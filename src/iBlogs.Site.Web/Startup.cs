@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CodeDi;
+using iBlogs.Site.Application.Service;
+using iBlogs.Site.Application.SqLite;
 using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +33,10 @@ namespace iBlogs.Site.Web
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            //services.AddCoreDi();
+            services.AddScoped<IInstallService, InstallService>();
+            services.AddScoped<ISqLiteBaseRepository, SqLiteBaseRepository>();
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

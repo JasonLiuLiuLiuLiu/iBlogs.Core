@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 
-namespace iBlogs.Site.Core.SqLite
+namespace iBlogs.Site.Application.SqLite
 {
     public interface ISqLiteBaseRepository
     {

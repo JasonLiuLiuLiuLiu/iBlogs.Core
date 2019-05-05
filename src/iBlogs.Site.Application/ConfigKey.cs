@@ -1,4 +1,4 @@
-﻿namespace iBlogs.Site.Common
+﻿namespace iBlogs.Site.Application
 {
     public class ConfigKey
     {

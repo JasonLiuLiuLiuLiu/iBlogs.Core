@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace iBlogs.Site.Core.Entity
+﻿namespace iBlogs.Site.Application.Entity
 {
     public class Options
     {

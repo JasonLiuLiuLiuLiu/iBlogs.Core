@@ -6,8 +6,15 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="seed.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 
   <ItemGroup>
+    <PackageReference Include="CodeDi" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
@@ -16,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\iBlogs.Site.Application\iBlogs.Site.Application.csproj" />
-    <ProjectReference Include="..\iBlogs.Site.Common\iBlogs.Site.Common.csproj" />
   </ItemGroup>
 
 </Project>
