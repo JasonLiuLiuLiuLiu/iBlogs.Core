@@ -1,4 +1,5 @@
-﻿using iBlogs.Site.Common.Extensions;
+﻿using iBlogs.Site.Common;
+using iBlogs.Site.Common.Extensions;
 using iBlogs.Site.Core.Configuration;
 using Microsoft.Data.Sqlite;
 using System;
@@ -9,7 +10,7 @@ namespace iBlogs.Site.Core.SqLite
     {
         public static string DbFile
         {
-            get { return Environment.CurrentDirectory + AppConfigurations.Get()[ConfigKey.SqliteDbFileName].IfNullReturnDefaultValue("iBlogs.db"); }
+            get { return Environment.CurrentDirectory + AppConfigurations.Get()[ConfigKey.SqLiteDbFileName].IfNullReturnDefaultValue("iBlogs.db"); }
         }
 
         public static SqliteConnection SimpleDbConnection()
