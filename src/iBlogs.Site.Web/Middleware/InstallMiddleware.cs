@@ -30,7 +30,7 @@ namespace iBlogs.Site.Web.Middleware
 
         private bool Installed()
         {
-            if (_configuration[ConfigKey.DbInstalled] == "true")
+            if (_configuration[ConfigKey.DbInstalled].ToBool())
                 return true;
             if (File.Exists(Environment.CurrentDirectory +"\\"+
                             _configuration[ConfigKey.SqLiteDbFileName].IfNullReturnDefaultValue("iBlogs.db")))

@@ -462,5 +462,13 @@ namespace iBlogs.Site.Application.Extensions
                 return str;
             return defaultValue;
         }
+
+        public static bool ToBool(this string str)
+        {
+            str = str.Trim().ToLower();
+            if (str == "true")
+                return true;
+            return false;
+        }
     }
 }

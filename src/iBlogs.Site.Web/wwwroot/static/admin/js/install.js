@@ -59,6 +59,7 @@
                             console.log('post异常', e);
                         }
                     });
+                    tale.hideLoading();
                     return isValid;
                 } else {
                     return isValid;

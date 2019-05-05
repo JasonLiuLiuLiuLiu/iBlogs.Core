@@ -2,34 +2,49 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using iBlogs.Site.Application;
 using iBlogs.Site.Application.Extensions;
 using iBlogs.Site.Application.Params;
+using iBlogs.Site.Application.Response;
 using iBlogs.Site.Application.Service;
 using iBlogs.Site.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace iBlogs.Site.Web.Controllers
 {
     public class InstallController : Controller
     {
-        private IInstallService _installService;
+        private readonly IInstallService _installService;
+        private readonly IConfiguration _configuration;
 
-        public InstallController(IInstallService installService)
+        public InstallController(IInstallService installService, IConfiguration configuration)
         {
             _installService = installService;
+            _configuration = configuration;
         }
 
-        public IActionResult Index(InstallParam param)
+        [HttpGet]
+        public IActionResult Index()
         {
-            if (param.AdminPwd.IsNullOrWhiteSpace())
+            var installed = _configuration[ConfigKey.DbInstalled].ToBool();
+            return View(new ViewBaseModel
             {
-                _installService.InitializeDbAsync();
-                return Redirect("/Home/Index");
-            }
-            else
+                Installed = installed
+            });
+        }
+
+        [HttpPost]
+        public RestResponse<int> Index(InstallParam param)
+        {
+            
+            var installed = _configuration[ConfigKey.DbInstalled].ToBool();
+            if (!param.AdminPwd.IsNullOrWhiteSpace() && !installed)
             {
-                return View(new ViewBaseModel());
+                if (_installService.InitializeDb())
+                   return RestResponse<int>.ok();
             }
+            return RestResponse<int>.fail("安装失败");
         }
     }
 }

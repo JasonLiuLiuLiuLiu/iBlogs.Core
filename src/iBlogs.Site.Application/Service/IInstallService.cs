@@ -2,6 +2,6 @@
 {
     public interface IInstallService
     {
-        void InitializeDbAsync(string seedFileName = null);
+        bool InitializeDb(string seedFileName = null);
     }
 }

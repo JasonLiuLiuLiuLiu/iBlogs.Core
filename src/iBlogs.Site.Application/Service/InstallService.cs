@@ -8,6 +8,7 @@ using iBlogs.Site.Application.SqLite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace iBlogs.Site.Application.Service
 {
@@ -22,21 +23,25 @@ namespace iBlogs.Site.Application.Service
             _configuration = configuration;
         }
 
-        public void InitializeDbAsync(string seedFileName=null)
+        public bool InitializeDb(string seedFileName = null)
         {
             if (seedFileName == null)
                 seedFileName = "seed.sql";
-            var sqlScript= File.ReadAllText(seedFileName);
+            var sqlScript = File.ReadAllText(seedFileName);
             var initResult = false;
-            using (var con=_baseRepository.DbConnection())
+            using (var con = _baseRepository.DbConnection())
             {
-               initResult=con.ExecuteAsync(sqlScript).Result>0;
+                initResult = con.ExecuteAsync(sqlScript).Result > 0;
             }
+            if(initResult)
+                Update();
+            return initResult;
         }
-
-        private void UpdateConfig()
+        public void Update()
         {
-          
+            var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));
+            jObject[ConfigKey.DbInstalled] = true;
+            File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }
     }
 }
