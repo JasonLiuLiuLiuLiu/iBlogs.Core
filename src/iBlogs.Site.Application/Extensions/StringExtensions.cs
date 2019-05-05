@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace iBlogs.Site.Common.Extensions
+namespace iBlogs.Site.Application.Extensions
 {
     //This class reference from https://github.com/aspnetboilerplate/aspnetboilerplate/blob/master/src/Abp/Extensions/StringExtensions.cs
     public static class StringExtensions
