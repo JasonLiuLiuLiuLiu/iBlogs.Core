@@ -1,8 +1,8 @@
 ﻿using iBlogs.Site.Common;
 using iBlogs.Site.Common.Extensions;
-using iBlogs.Site.Core.Configuration;
 using Microsoft.Data.Sqlite;
 using System;
+using iBlogs.Site.Common.Configuration;
 
 namespace iBlogs.Site.Core.SqLite
 {

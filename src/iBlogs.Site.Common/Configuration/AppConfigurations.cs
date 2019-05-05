@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Runtime.CompilerServices;
 using iBlogs.Site.Common.Extensions;
 using Microsoft.Extensions.Configuration;
 
-namespace iBlogs.Site.Core.Configuration
+namespace iBlogs.Site.Common.Configuration
 {
     public static class AppConfigurations
     {

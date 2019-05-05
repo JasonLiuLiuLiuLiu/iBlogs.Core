@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -48,6 +49,8 @@ namespace iBlogs.Site.Web
 
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseMiddleware<InstallMiddleware>();
 
             app.UseMvc(routes =>
             {

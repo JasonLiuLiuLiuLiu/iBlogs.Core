@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using iBlogs.Site.Common;
 using iBlogs.Site.Common.Extensions;
-using iBlogs.Site.Core.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
@@ -24,10 +23,9 @@ namespace iBlogs.Site.Web.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            if (Installed())
-                await _next.Invoke(context);
-            else
-                context.Response.Redirect("/Install");
+            if (!Installed())
+                context.Request.Path = "/install";
+            await _next.Invoke(context);
         }
 
         private bool Installed()
