@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\iBlogs.Site.Application\iBlogs.Site.Application.csproj" />
+    <ProjectReference Include="..\iBlogs.Site.Common\iBlogs.Site.Common.csproj" />
   </ItemGroup>
 
 </Project>

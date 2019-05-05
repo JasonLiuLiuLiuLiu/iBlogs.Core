@@ -15,8 +15,4 @@
     <ProjectReference Include="..\iBlogs.Site.Common\iBlogs.Site.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entity\" />
-  </ItemGroup>
-
 </Project>
