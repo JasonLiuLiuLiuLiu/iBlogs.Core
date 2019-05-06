@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using iBlogs.Site.Application.Extensions;
 
-namespace iBlogs.Site.Application.CodeDi
+namespace iBlogs.Site.Application.Utils.CodeDi
 {
-    class AssemblyLoader
+    static class AssemblyLoader
     {
         public static IList<Assembly> LoadAssembly(CodeDiOptions options)
         {
@@ -22,7 +23,7 @@ namespace iBlogs.Site.Application.CodeDi
                                                           && assembly.GetAssemblyName().IndexOf("WebMatrix", StringComparison.Ordinal) == -1
                                                           && assembly.GetAssemblyName().IndexOf("SMDiagnostics", StringComparison.Ordinal) == -1
                                                           && assembly.GetAssemblyName().IndexOf("Newtonsoft", StringComparison.Ordinal) == -1
-                                                          && !string.IsNullOrEmpty(assembly.Location)).ToList();
+                                                          && !String.IsNullOrEmpty(assembly.Location)).ToList();
             }
             assemblies.AddRange(LoadFromPaths(options.AssemblyPaths).Where(toAdd => assemblies.All(u => u.GetAssemblyName() != toAdd.GetAssemblyName())));
             return assemblies.Where(u => options.AssemblyNames.Any(name => u.GetAssemblyName().Matches(name)))
@@ -33,11 +34,16 @@ namespace iBlogs.Site.Application.CodeDi
 
         private static IEnumerable<Assembly> LoadFromPaths(string[] paths)
         {
-            var dllPath = paths.Where(u => !string.IsNullOrEmpty(u)).SelectMany(u => Directory.GetFiles(u, "*.dll"));
+            var dllPath = paths.Where(u => !String.IsNullOrEmpty(u)).SelectMany(u => Directory.GetFiles(u, "*.dll"));
             foreach (var path in dllPath)
             {
                 yield return Assembly.LoadFile(path);
             }
+        }
+
+        private static string GetAssemblyName(this Assembly assembly)
+        {
+            return assembly.GetName().Name;
         }
     }
 }

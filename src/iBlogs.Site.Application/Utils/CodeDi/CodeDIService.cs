@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace iBlogs.Site.Application.CodeDi
+namespace iBlogs.Site.Application.Utils.CodeDi
 {
     class CodeDiService
     {

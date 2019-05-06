@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace iBlogs.Site.Application.CodeDi
+namespace iBlogs.Site.Application.Utils.CodeDi
 {
     public class CodeDiOptions
     {

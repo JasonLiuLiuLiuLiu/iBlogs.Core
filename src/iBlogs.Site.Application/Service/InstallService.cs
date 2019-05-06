@@ -34,13 +34,13 @@ namespace iBlogs.Site.Application.Service
                 initResult = con.ExecuteAsync(sqlScript).Result > 0;
             }
             if(initResult)
-                Update();
+                Update(true);
             return initResult;
         }
-        public void Update()
+        public void Update(bool status)
         {
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));
-            jObject[ConfigKey.DbInstalled] = true;
+            jObject[ConfigKey.DbInstalled] = status;
             File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace iBlogs.Site.Application.CodeDi
+﻿namespace iBlogs.Site.Application.Utils.CodeDi
 {
     public interface ICodeDiServiceProvider
     {

@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using iBlogs.Site.Application.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace iBlogs.Site.Application.CodeDi
+namespace iBlogs.Site.Application.Utils.CodeDi
 {
     public class CodeDiServiceProvider : ICodeDiServiceProvider
     {
