@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CodeDi;
-using iBlogs.Site.Application.Service;
-using iBlogs.Site.Application.SqLite;
+﻿using iBlogs.Site.Application.CodeDi;
 using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,9 +28,7 @@ namespace iBlogs.Site.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            //services.AddCoreDi();
-            services.AddScoped<IInstallService, InstallService>();
-            services.AddScoped<ISqLiteBaseRepository, SqLiteBaseRepository>();
+            services.AddCoreDi();
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -63,7 +55,7 @@ namespace iBlogs.Site.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Index}/{action=Index}/{id?}");
             });
         }
     }
