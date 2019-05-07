@@ -106,5 +106,8 @@ namespace iBlogs.Site.Application.Utils
         public const string OPTION_ALLOW_COMMENT_AUDIT = "allow_comment_audit";
         public const string OPTION_ALLOW_CLOUD_CDN = "allow_cloud_CDN";
         public const string OPTION_SAFE_REMEMBER_ME = "safe_remember_me";
+
+        public const string TEMPLATES = "/templates/";
+        public const string THEME = "default";
     }
 }

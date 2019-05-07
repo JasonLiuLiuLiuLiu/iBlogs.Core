@@ -7,10 +7,12 @@ using iBlogs.Site.Application.Response;
 using iBlogs.Site.Application.Service.Options;
 using iBlogs.Site.Application.Utils;
 using Markdig;
+using Markdig.Extensions.Emoji;
+using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace iBlogs.Site.Application.Service.Common
 {
-    public class ViewService
+    public class ViewService : IViewService
     {
         private readonly IOptionService _optionService;
         private readonly ISiteService siteService;
@@ -813,6 +815,264 @@ namespace iBlogs.Site.Application.Service.Common
         public bool is_slug(string pageName)
         {
             return false;
+        }
+
+
+
+
+        /**
+         * 判断字符串不为空
+         *
+         * @param str
+         * @return
+         */
+        public bool not_empty(String str)
+        {
+            return stringKit.isNotBlank(str);
+        }
+
+        /**
+         * 返回网站首页链接，如：http://tale.biezhi.me
+         *
+         * @return
+         */
+        public String site_url()
+        {
+            return site_url("");
+        }
+
+        /**
+         * 返回当前主题名称
+         *
+         * @return
+         */
+        public String site_theme()
+        {
+            return site_option("site_theme", "default");
+        }
+
+        /**
+         * 返回网站链接下的全址
+         *
+         * @param sub 后面追加的地址
+         * @return
+         */
+        public String site_url(String sub)
+        {
+            return site_option("site_url") + sub;
+        }
+
+
+        /**
+         * 网站子标题
+         *
+         * @return
+         */
+        public String site_subtitle()
+        {
+            return site_option("site_subtitle");
+        }
+
+        /**
+         * 是否允许使用云公共静态资源
+         *
+         * @return
+         */
+        public String allow_cloud_CDN()
+        {
+            return site_option("allow_cloud_CDN");
+        }
+
+
+        /**
+         * 网站配置项
+         *
+         * @param key
+         * @param defalutValue 默认值
+         * @return
+         */
+        public string site_option(String key, String defalutValue)
+        {
+            if (stringKit.isBlank(key))
+            {
+                return "";
+            }
+            return _optionService.Get(key, defalutValue);
+        }
+
+        /**
+         * 返回站点设置的描述信息
+         *
+         * @return
+         */
+        public String site_description()
+        {
+            return site_option("site_description");
+        }
+
+        /**
+         * 截取字符串
+         *
+         * @param str
+         * @param len
+         * @return
+         */
+        public String substr(String str, int len)
+        {
+            if (str.Length > len)
+            {
+                return str.Substring(0, len);
+            }
+            return str;
+        }
+
+        /**
+         * 返回主题URL
+         *
+         * @return
+         */
+        public String theme_url()
+        {
+            return site_url(iBlogsConst.TEMPLATES + iBlogsConst.THEME);
+        }
+
+        /**
+         * 返回主题下的文件路径
+         *
+         * @param sub
+         * @return
+         */
+        public String theme_url(String sub)
+        {
+            return site_url(iBlogsConst.TEMPLATES + iBlogsConst.THEME + sub);
+        }
+
+
+        /**
+         * 返回gravatar头像地址
+         *
+         * @param email
+         * @return
+         */
+        public String gravatar(String email)
+        {
+            String avatarUrl = "https://cn.gravatar.com/avatar";
+            if (stringKit.isBlank(email))
+            {
+                return avatarUrl;
+            }
+            String hash = CreateMD5(email.Trim().ToLowerInvariant());
+            return avatarUrl + "/" + hash;
+        }
+        private string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Convert the byte array to hexadecimal string
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
+
+        /**
+         * 格式化unix时间戳为日期
+         *
+         * @param unixTime
+         * @return
+         */
+        public String fmtdate(int unixTime)
+        {
+            return Convert.ToDateTime(unixTime).ToString("yyyy-MM-dd");
+        }
+
+        /**
+         * 格式化日期
+         *
+         * @param date
+         * @param fmt
+         * @return
+         */
+        public String fmtdate(DateTime date, String fmt)
+        {
+            return date.ToString(fmt);
+        }
+
+        /**
+         * 格式化unix时间戳为日期
+         *
+         * @param unixTime
+         * @param patten
+         * @return
+         */
+        public String fmtdate(int unixTime, String patten)
+        {
+            if (null != unixTime && stringKit.isNotBlank(patten))
+            {
+                return Convert.ToDateTime(unixTime).ToString(patten);
+            }
+            return "";
+        }
+
+        /**
+         * 获取随机数
+         *
+         * @param max
+         * @param str
+         * @return
+         */
+        public String random(int max, String str)
+        {
+            return new Random().Next(1, max) + str;
+        }
+
+        /**
+         * An :grinning:awesome :smiley:string &#128516;with a few :wink:emojis!
+         * <p>
+         * 这种格式的字符转换为emoji表情
+         *
+         * @param value
+         * @return
+         */
+        public String emoji(String value)
+        {
+            throw new NotImplementedException();
+        }
+
+        // private final Pattern SRC_PATTERN = Pattern.compile("src\\s*=\\s*\'?\"?(.*?)(\'|\"|>|\\s+)");
+        /**
+         * 获取文章第一张图片
+         *
+         * @return
+         */
+        public String show_thumb(String content)
+        {
+            //content = TaleUtils.mdToHtml(content);
+            //if (content.contains("<img"))
+            //{
+            //    String img = "";
+            //    String regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
+            //    Pattern p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
+            //    Matcher m_image = p_image.matcher(content);
+            //    if (m_image.find())
+            //    {
+            //        img = img + "," + m_image.group();
+            //        // //匹配src
+            //        Matcher m = SRC_PATTERN.matcher(img);
+            //        if (m.find())
+            //        {
+            //            return m.group(1);
+            //        }
+            //    }
+            //}
+            return "";
         }
     }
 
