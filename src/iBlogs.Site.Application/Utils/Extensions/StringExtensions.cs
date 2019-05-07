@@ -502,4 +502,17 @@ namespace iBlogs.Site.Application.Extensions
             }
         }
     }
+
+    public static class stringKit
+    {
+        public static bool isNotBlank(string str)
+        {
+            return !str.IsNullOrWhiteSpace();
+        }
+
+        public static bool isBlank(string str)
+        {
+            return str.IsNullOrWhiteSpace();
+        }
+    }
 }

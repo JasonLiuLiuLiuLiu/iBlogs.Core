@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using iBlogs.Site.Application.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace iBlogs.Site.Application.Utils.CodeDi

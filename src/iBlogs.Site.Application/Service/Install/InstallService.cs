@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Dapper;
 using iBlogs.Site.Application.SqLite;
+using iBlogs.Site.Application.Utils;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Json;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
-namespace iBlogs.Site.Application.Service
+namespace iBlogs.Site.Application.Service.Install
 {
     public class InstallService : IInstallService
     {
@@ -34,14 +28,9 @@ namespace iBlogs.Site.Application.Service
                 initResult = con.ExecuteAsync(sqlScript).Result > 0;
             }
             if(initResult)
-                Update(true);
+                ConfigDataHelper.UpdateDbInstallStatus(true);
             return initResult;
         }
-        public void Update(bool status)
-        {
-            var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));
-            jObject[ConfigKey.DbInstalled] = status;
-            File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
-        }
+       
     }
 }

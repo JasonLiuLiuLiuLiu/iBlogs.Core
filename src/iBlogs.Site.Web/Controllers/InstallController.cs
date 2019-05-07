@@ -7,6 +7,7 @@ using iBlogs.Site.Application.Extensions;
 using iBlogs.Site.Application.Params;
 using iBlogs.Site.Application.Response;
 using iBlogs.Site.Application.Service;
+using iBlogs.Site.Application.Service.Install;
 using iBlogs.Site.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
