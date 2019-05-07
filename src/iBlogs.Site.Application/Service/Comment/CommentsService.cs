@@ -4,7 +4,6 @@ using System.Text;
 using iBlogs.Site.Application.Entity;
 using iBlogs.Site.Application.Params;
 using iBlogs.Site.Application.Response;
-using Markdig.Extensions.Emoji;
 
 namespace iBlogs.Site.Application.Service.Comment
 {

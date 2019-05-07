@@ -5,7 +5,7 @@ using iBlogs.Site.Application.Entity;
 
 namespace iBlogs.Site.Application.Service.Common
 {
-    public class MetasService
+    public class MetasService : IMetasService
     {
         /**
         * 根据类型查询项目列表

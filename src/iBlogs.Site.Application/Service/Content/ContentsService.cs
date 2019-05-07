@@ -6,7 +6,7 @@ using iBlogs.Site.Application.Service.Common;
 
 namespace iBlogs.Site.Application.Service.Content
 {
-    public class ContentsService
+    public class ContentsService : IContentsService
     {
         /**
          * 根据id或slug获取文章

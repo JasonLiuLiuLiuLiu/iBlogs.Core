@@ -66,7 +66,7 @@ namespace iBlogs.Site.Application.Service.Options
         */
         public void saveOption(String key, String value)
         {
-            if (StringKit.isNotBlank(key) && StringKit.isNotBlank(value))
+            if (stringKit.isNotBlank(key) && stringKit.isNotBlank(value))
             {
                 Set(key, value);
             }
