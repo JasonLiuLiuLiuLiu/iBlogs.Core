@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using iBlogs.Site.Application.Service.Common
+@inject IViewService ViewService
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -7,37 +9,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-transform" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <meta name="keywords" content="${meta_keywords()}" />
-    <meta name="description" content="${meta_description()}" />
+    <meta name="keywords" content="@ViewService.meta_keywords()" />
+    <meta name="description" content="@ViewService.meta_description()" />
     <meta content="${_csrf_token}" name="csrf_token" />
-    <link rel="shortcut icon" href="${theme_url('/static/img/favicon.png')}" />
-    <link rel="apple-touch-icon" href="${theme_url('/static/img/apple-touch-icon.png')}" />
-    <title>${head_title()}</title>
-    <link href="${theme_url('/static/css/default.min.css')}" rel="stylesheet">
-    <link href="${theme_url('/static/css/style.min.css')}" rel="stylesheet">
-    #if(allow_cloud_CDN() == "true")
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    #else
-    <script src="/static/admin/plugins/jquery/3.2.1/jquery.min.js"></script>
-    #end
+    <link rel="shortcut icon" href="@ViewService.theme_url("/static/img/favicon.png")" />
+    <link rel="apple-touch-icon" href="@ViewService.theme_url("/static/img/apple-touch-icon.png")" />
+    <title>@ViewService.head_title()</title>
+    <link href="@ViewService.theme_url("/static/css/default.min.css")" rel="stylesheet">
+    <link href="@ViewService.theme_url("/static/css/style.min.css")" rel="stylesheet">
+    @if (ViewService.allow_cloud_CDN() == "true")
+    {
+        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    }
+    else
+    {
+        <script src="/static/admin/plugins/jquery/3.2.1/jquery.min.js"></script> 
+    }
 
-    <script src="${theme_url('/static/js/highlight.min.js')}"></script>
-    <script src="${theme_url('/static/js/instantclick.min.js')}"></script>
+    <script src="@ViewService.theme_url("/static/js/highlight.min.js")"></script>
+    <script src="@ViewService.theme_url("/static/js/instantclick.min.js")"></script>
 </head>
 <body #if(!is_post) class="bg-grey" #end gtools_scp_screen_capture_injected="true">
     <header id="header" class="header bg-white">
         <div class="navbar-container">
-            <a href="${site_url()}" class="navbar-logo">
-                #if(theme_option('logo_url') == "")
-                <img src="${theme_url('/static/img/logo.png')}" alt="${site_title()}" />
-                #else
-                <img src="${theme_option('logo_url')}" alt="${site_title()}" />
-                #end
+            <a href="@ViewService.site_url()" class="navbar-logo">
+                @if (@ViewService.theme_option("logo_url") == "")
+                {
+                    <img src="@ViewService.theme_url("/static/img/logo.png")" alt="@ViewService.site_title()" />
+                }
+                else
+                {
+                    <img src="@ViewService.theme_option("logo_url")" alt="@ViewService.site_title()" />
+                }
             </a>
             <div class="navbar-menu">
-                <a href="${site_url('/archives')}">归档</a>
-                <a href="${site_url('/links')}">友链</a>
-                <a href="${site_url('/about')}">关于</a>
+                <a href="@ViewService.site_url("/archives")">归档</a>
+                <a href="@ViewService.site_url("/links")">友链</a>
+                <a href="@ViewService.site_url("/about")">关于</a>
             </div>
             <div class="navbar-search" onclick="">
                 <span class="icon-search"></span>
@@ -51,9 +59,9 @@
             <div class="navbar-mobile-menu" onclick="">
                 <span class="icon-menu cross"><span class="middle"></span></span>
                 <ul>
-                    <li><a href="${site_url('/archives')}">归档</a></li>
-                    <li><a href="${site_url('/links')}">友链</a></li>
-                    <li><a href="${site_url('/about')}">关于</a></li>
+                    <li><a href="@ViewService.site_url("/archives")">归档</a></li>
+                    <li><a href="@ViewService.site_url("/links")">友链</a></li>
+                    <li><a href="@ViewService.site_url("/about")">关于</a></li>
                 </ul>
             </div>
         </div>
@@ -69,8 +77,8 @@
             <div class="footer-container">
                 <div class="meta-item meta-copyright">
                     <div class="meta-copyright-info">
-                        <a href="${site_url()}" class="info-logo">
-                            <img src="/templates/themes/default/static/img/logo.png" alt="${site_title()}">
+                        <a href="@ViewService.site_url()" class="info-logo">
+                            <img src="/templates/themes/default/static/img/logo.png" alt="@ViewService.site_title()">
                         </a>
                         <div class="info-text">
                             <p>一生有所追求.</p>
@@ -86,41 +94,42 @@
                     <h3 class="meta-title">最新文章</h3>
                     #for(article : recent_articles(8))
                     <li>
-                        <a href="${permalink()}">${title()}</a>
+                        <a href="@ViewService.permalink()">@ViewService.Title()</a>
                     </li>
                     #end
                 </div>
 
                 <div class="meta-item meta-comments">
                     <h3 class="meta-title">最新评论</h3>
-                    #for(comm : recent_comments(8))
-                    <li>
-                        <a href="${site_url('/article/')}${comm.cid}#comment-${comm.coid}">${comm.author}：${comm.content}</a>
-                    </li>
-                    #end
+                    @foreach (var comm in ViewService.recent_comments(8))
+                    {
+                        <li>
+                        <a href="@ViewService.site_url("/article/")@comm.Cid#comment-@comm.Coid">@comm.Author：@comm.Content</a>
+                        </li>
+                    }
                 </div>
             </div>
         </div>
     </footer>
     <div class="social-list">
         #if(not_empty(theme_option('social_weibo')))
-        <a class="social weibo" target="blank" href="http://weibo.com/${theme_option('social_weibo')}">微博</a>
+        <a class="social weibo" target="blank" href="http://weibo.com/@ViewService.theme_option("social_weibo")">微博</a>
         #end
 
         #if(not_empty(theme_option('social_zhihu')))
         <a class="social zhihu" target="blank"
-           href="https://www.zhihu.com/people/${theme_option('social_zhihu')}">知乎</a>
+           href="https://www.zhihu.com/people/@ViewService.theme_option("social_zhihu")">知乎</a>
         #end
 
         <a class="social rss" target="blank" href="/feed">RSS</a>
 
         #if(not_empty(theme_option('social_github')))
         <a class="social github" target="blank"
-           href="https://github.com/${theme_option('social_github')}">Github</a>
+           href="https://github.com/@ViewService.theme_option("social_github")">Github</a>
         #end
 
         #if(not_empty(theme_option('social_twitter')))
-        <a class="social twitter" target="blank" href="https://twitter.com/${theme_option('social_twitter')}">Twitter</a>
+        <a class="social twitter" target="blank" href="https://twitter.com/@ViewService.theme_option("social_twitter")">Twitter</a>
         #end
     </div>
 

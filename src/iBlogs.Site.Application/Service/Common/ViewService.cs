@@ -24,6 +24,8 @@ namespace iBlogs.Site.Application.Service.Common
             this.siteService = siteService;
         }
 
+        public bool is_post { get; set; }
+
         public void Set_current_article(Contents contents)
         {
             _currentArticle = contents;

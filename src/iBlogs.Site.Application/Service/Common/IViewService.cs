@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using iBlogs.Site.Application.Entity;
 using iBlogs.Site.Application.Response;
 
@@ -6,6 +7,7 @@ namespace iBlogs.Site.Application.Service.Common
 {
     public interface IViewService
     {
+        bool is_post { get; set; }
         void Set_current_article(Contents contents);
         Contents current_article();
         string meta_keywords();
@@ -61,5 +63,23 @@ namespace iBlogs.Site.Application.Service.Common
         string theme_option(string key, string defaultValue);
         string theme_option(string key);
         bool is_slug(string pageName);
+        bool not_empty(String str);
+        String site_url();
+        String site_theme();
+        String site_url(String sub);
+        String site_subtitle();
+        String allow_cloud_CDN();
+        string site_option(String key, String defalutValue);
+        String site_description();
+        String substr(String str, int len);
+        String theme_url();
+        String theme_url(String sub);
+        String gravatar(String email);
+        String fmtdate(int unixTime);
+        String fmtdate(DateTime date, String fmt);
+        String fmtdate(int unixTime, String patten);
+        String random(int max, String str);
+        String emoji(String value);
+        String show_thumb(String content);
     }
 }
