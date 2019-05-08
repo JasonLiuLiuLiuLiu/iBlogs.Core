@@ -1,27 +1,28 @@
-﻿#include('./partial/header.html',{home_page:1})
+﻿@using iBlogs.Site.Application.Service.Common
+@inject IViewService ViewService
 <div class="main-content index-page clearfix">
     <div class="post-lists">
         <div class="post-lists-body">
             #for(article : articles(12).rows)
             <div class="post-list-item">
                 <div class="post-list-item-container">
-                    <div class="item-thumb bg-deepgrey" style="background-image:url(${show_thumb(article)});"></div>
-                    <a href="${permalink()}">
+                    <div class="item-thumb bg-deepgrey" style="background-image:url(@ViewService.show_thumb(article))"></div>
+                    <a href="@ViewService.permalink()">
                         <div class="item-desc">
-                            <p>${intro(75)}...</p>
+                            <p>@ViewService.intro(75)...</p>
                         </div>
                     </a>
                     <div class="item-slant reverse-slant bg-deepgrey"></div>
                     <div class="item-slant"></div>
                     <div class="item-label">
                         <div class="item-title">
-                            <a href="${permalink()}">${title()}</a>
+                            <a href="@ViewService.permalink()">@ViewService.Title()</a>
                         </div>
                         <div class="item-meta clearfix">
-                            <div class="item-meta-ico ${show_icon()}"
+                            <div class="item-meta-ico @ViewService.show_icon()"
                                  style="background: url(/templates/themes/default/static/img/bg-ico.png) no-repeat;background-size: 40px auto;"></div>
                             <div class="item-meta-cat">
-                                ${show_categories()}
+                                @ViewService.show_categories()
                             </div>
                         </div>
                     </div>
@@ -34,4 +35,3 @@
         #call pageNav(articles(12),'←','→','page')
     </div>
 </div>
-#include('./partial/footer.html')

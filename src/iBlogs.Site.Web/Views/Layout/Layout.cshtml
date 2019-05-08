@@ -1,4 +1,5 @@
-﻿@using iBlogs.Site.Application.Service.Common
+﻿@using iBlogs.Site.Application.Extensions
+@using iBlogs.Site.Application.Service.Common
 @inject IViewService ViewService
 <!DOCTYPE html>
 <html>
@@ -19,28 +20,28 @@
     <link href="@ViewService.theme_url("/static/css/style.min.css")" rel="stylesheet">
     @if (ViewService.allow_cloud_CDN() == "true")
     {
-        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     }
     else
     {
-        <script src="/static/admin/plugins/jquery/3.2.1/jquery.min.js"></script> 
+    <script src="/static/admin/plugins/jquery/3.2.1/jquery.min.js"></script>
     }
 
     <script src="@ViewService.theme_url("/static/js/highlight.min.js")"></script>
     <script src="@ViewService.theme_url("/static/js/instantclick.min.js")"></script>
 </head>
-<body #if(!is_post) class="bg-grey" #end gtools_scp_screen_capture_injected="true">
+<body class="@(ViewService.is_post?"bg-grey":"" )" gtools_scp_screen_capture_injected="true">
     <header id="header" class="header bg-white">
         <div class="navbar-container">
             <a href="@ViewService.site_url()" class="navbar-logo">
-                @if (@ViewService.theme_option("logo_url") == "")
-                {
-                    <img src="@ViewService.theme_url("/static/img/logo.png")" alt="@ViewService.site_title()" />
-                }
-                else
-                {
-                    <img src="@ViewService.theme_option("logo_url")" alt="@ViewService.site_title()" />
-                }
+                @if (@ViewService.theme_option("logo_url").IsNullOrWhiteSpace())
+            {
+                <img src="@ViewService.theme_url("/static/img/logo.png")" alt="@ViewService.site_title()" />
+            }
+            else
+            {
+                <img src="@ViewService.theme_option("logo_url")" alt="@ViewService.site_title()" />
+            }
             </a>
             <div class="navbar-menu">
                 <a href="@ViewService.site_url("/archives")">归档</a>
@@ -67,10 +68,37 @@
         </div>
     </header>
 
+    @RenderBody()
+
     <footer id="footer" class="footer bg-white">
         <div class="footer-social">
             <div class="footer-container clearfix">
-                #include("./social.html")
+                <div class="social-list">
+                    @if (!ViewService.theme_option("social_weibo").IsNullOrWhiteSpace())
+                    {
+                    <a class="social weibo" target="blank" href="http://weibo.com/@ViewService.theme_option("social_weibo")">微博</a>
+                    }
+
+                    @if (!ViewService.theme_option("social_zhihu").IsNullOrWhiteSpace())
+                    {
+                    <a class="social zhihu" target="blank" href="https://www.zhihu.com/people/@ViewService.theme_option("social_zhihu")">知乎</a>
+                    }
+
+
+
+                    <a class="social rss" target="blank" href="/feed">RSS</a>
+
+                    @if (!ViewService.theme_option("social_github").IsNullOrWhiteSpace())
+                    {
+                    <a class="social github" target="blank"
+                       href="https://github.com/@ViewService.theme_option("social_github")">Github</a>
+                    }
+
+                    @if (!ViewService.theme_option("social_twitter").IsNullOrWhiteSpace())
+                    {
+                    <a class="social twitter" target="blank" href="https://twitter.com/@ViewService.theme_option("social_twitter")">Twitter</a>
+                    }
+                </div>
             </div>
         </div>
         <div class="footer-meta">
@@ -92,48 +120,27 @@
 
                 <div class="meta-item meta-posts">
                     <h3 class="meta-title">最新文章</h3>
-                    #for(article : recent_articles(8))
+                    需要去做
                     <li>
                         <a href="@ViewService.permalink()">@ViewService.Title()</a>
                     </li>
-                    #end
                 </div>
 
                 <div class="meta-item meta-comments">
                     <h3 class="meta-title">最新评论</h3>
-                    @foreach (var comm in ViewService.recent_comments(8))
-                    {
+                    TODO
+                    @*@foreach (var comm in ViewService.recent_comments(8))
+                        {
                         <li>
-                        <a href="@ViewService.site_url("/article/")@comm.Cid#comment-@comm.Coid">@comm.Author：@comm.Content</a>
+                            <a href="@ViewService.site_url("/article/")@comm.Cid#comment-@comm.Coid">@comm.Author：@comm.Content</a>
                         </li>
-                    }
+                        }*@
                 </div>
             </div>
         </div>
     </footer>
-    <div class="social-list">
-        #if(not_empty(theme_option('social_weibo')))
-        <a class="social weibo" target="blank" href="http://weibo.com/@ViewService.theme_option("social_weibo")">微博</a>
-        #end
-
-        #if(not_empty(theme_option('social_zhihu')))
-        <a class="social zhihu" target="blank"
-           href="https://www.zhihu.com/people/@ViewService.theme_option("social_zhihu")">知乎</a>
-        #end
-
-        <a class="social rss" target="blank" href="/feed">RSS</a>
-
-        #if(not_empty(theme_option('social_github')))
-        <a class="social github" target="blank"
-           href="https://github.com/@ViewService.theme_option("social_github")">Github</a>
-        #end
-
-        #if(not_empty(theme_option('social_twitter')))
-        <a class="social twitter" target="blank" href="https://twitter.com/@ViewService.theme_option("social_twitter")">Twitter</a>
-        #end
-    </div>
-
-    #if(is_post)
+    @if (ViewService.is_post)
+    {
     <div id="directory-content" class="directory-content">
         <div id="directory"></div>
     </div>
@@ -228,23 +235,29 @@
         };
         postDirectoryBuild();
     </script>
-    #end
-    <script src="${theme_url('/static/js/headroom.min.js')}"></script>
-    <script src="${theme_url('/static/js/instantclick.min.js')}"></script>
+    }
+    <script src="@ViewService.theme_url("/static/js/headroom.min.js")"></script>
+    <script src="@ViewService.theme_url("/static/js/instantclick.min.js")"></script>
     <script>
         hljs.initHighlightingOnLoad();
+    </script>
+    @if (ViewService.is_post)
+        {
+    <script>
+        var postDirectory = new Headroom(document.getElementById("directory-content"), {
+            tolerance: 0,
+            offset: 100,
+            classes: {
+                initial: "initial",
+                pinned: "pinned",
+                unpinned: "unpinned"
+            }
+        });
+    </script>
 
-        #if (is_post)
-            var postDirectory = new Headroom(document.getElementById("directory-content"), {
-                tolerance: 0,
-                offset: 100,
-                classes: {
-                    initial: "initial",
-                    pinned: "pinned",
-                    unpinned: "unpinned"
-                }
-            });
-        #end
+        }
+    <script>
+
         var header = new Headroom(document.getElementById("header"), {
             tolerance: 10,
             offset: 80,

@@ -108,6 +108,6 @@ namespace iBlogs.Site.Application.Utils
         public const string OPTION_SAFE_REMEMBER_ME = "safe_remember_me";
 
         public const string TEMPLATES = "/templates/";
-        public const string THEME = "default";
+        public const string THEME = "themes/default";
     }
 }
