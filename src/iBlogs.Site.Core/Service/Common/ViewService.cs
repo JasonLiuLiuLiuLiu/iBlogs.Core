@@ -394,6 +394,7 @@ namespace iBlogs.Site.Core.Service.Common
             {
                 return "";
             }
+            Set_current_article(contents);
             if (stringKit.isNotBlank(contents.ThumbImg))
             {
                 string newFileName = IBlogsUtils.getFileName(contents.ThumbImg);
@@ -409,7 +410,7 @@ namespace iBlogs.Site.Core.Service.Common
             int cid = contents.Cid;
             int size = cid % 20;
             size = size == 0 ? 1 : size;
-            return "/templates/themes/default//img/rand/" + size + ".jpg";
+            return "/templates/themes/default/static/img/rand/" + size + ".jpg";
         }
 
         /**

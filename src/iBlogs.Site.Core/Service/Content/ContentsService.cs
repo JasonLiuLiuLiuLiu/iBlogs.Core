@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 using Dapper;
 using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Params;
 using iBlogs.Site.Core.Response;
-using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.SqLite;
+using iBlogs.Site.Core.Utils.Extensions;
 
 namespace iBlogs.Site.Core.Service.Content
 {
@@ -72,12 +74,34 @@ namespace iBlogs.Site.Core.Service.Content
 
         public Page<Entity.Contents> findArticles(ArticleParam articleParam)
         {
-            return null;
-        }
+            var sqlBuilder = new StringBuilder();
+            sqlBuilder.Append("select * from t_contents where 1=1");
 
-        private Entity.Contents mapContent(Entity.Contents contents)
-        {
-            return null;
+            
+
+            if (articleParam.Categories != null)
+                sqlBuilder.Append(" and categories like '%@categories%' ");
+
+            if (articleParam.Status != null)
+                sqlBuilder.Append(" and status like '%@status%'");
+
+            if (articleParam.Title != null)
+                sqlBuilder.Append(" and title like '%@Title%'");
+
+            if (articleParam.Type != null)
+                sqlBuilder.Append(" and type=@Type");
+
+            var count = _sqLiteBaseRepository.DbConnection().QueryCount(sqlBuilder.ToString(), articleParam);
+
+            sqlBuilder.Append($" and {articleParam.OrderBy} NOT IN ( SELECT {articleParam.OrderBy} FROM t_contents ORDER BY title ASC LIMIT {(articleParam.Page) * articleParam.Limit})");
+
+            sqlBuilder.Append(" order by ");
+            sqlBuilder.Append(articleParam.OrderBy);
+            sqlBuilder.Append(" LIMIT @Limit ");
+
+            var contents = _sqLiteBaseRepository.DbConnection().Query<Contents>(sqlBuilder.ToString(), articleParam).ToList();
+
+           return new Page<Contents>(count,articleParam.Page+1,articleParam.Limit,contents);
         }
     }
 }

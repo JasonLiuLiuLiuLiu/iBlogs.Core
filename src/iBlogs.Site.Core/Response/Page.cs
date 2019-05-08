@@ -88,6 +88,12 @@ namespace iBlogs.Site.Core.Response
             init(total, page, limit);
         }
 
+        public Page(long total, int page, int limit,List<T> rows)
+        {
+            init(total, page, limit);
+            this.rows = rows;
+        }
+
         public void init(long total, int pageNum, int limit)
         {
             // set basic params

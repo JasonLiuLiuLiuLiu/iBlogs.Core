@@ -1,34 +1,38 @@
-﻿@using iBlogs.Site.Core.Service.Common
+﻿@using iBlogs.Site.Core.Params
+@using iBlogs.Site.Core.Service.Common
+@using iBlogs.Site.Core.Service.Content
 @inject IViewService ViewService
+@inject IContentsService ContentsService
 <div class="main-content index-page clearfix">
     <div class="post-lists">
         <div class="post-lists-body">
-            #for(article : articles(12).rows)
-            <div class="post-list-item">
-                <div class="post-list-item-container">
-                    @*<div class="item-thumb bg-deepgrey" style="background-image:url(@ViewService.show_thumb(article))"></div>*@
-                    <a href="@ViewService.permalink()">
-                        <div class="item-desc">
-                            <p>@ViewService.intro(75)...</p>
-                        </div>
-                    </a>
-                    <div class="item-slant reverse-slant bg-deepgrey"></div>
-                    <div class="item-slant"></div>
-                    <div class="item-label">
-                        <div class="item-title">
-                            <a href="@ViewService.permalink()">@ViewService.Title()</a>
-                        </div>
-                        <div class="item-meta clearfix">
-                            <div class="item-meta-ico @ViewService.show_icon()"
-                                 style="background: url(/templates/themes/default/static/img/bg-ico.png) no-repeat;background-size: 40px auto;"></div>
-                            <div class="item-meta-cat">
-                                @ViewService.show_categories()
+            @foreach (var article in ContentsService.findArticles(new ArticleParam()).rows)
+            {
+                <div class="post-list-item">
+                    <div class="post-list-item-container">
+                        <div class="item-thumb bg-deepgrey" style="background-image:url(@ViewService.show_thumb(article))"></div>
+                        <a href="@ViewService.permalink()">
+                            <div class="item-desc">
+                                <p>@ViewService.intro(75)...</p>
+                            </div>
+                        </a>
+                        <div class="item-slant reverse-slant bg-deepgrey"></div>
+                        <div class="item-slant"></div>
+                        <div class="item-label">
+                            <div class="item-title">
+                                <a href="@ViewService.permalink()">@ViewService.Title()</a>
+                            </div>
+                            <div class="item-meta clearfix">
+                                <div class="item-meta-ico @ViewService.show_icon()"
+                                     style="background: url(/templates/themes/default/static/img/bg-ico.png) no-repeat;background-size: 40px auto;"></div>
+                                <div class="item-meta-cat">
+                                    @ViewService.show_categories()
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            #end
+            }
         </div>
     </div>
     <div class="lists-navigator clearfix">
