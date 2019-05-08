@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using iBlogs.Site.Application;
-using iBlogs.Site.Application.Extensions;
+using iBlogs.Site.Core;
+using iBlogs.Site.Core.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 

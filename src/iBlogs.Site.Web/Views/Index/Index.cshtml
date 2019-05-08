@@ -1,4 +1,4 @@
-﻿@using iBlogs.Site.Application.Service.Common
+﻿@using iBlogs.Site.Core.Service.Common
 @inject IViewService ViewService
 <div class="main-content index-page clearfix">
     <div class="post-lists">
@@ -6,7 +6,7 @@
             #for(article : articles(12).rows)
             <div class="post-list-item">
                 <div class="post-list-item-container">
-                    <div class="item-thumb bg-deepgrey" style="background-image:url(@ViewService.show_thumb(article))"></div>
+                    @*<div class="item-thumb bg-deepgrey" style="background-image:url(@ViewService.show_thumb(article))"></div>*@
                     <a href="@ViewService.permalink()">
                         <div class="item-desc">
                             <p>@ViewService.intro(75)...</p>

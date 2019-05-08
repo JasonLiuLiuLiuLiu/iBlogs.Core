@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
-using iBlogs.Site.Application;
-using iBlogs.Site.Application.Extensions;
-using iBlogs.Site.Application.Utils;
-using iBlogs.Site.Application.Utils.CodeDi;
+using iBlogs.Site.Core;
+using iBlogs.Site.Core.Extensions;
+using iBlogs.Site.Core.Utils;
+using iBlogs.Site.Core.Utils.CodeDi;
 using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
