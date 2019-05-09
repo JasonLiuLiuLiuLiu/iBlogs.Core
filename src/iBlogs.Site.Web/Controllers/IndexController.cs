@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using iBlogs.Site.Web.Attribute;
+using iBlogs.Site.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iBlogs.Site.Web.Controllers
@@ -12,7 +13,7 @@ namespace iBlogs.Site.Web.Controllers
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
         public IActionResult Index()
         {
-            return View();
+            return View(new ViewBaseModel());
         }
     }
 }

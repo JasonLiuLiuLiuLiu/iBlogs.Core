@@ -16,12 +16,14 @@ namespace iBlogs.Site.Core.Utils
         */
         public static String htmlToText(String html)
         {
-            var regexCss = new Regex("(?s) <[^>] *> (\\s *<[^>] *>) * ", RegexOptions.Singleline | RegexOptions.IgnoreCase);
-            if (stringKit.isNotBlank(html))
-            {
-                return regexCss.Replace(html, string.Empty);
-            }
-            return "";
+            string htmlTagPattern = "<.*?>";
+            var regexCss = new Regex("(\\<script(.+?)\\</script\\>)|(\\<style(.+?)\\</style\\>)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            html = regexCss.Replace(html, string.Empty);
+            html = Regex.Replace(html, htmlTagPattern, string.Empty);
+            html = Regex.Replace(html, @"^\s+$[\r\n]*", "", RegexOptions.Multiline);
+            html = html.Replace("&nbsp;", string.Empty);
+
+            return html;
         }
 
         public static string getFileName(string path)
