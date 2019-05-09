@@ -18,7 +18,7 @@ namespace iBlogs.Site.Core.Service.Common
         string permalink();
         string permalink(Contents contents);
         string permalink(int cid, string slug);
-        string created();
+        string created(string frm);
         string modified(string fmt);
         int hits();
         string show_categories();
@@ -56,7 +56,7 @@ namespace iBlogs.Site.Core.Service.Common
         string Title();
         string Title(Contents contents);
         string social_link(string type);
-        Page<Comments> comments(int limit);
+        Page<Dto.Comment> comments(int limit);
         long commentsCount();
         Page<Contents> articles(int limit);
         string comments_num(string noComment, string value);
@@ -75,7 +75,7 @@ namespace iBlogs.Site.Core.Service.Common
         String theme_url();
         String theme_url(String sub);
         String gravatar(String email);
-        String fmtdate(int unixTime);
+        String fmtdate(long unixTime);
         String fmtdate(DateTime date, String fmt);
         String fmtdate(int unixTime, String patten);
         String random(int max, String str);

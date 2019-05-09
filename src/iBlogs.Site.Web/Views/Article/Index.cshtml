@@ -1,0 +1,229 @@
+﻿@using iBlogs.Site.Core.Service.Common
+@inject IViewService ViewService
+@model ViewBaseModel
+<article class="main-content page-page" itemscope itemtype="http://schema.org/Article">
+    <div class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+            <a href="@ViewService.permalink()">@ViewService.Title()</a>
+        </h1>
+        <div class="post-data">
+            <time datetime="@ViewService.created("yyyy-MM-dd")" itemprop="datePublished">发布于 @ViewService.created("yyyy-MM-dd")</time>
+            / @Html.Raw(ViewService.show_categories()) / <a href="#comments">@ViewService.comments_num("没有评论", "{0} 条评论")</a> /
+            @ViewService.hits()浏览
+        </div>
+    </div>
+    <div id="post-content" class="post-content" itemprop="articleBody">
+        <p class="post-tags">@ViewService.show_tags()</p>
+        @Html.Raw(ViewService.show_content())
+        <p class="post-info">
+            本文由 <a href="">@(ViewService.theme_option("author", "阿宇"))</a> 创作，采用 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank"
+                                                                                    rel="external nofollow">知识共享署名4.0</a> 国际许可协议进行许可<br>本站文章除注明转载/出处外，均为本站原创或翻译，转载前请务必署名<br>最后编辑时间为:
+            @ViewService.modified("yyyy/MM/dd HH:mm")
+        </p>
+    </div>
+</article>
+<div id="post-bottom-bar" class="post-bottom-bar">
+    <div class="bottom-bar-inner">
+        <div class="bottom-bar-items social-share left">
+            <span class="bottom-bar-item">Share : </span>
+            <span class="bottom-bar-item bottom-bar-facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=@ViewService.permalink()" target="_blank" title="@ViewService.Title()" rel="nofollow">facebook</a></span>
+            <span class="bottom-bar-item bottom-bar-twitter"><a href="https://twitter.com/intent/tweet?url=@ViewService.permalink()&text=@ViewService.Title()" target="_blank" title="@ViewService.Title()" rel="nofollow">Twitter</a></span>
+            <span class="bottom-bar-item bottom-bar-weibo"><a href="http://service.weibo.com/share/share.php?url=@ViewService.permalink()&amp;title=@ViewService.Title()" target="_blank" title="@ViewService.Title()" rel="nofollow">Weibo</a></span>
+            <span class="bottom-bar-item bottom-bar-qrcode"><a href="https://cli.im/api/qrcode/code?text=@ViewService.permalink()&mhid=50eWDQu6nc0hMHcrKtNXPKo" target="_blank" rel="nofollow">QRcode</a></span>
+        </div>
+        <div class="bottom-bar-items right">
+            <span class="bottom-bar-item">@ViewService.thePrev("→")</span>
+            <span class="bottom-bar-item">@ViewService.thePrev("←")</span>
+            <span class="bottom-bar-item"><a href="#footer">↓</a></span>
+            <span class="bottom-bar-item"><a href="#">↑</a></span>
+        </div>
+    </div>
+</div>
+
+@{
+    var article = ViewService.current_article();
+    var comments = ViewService.comments(6);
+    <div id="@article.Cid" class="comment-container">
+        <div id="comments" class="clearfix">
+            @if (article.AllowComment)
+            {
+                <span class="response">
+                    #if(null!=login_user) Hi，<a href="${login_user.homeUrl}" data-no-instant>$login_user.username}</a>
+                    如果你想 <a href="/logout" title="注销" data-no-instant>注销</a> ? #end
+                </span>
+
+                <form method="post" id="comment-form" class="comment-form" onsubmit="return TaleComment.subComment();">
+                    <input type="hidden" name="coid" id="coid" />
+                    <input type="hidden" name="cid" id="cid" value="${article.cid}" />
+                    <input type="hidden" name="csrf_token" value="${csrf_token}" />
+                    <input name="author" maxlength="12" id="author" class="form-control input-control clearfix"
+                           placeholder="姓名 (*)" value="${login_user.username ?! ''}" required />
+                    <input type="email" name="mail" id="mail" class="form-control input-control clearfix" placeholder="邮箱 (*)"
+                           value="${login_user.email ?! ''}" required />
+                    <input type="url" name="url" id="url" class="form-control input-control clearfix" placeholder="网址 (http://)"
+                           value="${login_user.homeUrl ?! ''}" />
+                    <textarea name="content" id="textarea" class="form-control" placeholder="基佬，留下你的评论." required minlength="5" maxlength="2000"></textarea>
+
+                    ${_csrf_token_input}
+
+                    <button class="submit" id="misubmit">提交</button>
+                </form>
+            }
+            else
+            {
+                <span class="response">评论已关闭.</span>
+            }
+
+
+
+            @if (comments.rows.Count > 0)
+            {
+                <ol class="comment-list">
+                    @foreach (var comment in comments.rows)
+                    {
+                        <li id="li-comment-@comment.Coid" class="comment-body comment-parent comment-odd">
+                            <div id="comment-@comment.Coid}">
+                                <div class="comment-view" onclick="">
+                                    <div class="comment-header">
+                                        <img class="avatar" src="@ViewService.gravatar(comment.Mail)}?s=80&r=G&d=" title="@comment.Author}"
+                                             width="80" height="80">
+                                        <span class="comment-author">
+                                            <a href="@comment.Url}" target="_blank" rel="external nofollow">@comment.Author</a>
+                                        </span>
+                                    </div>
+                                    <div class="comment-content">
+                                        <span class="comment-author-at"></span>
+                                        <p>@ViewService.article(comment.Content)</p>
+                                    </div>
+                                    <div class="comment-meta">
+                                        <time class="comment-time">@ViewService.fmtdate(comment.Created)</time>
+                                        <span class="comment-reply">
+                                            <a rel="nofollow" onclick="TaleComment.reply('@comment.Coid');">回复</a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (comment.levels > 0)
+                            {
+                                <div class="comment-children">
+                                    <ol class="comment-list">
+                                        @foreach (var child in comment.children)
+                                        {
+                                            <li id="li-comment-@child.Coid"
+                                                class="comment-body comment-child comment-level-odd comment-odd">
+                                                <div id="comment-@child.Coid">
+                                                    <div class="comment-view">
+                                                        <div class="comment-header">
+                                                            <img class="avatar" src="@ViewService.gravatar(child.Mail)?s=80&r=G&d=" title="@child.Author" width="80" height="80">
+                                                            <span class="comment-author comment-by-author">
+                                                                <a href="@child.Url" target="_blank" rel="external nofollow">@child.Author</a>
+                                                            </span>
+                                                        </div>
+                                                        <div class="comment-content">
+                                                            <span class="comment-author-at">
+                                                                @ViewService.comment_at(child.Parent)
+                                                            </span>
+                                                            <p>@ViewService.article(child.Content)</p>
+                                                        </div>
+                                                        <div class="comment-meta">
+                                                            <time class="comment-time">@ViewService.fmtdate(child.Created)</time>
+                                                            <span class="comment-reply">
+                                                                <a rel="nofollow" onclick="TaleComment.reply('@child.Coid');">回复</a>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ol>
+                                </div>
+                            }
+                        </li>
+                    }
+                </ol>
+            }
+
+            <div class="lists-navigator clearfix">
+                <ol class="page-navigator">
+                    @if (comments.hasPrevPage)
+                    {
+                        <li class="prev"><a href="?cp=@comments.prevPage#comments">←</a></li>
+                    }
+
+
+                    @foreach (var navIndex in comments.navPageNums)
+                    {
+                        <li class="@((comments.pageNum==Model.navIndex)?"current":"")"><a href="?cp=@navIndex#comments">@navIndex</a></li>
+                    }
+
+
+                    @if (comments.hasNextPage)
+                    {
+                        <li class="next"><a href="?cp=@comments.nextPage#comments">→</a></li>
+                    }
+                </ol>
+
+            </div>
+            #end
+        </div>
+    </div>
+
+}
+
+
+<script>
+    (function () {
+        window.TaleComment = {
+            reply: function (coid) {
+                $('#comment-form input[name=coid]').val(coid);
+                $("html,body").animate({ scrollTop: $('div.comment-container').offset().top }, 500);
+                $('#comment-form #textarea').focus();
+            },
+            subComment: function () {
+                $.ajax({
+                    type: 'post',
+                    url: '/comment',
+                    data: $('#comment-form').serialize(),
+                    async: false,
+                    dataType: 'json',
+                    error: function (jqXHR, status, error) {
+                        if (status === 'error' && jqXHR.status === 400) {
+                            alert('非法的请求');
+                        } else {
+                            console.log('Request Error:', error)
+                        }
+                    },
+                    success: function (result) {
+                        $('#comment-form input[name=coid]').val('');
+                        if (result && result.success) {
+                            alert('评论成功');
+                            window.location.reload();
+                        } else {
+                            if (result.msg) {
+                                alert(result.msg);
+                                window.location.reload();
+                            }
+                        }
+                    }
+                });
+                return false;
+            }
+        };
+    })();
+
+    function getCommentCookie(name) {
+        var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+        if (arr = document.cookie.match(reg)) {
+            return unescape(decodeURI(arr[2]));
+        } else {
+            return null;
+        }
+    }
+
+    function addCommentInputValue() {
+        document.getElementById('author').value = getCommentCookie('tale_remember_author');
+        document.getElementById('mail').value = getCommentCookie('tale_remember_mail');
+        document.getElementById('url').value = getCommentCookie('tale_remember_url');
+    }
+    addCommentInputValue();
+</script>

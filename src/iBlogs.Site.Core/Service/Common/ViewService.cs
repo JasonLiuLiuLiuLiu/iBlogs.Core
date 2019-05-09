@@ -137,10 +137,10 @@ namespace iBlogs.Site.Core.Service.Common
          * @param fmt
          * @return
          */
-        public string created()
+        public string created(string frm)
         {
             Contents contents = current_article();
-            return contents?.Created.ToString();
+            return contents?.Created.ToString(frm);
 
         }
 
@@ -719,7 +719,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param limit
          * @return
          */
-        public Page<Comments> comments(int limit)
+        public Page<Dto.Comment> comments(int limit)
         {
             //Contents contents = current_article();
             //if (null == contents)
@@ -735,7 +735,7 @@ namespace iBlogs.Site.Core.Service.Common
             //}
             //Page<Comments> comments = siteService.getComments(contents.Cid, page, limit);
             //return comments;
-            return null;
+            return new Page<Dto.Comment>();
         }
 
         /**
@@ -991,7 +991,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param unixTime
          * @return
          */
-        public String fmtdate(int unixTime)
+        public String fmtdate(long unixTime)
         {
             return Convert.ToDateTime(unixTime).ToString("yyyy-MM-dd");
         }

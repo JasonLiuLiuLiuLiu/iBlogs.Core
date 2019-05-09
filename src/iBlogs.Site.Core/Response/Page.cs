@@ -70,7 +70,7 @@ namespace iBlogs.Site.Core.Response
         /**
          * all navigation pageNum number
          */
-        public int[] navPageNums { get; set; }
+        public int[] navPageNums { get; set; }=new []{1};
 
         public Page<T> NavPages(int navPages)
         {
@@ -81,6 +81,7 @@ namespace iBlogs.Site.Core.Response
 
         public Page()
         {
+            rows=new List<T>();
         }
 
         public Page(long total, int page, int limit)

@@ -5,6 +5,7 @@ using Dapper;
 using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Params;
 using iBlogs.Site.Core.Response;
+using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.SqLite;
 using iBlogs.Site.Core.Utils.Extensions;
 
@@ -13,10 +14,12 @@ namespace iBlogs.Site.Core.Service.Content
     public class ContentsService : IContentsService
     {
         private readonly ISqLiteBaseRepository _sqLiteBaseRepository;
+        private readonly IViewService _viewService;
 
-        public ContentsService(ISqLiteBaseRepository sqLiteBaseRepository)
+        public ContentsService(ISqLiteBaseRepository sqLiteBaseRepository, IViewService viewService)
         {
             _sqLiteBaseRepository = sqLiteBaseRepository;
+            _viewService = viewService;
         }
 
         /**
@@ -26,7 +29,12 @@ namespace iBlogs.Site.Core.Service.Content
          */
         public Contents getContents(String id)
         {
-            return null;
+            var contents = _sqLiteBaseRepository.DbConnection()
+                               .QueryFirstOrDefault<Contents>($"select * from t_contents where slug='{id}'") ??
+                           _sqLiteBaseRepository.DbConnection()
+                               .QueryFirstOrDefault<Contents>($"select * from t_contents where cid={id}");
+            _viewService.Set_current_article(contents);
+            return contents;
         }
 
         /**
@@ -34,7 +42,7 @@ namespace iBlogs.Site.Core.Service.Content
          *
          * @param contents 文章对象
          */
-        public int publish(Entity.Contents contents)
+        public int publish(Contents contents)
         {
             return 0;
         }
@@ -44,7 +52,7 @@ namespace iBlogs.Site.Core.Service.Content
          *
          * @param contents 文章对象
          */
-        public void updateArticle(Entity.Contents contents)
+        public void updateArticle(Contents contents)
         {
 
         }
@@ -67,17 +75,17 @@ namespace iBlogs.Site.Core.Service.Content
          * @param limit 每页条数
          * @return
          */
-        public Page<Entity.Contents> getArticles(int mid, int page, int limit)
+        public Page<Contents> getArticles(int mid, int page, int limit)
         {
             return null;
         }
 
-        public Page<Entity.Contents> findArticles(ArticleParam articleParam)
+        public Page<Contents> findArticles(ArticleParam articleParam)
         {
             var sqlBuilder = new StringBuilder();
             sqlBuilder.Append("select * from t_contents where 1=1");
 
-            
+
 
             if (articleParam.Categories != null)
                 sqlBuilder.Append(" and categories like '%@categories%' ");
@@ -101,7 +109,7 @@ namespace iBlogs.Site.Core.Service.Content
 
             var contents = _sqLiteBaseRepository.DbConnection().Query<Contents>(sqlBuilder.ToString(), articleParam).ToList();
 
-           return new Page<Contents>(count,articleParam.Page+1,articleParam.Limit,contents);
+            return new Page<Contents>(count, articleParam.Page + 1, articleParam.Limit, contents);
         }
     }
 }
