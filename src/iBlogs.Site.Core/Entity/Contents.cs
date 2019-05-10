@@ -83,17 +83,17 @@ namespace iBlogs.Site.Core.Entity
         /**
          * 是否允许评论
          */
-        public Boolean AllowComment { get; set; }
+        public bool AllowComment { get; set; }=true;
 
         /**
          * 是否允许ping
          */
-        public Boolean AllowPing { get; set; }
+        public bool AllowPing { get; set; }
 
         /**
          * 允许出现在Feed中
          */
-        public Boolean AllowFeed { get; set; }
+        public bool AllowFeed { get; set; }
 
         public string Url { get; set; }
     }
