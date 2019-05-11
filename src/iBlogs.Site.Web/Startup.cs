@@ -1,7 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
+using iBlogs.Site.Core;
+using iBlogs.Site.Core.Extensions;
+using iBlogs.Site.Core.Utils;
+using iBlogs.Site.Core.Utils.CodeDi;
+using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +19,7 @@ namespace iBlogs.Site.Web
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            CheckDbInstallStatus();
         }
 
         public IConfiguration Configuration { get; }
@@ -23,15 +27,8 @@ namespace iBlogs.Site.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddCoreDi();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,12 +46,22 @@ namespace iBlogs.Site.Web
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseMiddleware<InstallMiddleware>();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Index}/{action=Index}/{id?}");
             });
+        }
+
+        private void CheckDbInstallStatus()
+        {
+            if (File.Exists(Environment.CurrentDirectory + "\\" + Configuration[ConfigKey.SqLiteDbFileName].IfNullReturnDefaultValue("iBlogs.db")))
+                ConfigDataHelper.UpdateDbInstallStatus(true);
+            else
+                ConfigDataHelper.UpdateDbInstallStatus(false);
         }
     }
 }
