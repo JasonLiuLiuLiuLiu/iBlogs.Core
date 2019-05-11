@@ -49,6 +49,9 @@ namespace iBlogs.Site.Web
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "Admin",
+                    template: "admin/{controller=home}/{action=index}");
+                routes.MapRoute(
                     name: "default",
                     template: "{controller=Index}/{action=Index}/{id?}");
             });

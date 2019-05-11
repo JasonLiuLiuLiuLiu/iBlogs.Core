@@ -7,18 +7,18 @@ namespace iBlogs.Site.Web.Controllers
 {
     public class ArticleController : Controller
     {
-        private readonly IContentsService contentsService;
+        private readonly IContentsService _contentsService;
 
         public ArticleController(IContentsService contentsService)
         {
-            this.contentsService = contentsService;
+            this._contentsService = contentsService;
         }
 
         [HttpGet("/article/{url}")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
         public IActionResult Index(string url)
         {
-            contentsService.getContents(url);
+            _contentsService.getContents(url);
             return View(new ViewBaseModel());
         }
     }
