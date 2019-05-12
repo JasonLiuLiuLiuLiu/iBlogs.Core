@@ -7,7 +7,6 @@ using iBlogs.Site.Core.Utils.CodeDi;
 using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

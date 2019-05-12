@@ -1,0 +1,417 @@
+﻿@using iBlogs.Site.Core.Extensions
+@using iBlogs.Site.Core.Service.Common
+@inject IViewService ViewService
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@(ViewService.Title() ?? "博客后台") - iBlogs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta content="biezhi" name="author" />
+    <meta content="${_csrf_token}" name="csrf_token" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="shortcut icon" href="/static/admin/images/favicon.png" />
+    @if (ViewService.allow_cloud_CDN() == "true")
+    {
+        <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="https://cdn.bootcss.com/limonte-sweetalert2/6.4.1/sweetalert2.min.css" rel="stylesheet">
+        <link href="@ViewService.cdnURL()/plugins/vue-loading/vue-loading.min.css" rel="stylesheet">
+        <link href="@ViewService.cdnURL()/css/style.min.css" rel="stylesheet" asp-append-version="true">
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+            <script src="https://cdn.bootcss.com/respond.js/1.4.0/respond.min.js"></script>
+        <![endif]-->
+    }
+    else
+    {
+        <link href="@ViewService.cdnURL()/plugins/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="@ViewService.cdnURL()/plugins/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="@ViewService.cdnURL()/plugins/limonte-sweetalert2/6.4.1/sweetalert2.min.css" rel="stylesheet">
+        <link href="@ViewService.cdnURL()/plugins/vue-loading/vue-loading.min.css" rel="stylesheet">
+        <link href="@ViewService.cdnURL()/css/style.min.css" rel="stylesheet" asp-append-version="true">
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="@ViewService.cdnURL()/plugins/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="@ViewService.cdnURL()/plugins/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    }
+
+
+</head>
+<body class="fixed-left">
+    <div id="wrapper">
+        <div class="topbar">
+            <div class="topbar-left">
+                <div class="text-center p-t-10" style="margin: 0 auto;">
+                    <div class="pull-left" style="padding-left: 10px;">
+                        <a href="/admin/index">
+                            <img src="/static/admin/images/unicorn.png" width="50" height="50" />
+                        </a>
+                    </div>
+                    <div class="pull-left admin-title" style="padding-left: 10px;">
+                        <span style="font-size: 28px; color: #2f353f; line-height: 50px;">Tale Blog</span>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar navbar-default" role="navigation">
+                <div class="container">
+                    <div class="">
+                        <div class="pull-left">
+                            <button type="button" class="button-menu-mobile open-left">
+                                <i class="fa fa-bars"></i>
+                            </button>
+                            <span class="clearfix"></span>
+                        </div>
+
+                        <ul class="nav navbar-nav navbar-right pull-right">
+                            <li class="dropdown">
+                                <a href="index.html" class="dropdown-toggle profile" data-toggle="dropdown"
+                                   aria-expanded="true">
+                                    <img src="${gravatar(login_user.email)}" alt="user-img"
+                                         class="img-circle">
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="${site_url()}" target="_blank">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                            预览站点
+                                        </a>
+                                    </li>
+                                    <li><a href="/admin/profile"><i class="fa fa-sun-o"></i> 个人设置</a></li>
+                                    <li><a href="/logout"><i class="fa fa-sign-out"></i> 注销</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="left side-menu">
+            <div class="sidebar-inner slimscrollleft">
+                <div id="sidebar-menu">
+                    <ul>
+                        <li #if(active= ='home' ) class="active" #end>
+                            <a href="/admin/index" class="waves-effect #if(active=='home') active #end">
+                                <i class="fa fa-dashboard" aria-hidden="true"></i><span> 仪表盘 </span>
+                            </a>
+                        </li>
+                        <li #if(active= ='publish' ) class="active" #end>
+                            <a href="/admin/article/new" class="waves-effect #if(active=='publish') active #end">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i><span> 发布文章 </span>
+                            </a>
+                        </li>
+                        <li #if(active= ='articles' ) class="active" #end>
+                            <a href="/admin/articles" class="waves-effect #if(active=='articles') active #end">
+                                <i class="fa fa-list" aria-hidden="true"></i><span> 文章管理 </span>
+                            </a>
+                        </li>
+
+                        <li #if(active= ='pages' ) class="active" #end>
+                            <a href="/admin/pages" class="waves-effect #if(active=='pages') active #end">
+                                <i class="fa fa-file-text" aria-hidden="true"></i><span> 页面管理 </span>
+                            </a>
+                        </li>
+
+                        <li #if(active= ='attaches' ) class="active" #end>
+                            <a href="/admin/attaches" class="waves-effect #if(active=='attaches') active #end">
+                                <i class="fa fa-cloud-upload" aria-hidden="true"></i><span> 文件管理 </span>
+                            </a>
+                        </li>
+
+                        <li class="has_sub">
+                            <a href="javascript:void(0)" class="waves-effect #if(has_sub=='other') active subdrop #end">
+                                <i class="fa fa-cubes"></i><span> 其他管理 </span><span class="pull-right">
+                                    <i class="fa fa-plus"></i>
+                                </span>
+                            </a>
+                            <ul class="list-unstyled">
+                                <li #if(active= ='comments' ) class="active" #end>
+                                    <a href="/admin/comments" class="waves-effect #if(active=='comments') active #end">
+                                        <i class="fa fa-comments" aria-hidden="true"></i><span> 评论管理 </span>
+                                    </a>
+                                </li>
+                                <li #if(active= ='categories' ) class="active" #end>
+                                    <a href="/admin/categories"
+                                       class="waves-effect #if(active=='categories') active #end">
+                                        <i class="fa fa-tags"
+                                           aria-hidden="true"></i><span> 分类/标签 </span>
+                                    </a>
+                                </li>
+                                <li #if(active= ='template' ) class="active" #end>
+                                    <a href="/admin/template" class="waves-effect #if(active=='template') active #end">
+                                        <i class="fa fa-hashtag"></i><span> 编辑模板 </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li #if(active= ='themes' ) class="active" #end>
+                            <a href="/admin/themes" class="waves-effect #if(active=='themes') active #end">
+                                <i class="fa fa-diamond" aria-hidden="true"></i><span> 主题设置 </span>
+                            </a>
+                        </li>
+
+                        <li #if(active= ='setting' ) class="active" #end>
+                            <a href="/admin/setting" class="waves-effect #if(active=='setting') active #end">
+                                <i class="fa fa-gear" aria-hidden="true"></i><span> 系统设置 </span>
+                            </a>
+                        </li>
+
+                        #for(item : plugin_menus)
+                        <li #if(active= =item.slug) class="active" #end>
+                            <a href="/admin/plugins/${item.slug}" class="waves-effect #if(active==item.slug) active #end">
+                                <i class="${item.icon ?! 'fa fa-gear'}" aria-hidden="true"></i><span> ${item.name} </span>
+                            </a>
+                        </li>
+                        #end
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="content-page">
+            <div class="content">
+                <div class="container">
+
+                    <div id="app" class="row" v-cloak>
+                        <loading :active.sync="isLoading" :can-cancel="true"></loading>
+                        <div class="col-lg-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Tale仪表盘</h3>
+                                </div>
+                                <div class="panel-body">
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="mini-stat clearfix bx-shadow bg-info">
+                                                <a href="/admin/articles" class="text-white">
+                                                    <span class="mini-stat-icon"><i class="fa fa-quote-right" aria-hidden="true"></i></span>
+                                                </a>
+                                                <div class="mini-stat-info text-right">
+                                                    发表了<span class="counter">${statistics.articles}</span>篇文章
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mini-stat clearfix bg-purple bx-shadow">
+                                                <a href="/admin/comments" class="text-white">
+                                                    <span class="mini-stat-icon"><i class="fa fa-comments-o" aria-hidden="true"></i></span>
+                                                </a>
+                                                <div class="mini-stat-info text-right">
+                                                    收到了<span class="counter">${statistics.comments}</span>条留言
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="mini-stat clearfix bg-success bx-shadow">
+                                                <a href="/admin/attaches" class="text-white">
+                                                    <span class="mini-stat-icon"><i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
+                                                </a>
+                                                <div class="mini-stat-info text-right">
+                                                    上传了<span class="counter">${statistics.attachs}</span>个附件
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">最新文章</h4>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <ul class="list-group">
+                                                        #for(item : articles)
+                                                        <li class="list-group-item">
+                                                            <span class="badge badge-primary"
+                                                                  title="${item.commentsNum}条评论">${item.commentsNum}</span>
+                                                            <a target="_blank" href="${site_url('/article/')}${item.cid}">${item.title}</a>
+                                                        </li>
+                                                        #end
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">最新留言</h4>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div v-if="comments.length == 0" class="alert alert-warning">
+                                                        还没有收到留言.
+                                                    </div>
+
+                                                    <div v-if="comments.length > 0" class="inbox-widget nicescroll mx-box" tabindex="5000" style="overflow: hidden; outline: none;">
+                                                        <div class="inbox-item" v-for="item in comments">
+                                                            <div class="inbox-item-img">
+                                                                <a :href="item.url" target="_blank">
+                                                                    <img :src="item.mail | gravatar" class="img-circle" :alt="item.author">
+                                                                </a>
+                                                            </div>
+                                                            <p class="inbox-item-author">
+                                                                <a :href="item.url" target="_blank">{{item.author}}</a>
+                                                            </p>
+                                                            <p class="inbox-item-text">
+                                                                <a :href="'${site_url('/article/')}' + item.cid + '#comments'" target="_blank">
+                                                                    ${article("{{item.content}}")}
+                                                                </a>
+                                                            </p>
+                                                            <p class="inbox-item-date">{{item.created | formatUnix('MM月DD日 HH:mm')}}</p>
+                                                            <p v-if="item.status == 'no_audit'" class="pull-right">
+                                                                <button class="btn btn-sm btn-success" @click="audit(item.coid, 'approved')">通过</button>
+                                                                <button class="btn btn-sm btn-danger" @click="deleteComment(item.coid)">删除</button>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title">系统日志</h4>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item" v-for="item in logPage.rows">
+                                                            <span>{{item.created | formatUnix}} &nbsp;&nbsp;<kbd>{{item.action}}</kbd></span>
+                                                        </li>
+                                                    </ul>
+                                                    <ul class="pager">
+                                                        <li v-if="logPage.hasPrevPage">
+                                                            <a @click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                                        </li>
+                                                        <li v-if="logPage.hasNextPage">
+                                                            <a @click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="footer text-right">
+                        2017 © <a href="https://github.com/biezhi" target="_blank">Tale</a>.
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="@ViewService.cdnURL()/plugins/jquery/3.2.1/jquery.min.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/md5/md5.min.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/dashborad/detect.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/dashborad/fastclick.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/dashborad/wow.min.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/dashborad/jquery.slimscroll.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/limonte-sweetalert2/6.4.1/sweetalert2.min.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/axios/axios.min.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/vue/vue.min.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/moment/moment.min.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/vue-loading/vue-loading.min.js"></script>
+    <script src="@ViewService.cdnURL()/plugins/dashborad/jquery.app.js?v=${version}"></script>
+    <script src="@ViewService.cdnURL()/js/base.js?v=${version}"></script>
+    <script>
+        var tale = new $.tale();
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                logPage: {},
+                comments: [],
+                isLoading: true
+            },
+            beforeCreate: function () {
+                vueLoding = this.$loading.show();
+            },
+            mounted: function () {
+                this.load(1);
+            },
+            methods: {
+                load: function (page) {
+                    var $vm = this;
+                    tale.get({
+                        url: '/admin/api/logs',
+                        data: {
+                            page: page,
+                            limit: 8
+                        },
+                        success: function (data) {
+                            $vm.logPage = data.payload
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            alert(error || '数据加载失败');
+                        }
+                    });
+                    tale.get({
+                        url: '/admin/api/comments',
+                        success: function (data) {
+                            if (!data.payload.rows) {
+                                $vm.comments = [];
+                            } else {
+                                $vm.comments = data.payload.rows;
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            alert(error || '数据加载失败');
+                        }
+                    });
+                },
+                audit: function (coid, status) {
+                    var $vm = this;
+                    tale.post({
+                        url: '/admin/api/comment/status',
+                        data: { coid: coid, status: status },
+                        success: function (result) {
+                            if (result && result.success) {
+                                tale.alertOk('已通过');
+                                $vm.load();
+                            } else {
+                                tale.alertError(result.msg || '评论设置失败');
+                            }
+                        }
+                    });
+                },
+                deleteComment: function (coid) {
+                    var $vm = this;
+                    tale.alertConfirm({
+                        title: '确定删除该评论吗?',
+                        then: function () {
+                            tale.post({
+                                url: '/admin/api/comment/delete/' + coid,
+                                success: function (result) {
+                                    if (result && result.success) {
+                                        tale.alertOk('评论删除成功');
+                                        $vm.load();
+                                    } else {
+                                        tale.alertError(result.msg || '评论删除失败');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+        });
+
+        $(document).ready(function () {
+            vm.isLoading = false;
+            vueLoding.hide();
+        });
+    </script>
+</body>
+</html>

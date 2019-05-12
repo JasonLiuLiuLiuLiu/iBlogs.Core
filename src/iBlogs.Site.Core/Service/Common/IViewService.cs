@@ -63,23 +63,28 @@ namespace iBlogs.Site.Core.Service.Common
         string theme_option(string key, string defaultValue);
         string theme_option(string key);
         bool is_slug(string pageName);
-        bool not_empty(String str);
-        String site_url();
-        String site_theme();
-        String site_url(String sub);
-        String site_subtitle();
-        String allow_cloud_CDN();
-        string site_option(String key, String defalutValue);
-        String site_description();
-        String substr(String str, int len);
-        String theme_url();
-        String theme_url(String sub);
-        String gravatar(String email);
-        String fmtdate(long unixTime);
-        String fmtdate(DateTime date, String fmt);
-        String fmtdate(int unixTime, String patten);
-        String random(int max, String str);
-        String emoji(String value);
-        String show_thumb(String content);
+        bool not_empty(string str);
+        string site_url();
+        string site_theme();
+        string site_url(string sub);
+        string site_subtitle();
+        string allow_cloud_CDN();
+        string site_option(string key, string defalutValue);
+        string site_description();
+        string substr(string str, int len);
+        string theme_url();
+        string theme_url(string sub);
+        string gravatar(string email);
+        string fmtdate(long unixTime);
+        string fmtdate(DateTime date, string fmt);
+        string fmtdate(int unixTime, string patten);
+        string random(int max, string str);
+        string emoji(string value);
+        string show_thumb(string content);
+        string attachURL();
+        int maxFileSize();
+        string cdnURL();
+        string siteTheme();
+
     }
 }
