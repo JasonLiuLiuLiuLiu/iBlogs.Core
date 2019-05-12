@@ -7,6 +7,7 @@ using iBlogs.Site.Core.Utils.CodeDi;
 using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -50,7 +51,7 @@ namespace iBlogs.Site.Web
             {
                 routes.MapRoute(
                     name: "Admin",
-                    template: "admin/{controller=home}/{action=index}");
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Index}/{action=Index}/{id?}");
