@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using iBlogs.Site.Core.Dto;
 using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Extensions;
 using iBlogs.Site.Core.Response;
@@ -15,12 +16,17 @@ namespace iBlogs.Site.Core.Service.Common
         private readonly IOptionService _optionService;
         private readonly ISiteService _siteService;
         private Contents _currentArticle;
-
         public ViewService(IOptionService optionService, ISiteService siteService)
         {
             _optionService = optionService;
             this._siteService = siteService;
         }
+
+        public string active { get; set; }
+
+        public string has_sub { get; set; }
+
+        public CurrentUser User { get; set; }=new CurrentUser();
 
         public bool is_post { get; set; }
 
@@ -1076,12 +1082,12 @@ namespace iBlogs.Site.Core.Service.Common
             return "";
         }
 
-        public  string attachURL()
+        public string attachURL()
         {
             return _optionService.Get(Types.ATTACH_URL, site_url());
         }
 
-        public  int maxFileSize()
+        public int maxFileSize()
         {
             return iBlogsConst.MAX_FILE_SIZE / 1024;
         }

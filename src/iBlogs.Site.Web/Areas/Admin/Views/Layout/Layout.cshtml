@@ -1,5 +1,4 @@
-﻿@using iBlogs.Site.Core.Extensions
-@using iBlogs.Site.Core.Service.Common
+﻿@using iBlogs.Site.Core.Service.Common
 @inject IViewService ViewService
 <!DOCTYPE html>
 <html>
@@ -71,12 +70,11 @@
                             <li class="dropdown">
                                 <a href="index.html" class="dropdown-toggle profile" data-toggle="dropdown"
                                    aria-expanded="true">
-                                    <img src="${gravatar(login_user.email)}" alt="user-img"
-                                         class="img-circle">
+                                    <img src="@ViewService.gravatar(ViewService.User.Email)" alt="user-img" class="img-circle">
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="${site_url()}" target="_blank">
+                                        <a href="@ViewService.site_url()" target="_blank">
                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                             预览站点
                                         </a>
@@ -94,80 +92,71 @@
             <div class="sidebar-inner slimscrollleft">
                 <div id="sidebar-menu">
                     <ul>
-                        <li #if(active= ='home' ) class="active" #end>
-                            <a href="/admin/index" class="waves-effect #if(active=='home') active #end">
+                        <li class=@(ViewService.active=="home"?"active":"")>
+                            <a href="/admin/index" class="waves-effect @(ViewService.active=="home"?"active":"")">
                                 <i class="fa fa-dashboard" aria-hidden="true"></i><span> 仪表盘 </span>
                             </a>
                         </li>
-                        <li #if(active= ='publish' ) class="active" #end>
-                            <a href="/admin/article/new" class="waves-effect #if(active=='publish') active #end">
+                        <li @(ViewService.active == "publish" ? "active" : "")>
+                            <a href="/admin/article/new" class="waves-effect  @(ViewService.active=="publish"?"active":"")">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i><span> 发布文章 </span>
                             </a>
                         </li>
-                        <li #if(active= ='articles' ) class="active" #end>
-                            <a href="/admin/articles" class="waves-effect #if(active=='articles') active #end">
+                        <li @(ViewService.active == "articles" ? "active" : "")>
+                            <a href="/admin/articles" class="waves-effect  @(ViewService.active=="articles"?"active":"")">
                                 <i class="fa fa-list" aria-hidden="true"></i><span> 文章管理 </span>
                             </a>
                         </li>
 
-                        <li #if(active= ='pages' ) class="active" #end>
-                            <a href="/admin/pages" class="waves-effect #if(active=='pages') active #end">
+                        <li @(ViewService.active == "pages" ? "active" : "")>
+                            <a href="/admin/pages" class="waves-effect @(ViewService.active=="pages"?"active":"")">
                                 <i class="fa fa-file-text" aria-hidden="true"></i><span> 页面管理 </span>
                             </a>
                         </li>
 
-                        <li #if(active= ='attaches' ) class="active" #end>
-                            <a href="/admin/attaches" class="waves-effect #if(active=='attaches') active #end">
+                        <li @(ViewService.active == "attaches" ? "active" : "")>
+                            <a href="/admin/attaches" class="waves-effect @(ViewService.active=="attaches"?"active":"")">
                                 <i class="fa fa-cloud-upload" aria-hidden="true"></i><span> 文件管理 </span>
                             </a>
                         </li>
 
                         <li class="has_sub">
-                            <a href="javascript:void(0)" class="waves-effect #if(has_sub=='other') active subdrop #end">
+                            <a href="javascript:void(0)" class="waves-effect @(ViewService.has_sub=="other"?"active subdrop":"")">
                                 <i class="fa fa-cubes"></i><span> 其他管理 </span><span class="pull-right">
                                     <i class="fa fa-plus"></i>
                                 </span>
                             </a>
                             <ul class="list-unstyled">
-                                <li #if(active= ='comments' ) class="active" #end>
-                                    <a href="/admin/comments" class="waves-effect #if(active=='comments') active #end">
+                                <li @(ViewService.active == "comments" ? "active" : "")>
+                                    <a href="/admin/comments" class="waves-effect @(ViewService.active=="comments"?"active":"")">
                                         <i class="fa fa-comments" aria-hidden="true"></i><span> 评论管理 </span>
                                     </a>
                                 </li>
-                                <li #if(active= ='categories' ) class="active" #end>
-                                    <a href="/admin/categories"
-                                       class="waves-effect #if(active=='categories') active #end">
+                                <li @(ViewService.active == "categories" ? "active" : "")>
+                                    <a href="/admin/categories" class="waves-effect @(ViewService.active=="categories"?"active":"")">
                                         <i class="fa fa-tags"
                                            aria-hidden="true"></i><span> 分类/标签 </span>
                                     </a>
                                 </li>
-                                <li #if(active= ='template' ) class="active" #end>
-                                    <a href="/admin/template" class="waves-effect #if(active=='template') active #end">
+                                <li @(ViewService.active == "template" ? "active" : "")>
+                                    <a href="/admin/template" class="waves-effect @(ViewService.active=="template"?"active":"")">
                                         <i class="fa fa-hashtag"></i><span> 编辑模板 </span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
 
-                        <li #if(active= ='themes' ) class="active" #end>
-                            <a href="/admin/themes" class="waves-effect #if(active=='themes') active #end">
+                        <li @(ViewService.active == "themes" ? "active" : "")>
+                            <a href="/admin/themes" class="waves-effect @(ViewService.active=="themes"?"active":"")">
                                 <i class="fa fa-diamond" aria-hidden="true"></i><span> 主题设置 </span>
                             </a>
                         </li>
 
-                        <li #if(active= ='setting' ) class="active" #end>
-                            <a href="/admin/setting" class="waves-effect #if(active=='setting') active #end">
+                        <li @(ViewService.active == "setting" ? "active" : "")>
+                            <a href="/admin/setting" class="waves-effect @(ViewService.active=="setting"?"active":"")">
                                 <i class="fa fa-gear" aria-hidden="true"></i><span> 系统设置 </span>
                             </a>
                         </li>
-
-                        #for(item : plugin_menus)
-                        <li #if(active= =item.slug) class="active" #end>
-                            <a href="/admin/plugins/${item.slug}" class="waves-effect #if(active==item.slug) active #end">
-                                <i class="${item.icon ?! 'fa fa-gear'}" aria-hidden="true"></i><span> ${item.name} </span>
-                            </a>
-                        </li>
-                        #end
                     </ul>
                     <div class="clearfix"></div>
                 </div>
@@ -177,132 +166,7 @@
         <div class="content-page">
             <div class="content">
                 <div class="container">
-
-                    <div id="app" class="row" v-cloak>
-                        <loading :active.sync="isLoading" :can-cancel="true"></loading>
-                        <div class="col-lg-12">
-                            <div class="panel panel-primary">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">Tale仪表盘</h3>
-                                </div>
-                                <div class="panel-body">
-
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="mini-stat clearfix bx-shadow bg-info">
-                                                <a href="/admin/articles" class="text-white">
-                                                    <span class="mini-stat-icon"><i class="fa fa-quote-right" aria-hidden="true"></i></span>
-                                                </a>
-                                                <div class="mini-stat-info text-right">
-                                                    发表了<span class="counter">${statistics.articles}</span>篇文章
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="mini-stat clearfix bg-purple bx-shadow">
-                                                <a href="/admin/comments" class="text-white">
-                                                    <span class="mini-stat-icon"><i class="fa fa-comments-o" aria-hidden="true"></i></span>
-                                                </a>
-                                                <div class="mini-stat-info text-right">
-                                                    收到了<span class="counter">${statistics.comments}</span>条留言
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <div class="mini-stat clearfix bg-success bx-shadow">
-                                                <a href="/admin/attaches" class="text-white">
-                                                    <span class="mini-stat-icon"><i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
-                                                </a>
-                                                <div class="mini-stat-info text-right">
-                                                    上传了<span class="counter">${statistics.attachs}</span>个附件
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title">最新文章</h4>
-                                                </div>
-                                                <div class="panel-body">
-                                                    <ul class="list-group">
-                                                        #for(item : articles)
-                                                        <li class="list-group-item">
-                                                            <span class="badge badge-primary"
-                                                                  title="${item.commentsNum}条评论">${item.commentsNum}</span>
-                                                            <a target="_blank" href="${site_url('/article/')}${item.cid}">${item.title}</a>
-                                                        </li>
-                                                        #end
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title">最新留言</h4>
-                                                </div>
-                                                <div class="panel-body">
-                                                    <div v-if="comments.length == 0" class="alert alert-warning">
-                                                        还没有收到留言.
-                                                    </div>
-
-                                                    <div v-if="comments.length > 0" class="inbox-widget nicescroll mx-box" tabindex="5000" style="overflow: hidden; outline: none;">
-                                                        <div class="inbox-item" v-for="item in comments">
-                                                            <div class="inbox-item-img">
-                                                                <a :href="item.url" target="_blank">
-                                                                    <img :src="item.mail | gravatar" class="img-circle" :alt="item.author">
-                                                                </a>
-                                                            </div>
-                                                            <p class="inbox-item-author">
-                                                                <a :href="item.url" target="_blank">{{item.author}}</a>
-                                                            </p>
-                                                            <p class="inbox-item-text">
-                                                                <a :href="'${site_url('/article/')}' + item.cid + '#comments'" target="_blank">
-                                                                    ${article("{{item.content}}")}
-                                                                </a>
-                                                            </p>
-                                                            <p class="inbox-item-date">{{item.created | formatUnix('MM月DD日 HH:mm')}}</p>
-                                                            <p v-if="item.status == 'no_audit'" class="pull-right">
-                                                                <button class="btn btn-sm btn-success" @click="audit(item.coid, 'approved')">通过</button>
-                                                                <button class="btn btn-sm btn-danger" @click="deleteComment(item.coid)">删除</button>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title">系统日志</h4>
-                                                </div>
-                                                <div class="panel-body">
-                                                    <ul class="list-group">
-                                                        <li class="list-group-item" v-for="item in logPage.rows">
-                                                            <span>{{item.created | formatUnix}} &nbsp;&nbsp;<kbd>{{item.action}}</kbd></span>
-                                                        </li>
-                                                    </ul>
-                                                    <ul class="pager">
-                                                        <li v-if="logPage.hasPrevPage">
-                                                            <a @click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
-                                                        </li>
-                                                        <li v-if="logPage.hasNextPage">
-                                                            <a @click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @RenderBody()
                     <footer class="footer text-right">
                         2017 © <a href="https://github.com/biezhi" target="_blank">Tale</a>.
                     </footer>
@@ -322,8 +186,8 @@
     <script src="@ViewService.cdnURL()/plugins/vue/vue.min.js"></script>
     <script src="@ViewService.cdnURL()/plugins/moment/moment.min.js"></script>
     <script src="@ViewService.cdnURL()/plugins/vue-loading/vue-loading.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/dashborad/jquery.app.js?v=${version}"></script>
-    <script src="@ViewService.cdnURL()/js/base.js?v=${version}"></script>
+    <script src="@ViewService.cdnURL()/plugins/dashborad/jquery.app.js" asp-append-version="true"></script>
+    <script src="@ViewService.cdnURL()/js/base.js" asp-append-version="true"></script>
     <script>
         var tale = new $.tale();
         var vm = new Vue({
@@ -349,7 +213,7 @@
                             limit: 8
                         },
                         success: function (data) {
-                            $vm.logPage = data.payload
+                            $vm.logPage = data.payload;
                         },
                         error: function (error) {
                             console.log(error);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using iBlogs.Site.Core.Dto;
 using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Response;
 
@@ -7,6 +8,9 @@ namespace iBlogs.Site.Core.Service.Common
 {
     public interface IViewService
     {
+        string active { get; set; }
+        string has_sub { get; set; }
+        CurrentUser User { get; set; }
         bool is_post { get; set; }
         void Set_current_article(Contents contents);
         Contents current_article();
