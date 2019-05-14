@@ -9,6 +9,7 @@ namespace iBlogs.Site.Core.Service.Common
     public interface IViewService
     {
         string active { get; set; }
+        string title { get; set; }
         string has_sub { get; set; }
         CurrentUser User { get; set; }
         bool is_post { get; set; }

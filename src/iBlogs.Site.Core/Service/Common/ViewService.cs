@@ -23,6 +23,7 @@ namespace iBlogs.Site.Core.Service.Common
         }
 
         public string active { get; set; }
+        public string title { get; set; }
 
         public string has_sub { get; set; }
 
