@@ -5,14 +5,28 @@ using System.Threading.Tasks;
 using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Params;
 using iBlogs.Site.Core.Response;
+using iBlogs.Site.Core.Service.Common;
+using iBlogs.Site.Core.Service.Content;
+using iBlogs.Site.Core.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class AdminApiController : ControllerBase
+    public class ApiController : Controller
     {
+        private readonly IMetasService _metasService;
+        private readonly ISiteService _siteService;
+        private readonly IContentsService _contentsService;
+
+        public ApiController(IMetasService metasService, ISiteService siteService, IContentsService contentsService)
+        {
+            _metasService = metasService;
+            _siteService = siteService;
+            _contentsService = contentsService;
+        }
+
         //@GetRoute("logs")
         public RestResponse sysLogs(PageParam pageParam)
         {
@@ -59,7 +73,10 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         // @GetRoute("articles")
         public RestResponse articleList(ArticleParam articleParam)
         {
-            throw new NotImplementedException();
+            articleParam.Type=Types.ARTICLE;
+            articleParam.Page--;
+            Page<Contents> articles = _contentsService.findArticles(articleParam);
+            return RestResponse<Page<Contents>>.ok(articles);
         }
 
         //@GetRoute("pages")
@@ -84,10 +101,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         // @SysLog("保存分类")
-        //@PostRoute("category/save")
-        public RestResponse saveCategory( MetaParam metaParam)
+        [Route("/admin/api/category/save")]
+        public RestResponse saveCategory([FromBody]MetaParam metaParam)
         {
-            throw new NotImplementedException();
+            _metasService.saveMeta(Types.CATEGORY, metaParam.cname, metaParam.mid);
+            _siteService.cleanCache(Types.SYS_STATISTICS);
+            return RestResponse.ok();
         }
 
         // @SysLog("删除分类/标签")
@@ -139,15 +158,15 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         // @GetRoute("categories")
-        public RestResponse categoryList()
+        public RestResponse CategoryList()
         {
-            throw new NotImplementedException();
+            return RestResponse<List<Metas>>.ok(_siteService.getMetas(Types.RECENT_META,Types.CATEGORY,iBlogsConst.MAX_POSTS));
         }
 
         // @GetRoute("tags")
-        public RestResponse tagList()
+        public RestResponse TagList()
         {
-            throw new NotImplementedException();
+            return RestResponse<List<Metas>>.ok(_siteService.getMetas(Types.RECENT_META, Types.TAG, iBlogsConst.MAX_POSTS));
         }
 
         // @GetRoute("options")

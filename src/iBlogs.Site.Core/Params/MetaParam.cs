@@ -6,8 +6,8 @@ namespace iBlogs.Site.Core.Params
 {
     public class MetaParam
     {
-        private int mid { get; set; }
-        private string cname { get; set; }
+        public int? mid { get; set; }
+        public string cname { get; set; }
 
     }
 }

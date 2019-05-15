@@ -1,12 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Dapper;
 using iBlogs.Site.Core.Entity;
+using iBlogs.Site.Core.Extensions;
+using iBlogs.Site.Core.SqLite;
+using Microsoft.Data.Sqlite;
 
 namespace iBlogs.Site.Core.Service.Common
 {
     public class MetasService : IMetasService
     {
+        private readonly SqliteConnection _sqlite;
+
+        public MetasService(ISqLiteBaseRepository sqLite)
+        {
+            _sqlite = sqLite.DbConnection();
+        }
+
         /**
         * 根据类型查询项目列表
         *
@@ -82,9 +93,26 @@ namespace iBlogs.Site.Core.Service.Common
          * @param name
          * @param mid
          */
-        public void saveMeta(string type, string name, int mid)
+        public void saveMeta(string type, string name, int? mid)
         {
-
+            if (type.IsNullOrWhiteSpace() || name.IsNullOrWhiteSpace())
+            {
+                return;
+            }
+            Metas metas = _sqlite.QueryFirstOrDefault<Metas>("select * from t_metas WHERE type=@type and name=@name",new {type,name});
+            if (null != metas) {
+                throw new Exception("已经存在该项");
+            } else {
+                metas = new Metas();
+                metas.Name=name;
+                if (null != mid)
+                {
+                    _sqlite.Execute("update t_metas set name=@name where mid=@mid", new {name, mid=mid.Value});
+                } else {
+                    metas.Type=type;
+                    _sqlite.Execute("insert into t_metas (name,type) values (@name,@type)", new {name, type});
+                }
+            }
         }
 
         private string reMeta(string name, string metas)

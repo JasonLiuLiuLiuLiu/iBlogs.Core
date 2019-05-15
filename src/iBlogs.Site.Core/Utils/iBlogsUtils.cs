@@ -14,7 +14,7 @@ namespace iBlogs.Site.Core.Utils
         /**
         * 提取html中的文字
         */
-        public static String htmlToText(String html)
+        public static string htmlToText(string html)
         {
             string htmlTagPattern = "<.*?>";
             var regexCss = new Regex("(\\<script(.+?)\\</script\\>)|(\\<style(.+?)\\</style\\>)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
@@ -36,13 +36,13 @@ namespace iBlogs.Site.Core.Utils
  *
  * @return
  */
-        public static String show_thumb(String content)
+        public static string show_thumb(string content)
         {
             content = Markdown.ToHtml(content);
             if (content.Contains("<img"))
             {
-                String img = "";
-                String regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
+                string img = "";
+                string regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
                 var regex = new Regex(regEx_img, RegexOptions.Singleline | RegexOptions.IgnoreCase);
                 var m_image = regex.Match(content);
                 if (m_image.Success)

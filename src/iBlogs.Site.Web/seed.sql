@@ -35,7 +35,7 @@ INSERT INTO t_contents (cid, title, slug, created, modified, content, author_id,
 <!--more-->
 
 ```java
-public static void main(String[] args){
+public static void main(string[] args){
     System.out.println(\"Hello Tale.\");
 }
 ```', 1, 'post', 'publish', '', '默认分类', 10, 0, 1, 1, 1);

@@ -1,15 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
+using Dapper;
 using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Extensions;
 using iBlogs.Site.Core.Response;
+using iBlogs.Site.Core.SqLite;
+using iBlogs.Site.Core.Utils;
+using Microsoft.Data.Sqlite;
 
 namespace iBlogs.Site.Core.Service.Common
 {
     public class SiteService : ISiteService
     {
+        private readonly SqliteConnection _sqLite;
+
+        public SiteService(ISqLiteBaseRepository sqLite)
+        {
+            _sqLite = sqLite.DbConnection();
+        }
 
         /**
          * 最新收到的评论
@@ -70,8 +81,44 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public List<Metas> getMetas(string searchType, string type, int limit)
         {
+            if (stringKit.isBlank(searchType) || stringKit.isBlank(type))
+            {
+                return new List<Metas>();
+            }
 
-            return null;
+            if (limit < 1 || limit > iBlogsConst.MAX_POSTS)
+            {
+                limit = 10;
+            }
+
+            // 获取最新的项目
+            if (Types.RECENT_META.Equals(searchType))
+            {
+                var sql =
+                    "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
+                    +
+                    "where a.type = @type group by a.mid order by count desc, a.mid desc limit @limit";
+
+                return _sqLite.Query<Metas>(sql, new { type = type, limit = limit }).ToList();
+            }
+
+            // 随机获取项目
+            if (Types.RANDOM_META.Equals(searchType))
+            {
+                List<int> mids = _sqLite.Query<int>(
+                "select mid from t_metas where type = @type order by random() * mid limit @limit",
+                new { type = type, limit = limit }).ToList();
+                if (mids != null)
+                {
+                    string sql =
+                        "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
+                        +
+                        "where a.mid in @mids group by a.mid order by count desc, a.mid desc";
+
+                    return _sqLite.Query<Metas>(sql, mids).ToList();
+                }
+            }
+            return new List<Metas>();
         }
 
         /**
@@ -80,7 +127,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param type 上一篇:prev | 下一篇:next
          * @param created 当前文章创建时间
          */
-        public Entity.Contents getNhContent(string type, int created)
+        public Contents getNhContent(string type, int created)
         {
             return null;
         }

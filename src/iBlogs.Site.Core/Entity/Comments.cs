@@ -19,7 +19,7 @@ namespace iBlogs.Site.Core.Entity
         /**
          * 评论作者
          */
-        public String Author { get; set; }
+        public string Author { get; set; }
 
         /**
          * 评论所属内容作者id
@@ -29,37 +29,37 @@ namespace iBlogs.Site.Core.Entity
         /**
          * 评论者邮件
          */
-        public String Mail { get; set; }
+        public string Mail { get; set; }
 
         /**
          * 评论者网址
          */
-        public String Url { get; set; }
+        public string Url { get; set; }
 
         /**
          * 评论者ip地址
          */
-        public String Ip { get; set; }
+        public string Ip { get; set; }
 
         /**
          * 评论者客户端
          */
-        public String Agent { get; set; }
+        public string Agent { get; set; }
 
         /**
          * 评论内容
          */
-        public String Content { get; set; }
+        public string Content { get; set; }
 
         /**
          * 评论类型
          */
-        public String Type { get; set; }
+        public string Type { get; set; }
 
         /**
          * 评论状态
          */
-        public String Status { get; set; }
+        public string Status { get; set; }
 
         /**
          * 父级评论

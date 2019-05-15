@@ -27,7 +27,7 @@ namespace iBlogs.Site.Core.Service.Content
          *
          * @param id 唯一标识
          */
-        public Contents getContents(String id)
+        public Contents getContents(string id)
         {
             var contents = _sqLiteBaseRepository.DbConnection()
                                .QueryFirstOrDefault<Contents>($"select * from t_contents where slug='{id}'") ??
@@ -101,10 +101,9 @@ namespace iBlogs.Site.Core.Service.Content
 
             var count = _sqLiteBaseRepository.DbConnection().QueryCount(sqlBuilder.ToString(), articleParam);
 
-            sqlBuilder.Append($" and {articleParam.OrderBy} NOT IN ( SELECT {articleParam.OrderBy} FROM t_contents ORDER BY title ASC LIMIT {(articleParam.Page) * articleParam.Limit})");
+            sqlBuilder.Append($" and {articleParam.OrderBy} NOT IN ( SELECT {articleParam.OrderBy} FROM t_contents ORDER BY {articleParam.OrderBy} {articleParam.OrderType} LIMIT {(articleParam.Page) * articleParam.Limit})");
 
-            sqlBuilder.Append(" order by ");
-            sqlBuilder.Append(articleParam.OrderBy);
+            sqlBuilder.Append($" order by {articleParam.OrderBy} {articleParam.OrderType}");
             sqlBuilder.Append(" LIMIT @Limit ");
 
             var contents = _sqLiteBaseRepository.DbConnection().Query<Contents>(sqlBuilder.ToString(), articleParam).ToList();

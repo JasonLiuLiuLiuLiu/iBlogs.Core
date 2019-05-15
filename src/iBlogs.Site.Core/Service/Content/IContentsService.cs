@@ -7,7 +7,7 @@ namespace iBlogs.Site.Core.Service.Content
 {
     public interface IContentsService
     {
-        Contents getContents(String id);
+        Contents getContents(string id);
         int publish(Entity.Contents contents);
         void updateArticle(Entity.Contents contents);
         void delete(int cid);

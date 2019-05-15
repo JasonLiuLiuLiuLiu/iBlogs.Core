@@ -10,6 +10,6 @@ namespace iBlogs.Site.Core.Service.Common
         Metas getMeta(string type, string name);
         void saveMetas(int cid, string names, string type);
         void delete(int mid);
-        void saveMeta(string type, string name, int mid);
+        void saveMeta(string type, string name, int? mid);
     }
 }
