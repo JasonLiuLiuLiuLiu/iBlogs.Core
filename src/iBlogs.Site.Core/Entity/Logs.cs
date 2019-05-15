@@ -20,7 +20,7 @@ namespace iBlogs.Site.Core.Entity
          */
         public string Ip { get; set; }
 
-        public Logs(String action, string data, String ip, int uid)
+        public Logs(string action, string data, string ip, int uid)
         {
             this.Action = action;
             this.Data = data;

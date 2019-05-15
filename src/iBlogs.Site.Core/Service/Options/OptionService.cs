@@ -64,7 +64,7 @@ namespace iBlogs.Site.Core.Service.Options
         * @param key   配置key
         * @param value 配置值
         */
-        public void saveOption(String key, String value)
+        public void saveOption(string key, string value)
         {
             if (stringKit.isNotBlank(key) && stringKit.isNotBlank(value))
             {
@@ -80,7 +80,7 @@ namespace iBlogs.Site.Core.Service.Options
             return _options;
         }
 
-        public String getOption(String key)
+        public string getOption(string key)
         {
             return Get(key);
         }

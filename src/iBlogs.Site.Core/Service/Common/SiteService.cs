@@ -27,7 +27,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param type 最新,随机
          * @param limit 获取条数
          */
-        public List<Entity.Contents> getContens(String type, int limit)
+        public List<Entity.Contents> getContens(string type, int limit)
         {
 
             return null;
@@ -68,7 +68,7 @@ namespace iBlogs.Site.Core.Service.Common
         /**
          * 获取分类/标签列表
          */
-        public List<Metas> getMetas(String searchType, String type, int limit)
+        public List<Metas> getMetas(string searchType, string type, int limit)
         {
 
             return null;
@@ -80,7 +80,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param type 上一篇:prev | 下一篇:next
          * @param created 当前文章创建时间
          */
-        public Entity.Contents getNhContent(String type, int created)
+        public Entity.Contents getNhContent(string type, int created)
         {
             return null;
         }
@@ -112,7 +112,7 @@ namespace iBlogs.Site.Core.Service.Common
          *
          * @param key 缓存key
          */
-        public void cleanCache(String key)
+        public void cleanCache(string key)
         {
 
         }

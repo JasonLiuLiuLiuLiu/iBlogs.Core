@@ -39,7 +39,7 @@ namespace iBlogs.Site.Core.Response
             return this;
         }
 
-        public RestResponse<T> Message(String msg)
+        public RestResponse<T> Message(string msg)
         {
             this.msg = msg;
             return this;
@@ -70,7 +70,7 @@ namespace iBlogs.Site.Core.Response
             return new RestResponse<T>().Success(false).Message(message);
         }
 
-        public static RestResponse<T> fail(int code, String message)
+        public static RestResponse<T> fail(int code, string message)
         {
             return new RestResponse<T>().Success(false).Message(message).Code(code);
         }
@@ -87,7 +87,7 @@ namespace iBlogs.Site.Core.Response
         /**
          * Error message
          */
-        public String msg { get; set; }
+        public string msg { get; set; }
 
         /**
          * Status code
@@ -123,7 +123,7 @@ namespace iBlogs.Site.Core.Response
             return this;
         }
 
-        public RestResponse Message(String msg)
+        public RestResponse Message(string msg)
         {
             this.msg = msg;
             return this;
@@ -143,7 +143,7 @@ namespace iBlogs.Site.Core.Response
             return new RestResponse().Success(false);
         }
 
-        public static RestResponse fail(String message)
+        public static RestResponse fail(string message)
         {
             return new RestResponse().Success(false).Message(message);
         }

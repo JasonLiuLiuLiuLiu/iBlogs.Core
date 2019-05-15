@@ -21,37 +21,37 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         // @SysLog("删除页面")
         // @PostRoute("page/delete/:cid")
-        public RestResponse<?> deletePage(@PathParam Integer cid)
+        public RestResponse deletePage( int cid)
         {
             throw new NotImplementedException();
         }
 
         //@GetRoute("articles/:cid")
-        public RestResponse article(@PathParam String cid)
+        public RestResponse article( string cid)
         {
             throw new NotImplementedException();
         }
 
         // @GetRoute("articles/content/:cid")
-        public void articleContent(@PathParam String cid, Response response)
+        public void articleContent( string cid)
         {
             throw new NotImplementedException();
         }
 
         //@PostRoute("article/new")
-        public RestResponse newArticle(@BodyParam Contents contents)
+        public RestResponse newArticle( Contents contents)
         {
             throw new NotImplementedException();
         }
 
         //@PostRoute("article/delete/:cid")
-        public RestResponse<?> deleteArticle(@PathParam Integer cid)
+        public RestResponse deleteArticle( int cid)
         {
             throw new NotImplementedException();
         }
 
         //@PostRoute("article/update")
-        public RestResponse updateArticle(@BodyParam Contents contents)
+        public RestResponse updateArticle( Contents contents)
         {
             throw new NotImplementedException();
         }
@@ -70,7 +70,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         //@SysLog("发布页面")
         //@PostRoute("page/new")
-        public RestResponse<?> newPage(@BodyParam Contents contents)
+        public RestResponse newPage( Contents contents)
         {
 
             throw new NotImplementedException();
@@ -78,21 +78,21 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         //@SysLog("修改页面")
         //@PostRoute("page/update")
-        public RestResponse<?> updatePage(@BodyParam Contents contents)
+        public RestResponse updatePage( Contents contents)
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("保存分类")
         //@PostRoute("category/save")
-        public RestResponse<?> saveCategory(@BodyParam MetaParam metaParam)
+        public RestResponse saveCategory( MetaParam metaParam)
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("删除分类/标签")
         // @PostRoute("category/delete/:mid")
-        public RestResponse<?> deleteMeta(@PathParam Integer mid)
+        public RestResponse deleteMeta( int mid)
         {
             throw new NotImplementedException();
         }
@@ -105,21 +105,21 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         // @SysLog("删除评论")
         //@PostRoute("comment/delete/:coid")
-        public RestResponse<?> deleteComment(@PathParam Integer coid)
+        public RestResponse deleteComment( int coid)
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("修改评论状态")
         // @PostRoute("comment/status")
-        public RestResponse<?> updateStatus(@BodyParam Comments comments)
+        public RestResponse updateStatus( Comments comments)
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("回复评论")
         // @PostRoute("comment/reply")
-        public RestResponse<?> replyComment(@BodyParam Comments comments, Request request)
+        public RestResponse replyComment( Comments comments)
         {
             throw new NotImplementedException();
         }
@@ -133,7 +133,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         //    @SysLog("删除附件")
         //@PostRoute("attach/delete/:id")
-        public RestResponse<?> deleteAttach(@PathParam Integer id)
+        public RestResponse deleteAttach( int id)
         {
             throw new NotImplementedException();
         }
@@ -158,14 +158,14 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         //@SysLog("保存系统配置")
         // @PostRoute("options/save")
-        public RestResponse<?> saveOptions(Request request)
+        public RestResponse saveOptions()
         {
             throw new NotImplementedException();
         }
 
         //@SysLog("保存高级选项设置")
         // @PostRoute("advanced/save")
-        public RestResponse<?> saveAdvance(AdvanceParam advanceParam)
+        public RestResponse saveAdvance(AdvanceParam advanceParam)
         {
             // 清除缓存
             throw new NotImplementedException();
@@ -179,21 +179,21 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         // @SysLog("保存主题设置")
         //@PostRoute("themes/setting")
-        public RestResponse<?> saveSetting(Request request)
+        public RestResponse saveSetting()
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("激活主题")
         // @PostRoute("themes/active")
-        public RestResponse<?> activeTheme(@BodyParam ThemeParam themeParam)
+        public RestResponse activeTheme()
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("保存模板")
         // @PostRoute("template/save")
-        public RestResponse<?> saveTpl(@BodyParam TemplateParam templateParam)
+        public RestResponse saveTpl( TemplateParam templateParam)
         {
             throw new NotImplementedException();
         }
