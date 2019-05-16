@@ -40,7 +40,7 @@ var vm = new Vue({
         load: function () {
             var $vm = this;
             tale.get({
-                url: '/admin/api/categories',
+                url: '/admin/api/CategoryList',
                 success: function (data) {
                     for(item in data.payload){
                         $vm.categories.push(data.payload[item].name);
