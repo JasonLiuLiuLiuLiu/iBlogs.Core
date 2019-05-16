@@ -115,21 +115,31 @@
     <script src="@ViewService.cdnURL()/plugins/axios/axios.min.js"></script>
     <script src="@ViewService.cdnURL()/js/base.js"></script>
     <script>
-    var tale = new $.tale();
-    function checkForm() {
-        tale.post({
-            url: '/admin/login',
-            data: $("#loginForm").serialize(),
-            success: function (result) {
-                if (result && result.success) {
-                    window.location.href = '/admin/index';
-                } else {
-                    tale.alertError(result.msg || '登录失败');
-                }
+        var tale = new $.tale();
+        function setCookie(name, value, days) {
+            var expires = "";
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
             }
-        });
-        return false;
-    }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+        function checkForm() {
+            tale.post({
+                url: '/admin/login',
+                data: $("#loginForm").serialize(),
+                success: function (result) {
+                    if (result && result.success) {
+                        setCookie('Authorization', result.payload, 10);
+                        window.location.href = '/admin';
+                    } else {
+                        tale.alertError(result.msg || '登录失败');
+                    }
+                }
+            });
+            return false;
+        }
     </script>
 </body>
 </html>
