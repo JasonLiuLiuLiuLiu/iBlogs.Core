@@ -8,11 +8,13 @@ using iBlogs.Site.Core.Response;
 using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.Service.Content;
 using iBlogs.Site.Core.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
 {
+    [Authorize]
     [Area("Admin")]
     public class ApiController : Controller
     {
