@@ -1,14 +1,17 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 using iBlogs.Site.Core;
 using iBlogs.Site.Core.Extensions;
 using iBlogs.Site.Core.Utils;
 using iBlogs.Site.Core.Utils.CodeDi;
 using iBlogs.Site.Web.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace iBlogs.Site.Web
 {
@@ -25,6 +28,23 @@ namespace iBlogs.Site.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    var issuer = Configuration["Auth:JwtIssuer"];
+                    var key = Configuration["Auth:JwtKey"];
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = issuer,
+                        ValidAudience = issuer,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                        ValidateIssuer = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
+                    };
+                });
             services.AddCoreDi();
             services.AddMvc();
         }
