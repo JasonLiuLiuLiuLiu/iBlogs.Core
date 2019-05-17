@@ -6,6 +6,6 @@ namespace iBlogs.Site.Core.Service.Users
     {
         Entity.Users CurrentUsers { get; set; }
         bool InsertUser(Entity.Users user);
-        List<Entity.Users> QueryUsers(Entity.Users user);
+        List<Entity.Users> FindUsers(Entity.Users user);
     }
 }

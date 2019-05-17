@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using iBlogs.Site.Core;
 using iBlogs.Site.Core.Extensions;
@@ -11,7 +12,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace iBlogs.Site.Web
@@ -64,6 +64,14 @@ namespace iBlogs.Site.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            app.UseStatusCodePages(async context =>
+            {
+                var response = context.HttpContext.Response;
+                if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+                {
+                    response.Redirect("/admin/login");
+                }
+            });
 
             app.UseAuthentication();
             app.UseStaticFiles();

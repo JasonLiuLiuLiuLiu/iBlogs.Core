@@ -25,7 +25,7 @@ namespace iBlogs.Site.Core.Service.Users
             return _sqLite.Execute("INSERT into t_users (username,password,email,created) VALUES (@Username,@Password,@Email,@Created)", user) == 1;
         }
 
-        public List<Entity.Users> QueryUsers(Entity.Users user)
+        public List<Entity.Users> FindUsers(Entity.Users user)
         {
             var sqlBuilder = new StringBuilder();
             sqlBuilder.AppendLine("select uid,username,email FROM t_users where 1=1 ");
@@ -35,6 +35,12 @@ namespace iBlogs.Site.Core.Service.Users
                 sqlBuilder.Append(" and username=@Username ");
             if (!user.Email.IsNullOrWhiteSpace())
                 sqlBuilder.Append(" and email=@Email ");
+            if (!user.Password.IsNullOrWhiteSpace())
+            {
+                user.PwdMd5();
+                sqlBuilder.Append(" and password=@Password ");
+            }
+
             return _sqLite.Query<Entity.Users>(sqlBuilder.ToString(), user).ToList();
         }
     }

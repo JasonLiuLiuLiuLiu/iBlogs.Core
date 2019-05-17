@@ -1,12 +1,16 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Params;
 using iBlogs.Site.Core.Response;
+using iBlogs.Site.Core.Service.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using ClaimTypes = iBlogs.Site.Core.Dto.ClaimTypes;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
 {
@@ -14,10 +18,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
     public class LoginController : Controller
     {
         private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
-        public LoginController(IConfiguration configuration)
+        public LoginController(IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -29,15 +35,23 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [HttpPost]
         public RestResponse<string> Index(LoginParam loginParam)
         {
-            var tokenString = GenerateJsonWebToken();
-            return RestResponse<string>.ok(tokenString);
+            var user = _userService.FindUsers(new Users
+            {
+                Username = loginParam.Username,
+                Password = loginParam.Password
+            }).FirstOrDefault();
+            if (user != null)
+                return RestResponse<string>.ok(GenerateJsonWebToken(user));
+            return RestResponse<string>.fail("没有找到该用户!");
         }
 
-        private string GenerateJsonWebToken()
+        private string GenerateJsonWebToken(Users user)
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, "test")
+                new Claim(ClaimTypes.Uid, user.Uid.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.Username)
             };
 
             var days = _configuration["Auth:JwtExpireDays"];
