@@ -21,7 +21,7 @@ namespace iBlogs.Site.Core.Service.Options
         public void ReLoad()
         {
             var options =
-                _sqLiteBaseRepository.DbConnection().QueryAsync<Entity.Options>("select * from options");
+                _sqLiteBaseRepository.DbConnection().QueryAsync<Entity.Options>("select * from t_options");
             _options.Clear();
             foreach (var option in options.Result)
             {
@@ -32,19 +32,18 @@ namespace iBlogs.Site.Core.Service.Options
 
         public void Set(string key, string value)
         {
-            key = key.Trim().ToLower();
             if (_options.ContainsKey(key))
                 if (_options[key] == value)
                     return;
                 else
                 {
-                    _sqLiteBaseRepository.DbConnection().Execute("update options set value=@value where name=@name",
+                    _sqLiteBaseRepository.DbConnection().Execute("update t_options set value=@value where name=@name",
                         new { value = value, name = key });
                     _options[key] = value;
                 }
             else
             {
-                _sqLiteBaseRepository.DbConnection().Execute("insert into options values(@name,@value)",
+                _sqLiteBaseRepository.DbConnection().Execute("insert into t_options (name,value) values(@name,@value)",
                     new { value = value, name = key });
                 _options.Add(key, value);
             }

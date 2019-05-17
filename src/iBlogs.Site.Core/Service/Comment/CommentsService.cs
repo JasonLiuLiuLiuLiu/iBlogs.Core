@@ -14,7 +14,7 @@ namespace iBlogs.Site.Core.Service.Comment
      * @since 1.3.1
      */
 
-    public class CommentsService
+    public class CommentsService : ICommentsService
     {
 
         /**

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using iBlogs.Site.Core.Extensions;
@@ -52,6 +53,57 @@ namespace iBlogs.Site.Core.Utils
                 }
             }
             return "";
+        }
+
+        public static string buildURL(String url)
+        {
+            if (url.EndsWith("/"))
+            {
+                url = url.Substring(0, url.Length - 1);
+            }
+            if (!url.StartsWith("http"))
+            {
+                url = "http://" + url;
+            }
+            return url;
+        }
+
+        /**
+ * MD5加密
+ *
+ * @param data 明文字符串
+ * @param salt 盐
+ * @return 16进制加盐密文
+ */
+        public static string md5(string data, string salt)
+        {
+            return md5(Encoding.ASCII.GetBytes((data + salt)));
+        }
+
+        /**
+         * MD5加密
+         *
+         * @param data 明文字节数组
+         * @return 16进制密文
+         */
+        public static string md5(byte[] input)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                var data = sha256Hash.ComputeHash(input);
+                // Create a new Stringbuilder to collect the bytes
+                // and create a string.
+                var sBuilder = new StringBuilder();
+
+                // Loop through each byte of the hashed data 
+                // and format each one as a hexadecimal string.
+                for (int i = 0; i < data.Length; i++)
+                {
+                    sBuilder.Append(data[i].ToString("x2"));
+                }
+                // Return the hexadecimal string.
+                return sBuilder.ToString();
+            }
         }
     }
 }

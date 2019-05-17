@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Dapper;
+using iBlogs.Site.Core.Service.Options;
 using iBlogs.Site.Core.SqLite;
 using iBlogs.Site.Core.Utils;
 using Microsoft.Extensions.Configuration;
@@ -8,13 +9,13 @@ namespace iBlogs.Site.Core.Service.Install
 {
     public class InstallService : IInstallService
     {
-        private ISqLiteBaseRepository _baseRepository;
-        private IConfiguration _configuration;
+        private readonly ISqLiteBaseRepository _baseRepository;
+        private readonly IOptionService _optionService;
 
-        public InstallService(ISqLiteBaseRepository baseRepository, IConfiguration configuration)
+        public InstallService(ISqLiteBaseRepository baseRepository, IOptionService optionService)
         {
             _baseRepository = baseRepository;
-            _configuration = configuration;
+            _optionService = optionService;
         }
 
         public bool InitializeDb(string seedFileName = null)
@@ -27,8 +28,12 @@ namespace iBlogs.Site.Core.Service.Install
             {
                 initResult = con.ExecuteAsync(sqlScript).Result > 0;
             }
-            if(initResult)
+
+            if (initResult)
+            {
                 ConfigDataHelper.UpdateDbInstallStatus(true);
+                _optionService.ReLoad();
+            }
             return initResult;
         }
        
