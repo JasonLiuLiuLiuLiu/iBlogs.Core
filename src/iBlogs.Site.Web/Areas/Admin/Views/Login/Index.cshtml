@@ -125,6 +125,7 @@
             }
             document.cookie = name + "=" + (value || "") + expires + "; path=/";
         }
+        setCookie('Authorization', '', 0);
         function checkForm() {
             tale.post({
                 url: '/admin/login',
