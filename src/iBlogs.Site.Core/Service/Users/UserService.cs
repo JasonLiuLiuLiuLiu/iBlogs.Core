@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using Dapper;
+using iBlogs.Site.Core.Dto;
 using iBlogs.Site.Core.Extensions;
 using iBlogs.Site.Core.SqLite;
 using Microsoft.Data.Sqlite;
@@ -17,7 +18,7 @@ namespace iBlogs.Site.Core.Service.Users
             _sqLite = sqLite.DbConnection();
         }
 
-        public Entity.Users CurrentUsers { get; set; }
+        public CurrentUser CurrentUsers { get; set; }=new CurrentUser();
 
         public bool InsertUser(Entity.Users user)
         {

@@ -6,6 +6,7 @@ using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Extensions;
 using iBlogs.Site.Core.Response;
 using iBlogs.Site.Core.Service.Options;
+using iBlogs.Site.Core.Service.Users;
 using iBlogs.Site.Core.Utils;
 using Markdig;
 
@@ -16,10 +17,12 @@ namespace iBlogs.Site.Core.Service.Common
         private readonly IOptionService _optionService;
         private readonly ISiteService _siteService;
         private Contents _currentArticle;
-        public ViewService(IOptionService optionService, ISiteService siteService)
+        private readonly IUserService _userService;
+        public ViewService(IOptionService optionService, ISiteService siteService, IUserService userService)
         {
             _optionService = optionService;
-            this._siteService = siteService;
+            _siteService = siteService;
+            _userService = userService;
         }
 
         public string active { get; set; }
@@ -27,7 +30,7 @@ namespace iBlogs.Site.Core.Service.Common
 
         public string has_sub { get; set; }
 
-        public CurrentUser User { get; set; }=new CurrentUser();
+        public CurrentUser User => _userService.CurrentUsers;
 
         public bool is_post { get; set; }
 

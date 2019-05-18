@@ -11,7 +11,7 @@ namespace iBlogs.Site.Core.Service.Common
         string active { get; set; }
         string title { get; set; }
         string has_sub { get; set; }
-        CurrentUser User { get; set; }
+        CurrentUser User { get; }
         bool is_post { get; set; }
         void Set_current_article(Contents contents);
         Contents current_article();
