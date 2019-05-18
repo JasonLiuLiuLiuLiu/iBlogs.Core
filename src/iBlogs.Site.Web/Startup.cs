@@ -60,16 +60,28 @@ namespace iBlogs.Site.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
+            
             app.UseStatusCodePages(async context =>
             {
                 var response = context.HttpContext.Response;
                 if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
                 {
                     response.Redirect("/admin/login");
+                }
+                else if (!env.IsDevelopment())
+                {
+                    if (response.StatusCode == (int)HttpStatusCode.NotFound)
+                    {
+                        response.Redirect("/error/error404");
+                    }
+                    else if (response.StatusCode == (int)HttpStatusCode.InternalServerError)
+                    {
+                        response.Redirect("/error/error500");
+                    }
+                    else
+                    {
+                        response.Redirect("/Error/Index/"+response.StatusCode);
+                    }
                 }
             });
 
