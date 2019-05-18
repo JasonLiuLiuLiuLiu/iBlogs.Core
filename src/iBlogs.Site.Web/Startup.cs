@@ -4,8 +4,10 @@ using System.Net;
 using System.Text;
 using iBlogs.Site.Core;
 using iBlogs.Site.Core.Extensions;
+using iBlogs.Site.Core.Service.Users;
 using iBlogs.Site.Core.Utils;
 using iBlogs.Site.Core.Utils.CodeDi;
+using iBlogs.Site.Web.Filter;
 using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -47,8 +49,9 @@ namespace iBlogs.Site.Web
                         ValidateLifetime = true,
                     };
                 });
+            services.AddScoped<IUserService, UserService>();
             services.AddCoreDi();
-            services.AddMvc();
+            services.AddMvc(option=>option.Filters.Add<LoginFilter>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,11 +59,6 @@ namespace iBlogs.Site.Web
         {
             app.UseMiddleware<JwtInHeaderMiddleware>();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            
             app.UseStatusCodePages(async context =>
             {
                 var response = context.HttpContext.Response;
@@ -80,10 +78,15 @@ namespace iBlogs.Site.Web
                     }
                     else
                     {
-                        response.Redirect("/Error/Index/"+response.StatusCode);
+                        response.Redirect("/Error/Index/" + response.StatusCode);
                     }
                 }
             });
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
             app.UseAuthentication();
             app.UseStaticFiles();

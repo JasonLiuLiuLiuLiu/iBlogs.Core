@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Params;
 using iBlogs.Site.Core.Response;
@@ -9,7 +7,6 @@ using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.Service.Content;
 using iBlogs.Site.Core.Utils;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
@@ -37,37 +34,37 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         // @SysLog("删除页面")
         // @PostRoute("page/delete/:cid")
-        public RestResponse deletePage( int cid)
+        public RestResponse deletePage(int cid)
         {
             throw new NotImplementedException();
         }
 
         //@GetRoute("articles/:cid")
-        public RestResponse article( string cid)
+        public RestResponse article(string cid)
         {
             throw new NotImplementedException();
         }
 
         // @GetRoute("articles/content/:cid")
-        public void articleContent( string cid)
+        public void articleContent(string cid)
         {
             throw new NotImplementedException();
         }
 
         //@PostRoute("article/new")
-        public RestResponse newArticle( Contents contents)
+        public RestResponse newArticle(Contents contents)
         {
             throw new NotImplementedException();
         }
 
         //@PostRoute("article/delete/:cid")
-        public RestResponse deleteArticle( int cid)
+        public RestResponse deleteArticle(int cid)
         {
             throw new NotImplementedException();
         }
 
         //@PostRoute("article/update")
-        public RestResponse updateArticle( Contents contents)
+        public RestResponse updateArticle(Contents contents)
         {
             throw new NotImplementedException();
         }
@@ -75,7 +72,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         // @GetRoute("articles")
         public RestResponse articleList(ArticleParam articleParam)
         {
-            articleParam.Type=Types.ARTICLE;
+            articleParam.Type = Types.ARTICLE;
             articleParam.Page--;
             Page<Contents> articles = _contentsService.findArticles(articleParam);
             return RestResponse<Page<Contents>>.ok(articles);
@@ -89,7 +86,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         //@SysLog("发布页面")
         //@PostRoute("page/new")
-        public RestResponse newPage( Contents contents)
+        public RestResponse newPage(Contents contents)
         {
 
             throw new NotImplementedException();
@@ -97,7 +94,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         //@SysLog("修改页面")
         //@PostRoute("page/update")
-        public RestResponse updatePage( Contents contents)
+        public RestResponse updatePage(Contents contents)
         {
             throw new NotImplementedException();
         }
@@ -113,7 +110,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         // @SysLog("删除分类/标签")
         // @PostRoute("category/delete/:mid")
-        public RestResponse deleteMeta( int mid)
+        public RestResponse deleteMeta(int mid)
         {
             throw new NotImplementedException();
         }
@@ -126,21 +123,21 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         // @SysLog("删除评论")
         //@PostRoute("comment/delete/:coid")
-        public RestResponse deleteComment( int coid)
+        public RestResponse deleteComment(int coid)
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("修改评论状态")
         // @PostRoute("comment/status")
-        public RestResponse updateStatus( Comments comments)
+        public RestResponse updateStatus(Comments comments)
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("回复评论")
         // @PostRoute("comment/reply")
-        public RestResponse replyComment( Comments comments)
+        public RestResponse replyComment(Comments comments)
         {
             throw new NotImplementedException();
         }
@@ -154,7 +151,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         //    @SysLog("删除附件")
         //@PostRoute("attach/delete/:id")
-        public RestResponse deleteAttach( int id)
+        public RestResponse deleteAttach(int id)
         {
             throw new NotImplementedException();
         }
@@ -162,7 +159,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         // @GetRoute("categories")
         public RestResponse CategoryList()
         {
-            return RestResponse<List<Metas>>.ok(_siteService.getMetas(Types.RECENT_META,Types.CATEGORY,iBlogsConst.MAX_POSTS));
+            return RestResponse<List<Metas>>.ok(_siteService.getMetas(Types.RECENT_META, Types.CATEGORY, iBlogsConst.MAX_POSTS));
         }
 
         // @GetRoute("tags")
@@ -214,7 +211,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         // @SysLog("保存模板")
         // @PostRoute("template/save")
-        public RestResponse saveTpl( TemplateParam templateParam)
+        public RestResponse saveTpl(TemplateParam templateParam)
         {
             throw new NotImplementedException();
         }

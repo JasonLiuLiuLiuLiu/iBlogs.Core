@@ -967,13 +967,9 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public string gravatar(string email)
         {
-            string avatarUrl = "https://cn.gravatar.com/avatar";
-            if (stringKit.isBlank(email))
-            {
-                return avatarUrl;
-            }
-            string hash = CreateMD5(email.Trim().ToLowerInvariant());
-            return avatarUrl + "/" + hash;
+            if (email.IsNullOrWhiteSpace())
+                return "https://www.gravatar.com/avatar";
+            return $"https://www.gravatar.com/avatar/{CreateMD5(email).ToLowerInvariant()}?s=60&d=blank";
         }
         private string CreateMD5(string input)
         {

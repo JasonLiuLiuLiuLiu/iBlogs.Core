@@ -16,6 +16,6 @@
         /// <summary>
         /// Email
         /// </summary>
-        public const string Email = "email";
+        public const string Email = "userEmail";
     }
 }
