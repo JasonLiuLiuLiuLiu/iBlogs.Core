@@ -94,7 +94,7 @@
                                         <p>@ViewService.article(comment.Content)</p>
                                     </div>
                                     <div class="comment-meta">
-                                        <time class="comment-time">@ViewService.fmtdate(comment.Created)</time>
+                                        <time class="comment-time">@ViewService.fmtdate(comment.Created.Value)</time>
                                         <span class="comment-reply">
                                             <a rel="nofollow" onclick="TaleComment.reply('@comment.Coid');">回复</a>
                                         </span>
@@ -124,7 +124,7 @@
                                                             <p>@ViewService.article(child.Content)</p>
                                                         </div>
                                                         <div class="comment-meta">
-                                                            <time class="comment-time">@ViewService.fmtdate(child.Created)</time>
+                                                            <time class="comment-time">@ViewService.fmtdate(child.Created.Value)</time>
                                                             <span class="comment-reply">
                                                                 <a rel="nofollow" onclick="TaleComment.reply('@child.Coid');">回复</a>
                                                             </span>

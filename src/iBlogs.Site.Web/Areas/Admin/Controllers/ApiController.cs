@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Params;
 using iBlogs.Site.Core.Response;
@@ -7,6 +9,7 @@ using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.Service.Content;
 using iBlogs.Site.Core.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
@@ -38,8 +41,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
             throw new NotImplementedException();
         }
-
-        //@GetRoute("articles/:cid")
+        [AdminApiRoute("articles/cid")]
         public RestResponse article(string cid)
         {
             throw new NotImplementedException();
@@ -51,7 +53,8 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             throw new NotImplementedException();
         }
 
-        //@PostRoute("article/new")
+
+        //[AdminApiRoute("article/new")]
         public RestResponse newArticle(Contents contents)
         {
             throw new NotImplementedException();
@@ -63,9 +66,11 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             throw new NotImplementedException();
         }
 
-        //@PostRoute("article/update")
-        public RestResponse updateArticle(Contents contents)
+        //[Route("article/update")]
+        public RestResponse updateArticle([FromBody]Contents contents)
         {
+          
+            // Do whatever work with bodyStr here
             throw new NotImplementedException();
         }
 

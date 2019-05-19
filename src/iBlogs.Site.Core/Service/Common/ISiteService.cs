@@ -13,7 +13,7 @@ namespace iBlogs.Site.Core.Service.Common
         List<Archive> getArchives();
         Comments getComment(int coid);
         List<Metas> getMetas(string searchType, string type, int limit);
-        Entity.Contents getNhContent(string type, int created);
+        Entity.Contents getNhContent(string type, long created);
         Page<Comments> getComments(int cid, int page, int limit);
         long getCommentCount(int cid);
         void cleanCache(string key);

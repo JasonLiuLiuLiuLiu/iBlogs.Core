@@ -99,19 +99,20 @@ namespace iBlogs.Site.Core.Service.Common
             {
                 return;
             }
-            Metas metas = _sqlite.QueryFirstOrDefault<Metas>("select * from t_metas WHERE type=@type and name=@name",new {type,name});
-            if (null != metas) {
-                throw new Exception("已经存在该项");
-            } else {
-                metas = new Metas();
-                metas.Name=name;
-                if (null != mid)
+
+            if (null != mid)
+            {
+
+                _sqlite.Execute("update t_metas set name=@name where mid=@mid", new { name, mid = mid.Value });
+            }
+            else
+            {
+                var metas = _sqlite.QueryFirstOrDefault<Metas>("select * from t_metas WHERE type=@type and name=@name", new { type, name });
+                if (null != metas)
                 {
-                    _sqlite.Execute("update t_metas set name=@name where mid=@mid", new {name, mid=mid.Value});
-                } else {
-                    metas.Type=type;
-                    _sqlite.Execute("insert into t_metas (name,type) values (@name,@type)", new {name, type});
+                    throw new Exception("已经存在该项");
                 }
+                _sqlite.Execute("insert into t_metas (name,type) values (@name,@type)", new { name, type });
             }
         }
 

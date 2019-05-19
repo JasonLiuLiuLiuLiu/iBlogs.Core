@@ -127,7 +127,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param type 上一篇:prev | 下一篇:next
          * @param created 当前文章创建时间
          */
-        public Contents getNhContent(string type, int created)
+        public Contents getNhContent(string type, long created)
         {
             return null;
         }

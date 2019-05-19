@@ -2,13 +2,14 @@
 
 namespace iBlogs.Site.Core.Entity
 {
+    [Serializable]
     public class Contents : EntityBase
     {
 
         /**
          * 文章表主键
          */
-        public int Cid { get; set; }
+        public int? Cid { get; set; }
 
         /**
          * 文章标题
@@ -21,14 +22,9 @@ namespace iBlogs.Site.Core.Entity
         public string Slug { get; set; }
 
         /**
-         * 文章创建时间戳
-         */
-        public int Created { get; set; }
-
-        /**
          * 文章修改时间戳
          */
-        public int Modified { get; set; }
+        public int? Modified { get; set; }
 
         /**
          * 文章内容
@@ -36,14 +32,9 @@ namespace iBlogs.Site.Core.Entity
         public string Content { get; set; }
 
         /**
-         * 文章创建用户
-         */
-        public int AuthorId { get; set; }
-
-        /**
          * 文章点击次数
          */
-        public int Hits { get; set; }
+        public int? Hits { get; set; }
 
         /**
          * 文章类型： PAGE、POST
@@ -78,7 +69,7 @@ namespace iBlogs.Site.Core.Entity
         /**
          * 内容所属评论数
          */
-        public int CommentsNum { get; set; }
+        public int? CommentsNum { get; set; }
 
         /**
          * 是否允许评论
