@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Data.Common;
+using System.Linq;
 using System.Text;
 using Dapper;
 using iBlogs.Site.Core.Entity;
@@ -6,19 +8,23 @@ using iBlogs.Site.Core.Params;
 using iBlogs.Site.Core.Response;
 using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.SqLite;
+using iBlogs.Site.Core.Utils;
 using iBlogs.Site.Core.Utils.Extensions;
+using Z.Dapper.Plus;
 
 namespace iBlogs.Site.Core.Service.Content
 {
     public class ContentsService : IContentsService
     {
-        private readonly ISqLiteBaseRepository _sqLiteBaseRepository;
+        private readonly DbConnection _sqlLite;
         private readonly IViewService _viewService;
+        private readonly IMetasService _metasService;
 
-        public ContentsService(ISqLiteBaseRepository sqLiteBaseRepository, IViewService viewService)
+        public ContentsService(IDbBaseRepository dbBaseRepository, IViewService viewService, IMetasService metasService)
         {
-            _sqLiteBaseRepository = sqLiteBaseRepository;
+            _sqlLite = dbBaseRepository.DbConnection();
             _viewService = viewService;
+            _metasService = metasService;
         }
 
         /**
@@ -28,10 +34,8 @@ namespace iBlogs.Site.Core.Service.Content
          */
         public Contents getContents(string id)
         {
-            var contents = _sqLiteBaseRepository.DbConnection()
-                               .QueryFirstOrDefault<Contents>($"select * from t_contents where slug='{id}'") ??
-                           _sqLiteBaseRepository.DbConnection()
-                               .QueryFirstOrDefault<Contents>($"select * from t_contents where cid={id}");
+            var contents = _sqlLite .QueryFirstOrDefault<Contents>($"select * from t_contents where slug='{id}'") ??
+                           _sqlLite.QueryFirstOrDefault<Contents>($"select * from t_contents where cid={id}");
             _viewService.Set_current_article(contents);
             return contents;
         }
@@ -43,7 +47,27 @@ namespace iBlogs.Site.Core.Service.Content
          */
         public int publish(Contents contents)
         {
-            return 0;
+            if (null == contents.AuthorId)
+            {
+                throw new Exception("请登录后发布文章");
+            }
+
+            int time = DateTime.Now.ToUnixTimestamp();
+            contents.Created = time;
+            contents.Modified = time;
+            contents.Hits = 0;
+
+            var tags = contents.Tags;
+            var categories = contents.Categories;
+
+            _sqlLite.BulkInsert(contents);
+
+            int cid = _sqlLite.QueryFirstOrDefault<int>("SELECT cid FROM t_contents WHERE title=@Title and created=@Created AND author_id=@Author_id", contents);
+
+            _metasService.saveMetas(cid, tags, Types.TAG);
+            _metasService.saveMetas(cid, categories, Types.CATEGORY);
+
+            return cid;
         }
 
         /**
@@ -98,14 +122,14 @@ namespace iBlogs.Site.Core.Service.Content
             if (articleParam.Type != null)
                 sqlBuilder.Append(" and type=@Type");
 
-            var count = _sqLiteBaseRepository.DbConnection().QueryCount(sqlBuilder.ToString(), articleParam);
+            var count = _sqlLite.QueryCount(sqlBuilder.ToString(), articleParam);
 
             sqlBuilder.Append($" and {articleParam.OrderBy} NOT IN ( SELECT {articleParam.OrderBy} FROM t_contents ORDER BY {articleParam.OrderBy} {articleParam.OrderType} LIMIT {(articleParam.Page) * articleParam.Limit})");
 
             sqlBuilder.Append($" order by {articleParam.OrderBy} {articleParam.OrderType}");
             sqlBuilder.Append(" LIMIT @Limit ");
 
-            var contents = _sqLiteBaseRepository.DbConnection().Query<Contents>(sqlBuilder.ToString(), articleParam).ToList();
+            var contents = _sqlLite.Query<Contents>(sqlBuilder.ToString(), articleParam).ToList();
 
             return new Page<Contents>(count, articleParam.Page + 1, articleParam.Limit, contents);
         }

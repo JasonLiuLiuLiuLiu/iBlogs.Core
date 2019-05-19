@@ -9,10 +9,10 @@ namespace iBlogs.Site.Core.Service.Install
 {
     public class InstallService : IInstallService
     {
-        private readonly ISqLiteBaseRepository _baseRepository;
+        private readonly IDbBaseRepository _baseRepository;
         private readonly IOptionService _optionService;
 
-        public InstallService(ISqLiteBaseRepository baseRepository, IOptionService optionService)
+        public InstallService(IDbBaseRepository baseRepository, IOptionService optionService)
         {
             _baseRepository = baseRepository;
             _optionService = optionService;

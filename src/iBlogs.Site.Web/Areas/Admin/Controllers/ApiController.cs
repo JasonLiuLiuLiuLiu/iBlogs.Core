@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using iBlogs.Site.Core.Entity;
+using iBlogs.Site.Core.Extensions;
 using iBlogs.Site.Core.Params;
 using iBlogs.Site.Core.Response;
 using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.Service.Content;
+using iBlogs.Site.Core.Service.Users;
 using iBlogs.Site.Core.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Internal;
@@ -21,12 +23,14 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         private readonly IMetasService _metasService;
         private readonly ISiteService _siteService;
         private readonly IContentsService _contentsService;
+        private readonly IUserService _userService;
 
-        public ApiController(IMetasService metasService, ISiteService siteService, IContentsService contentsService)
+        public ApiController(IMetasService metasService, ISiteService siteService, IContentsService contentsService, IUserService userService)
         {
             _metasService = metasService;
             _siteService = siteService;
             _contentsService = contentsService;
+            _userService = userService;
         }
 
         //@GetRoute("logs")
@@ -54,10 +58,23 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
 
-        //[AdminApiRoute("article/new")]
-        public RestResponse newArticle(Contents contents)
+        [AdminApiRoute("article/new")]
+        public RestResponse newArticle([FromBody]Contents contents)
         {
-            throw new NotImplementedException();
+            var user = _userService.CurrentUsers;
+            contents.Type=Types.ARTICLE;
+            contents.AuthorId=user.Uid;
+            //将点击数设初始化为0
+            contents.Hits=0;
+            //将评论数设初始化为0
+            contents.CommentsNum=0;
+            if (stringKit.isBlank(contents.Categories))
+            {
+                contents.Categories="默认分类";
+            }
+            var cid = _contentsService.publish(contents);
+            _siteService.cleanCache(Types.SYS_STATISTICS);
+            return RestResponse.ok(cid);
         }
 
         //@PostRoute("article/delete/:cid")
@@ -66,7 +83,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             throw new NotImplementedException();
         }
 
-        //[Route("article/update")]
+        [AdminApiRoute("article/update")]
         public RestResponse updateArticle([FromBody]Contents contents)
         {
           

@@ -23,7 +23,7 @@ namespace iBlogs.Site.Web
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            CheckDbInstallStatus();
+            IBlogsBoot.Startup(Configuration);
         }
 
         public IConfiguration Configuration { get; }
@@ -50,8 +50,8 @@ namespace iBlogs.Site.Web
                     };
                 });
             services.AddScoped<IUserService, UserService>();
-            services.AddCoreDi();
-            services.AddMvc(option=>option.Filters.Add<LoginFilter>());
+            services.AddCoreDi(options => { options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*" };});
+            services.AddMvc(option => option.Filters.Add<LoginFilter>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -103,14 +103,6 @@ namespace iBlogs.Site.Web
                     name: "default",
                     template: "{controller=Index}/{action=Index}/{id?}");
             });
-        }
-
-        private void CheckDbInstallStatus()
-        {
-            if (File.Exists(Environment.CurrentDirectory + "\\" + Configuration[ConfigKey.SqLiteDbFileName].IfNullReturnDefaultValue("iBlogs.db")))
-                ConfigDataHelper.UpdateDbInstallStatus(true);
-            else
-                ConfigDataHelper.UpdateDbInstallStatus(false);
         }
     }
 }

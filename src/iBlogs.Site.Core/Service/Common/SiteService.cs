@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -15,11 +16,11 @@ namespace iBlogs.Site.Core.Service.Common
 {
     public class SiteService : ISiteService
     {
-        private readonly SqliteConnection _sqLite;
+        private readonly DbConnection _sqLite;
 
-        public SiteService(ISqLiteBaseRepository sqLite)
+        public SiteService(IDbBaseRepository db)
         {
-            _sqLite = sqLite.DbConnection();
+            _sqLite = db.DbConnection();
         }
 
         /**

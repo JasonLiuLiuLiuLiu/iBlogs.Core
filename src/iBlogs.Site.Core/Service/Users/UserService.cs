@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using Dapper;
@@ -12,11 +13,11 @@ namespace iBlogs.Site.Core.Service.Users
 {
     public class UserService : IUserService
     {
-        private readonly SqliteConnection _sqLite;
+        private readonly DbConnection _sqLite;
 
-        public UserService(ISqLiteBaseRepository sqLite)
+        public UserService(IDbBaseRepository db)
         {
-            _sqLite = sqLite.DbConnection();
+            _sqLite = db.DbConnection();
         }
 
         public CurrentUser CurrentUsers { get; set; }=new CurrentUser();
