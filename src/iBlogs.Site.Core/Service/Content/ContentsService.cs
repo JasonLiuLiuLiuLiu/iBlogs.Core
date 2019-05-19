@@ -10,7 +10,6 @@ using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.SqLite;
 using iBlogs.Site.Core.Utils;
 using iBlogs.Site.Core.Utils.Extensions;
-using Z.Dapper.Plus;
 
 namespace iBlogs.Site.Core.Service.Content
 {
@@ -60,9 +59,12 @@ namespace iBlogs.Site.Core.Service.Content
             var tags = contents.Tags;
             var categories = contents.Categories;
 
-            _sqlLite.BulkInsert(contents);
+            _sqlLite.Execute(
+                "INSERT INTO t_contents ( title, slug, created, modified, content, author_id, type, status, tags, categories, hits, comments_num, allow_comment, allow_ping, allow_feed) VALUES" +
+                " ( @Title, @Slug, @Created, @Modified, @Content, @AuthorId, @Type, @Status, @Tags, @Categories, @Hits, @CommentsNum, @AllowComment, @AllowPing, @AllowFeed)",
+                contents);
 
-            int cid = _sqlLite.QueryFirstOrDefault<int>("SELECT cid FROM t_contents WHERE title=@Title and created=@Created AND author_id=@Author_id", contents);
+            int cid = _sqlLite.QueryFirstOrDefault<int>("SELECT cid FROM t_contents WHERE title=@Title and created=@Created AND author_id=@AuthorId", contents);
 
             _metasService.saveMetas(cid, tags, Types.TAG);
             _metasService.saveMetas(cid, categories, Types.CATEGORY);

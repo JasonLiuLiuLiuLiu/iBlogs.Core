@@ -10,7 +10,6 @@ namespace iBlogs.Site.Core.Utils
         public static void Startup(IConfiguration configuration)
         {
             CheckDbInstallStatus(configuration);
-            DapperPlus.SetMapping();
         }
         private static void CheckDbInstallStatus(IConfiguration configuration)
         {

@@ -8,8 +8,6 @@ using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Extensions;
 using iBlogs.Site.Core.SqLite;
 using iBlogs.Site.Core.Utils.Extensions;
-using Microsoft.Data.Sqlite;
-using Z.Dapper.Plus;
 
 namespace iBlogs.Site.Core.Service.Common
 {
@@ -71,7 +69,7 @@ namespace iBlogs.Site.Core.Service.Common
             {
                 throw new Exception("项目关联id不能为空");
             }
-            if (names.IsNullOrWhiteSpace() && type.IsNullOrWhiteSpace())
+            if (!names.IsNullOrWhiteSpace() && !type.IsNullOrWhiteSpace())
             {
                 var nameArr = names.Split(",");
                 foreach (var name in nameArr)
@@ -90,20 +88,16 @@ namespace iBlogs.Site.Core.Service.Common
                 mid = metas.Mid;
             } else {
                 metas = new Metas {Slug = name, Name = name, Type = type};
-                _sqlite.BulkInsert(metas);
+                _sqlite.Execute("insert into t_metas (name,type) values (@Name,@Type)", metas);
                 mid = _sqlite.QueryFirstOrDefault<int>("select mid from t_metas where name=@name and type=@type", new { cid, name, type });
             }
             if (mid != 0)
             {
-                var count = _sqlite.QueryFirstOrDefault<int>("select count(1) from t_metas where cid=@cid and mid=@mid",
+                var count = _sqlite.QueryFirstOrDefault<int>("select count(1) from t_relationships where cid=@cid and mid=@mid",
                     new {cid, mid});
                 if (count == 0)
                 {
-                    _sqlite.BulkInsert(new Relationships
-                    {
-                        Cid = cid,
-                        Mid = mid,
-                    });
+                    _sqlite.Execute("insert into t_relationships (cid,mid) values (@cid,@mid)", new { cid, mid });
                 }
             }
         }
