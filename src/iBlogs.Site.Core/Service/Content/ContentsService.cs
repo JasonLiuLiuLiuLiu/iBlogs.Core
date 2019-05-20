@@ -10,6 +10,7 @@ using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.SqLite;
 using iBlogs.Site.Core.Utils;
 using iBlogs.Site.Core.Utils.Extensions;
+using Markdig.Extensions.Emoji;
 
 namespace iBlogs.Site.Core.Service.Content
 {
@@ -79,7 +80,26 @@ namespace iBlogs.Site.Core.Service.Content
          */
         public void updateArticle(Contents contents)
         {
+            contents.Modified=DateTime.Now.ToUnixTimestamp();
+            contents.Tags=contents.Tags ?? "";
+            contents.Categories=contents.Categories ?? "";
 
+            var cid = contents.Cid.ValueOrDefault();
+
+            _sqlLite.Execute(
+                "UPDATE t_contents SET title=@Title,slug=@Slug,modified= @Modified,content=@Content,status=@Status,tags=@Tags,categories=@Categories,allow_comment=@AllowComment,allow_ping=@AllowPing,allow_feed=@AllowFeed where cid=@Cid",
+                contents);
+
+            var tags = contents.Tags;
+            var categories = contents.Categories;
+
+            if (null != contents.Type && !contents.Type.Equals(Types.PAGE))
+            {
+                _sqlLite.Execute("delete from t_relationships where cid=@cid",new{cid});
+            }
+
+            _metasService.saveMetas(cid, tags, Types.TAG);
+            _metasService.saveMetas(cid, categories, Types.CATEGORY);
         }
 
         /**

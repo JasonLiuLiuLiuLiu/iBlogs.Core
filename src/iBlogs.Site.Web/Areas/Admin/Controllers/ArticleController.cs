@@ -23,5 +23,11 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
             return View();
         }
+
+        [ViewLayout("~/Areas/Admin/Views/Layout/Layout.cshtml")]
+        public IActionResult Edit()
+        {
+            return View();
+        }
     }
 }

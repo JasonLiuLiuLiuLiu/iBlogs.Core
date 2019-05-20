@@ -10,6 +10,7 @@ using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.Service.Content;
 using iBlogs.Site.Core.Service.Users;
 using iBlogs.Site.Core.Utils;
+using iBlogs.Site.Core.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
@@ -59,22 +60,22 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
 
         [AdminApiRoute("article/new")]
-        public RestResponse newArticle([FromBody]Contents contents)
+        public RestResponse<int> newArticle([FromBody]Contents contents)
         {
             var user = _userService.CurrentUsers;
-            contents.Type=Types.ARTICLE;
-            contents.AuthorId=user.Uid;
+            contents.Type = Types.ARTICLE;
+            contents.AuthorId = user.Uid;
             //将点击数设初始化为0
-            contents.Hits=0;
+            contents.Hits = 0;
             //将评论数设初始化为0
-            contents.CommentsNum=0;
+            contents.CommentsNum = 0;
             if (stringKit.isBlank(contents.Categories))
             {
-                contents.Categories="默认分类";
+                contents.Categories = "默认分类";
             }
             var cid = _contentsService.publish(contents);
             _siteService.cleanCache(Types.SYS_STATISTICS);
-            return RestResponse.ok(cid);
+            return RestResponse<int>.ok(cid);
         }
 
         //@PostRoute("article/delete/:cid")
@@ -84,11 +85,16 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         [AdminApiRoute("article/update")]
-        public RestResponse updateArticle([FromBody]Contents contents)
+        public RestResponse<int> updateArticle([FromBody]Contents contents)
         {
-          
-            // Do whatever work with bodyStr here
-            throw new NotImplementedException();
+            if (contents?.Cid == null)
+            {
+                return RestResponse<int>.fail("缺少参数，请重试");
+            }
+            contents.Type = Types.ARTICLE;
+            var cid = contents.Cid;
+            _contentsService.updateArticle(contents);
+            return RestResponse<int>.ok(cid.ValueOrDefault());
         }
 
         // @GetRoute("articles")
