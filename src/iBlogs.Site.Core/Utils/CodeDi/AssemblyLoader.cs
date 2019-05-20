@@ -23,7 +23,7 @@ namespace iBlogs.Site.Core.Utils.CodeDi
                                                           && assembly.GetAssemblyName().IndexOf("WebMatrix", StringComparison.Ordinal) == -1
                                                           && assembly.GetAssemblyName().IndexOf("SMDiagnostics", StringComparison.Ordinal) == -1
                                                           && assembly.GetAssemblyName().IndexOf("Newtonsoft", StringComparison.Ordinal) == -1
-                                                          && !String.IsNullOrEmpty(assembly.Location)).ToList();
+                                                          && !string.IsNullOrEmpty(assembly.Location)).ToList();
             }
             assemblies.AddRange(LoadFromPaths(options.AssemblyPaths).Where(toAdd => assemblies.All(u => u.GetAssemblyName() != toAdd.GetAssemblyName())));
             return assemblies.Where(u => options.AssemblyNames.Any(name => u.GetAssemblyName().Matches(name)))
@@ -34,7 +34,7 @@ namespace iBlogs.Site.Core.Utils.CodeDi
 
         private static IEnumerable<Assembly> LoadFromPaths(string[] paths)
         {
-            var dllPath = paths.Where(u => !String.IsNullOrEmpty(u)).SelectMany(u => Directory.GetFiles(u, "*.dll"));
+            var dllPath = paths.Where(u => !string.IsNullOrEmpty(u)).SelectMany(u => Directory.GetFiles(u, "*.dll"));
             foreach (var path in dllPath)
             {
                 yield return Assembly.LoadFile(path);

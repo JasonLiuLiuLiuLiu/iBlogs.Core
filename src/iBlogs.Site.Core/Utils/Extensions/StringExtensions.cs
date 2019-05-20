@@ -98,7 +98,7 @@ namespace iBlogs.Site.Core.Extensions
         }
 
         /// <summary>
-        /// Indicates whether this string is null or an System.String.Empty string.
+        /// Indicates whether this string is null or an System.string.Empty string.
         /// </summary>
         public static bool IsNullOrEmpty(this string str)
         {
@@ -226,7 +226,7 @@ namespace iBlogs.Site.Core.Extensions
         /// <summary>
         /// Converts PascalCase string to camelCase string.
         /// </summary>
-        /// <param name="str">String to convert</param>
+        /// <param name="str">string to convert</param>
         /// <param name="invariantCulture">Invariant culture</param>
         /// <returns>camelCase of the string</returns>
         public static string ToCamelCase(this string str, bool invariantCulture = true)
@@ -247,7 +247,7 @@ namespace iBlogs.Site.Core.Extensions
         /// <summary>
         /// Converts PascalCase string to camelCase string in specified culture.
         /// </summary>
-        /// <param name="str">String to convert</param>
+        /// <param name="str">string to convert</param>
         /// <param name="culture">An object that supplies culture-specific casing rules</param>
         /// <returns>camelCase of the string</returns>
         public static string ToCamelCase(this string str, CultureInfo culture)
@@ -269,7 +269,7 @@ namespace iBlogs.Site.Core.Extensions
         /// Converts given PascalCase/camelCase string to sentence (by splitting words by space).
         /// Example: "ThisIsSampleSentence" is converted to "This is a sample sentence".
         /// </summary>
-        /// <param name="str">String to convert.</param>
+        /// <param name="str">string to convert.</param>
         /// <param name="invariantCulture">Invariant culture</param>
         public static string ToSentenceCase(this string str, bool invariantCulture = false)
         {
@@ -289,7 +289,7 @@ namespace iBlogs.Site.Core.Extensions
         /// Converts given PascalCase/camelCase string to sentence (by splitting words by space).
         /// Example: "ThisIsSampleSentence" is converted to "This is a sample sentence".
         /// </summary>
-        /// <param name="str">String to convert.</param>
+        /// <param name="str">string to convert.</param>
         /// <param name="culture">An object that supplies culture-specific casing rules.</param>
         public static string ToSentenceCase(this string str, CultureInfo culture)
         {
@@ -305,7 +305,7 @@ namespace iBlogs.Site.Core.Extensions
         /// Converts string to enum value.
         /// </summary>
         /// <typeparam name="T">Type of enum</typeparam>
-        /// <param name="value">String value to convert</param>
+        /// <param name="value">string value to convert</param>
         /// <returns>Returns enum object</returns>
         public static T ToEnum<T>(this string value)
             where T : struct
@@ -322,7 +322,7 @@ namespace iBlogs.Site.Core.Extensions
         /// Converts string to enum value.
         /// </summary>
         /// <typeparam name="T">Type of enum</typeparam>
-        /// <param name="value">String value to convert</param>
+        /// <param name="value">string value to convert</param>
         /// <param name="ignoreCase">Ignore case</param>
         /// <returns>Returns enum object</returns>
         public static T ToEnum<T>(this string value, bool ignoreCase)
@@ -356,7 +356,7 @@ namespace iBlogs.Site.Core.Extensions
         /// <summary>
         /// Converts camelCase string to PascalCase string.
         /// </summary>
-        /// <param name="str">String to convert</param>
+        /// <param name="str">string to convert</param>
         /// <param name="invariantCulture">Invariant culture</param>
         /// <returns>PascalCase of the string</returns>
         public static string ToPascalCase(this string str, bool invariantCulture = true)
@@ -377,7 +377,7 @@ namespace iBlogs.Site.Core.Extensions
         /// <summary>
         /// Converts camelCase string to PascalCase string in specified culture.
         /// </summary>
-        /// <param name="str">String to convert</param>
+        /// <param name="str">string to convert</param>
         /// <param name="culture">An object that supplies culture-specific casing rules</param>
         /// <returns>PascalCase of the string</returns>
         public static string ToPascalCase(this string str, CultureInfo culture)

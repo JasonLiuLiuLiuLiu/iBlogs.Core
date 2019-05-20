@@ -9,19 +9,20 @@ namespace iBlogs.Site.Core.Service.Options
 {
     public class OptionService : IOptionService
     {
-        private ISqLiteBaseRepository _sqLiteBaseRepository;
+        private IDbBaseRepository _dbBaseRepository;
         private IDictionary<string, string> _options;
 
-        public OptionService(ISqLiteBaseRepository sqLiteBaseRepository)
+        public OptionService(IDbBaseRepository dbBaseRepository)
         {
-            _sqLiteBaseRepository = sqLiteBaseRepository;
+            _dbBaseRepository = dbBaseRepository;
             _options = new Dictionary<string, string>();
+            ReLoad();
         }
 
         public void ReLoad()
         {
             var options =
-                _sqLiteBaseRepository.DbConnection().QueryAsync<Entity.Options>("select * from options");
+                _dbBaseRepository.DbConnection().QueryAsync<Entity.Options>("select * from t_options");
             _options.Clear();
             foreach (var option in options.Result)
             {
@@ -32,19 +33,18 @@ namespace iBlogs.Site.Core.Service.Options
 
         public void Set(string key, string value)
         {
-            key = key.Trim().ToLower();
             if (_options.ContainsKey(key))
                 if (_options[key] == value)
                     return;
                 else
                 {
-                    _sqLiteBaseRepository.DbConnection().Execute("update options set value=@value where name=@name",
+                    _dbBaseRepository.DbConnection().Execute("update t_options set value=@value where name=@name",
                         new { value = value, name = key });
                     _options[key] = value;
                 }
             else
             {
-                _sqLiteBaseRepository.DbConnection().Execute("insert into options values(@name,@value)",
+                _dbBaseRepository.DbConnection().Execute("insert into t_options (name,value) values(@name,@value)",
                     new { value = value, name = key });
                 _options.Add(key, value);
             }
@@ -64,7 +64,7 @@ namespace iBlogs.Site.Core.Service.Options
         * @param key   配置key
         * @param value 配置值
         */
-        public void saveOption(String key, String value)
+        public void saveOption(string key, string value)
         {
             if (stringKit.isNotBlank(key) && stringKit.isNotBlank(value))
             {
@@ -80,7 +80,7 @@ namespace iBlogs.Site.Core.Service.Options
             return _options;
         }
 
-        public String getOption(String key)
+        public string getOption(string key)
         {
             return Get(key);
         }
@@ -95,7 +95,7 @@ namespace iBlogs.Site.Core.Service.Options
             if (_options.ContainsKey(key))
             {
                 _options.Remove(key);
-                _sqLiteBaseRepository.DbConnection().Execute("delete options  where name=@name", new { name = key });
+                _dbBaseRepository.DbConnection().Execute("delete options  where name=@name", new { name = key });
             }
         }
 

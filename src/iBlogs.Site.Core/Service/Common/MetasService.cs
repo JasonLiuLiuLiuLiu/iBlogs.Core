@@ -1,12 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
+using System.Net.Sockets;
 using System.Text;
+using Dapper;
 using iBlogs.Site.Core.Entity;
+using iBlogs.Site.Core.Extensions;
+using iBlogs.Site.Core.SqLite;
+using iBlogs.Site.Core.Utils.Extensions;
 
 namespace iBlogs.Site.Core.Service.Common
 {
     public class MetasService : IMetasService
     {
+        private readonly DbConnection _sqlite;
+
+        public MetasService(IDbBaseRepository db)
+        {
+            _sqlite = db.DbConnection();
+        }
+
         /**
         * 根据类型查询项目列表
         *
@@ -50,14 +63,43 @@ namespace iBlogs.Site.Core.Service.Common
          * @param names 类型名称列表
          * @param type  类型，tag or category
          */
-        public void saveMetas(int cid, string names, string type)
+        public void saveMetas(int? cid, string names, string type)
         {
-
+            if (null == cid)
+            {
+                throw new Exception("项目关联id不能为空");
+            }
+            if (!names.IsNullOrWhiteSpace() && !type.IsNullOrWhiteSpace())
+            {
+                var nameArr = names.Split(",");
+                foreach (var name in nameArr)
+                {
+                    saveOrUpdate(cid.ValueOrDefault(), name, type);
+                }
+            }
         }
 
         private void saveOrUpdate(int cid, string name, string type)
         {
-
+            var metas = _sqlite.QueryFirstOrDefault<Metas>(
+                "select * from t_metas where name=@name and type=@type",new {cid,name,type});
+            int mid;
+            if (null != metas) {
+                mid = metas.Mid;
+            } else {
+                metas = new Metas {Slug = name, Name = name, Type = type};
+                _sqlite.Execute("insert into t_metas (name,type) values (@Name,@Type)", metas);
+                mid = _sqlite.QueryFirstOrDefault<int>("select mid from t_metas where name=@name and type=@type", new { cid, name, type });
+            }
+            if (mid != 0)
+            {
+                var count = _sqlite.QueryFirstOrDefault<int>("select count(1) from t_relationships where cid=@cid and mid=@mid",
+                    new {cid, mid});
+                if (count == 0)
+                {
+                    _sqlite.Execute("insert into t_relationships (cid,mid) values (@cid,@mid)", new { cid, mid });
+                }
+            }
         }
 
         /**
@@ -82,9 +124,27 @@ namespace iBlogs.Site.Core.Service.Common
          * @param name
          * @param mid
          */
-        public void saveMeta(string type, string name, int mid)
+        public void saveMeta(string type, string name, int? mid)
         {
+            if (type.IsNullOrWhiteSpace() || name.IsNullOrWhiteSpace())
+            {
+                return;
+            }
 
+            if (null != mid)
+            {
+
+                _sqlite.Execute("update t_metas set name=@name where mid=@mid", new { name, mid = mid.Value });
+            }
+            else
+            {
+                var metas = _sqlite.QueryFirstOrDefault<Metas>("select * from t_metas WHERE type=@type and name=@name", new { type, name });
+                if (null != metas)
+                {
+                    throw new Exception("已经存在该项");
+                }
+                _sqlite.Execute("insert into t_metas (name,type) values (@name,@type)", new { name, type });
+            }
         }
 
         private string reMeta(string name, string metas)

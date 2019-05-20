@@ -1,28 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using iBlogs.Site.Core.Dto;
 using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Extensions;
 using iBlogs.Site.Core.Response;
 using iBlogs.Site.Core.Service.Options;
+using iBlogs.Site.Core.Service.Users;
 using iBlogs.Site.Core.Utils;
 using Markdig;
-using Markdig.Extensions.Emoji;
-using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace iBlogs.Site.Core.Service.Common
 {
     public class ViewService : IViewService
     {
         private readonly IOptionService _optionService;
-        private readonly ISiteService siteService;
+        private readonly ISiteService _siteService;
         private Contents _currentArticle;
-
-        public ViewService(IOptionService optionService, ISiteService siteService)
+        private readonly IUserService _userService;
+        public ViewService(IOptionService optionService, ISiteService siteService, IUserService userService)
         {
             _optionService = optionService;
-            this.siteService = siteService;
+            _siteService = siteService;
+            _userService = userService;
         }
+
+        public string active { get; set; }
+        public string title { get; set; }
+
+        public string has_sub { get; set; }
+
+        public CurrentUser User => _userService.CurrentUsers;
 
         public bool is_post { get; set; }
 
@@ -116,7 +124,7 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public string permalink(Contents contents)
         {
-            return permalink(contents.Cid, contents.Slug);
+            return permalink(contents.Cid.Value, contents.Slug);
         }
 
         /**
@@ -140,7 +148,7 @@ namespace iBlogs.Site.Core.Service.Common
         public string created(string frm)
         {
             Contents contents = current_article();
-            return contents?.Created.ToString(frm);
+            return contents?.Created.Value.ToString(frm);
 
         }
 
@@ -407,8 +415,8 @@ namespace iBlogs.Site.Core.Service.Common
             {
                 return img;
             }
-            int cid = contents.Cid;
-            int size = cid % 20;
+            int? cid = contents.Cid;
+            int? size = cid % 20;
             size = size == 0 ? 1 : size;
             return "/templates/themes/default/static/img/rand/" + size + ".jpg";
         }
@@ -421,7 +429,7 @@ namespace iBlogs.Site.Core.Service.Common
         public Contents article_next()
         {
             Contents cur = current_article();
-            return null != cur ? siteService.getNhContent(Types.NEXT, cur.Created) : null;
+            return null != cur ? _siteService.getNhContent(Types.NEXT, cur.Created.Value) : null;
         }
 
         /**
@@ -432,7 +440,7 @@ namespace iBlogs.Site.Core.Service.Common
         public Contents article_prev()
         {
             Contents cur = current_article();
-            return null != cur ? siteService.getNhContent(Types.PREV, cur.Created) : null;
+            return null != cur ? _siteService.getNhContent(Types.PREV, cur.Created.Value) : null;
         }
 
         /**
@@ -505,11 +513,11 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public List<Contents> recent_articles(int limit)
         {
-            if (null == siteService)
+            if (null == _siteService)
             {
                 return new List<Contents>();
             }
-            return siteService.getContens(Types.RECENT_ARTICLE, limit);
+            return _siteService.getContens(Types.RECENT_ARTICLE, limit);
         }
 
         /**
@@ -520,11 +528,11 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public List<Contents> rand_articles(int limit)
         {
-            if (null == siteService)
+            if (null == _siteService)
             {
                 return new List<Contents>();
             }
-            return siteService.getContens(Types.RANDOM_ARTICLE, limit);
+            return _siteService.getContens(Types.RANDOM_ARTICLE, limit);
         }
 
         /**
@@ -535,11 +543,11 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public List<Comments> recent_comments(int limit)
         {
-            if (null == siteService)
+            if (null == _siteService)
             {
                 return new List<Comments>();
             }
-            return siteService.recentComments(limit);
+            return _siteService.recentComments(limit);
         }
 
         /**
@@ -549,11 +557,11 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public List<Metas> categories(int limit)
         {
-            if (null == siteService)
+            if (null == _siteService)
             {
                 return new List<Metas>();
             }
-            return siteService.getMetas(Types.RECENT_META, Types.CATEGORY, limit);
+            return _siteService.getMetas(Types.RECENT_META, Types.CATEGORY, limit);
         }
 
         /**
@@ -564,11 +572,11 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public List<Metas> rand_categories(int limit)
         {
-            if (null == siteService)
+            if (null == _siteService)
             {
                 return new List<Metas>();
             }
-            return siteService.getMetas(Types.RANDOM_META, Types.CATEGORY, limit);
+            return _siteService.getMetas(Types.RANDOM_META, Types.CATEGORY, limit);
         }
 
         /**
@@ -588,11 +596,11 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public List<Metas> tags(int limit)
         {
-            if (null == siteService)
+            if (null == _siteService)
             {
                 return new List<Metas>();
             }
-            return siteService.getMetas(Types.RECENT_META, Types.TAG, limit);
+            return _siteService.getMetas(Types.RECENT_META, Types.TAG, limit);
         }
 
         /**
@@ -603,11 +611,11 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public List<Metas> rand_tags(int limit)
         {
-            if (null == siteService)
+            if (null == _siteService)
             {
                 return new List<Metas>();
             }
-            return siteService.getMetas(Types.RANDOM_META, Types.TAG, limit);
+            return _siteService.getMetas(Types.RANDOM_META, Types.TAG, limit);
         }
 
         /**
@@ -628,11 +636,11 @@ namespace iBlogs.Site.Core.Service.Common
          */
         public string comment_at(int coid)
         {
-            if (null == siteService)
+            if (null == _siteService)
             {
                 return "";
             }
-            Comments comments = siteService.getComment(coid);
+            Comments comments = _siteService.getComment(coid);
             if (null != comments)
             {
                 return "<a href=\"#comment-" + coid + "\">@" + comments.Author + "</a>";
@@ -652,7 +660,7 @@ namespace iBlogs.Site.Core.Service.Common
             Contents contents = current_article();
             if (null != contents)
             {
-                return show_icon(contents.Cid);
+                return show_icon(contents.Cid.Value);
             }
             return show_icon(1);
         }
@@ -750,7 +758,7 @@ namespace iBlogs.Site.Core.Service.Common
             {
                 return 0;
             }
-            return siteService.getCommentCount(contents.Cid);
+            return _siteService.getCommentCount(contents.Cid.Value);
         }
 
         /**
@@ -829,7 +837,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param str
          * @return
          */
-        public bool not_empty(String str)
+        public bool not_empty(string str)
         {
             return stringKit.isNotBlank(str);
         }
@@ -839,7 +847,7 @@ namespace iBlogs.Site.Core.Service.Common
          *
          * @return
          */
-        public String site_url()
+        public string site_url()
         {
             return site_url("");
         }
@@ -849,7 +857,7 @@ namespace iBlogs.Site.Core.Service.Common
          *
          * @return
          */
-        public String site_theme()
+        public string site_theme()
         {
             return site_option("site_theme", "default");
         }
@@ -860,7 +868,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param sub 后面追加的地址
          * @return
          */
-        public String site_url(String sub)
+        public string site_url(string sub)
         {
             return site_option("site_url") + sub;
         }
@@ -871,7 +879,7 @@ namespace iBlogs.Site.Core.Service.Common
          *
          * @return
          */
-        public String site_subtitle()
+        public string site_subtitle()
         {
             return site_option("site_subtitle");
         }
@@ -881,7 +889,7 @@ namespace iBlogs.Site.Core.Service.Common
          *
          * @return
          */
-        public String allow_cloud_CDN()
+        public string allow_cloud_CDN()
         {
             return site_option("allow_cloud_CDN");
         }
@@ -894,7 +902,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param defalutValue 默认值
          * @return
          */
-        public string site_option(String key, String defalutValue)
+        public string site_option(string key, string defalutValue)
         {
             if (stringKit.isBlank(key))
             {
@@ -908,7 +916,7 @@ namespace iBlogs.Site.Core.Service.Common
          *
          * @return
          */
-        public String site_description()
+        public string site_description()
         {
             return site_option("site_description");
         }
@@ -920,7 +928,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param len
          * @return
          */
-        public String substr(String str, int len)
+        public string substr(string str, int len)
         {
             if (str.Length > len)
             {
@@ -934,7 +942,7 @@ namespace iBlogs.Site.Core.Service.Common
          *
          * @return
          */
-        public String theme_url()
+        public string theme_url()
         {
             return site_url(iBlogsConst.TEMPLATES + iBlogsConst.THEME);
         }
@@ -945,7 +953,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param sub
          * @return
          */
-        public String theme_url(String sub)
+        public string theme_url(string sub)
         {
             return site_url(iBlogsConst.TEMPLATES + iBlogsConst.THEME + sub);
         }
@@ -957,15 +965,11 @@ namespace iBlogs.Site.Core.Service.Common
          * @param email
          * @return
          */
-        public String gravatar(String email)
+        public string gravatar(string email)
         {
-            String avatarUrl = "https://cn.gravatar.com/avatar";
-            if (stringKit.isBlank(email))
-            {
-                return avatarUrl;
-            }
-            String hash = CreateMD5(email.Trim().ToLowerInvariant());
-            return avatarUrl + "/" + hash;
+            if (email.IsNullOrWhiteSpace())
+                return "https://www.gravatar.com/avatar";
+            return $"https://www.gravatar.com/avatar/{CreateMD5(email).ToLowerInvariant()}?s=60&d=blank";
         }
         private string CreateMD5(string input)
         {
@@ -991,7 +995,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param unixTime
          * @return
          */
-        public String fmtdate(long unixTime)
+        public string fmtdate(long unixTime)
         {
             return Convert.ToDateTime(unixTime).ToString("yyyy-MM-dd");
         }
@@ -1003,7 +1007,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param fmt
          * @return
          */
-        public String fmtdate(DateTime date, String fmt)
+        public string fmtdate(DateTime date, string fmt)
         {
             return date.ToString(fmt);
         }
@@ -1015,9 +1019,9 @@ namespace iBlogs.Site.Core.Service.Common
          * @param patten
          * @return
          */
-        public String fmtdate(int unixTime, String patten)
+        public string fmtdate(int unixTime, string patten)
         {
-            if (null != unixTime && stringKit.isNotBlank(patten))
+            if (stringKit.isNotBlank(patten))
             {
                 return Convert.ToDateTime(unixTime).ToString(patten);
             }
@@ -1031,7 +1035,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param str
          * @return
          */
-        public String random(int max, String str)
+        public string random(int max, string str)
         {
             return new Random().Next(1, max) + str;
         }
@@ -1044,7 +1048,7 @@ namespace iBlogs.Site.Core.Service.Common
          * @param value
          * @return
          */
-        public String emoji(String value)
+        public string emoji(string value)
         {
             throw new NotImplementedException();
         }
@@ -1055,13 +1059,13 @@ namespace iBlogs.Site.Core.Service.Common
          *
          * @return
          */
-        public String show_thumb(String content)
+        public string show_thumb(string content)
         {
             //content = TaleUtils.mdToHtml(content);
             //if (content.contains("<img"))
             //{
-            //    String img = "";
-            //    String regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
+            //    string img = "";
+            //    string regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
             //    Pattern p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
             //    Matcher m_image = p_image.matcher(content);
             //    if (m_image.find())
@@ -1076,6 +1080,26 @@ namespace iBlogs.Site.Core.Service.Common
             //    }
             //}
             return "";
+        }
+
+        public string attachURL()
+        {
+            return _optionService.Get(Types.ATTACH_URL, site_url());
+        }
+
+        public int maxFileSize()
+        {
+            return iBlogsConst.MAX_FILE_SIZE / 1024;
+        }
+
+        public string cdnURL()
+        {
+            return _optionService.Get(Types.CDN_URL, "/static/admin");
+        }
+
+        public string siteTheme()
+        {
+            return "default";
         }
     }
 

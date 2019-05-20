@@ -7,9 +7,9 @@ namespace iBlogs.Site.Core.Response
 {
     public class Archive
     {
-        public String DateStr { get; set; }
+        public string DateStr { get; set; }
         public DateTime Date { get; set; }
-        public String Count { get; set; }
+        public string Count { get; set; }
         public List<Contents> Articles { get; set; }
     }
 }
