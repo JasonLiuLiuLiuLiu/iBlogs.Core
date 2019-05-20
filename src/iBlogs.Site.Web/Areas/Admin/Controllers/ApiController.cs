@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using iBlogs.Site.Core.Entity;
 using iBlogs.Site.Core.Extensions;
 using iBlogs.Site.Core.Params;
 using iBlogs.Site.Core.Response;
+using iBlogs.Site.Core.Service;
 using iBlogs.Site.Core.Service.Common;
 using iBlogs.Site.Core.Service.Content;
 using iBlogs.Site.Core.Service.Users;
 using iBlogs.Site.Core.Utils;
 using iBlogs.Site.Core.Utils.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,13 +29,17 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         private readonly ISiteService _siteService;
         private readonly IContentsService _contentsService;
         private readonly IUserService _userService;
+        private readonly IHostingEnvironment _env;
+        private readonly IAttachService _attachService;
 
-        public ApiController(IMetasService metasService, ISiteService siteService, IContentsService contentsService, IUserService userService)
+        public ApiController(IMetasService metasService, ISiteService siteService, IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService)
         {
             _metasService = metasService;
             _siteService = siteService;
             _contentsService = contentsService;
             _userService = userService;
+            _env = env;
+            _attachService = attachService;
         }
 
         //@GetRoute("logs")
@@ -50,7 +58,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         public RestResponse<Contents> article(string cid)
         {
             Contents contents = _contentsService.getContents(cid);
-            contents.Content="";
+            contents.Content = "";
             return RestResponse<Contents>.ok(contents);
         }
 
@@ -245,6 +253,82 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         public RestResponse saveTpl(TemplateParam templateParam)
         {
             throw new NotImplementedException();
+        }
+
+        /**
+        * 上传文件接口
+        */
+        [AdminApiRoute("attach/upload")]
+        public async Task<RestResponse<List<Attach>>> uploadAsync(List<IFormFile> files)
+        {
+
+            //log.info("UPLOAD DIR = {}", TaleUtils.UP_DIR);
+
+            var users = _userService.CurrentUsers;
+            var uid = users.Uid;
+            List<Attach> errorFiles = new List<Attach>();
+            List<Attach> urls = new List<Attach>();
+
+            var fileItems = HttpContext.Request.Form.Files;
+            if (null == fileItems || fileItems.Count == 0)
+            {
+                return RestResponse<List<Attach>>.fail("请选择文件上传");
+            }
+
+            foreach (var fileItem in fileItems)
+            {
+                string fname = fileItem.FileName;
+                if ((fileItem.Length / 1024) <= iBlogsConst.MAX_FILE_SIZE)
+                {
+                    var fkey = IBlogsUtils.getFileKey(fname, _env.WebRootPath);
+
+                    var ftype = fileItem.ContentType.Contains("image") ? Types.IMAGE : Types.FILE;
+                    var filePath = _env.WebRootPath + fkey;
+
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await fileItem.CopyToAsync(stream);
+                    }
+                    if (IBlogsUtils.isImage(filePath))
+                    {
+                        var newFileName = IBlogsUtils.getFileName(fkey);
+                        var thumbnailFilePath = _env.WebRootPath + fkey.Replace(newFileName, "thumbnail_" + newFileName);
+                        IBlogsUtils.cutCenterImage(_env.WebRootPath + fkey, thumbnailFilePath, 270, 380);
+
+                    }
+
+
+                    Attach attach = new Attach();
+                    attach.FName=fname;
+                    attach.AuthorId=uid;
+                    attach.FKey=fkey;
+                    attach.FType=ftype;
+                    attach.Created=DateTime.Now.ToUnixTimestamp();
+                    if (await _attachService.Save(attach))
+                    {
+                        urls.Add(attach);
+                        _siteService.cleanCache(Types.SYS_STATISTICS);
+                    }
+                    else
+                    {
+                        errorFiles.Add(attach);
+                    }
+                    
+                }
+                else
+                {
+                    Attach attach = new Attach();
+                    attach.FName=fname;
+                    errorFiles.Add(attach);
+                }
+            }
+
+            if (errorFiles.Count > 0)
+            {
+                return RestResponse<List<Attach>>.fail().Payload(errorFiles);
+            }
+            return RestResponse<List<Attach>>.ok(urls);
         }
     }
 }

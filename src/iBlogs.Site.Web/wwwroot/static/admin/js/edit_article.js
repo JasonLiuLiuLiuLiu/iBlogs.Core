@@ -87,7 +87,7 @@ var vm = new Vue({
             var pos = window.location.toString().lastIndexOf("/");
             var cid = window.location.toString().substring(pos + 1);
             tale.get({
-                url: '/admin/api/categories',
+                url: '/admin/api/categoryList',
                 success: function (data) {
                     for(item in data.payload){
                         $vm.categories.push(data.payload[item].name);

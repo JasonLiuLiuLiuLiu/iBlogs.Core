@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using iBlogs.Site.Core.Extensions;
 using Markdig;
-using Microsoft.Extensions.FileSystemGlobbing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace iBlogs.Site.Core.Utils
 {
@@ -33,10 +34,10 @@ namespace iBlogs.Site.Core.Utils
         }
 
         /**
- * 获取文章第一张图片
- *
- * @return
- */
+        * 获取文章第一张图片
+        *
+        * @return
+        */
         public static string show_thumb(string content)
         {
             content = Markdown.ToHtml(content);
@@ -105,5 +106,51 @@ namespace iBlogs.Site.Core.Utils
                 return sBuilder.ToString();
             }
         }
+
+        public static String getFileKey(String name, string rootPath)
+        {
+            String prefix = "/upload/" + DateTime.Now.ToString("yyyy/MM");
+            String dir = rootPath + prefix;
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+            return prefix + "/" + Guid.NewGuid() + "." + Path.GetExtension(name);
+        }
+
+        /**
+        * 判断文件是否是图片类型
+        */
+        public static bool isImage(string imageFile)
+        {
+            if (!File.Exists(imageFile))
+            {
+                return false;
+            }
+            return new[] { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" }.Contains(Path.GetExtension(imageFile)?.ToUpper());
+        }
+
+        /**
+        * 根据尺寸图片居中裁剪
+        *
+        * @param src
+        * @param dist
+        * @param w
+        * @param h
+        * @throws IOException
+        */
+        public static void cutCenterImage(string src, string dist, int w, int h)
+        {
+            // Image.Load(string path) is a shortcut for our default type. 
+            // Other pixel formats use Image.Load<TPixel>(string path))
+            using (Image<Rgba32> image = Image.Load(src))
+            {
+                image.Mutate(x => x
+                    .Resize(w, h)
+                    .Grayscale());
+                image.Save(dist); // Automatic encoder selected based on extension.
+            }
+        }
+
     }
 }
