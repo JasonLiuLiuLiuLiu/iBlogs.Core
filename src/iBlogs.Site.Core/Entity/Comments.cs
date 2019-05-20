@@ -1,4 +1,5 @@
 ﻿using System;
+using iBlogs.Site.Core.Utils.Attribute;
 
 namespace iBlogs.Site.Core.Entity
 {
@@ -24,6 +25,7 @@ namespace iBlogs.Site.Core.Entity
         /**
          * 评论所属内容作者id
          */
+        [Column(Name = "owner_id")]
         public int OwnerId { get; set; }
 
         /**

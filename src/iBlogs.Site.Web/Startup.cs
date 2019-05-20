@@ -50,7 +50,7 @@ namespace iBlogs.Site.Web
                     };
                 });
             services.AddScoped<IUserService, UserService>();
-            services.AddCoreDi(options => { options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*" };});
+            services.AddCoreDi(options => { options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*" , "*Dapper*" };});
             services.AddMvc(option => option.Filters.Add<LoginFilter>());
         }
 

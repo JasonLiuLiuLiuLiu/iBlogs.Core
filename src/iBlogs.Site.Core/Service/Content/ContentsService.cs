@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Dapper;
 using iBlogs.Site.Core.Entity;
+using iBlogs.Site.Core.Extensions;
 using iBlogs.Site.Core.Params;
 using iBlogs.Site.Core.Response;
 using iBlogs.Site.Core.Service.Common;
@@ -37,6 +38,10 @@ namespace iBlogs.Site.Core.Service.Content
             var contents = _sqlLite .QueryFirstOrDefault<Contents>($"select * from t_contents where slug='{id}'") ??
                            _sqlLite.QueryFirstOrDefault<Contents>($"select * from t_contents where cid={id}");
             _viewService.Set_current_article(contents);
+            if (contents.FmtType.IsNullOrWhiteSpace())
+            {
+                contents.FmtType = "markdown";
+            }
             return contents;
         }
 
@@ -56,13 +61,16 @@ namespace iBlogs.Site.Core.Service.Content
             contents.Created = time;
             contents.Modified = time;
             contents.Hits = 0;
-
+            if (contents.FmtType.IsNullOrWhiteSpace())
+            {
+                contents.FmtType = "markdown";
+            }
             var tags = contents.Tags;
             var categories = contents.Categories;
 
             _sqlLite.Execute(
-                "INSERT INTO t_contents ( title, slug, created, modified, content, author_id, type, status, tags, categories, hits, comments_num, allow_comment, allow_ping, allow_feed) VALUES" +
-                " ( @Title, @Slug, @Created, @Modified, @Content, @AuthorId, @Type, @Status, @Tags, @Categories, @Hits, @CommentsNum, @AllowComment, @AllowPing, @AllowFeed)",
+                "INSERT INTO t_contents ( title, slug, created, modified, content, author_id, type, status, tags, categories, hits, comments_num, allow_comment, allow_ping, allow_feed,fmt_Type) VALUES" +
+                " ( @Title, @Slug, @Created, @Modified, @Content, @AuthorId, @Type, @Status, @Tags, @Categories, @Hits, @CommentsNum, @AllowComment, @AllowPing, @AllowFeed,@FmtType)",
                 contents);
 
             int cid = _sqlLite.QueryFirstOrDefault<int>("SELECT cid FROM t_contents WHERE title=@Title and created=@Created AND author_id=@AuthorId", contents);
@@ -87,7 +95,7 @@ namespace iBlogs.Site.Core.Service.Content
             var cid = contents.Cid.ValueOrDefault();
 
             _sqlLite.Execute(
-                "UPDATE t_contents SET title=@Title,slug=@Slug,modified= @Modified,content=@Content,status=@Status,tags=@Tags,categories=@Categories,allow_comment=@AllowComment,allow_ping=@AllowPing,allow_feed=@AllowFeed where cid=@Cid",
+                "UPDATE t_contents SET title=@Title,slug=@Slug,modified= @Modified,content=@Content,status=@Status,tags=@Tags,categories=@Categories,allow_comment=@AllowComment,allow_ping=@AllowPing,allow_feed=@AllowFeed,fmt_Type=@FmtType where cid=@Cid",
                 contents);
 
             var tags = contents.Tags;

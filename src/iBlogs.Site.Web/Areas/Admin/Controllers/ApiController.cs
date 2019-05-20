@@ -46,16 +46,19 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
             throw new NotImplementedException();
         }
-        [AdminApiRoute("articles/cid")]
-        public RestResponse article(string cid)
+        [AdminApiRoute("articles/{cid}")]
+        public RestResponse<Contents> article(string cid)
         {
-            throw new NotImplementedException();
+            Contents contents = _contentsService.getContents(cid);
+            contents.Content="";
+            return RestResponse<Contents>.ok(contents);
         }
 
-        // @GetRoute("articles/content/:cid")
-        public void articleContent(string cid)
+        [AdminApiRoute("articles/content/{cid}")]
+        public RestResponse<string> articleContent(string cid)
         {
-            throw new NotImplementedException();
+            Contents contents = _contentsService.getContents(cid);
+            return RestResponse<string>.ok(contents.Content);
         }
 
 

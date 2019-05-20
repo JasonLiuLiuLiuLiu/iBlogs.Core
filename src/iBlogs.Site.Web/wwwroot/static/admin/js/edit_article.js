@@ -171,9 +171,9 @@ var vm = new Vue({
                         url: '/admin/api/articles/content/' + cid,
                         success: function (data) {
                             if ($vm.article.fmtType === 'markdown') {
-                                mditor.value = data;
+                                mditor.value = data.payload;
                             } else {
-                                htmlEditor.summernote("code", data);
+                                htmlEditor.summernote("code", data.payload);
                             }
                         }
                     });
@@ -263,7 +263,7 @@ var vm = new Vue({
                     text: '文章保存成功',
                     then: function () {
                         setTimeout(function () {
-                            window.location.href = '/admin/articles';
+                            window.location.href = '/admin/article';
                         }, 500);
                     }
                 });
