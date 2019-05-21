@@ -115,9 +115,9 @@ var vm = new Vue({
                         url: '/admin/api/articles/content/' + cid,
                         success: function (data) {
                             if ($vm.article.fmtType === 'markdown') {
-                                mditor.value = data;
+                                mditor.value = data.payload;
                             } else {
-                                htmlEditor.summernote("code", data);
+                                htmlEditor.summernote("code", data.payload);
                             }
                         }
                     });
