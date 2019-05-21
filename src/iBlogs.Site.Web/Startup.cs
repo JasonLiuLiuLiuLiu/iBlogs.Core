@@ -1,9 +1,7 @@
-﻿using System;
-using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Text;
-using iBlogs.Site.Core;
-using iBlogs.Site.Core.Extensions;
+using Hangfire;
+using Hangfire.SQLite;
 using iBlogs.Site.Core.Service.Users;
 using iBlogs.Site.Core.Utils;
 using iBlogs.Site.Core.Utils.CodeDi;
@@ -31,7 +29,6 @@ namespace iBlogs.Site.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -50,7 +47,16 @@ namespace iBlogs.Site.Web
                     };
                 });
             services.AddScoped<IUserService, UserService>();
-            services.AddCoreDi(options => { options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*" , "*Dapper*" };});
+            services.AddCoreDi(options => { options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*" , "*Dapper*", "*Hangfire*" };});
+            // Add Hangfire services.
+            services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSQLiteStorage("Data Source=Hangfire"));
+
+            // Add the processing server as IHostedService
+            services.AddHangfireServer();
             services.AddMvc(option => option.Filters.Add<LoginFilter>());
         }
 
@@ -58,6 +64,8 @@ namespace iBlogs.Site.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseMiddleware<JwtInHeaderMiddleware>();
+
+            app.UseHangfireDashboard();
 
             app.UseStatusCodePages(async context =>
             {
