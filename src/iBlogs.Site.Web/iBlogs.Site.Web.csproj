@@ -14,6 +14,9 @@
 
 
   <ItemGroup>
+    <PackageReference Include="Hangfire" Version="1.7.2" />
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.6.0" />
+    <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />

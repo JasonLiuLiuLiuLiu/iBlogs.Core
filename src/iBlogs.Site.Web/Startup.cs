@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using Hangfire;
+using Hangfire.MemoryStorage;
 using Hangfire.SQLite;
 using iBlogs.Site.Core.Service.Users;
 using iBlogs.Site.Core.Utils;
@@ -53,7 +54,7 @@ namespace iBlogs.Site.Web
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                .UseSQLiteStorage("Data Source=Hangfire"));
+                .UseMemoryStorage());
 
             // Add the processing server as IHostedService
             services.AddHangfireServer();
