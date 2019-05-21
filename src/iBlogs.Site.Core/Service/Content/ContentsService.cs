@@ -69,8 +69,8 @@ namespace iBlogs.Site.Core.Service.Content
             var categories = contents.Categories;
 
             _sqlLite.Execute(
-                "INSERT INTO t_contents ( title, slug, created, modified, content, author_id, type, status, tags, categories, hits, comments_num, allow_comment, allow_ping, allow_feed,fmt_Type) VALUES" +
-                " ( @Title, @Slug, @Created, @Modified, @Content, @AuthorId, @Type, @Status, @Tags, @Categories, @Hits, @CommentsNum, @AllowComment, @AllowPing, @AllowFeed,@FmtType)",
+                "INSERT INTO t_contents ( title, slug, created, modified, content, author_id, type, status, tags, categories, hits, comments_num, allow_comment, allow_ping, allow_feed,fmt_Type,thumb_img) VALUES" +
+                " ( @Title, @Slug, @Created, @Modified, @Content, @AuthorId, @Type, @Status, @Tags, @Categories, @Hits, @CommentsNum, @AllowComment, @AllowPing, @AllowFeed,@FmtType,@ThumbImg)",
                 contents);
 
             int cid = _sqlLite.QueryFirstOrDefault<int>("SELECT cid FROM t_contents WHERE title=@Title and created=@Created AND author_id=@AuthorId", contents);
@@ -95,7 +95,7 @@ namespace iBlogs.Site.Core.Service.Content
             var cid = contents.Cid.ValueOrDefault();
 
             _sqlLite.Execute(
-                "UPDATE t_contents SET title=@Title,slug=@Slug,modified= @Modified,content=@Content,status=@Status,tags=@Tags,categories=@Categories,allow_comment=@AllowComment,allow_ping=@AllowPing,allow_feed=@AllowFeed,fmt_Type=@FmtType where cid=@Cid",
+                "UPDATE t_contents SET title=@Title,slug=@Slug,modified= @Modified,content=@Content,status=@Status,tags=@Tags,categories=@Categories,allow_comment=@AllowComment,allow_ping=@AllowPing,allow_feed=@AllowFeed,fmt_Type=@FmtType,thumb_img=@ThumbImg where cid=@Cid",
                 contents);
 
             var tags = contents.Tags;

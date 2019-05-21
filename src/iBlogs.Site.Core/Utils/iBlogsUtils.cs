@@ -70,12 +70,12 @@ namespace iBlogs.Site.Core.Utils
         }
 
         /**
- * MD5加密
- *
- * @param data 明文字符串
- * @param salt 盐
- * @return 16进制加盐密文
- */
+        * MD5加密
+        *
+        * @param data 明文字符串
+        * @param salt 盐
+        * @return 16进制加盐密文
+        */
         public static string md5(string data, string salt)
         {
             return md5(Encoding.ASCII.GetBytes((data + salt)));
