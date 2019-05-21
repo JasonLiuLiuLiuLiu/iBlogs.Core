@@ -146,8 +146,7 @@ namespace iBlogs.Site.Core.Utils
             using (Image<Rgba32> image = Image.Load(src))
             {
                 image.Mutate(x => x
-                    .Resize(w, h)
-                    .Grayscale());
+                    .Resize(w, h));
                 image.Save(dist); // Automatic encoder selected based on extension.
             }
         }

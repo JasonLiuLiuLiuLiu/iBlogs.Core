@@ -33,7 +33,7 @@
                                         <span v-show="item.status == 'draft'">草稿</span>
                                     </td>
                                     <td>
-                                        <a :href="'/admin/page/edit/' + item.cid" class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
+                                        <a :href="'/admin/pages/edit/' + item.cid" class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
                                             <i class="fa fa-edit"></i> <span>编辑</span>
                                         </a>
                                         <a click="deleteArticle(item.cid)" href="javascript:void(0)" class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
@@ -58,7 +58,7 @@
 
                         <li class="page-item" v-for="num in articlePage.navPageNums" :class="{ active: articlePage.pageNum == num }">
                             <a click="load(num)">
-                                {{ num }}</i>
+                                {{ num }}
                             </a>
                         </li>
                         <li v-if="articlePage.hasNextPage">

@@ -117,25 +117,41 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             return RestResponse<Page<Contents>>.ok(articles);
         }
 
-        //@GetRoute("pages")
-        public RestResponse pageList(ArticleParam articleParam)
+        [AdminApiRoute("pages")]
+        public RestResponse<Page<Contents>> pageList(ArticleParam articleParam)
         {
-            throw new NotImplementedException();
+            articleParam.Type=Types.PAGE;
+            articleParam.Page--;
+            Page<Contents> articles = _contentsService.findArticles(articleParam);
+            return RestResponse<Page<Contents>>.ok(articles);
         }
 
         //@SysLog("发布页面")
-        //@PostRoute("page/new")
-        public RestResponse newPage(Contents contents)
+        [AdminApiRoute("page/new")]
+        public RestResponse newPage([FromBody]Contents contents)
         {
 
-            throw new NotImplementedException();
+            var users = _userService.CurrentUsers;
+            contents.Type=Types.PAGE;
+            contents.AllowPing=true;
+            contents.AuthorId=users.Uid;
+            _contentsService.publish(contents);
+            _siteService.cleanCache(Types.SYS_STATISTICS);
+            return RestResponse.ok();
         }
 
         //@SysLog("修改页面")
-        //@PostRoute("page/update")
-        public RestResponse updatePage(Contents contents)
+        [AdminApiRoute("page/update")]
+        public RestResponse updatePage([FromBody]Contents contents)
         {
-            throw new NotImplementedException();
+            if (null == contents.Cid)
+            {
+                return RestResponse.fail("缺少参数，请重试");
+            }
+            int cid = contents.Cid.ValueOrDefault();
+            contents.Type=Types.PAGE;
+            _contentsService.updateArticle(contents);
+            return RestResponse.ok(cid);
         }
 
         // @SysLog("保存分类")
