@@ -282,20 +282,20 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         * 上传文件接口
         */
         [AdminApiRoute("attach/upload")]
-        public async Task<RestResponse<List<Attach>>> uploadAsync(List<IFormFile> files)
+        public async Task<RestResponse<List<Attachment>>> uploadAsync(List<IFormFile> files)
         {
 
             //log.info("UPLOAD DIR = {}", TaleUtils.UP_DIR);
 
             var users = _userService.CurrentUsers;
             var uid = users.Uid;
-            List<Attach> errorFiles = new List<Attach>();
-            List<Attach> urls = new List<Attach>();
+            List<Attachment> errorFiles = new List<Attachment>();
+            List<Attachment> urls = new List<Attachment>();
 
             var fileItems = HttpContext.Request.Form.Files;
             if (null == fileItems || fileItems.Count == 0)
             {
-                return RestResponse<List<Attach>>.fail("请选择文件上传");
+                return RestResponse<List<Attachment>>.fail("请选择文件上传");
             }
 
             foreach (var fileItem in fileItems)
@@ -322,36 +322,36 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                     }
 
 
-                    Attach attach = new Attach();
-                    attach.FName=fname;
-                    attach.AuthorId=uid;
-                    attach.FKey=fkey;
-                    attach.FType=ftype;
-                    attach.Created=DateTime.Now.ToUnixTimestamp();
-                    if (await _attachService.Save(attach))
+                    Attachment attachment = new Attachment();
+                    attachment.FName=fname;
+                    attachment.AuthorId=uid;
+                    attachment.FKey=fkey;
+                    attachment.FType=ftype;
+                    attachment.Created=DateTime.Now.ToUnixTimestamp();
+                    if (await _attachService.Save(attachment))
                     {
-                        urls.Add(attach);
+                        urls.Add(attachment);
                         _siteService.cleanCache(Types.SYS_STATISTICS);
                     }
                     else
                     {
-                        errorFiles.Add(attach);
+                        errorFiles.Add(attachment);
                     }
                     
                 }
                 else
                 {
-                    Attach attach = new Attach();
-                    attach.FName=fname;
-                    errorFiles.Add(attach);
+                    Attachment attachment = new Attachment();
+                    attachment.FName=fname;
+                    errorFiles.Add(attachment);
                 }
             }
 
             if (errorFiles.Count > 0)
             {
-                return RestResponse<List<Attach>>.fail().Payload(errorFiles);
+                return RestResponse<List<Attachment>>.fail().Payload(errorFiles);
             }
-            return RestResponse<List<Attach>>.ok(urls);
+            return RestResponse<List<Attachment>>.ok(urls);
         }
     }
 }

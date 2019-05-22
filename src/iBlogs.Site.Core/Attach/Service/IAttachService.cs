@@ -4,6 +4,6 @@ namespace iBlogs.Site.Core.Attach.Service
 {
     public interface IAttachService
     {
-        Task<bool> Save(Attach attach);
+        Task<bool> Save(Attachment attachment);
     }
 }

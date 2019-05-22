@@ -1,8 +1,11 @@
-﻿namespace iBlogs.Site.Core.Option
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace iBlogs.Site.Core.Option
 {
     public class Options
     {
-
+        [Key]
+        public int Id { get; set; }
         /**
          * 配置键
          */

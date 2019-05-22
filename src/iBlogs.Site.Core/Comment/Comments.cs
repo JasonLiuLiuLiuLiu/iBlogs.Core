@@ -1,20 +1,28 @@
-﻿namespace iBlogs.Site.Core.Comment
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using iBlogs.Site.Core.Content;
+using iBlogs.Site.Core.User;
+
+namespace iBlogs.Site.Core.Comment
 {
     public class Comments
     {
 
-        public int Id { get; set; }
-        public int AuthorId { get; set; }
-        public long Created { get; set; }
         /**
-         * comment表主键
-         */
+        * comment表主键
+        */
+        [Key]
         public int Coid { get; set; }
-
+        public int? AuthorId { get; set; }
+        [ForeignKey("AuthorId")]
+        public Users User { get; set; }
+        public long Created { get; set; }
         /**
          * post表主键,关联字段
          */
         public int Cid { get; set; }
+        [ForeignKey("Cid")]
+        public Contents Article { get; set; }
 
         /**
          * 评论作者

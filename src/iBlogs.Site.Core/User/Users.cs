@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 
@@ -10,6 +11,7 @@ namespace iBlogs.Site.Core.User
         /**
          * user表主键
          */
+        [Key]
         public int Uid { get; set; }
 
         /**

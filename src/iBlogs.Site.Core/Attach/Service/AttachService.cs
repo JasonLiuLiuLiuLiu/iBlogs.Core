@@ -14,14 +14,14 @@ namespace iBlogs.Site.Core.Attach.Service
             _sqlite = sqlite.DbConnection();
         }
 
-        public async Task<bool> Save(Attach attach)
+        public async Task<bool> Save(Attachment attachment)
         {
-            if(attach==null)
+            if(attachment==null)
                 throw new NullReferenceException();
 
             var  result=await  _sqlite.ExecuteAsync(
                 "insert into t_attach (fname,ftype,fkey,author_id,created) values (@FName,@FType,@FKey,@AuthorId,@Created)",
-                attach);
+                attachment);
             return result == 1;
         }
     }

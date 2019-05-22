@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.User;
 
 namespace iBlogs.Site.Core.Content
 {
@@ -9,6 +12,7 @@ namespace iBlogs.Site.Core.Content
         /**
          * 文章表主键
          */
+        [Key]
         public int Cid { get; set; }
 
         /**
@@ -88,7 +92,9 @@ namespace iBlogs.Site.Core.Content
 
         public string Url { get; set; }
 
-        public int? AuthorId { get; set; }
+        public int AuthorId { get; set; }
+        [ForeignKey("AuthorId")]
+        public Users Author { get; set; }
         public long Created { get; set; }
     }
 }

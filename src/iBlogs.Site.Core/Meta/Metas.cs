@@ -1,4 +1,6 @@
-﻿namespace iBlogs.Site.Core.Meta
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace iBlogs.Site.Core.Meta
 {
     public class Metas
     {
@@ -6,6 +8,7 @@
         /**
          * 项目主键
          */
+        [Key]
         public int Mid { get; set; }
 
         /**
