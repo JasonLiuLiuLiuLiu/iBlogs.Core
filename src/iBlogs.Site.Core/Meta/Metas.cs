@@ -45,6 +45,7 @@ namespace iBlogs.Site.Core.Meta
          * 项目下文章数
          */
         public int Count { get; set; }
-
+        [Timestamp]
+        public byte[] Timestamp { get; set; }
     }
 }
