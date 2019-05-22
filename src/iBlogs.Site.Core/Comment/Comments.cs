@@ -1,6 +1,4 @@
-﻿using iBlogs.Site.Core.Common.Attribute;
-
-namespace iBlogs.Site.Core.Content
+﻿namespace iBlogs.Site.Core.Comment
 {
     public class Comments
     {
@@ -26,7 +24,6 @@ namespace iBlogs.Site.Core.Content
         /**
          * 评论所属内容作者id
          */
-        [Column(Name = "owner_id")]
         public int OwnerId { get; set; }
 
         /**

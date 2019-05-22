@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using iBlogs.Site.Core.Comment;
 using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.Content;
 using iBlogs.Site.Core.SqLite;
 
 namespace iBlogs.Site.Core.Meta.Service

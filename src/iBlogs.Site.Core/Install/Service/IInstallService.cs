@@ -1,4 +1,4 @@
-﻿namespace iBlogs.Site.Core.Install
+﻿namespace iBlogs.Site.Core.Install.Service
 {
     public interface IInstallService
     {

@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Common\Attribute\" />
     <Folder Include="Log\Service\" />
     <Folder Include="Relationship\Service\" />
   </ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using iBlogs.Site.Core.Comment;
+using iBlogs.Site.Core.Content;
 
 namespace iBlogs.Site.Core.Meta.Service
 {
