@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using iBlogs.Site.Core.Content;
 using iBlogs.Site.Core.User;
@@ -16,7 +17,8 @@ namespace iBlogs.Site.Core.Comment
         public int? AuthorId { get; set; }
         [ForeignKey("AuthorId")]
         public Users User { get; set; }
-        public long Created { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Created { get; set; }
         /**
          * post表主键,关联字段
          */

@@ -28,7 +28,8 @@ namespace iBlogs.Site.Core.Content
         /**
          * 文章修改时间戳
          */
-        public int Modified { get; set; } = DateTime.Now.ToUnixTimestamp();
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime Modified { get; set; }
 
         /**
          * 文章内容
@@ -95,6 +96,7 @@ namespace iBlogs.Site.Core.Content
         public int AuthorId { get; set; }
         [ForeignKey("AuthorId")]
         public Users Author { get; set; }
-        public long Created { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Created { get; set; }
     }
 }

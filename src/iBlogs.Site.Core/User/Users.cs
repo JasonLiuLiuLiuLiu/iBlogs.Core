@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 
@@ -42,17 +43,18 @@ namespace iBlogs.Site.Core.User
         /**
          * 用户注册时的GMT unix时间戳
          */
-        public int Created { get; set; } = DateTime.Now.ToUnixTimestamp();
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Created { get; set; } 
 
         /**
          * 最后活动时间
          */
-        public int Activated { get; set; }
+        public DateTime Activated { get; set; }
 
         /**
          * 上次登录最后活跃时间
          */
-        public int Logged { get; set; }
+        public DateTime Logged { get; set; }
 
         /**
          * 用户组
