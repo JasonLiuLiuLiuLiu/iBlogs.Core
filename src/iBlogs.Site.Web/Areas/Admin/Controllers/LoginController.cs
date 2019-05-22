@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using iBlogs.Site.Core.Common.DTO;
 using iBlogs.Site.Core.User;
+using iBlogs.Site.Core.User.DTO;
 using iBlogs.Site.Core.User.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;

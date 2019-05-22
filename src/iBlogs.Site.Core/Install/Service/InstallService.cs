@@ -3,7 +3,7 @@ using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.SqLite;
 
-namespace iBlogs.Site.Core.Install
+namespace iBlogs.Site.Core.Install.Service
 {
     public class InstallService : IInstallService
     {

@@ -1,4 +1,4 @@
-﻿namespace iBlogs.Site.Core.Params
+﻿namespace iBlogs.Site.Core.Option.DTO
 {
     public class AdvanceParam
     {

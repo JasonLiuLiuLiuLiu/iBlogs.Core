@@ -1,4 +1,4 @@
-﻿namespace iBlogs.Site.Core.Common.DTO
+﻿namespace iBlogs.Site.Core.Install.DTO
 {
     public class InstallParam
     {

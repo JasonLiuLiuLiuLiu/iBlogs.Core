@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace iBlogs.Site.Core.Params
+﻿namespace iBlogs.Site.Core.Common.DTO
 {
     public class PageParam
     {
