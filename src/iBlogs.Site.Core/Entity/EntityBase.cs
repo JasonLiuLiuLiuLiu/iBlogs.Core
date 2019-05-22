@@ -8,7 +8,6 @@ namespace iBlogs.Site.Core.Entity
     {
         public int? Id { get; set; }
 
-        [Column(Name = "author_id")]
         public int? AuthorId { get; set; }
 
         public long? Created { get; set; }

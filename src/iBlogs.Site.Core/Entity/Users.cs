@@ -31,13 +31,11 @@ namespace iBlogs.Site.Core.Entity
         /**
          * 用户的主页
          */
-        [Column(Name = "home_url")]
         public string HomeUrl { get; set; }
 
         /**
          * 用户显示的名称
          */
-        [Column(Name = "screen_name")]
         public string ScreenName { get; set; }
 
         /**
@@ -58,7 +56,6 @@ namespace iBlogs.Site.Core.Entity
         /**
          * 用户组
          */
-        [Column(Name = "group_name")]
         public string GroupName { get; set; }
 
         public void PwdMd5()

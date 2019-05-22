@@ -5,8 +5,6 @@ namespace iBlogs.Site.Core.Entity
 {
     public class Comments : EntityBase
     {
-
-
         /**
          * comment表主键
          */
@@ -25,7 +23,6 @@ namespace iBlogs.Site.Core.Entity
         /**
          * 评论所属内容作者id
          */
-        [Column(Name = "owner_id")]
         public int OwnerId { get; set; }
 
         /**
