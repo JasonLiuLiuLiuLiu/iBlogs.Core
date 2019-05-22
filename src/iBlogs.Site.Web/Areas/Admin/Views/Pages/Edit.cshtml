@@ -1,4 +1,4 @@
-﻿@using iBlogs.Site.Core.Service.Common
+﻿@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
 
 
@@ -93,7 +93,7 @@
                 <form id="articleForm">
                     <input type="hidden" v-model="article.cid" />
                     <input type="hidden" v-model="article.status" />
-                    <input type="hidden" v-model="article.allowComment" />
+                    <input type="hidden" v-model="article.allowCommentDto" />
                     <input type="hidden" v-model="article.allowFeed" />
                     <input type="hidden" v-model="article.fmtType" />
 

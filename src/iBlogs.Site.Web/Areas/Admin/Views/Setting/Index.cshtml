@@ -1,4 +1,4 @@
-﻿@using iBlogs.Site.Core.Service.Common
+﻿@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
 
 <link href="@ViewService.cdnURL()/plugins/toggles/toggles.css" rel="stylesheet">
@@ -121,7 +121,7 @@
                                     </div>
 
                                     <input type="hidden" name="allowInstall" v-model="allowInstall" />
-                                    <input type="hidden" name="allowCommentAudit" v-model="allowCommentAudit" />
+                                    <input type="hidden" name="allowCommentDtoAudit" v-model="allowCommentDtoAudit" />
                                     <input type="hidden" name="allowCloudCDN" v-model="allowCloudCDN" />
 
                                     <div class="clearfix pull-right">

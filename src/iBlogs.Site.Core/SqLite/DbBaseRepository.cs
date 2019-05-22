@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data.Common;
-using iBlogs.Site.Core.Extensions;
+using iBlogs.Site.Core.Common;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 

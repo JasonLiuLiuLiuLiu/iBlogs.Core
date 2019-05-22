@@ -1,4 +1,5 @@
-﻿@using iBlogs.Site.Core.Service.Common
+﻿@using iBlogs.Site.Core.Common
+@using iBlogs.Site.Core.Common.Service
 @using iBlogs.Site.Core.Utils
 @inject IViewService ViewService
 @*@(ViewService.active="home")
@@ -185,7 +186,7 @@
                                         <p class="inbox-item-date">{{item.created | formatUnix('MM月DD日 HH:mm')}}</p>
                                         <p v-if="item.status == 'no_audit'" class="pull-right">
                                             <button class="btn btn-sm btn-success" click="audit(item.coid, 'approved')">通过</button>
-                                            <button class="btn btn-sm btn-danger" click="deleteComment(item.coid)">删除</button>
+                                            <button class="btn btn-sm btn-danger" click="deleteCommentDto(item.coid)">删除</button>
                                         </p>
                                     </div>
                                 </div>

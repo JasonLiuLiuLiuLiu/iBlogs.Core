@@ -3,14 +3,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using iBlogs.Site.Core.Entity;
-using iBlogs.Site.Core.Params;
-using iBlogs.Site.Core.Response;
-using iBlogs.Site.Core.Service.Users;
+using iBlogs.Site.Core.Common.DTO;
+using iBlogs.Site.Core.User;
+using iBlogs.Site.Core.User.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using ClaimTypes = iBlogs.Site.Core.Dto.ClaimTypes;
+using ClaimTypes = iBlogs.Site.Core.Common.ClaimTypes;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
 {

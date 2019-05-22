@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using iBlogs.Site.Core;
-using iBlogs.Site.Core.Extensions;
+using iBlogs.Site.Core.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using iBlogs.Site.Core.Dto;
-using iBlogs.Site.Core.Service.Users;
+using iBlogs.Site.Core.Common;
+using iBlogs.Site.Core.User.DTO;
+using iBlogs.Site.Core.User.Service;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace iBlogs.Site.Web.Filter

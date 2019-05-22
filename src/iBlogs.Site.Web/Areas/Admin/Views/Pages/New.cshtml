@@ -1,4 +1,4 @@
-﻿@using iBlogs.Site.Core.Service.Common
+﻿@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
 
 <link href="@ViewService.cdnURL()/plugins/tagsinput/jquery.tagsinput.css" rel="stylesheet">
@@ -92,7 +92,7 @@
                     <input type="hidden" v-model="article.cid" />
                     <input type="hidden" v-model="article.created" />
                     <input type="hidden" v-model="article.status" />
-                    <input type="hidden" v-model="article.allowComment" />
+                    <input type="hidden" v-model="article.allowCommentDto" />
                     <input type="hidden" v-model="article.allowFeed" />
                     <input type="hidden" v-model="article.fmtType" />
 
