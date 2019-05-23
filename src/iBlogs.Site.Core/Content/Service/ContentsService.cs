@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Common;
+using System.Linq;
 using System.Text;
 using iBlogs.Site.Core.Comment;
 using iBlogs.Site.Core.Common;
@@ -7,22 +8,25 @@ using iBlogs.Site.Core.Common.DTO;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Service;
 using iBlogs.Site.Core.Content.DTO;
+using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Meta.Service;
-using iBlogs.Site.Core.SqLite;
+using iBlogs.Site.Core.Relationship.Service;
 
 namespace iBlogs.Site.Core.Content.Service
 {
     public class ContentsService : IContentsService
     {
-        private readonly DbConnection _sqlLite;
         private readonly IViewService _viewService;
         private readonly IMetasService _metasService;
+        private readonly IRepository<Contents> _repository;
+        private readonly IRelationshipService _relationshipService;
 
-        public ContentsService(IDbBaseRepository dbBaseRepository, IViewService viewService, IMetasService metasService)
+        public ContentsService( IViewService viewService, IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService)
         {
-            _sqlLite = dbBaseRepository.DbConnection();
             _viewService = viewService;
             _metasService = metasService;
+            _repository = repository;
+            _relationshipService = relationshipService;
         }
 
         /**
@@ -32,8 +36,7 @@ namespace iBlogs.Site.Core.Content.Service
          */
         public Contents getContents(string id)
         {
-            var contents = _sqlLite .QueryFirstOrDefault<Contents>($"select * from t_contents where slug='{id}'") ??
-                           _sqlLite.QueryFirstOrDefault<Contents>($"select * from t_contents where cid={id}");
+            var contents = _repository.GetAll().FirstOrDefault(c => c.Slug == id) ?? _repository.FirstOrDefault(int.Parse(id));
             _viewService.Set_current_article(contents);
             if (contents.FmtType.IsNullOrWhiteSpace())
             {
@@ -53,10 +56,8 @@ namespace iBlogs.Site.Core.Content.Service
             {
                 throw new Exception("请登录后发布文章");
             }
-
-            int time = DateTime.Now.ToUnixTimestamp();
-            contents.Created = time;
-            contents.Modified = time;
+            contents.Created = DateTime.Now;
+            contents.Modified = DateTime.Now;
             contents.Hits = 0;
             if (contents.FmtType.IsNullOrWhiteSpace())
             {
@@ -65,12 +66,7 @@ namespace iBlogs.Site.Core.Content.Service
             var tags = contents.Tags;
             var categories = contents.Categories;
 
-            _sqlLite.Execute(
-                "INSERT INTO t_contents ( title, slug, created, modified, content, author_id, type, status, tags, categories, hits, comments_num, allow_comment, allow_ping, allow_feed,fmt_Type,thumb_img) VALUES" +
-                " ( @Title, @Slug, @Created, @Modified, @Content, @AuthorId, @Type, @Status, @Tags, @Categories, @Hits, @CommentsNum, @AllowComment, @AllowPing, @AllowFeed,@FmtType,@ThumbImg)",
-                contents);
-
-            int cid = _sqlLite.QueryFirstOrDefault<int>("SELECT cid FROM t_contents WHERE title=@Title and created=@Created AND author_id=@AuthorId", contents);
+            var cid = _repository.InsertOrUpdateAndGetId(contents);
 
             _metasService.saveMetas(cid, tags, Types.TAG);
             _metasService.saveMetas(cid, categories, Types.CATEGORY);
@@ -85,22 +81,18 @@ namespace iBlogs.Site.Core.Content.Service
          */
         public void updateArticle(Contents contents)
         {
-            contents.Modified=DateTime.Now.ToUnixTimestamp();
+            contents.Modified=DateTime.Now;
             contents.Tags=contents.Tags ?? "";
             contents.Categories=contents.Categories ?? "";
 
-            var cid = contents.Id.ValueOrDefault();
-
-            _sqlLite.Execute(
-                "UPDATE t_contents SET title=@Title,slug=@Slug,modified= @Modified,content=@Content,status=@Status,tags=@Tags,categories=@Categories,allow_comment=@AllowComment,allow_ping=@AllowPing,allow_feed=@AllowFeed,fmt_Type=@FmtType,thumb_img=@ThumbImg where cid=@Id",
-                contents);
+            var cid = _repository.InsertOrUpdateAndGetId(contents);
 
             var tags = contents.Tags;
             var categories = contents.Categories;
 
             if (null != contents.Type && !contents.Type.Equals(Types.PAGE))
             {
-                _sqlLite.Execute("delete from t_relationships where cid=@cid",new{cid});
+                _relationshipService.DeleteByContentId(cid);
             }
 
             _metasService.saveMetas(cid, tags, Types.TAG);
@@ -132,33 +124,34 @@ namespace iBlogs.Site.Core.Content.Service
 
         public Page<Contents> findArticles(ArticleParam articleParam)
         {
-            var sqlBuilder = new StringBuilder();
-            sqlBuilder.Append("select * from t_contents where 1=1");
+            //var sqlBuilder = new StringBuilder();
+            //sqlBuilder.Append("select * from t_contents where 1=1");
 
 
 
-            if (articleParam.Categories != null)
-                sqlBuilder.Append(" and categories like '%@categories%' ");
+            //if (articleParam.Categories != null)
+            //    sqlBuilder.Append(" and categories like '%@categories%' ");
 
-            if (articleParam.Status != null)
-                sqlBuilder.Append(" and status like '%@status%'");
+            //if (articleParam.Status != null)
+            //    sqlBuilder.Append(" and status like '%@status%'");
 
-            if (articleParam.Title != null)
-                sqlBuilder.Append(" and title like '%@Title%'");
+            //if (articleParam.Title != null)
+            //    sqlBuilder.Append(" and title like '%@Title%'");
 
-            if (articleParam.Type != null)
-                sqlBuilder.Append(" and type=@Type");
+            //if (articleParam.Type != null)
+            //    sqlBuilder.Append(" and type=@Type");
 
-            var count = _sqlLite.QueryCount(sqlBuilder.ToString(), articleParam);
+            //var count = _sqlLite.QueryCount(sqlBuilder.ToString(), articleParam);
 
-            sqlBuilder.Append($" and {articleParam.OrderBy} NOT IN ( SELECT {articleParam.OrderBy} FROM t_contents ORDER BY {articleParam.OrderBy} {articleParam.OrderType} LIMIT {(articleParam.Page) * articleParam.Limit})");
+            //sqlBuilder.Append($" and {articleParam.OrderBy} NOT IN ( SELECT {articleParam.OrderBy} FROM t_contents ORDER BY {articleParam.OrderBy} {articleParam.OrderType} LIMIT {(articleParam.Page) * articleParam.Limit})");
 
-            sqlBuilder.Append($" order by {articleParam.OrderBy} {articleParam.OrderType}");
-            sqlBuilder.Append(" LIMIT @Limit ");
+            //sqlBuilder.Append($" order by {articleParam.OrderBy} {articleParam.OrderType}");
+            //sqlBuilder.Append(" LIMIT @Limit ");
 
-            var contents = _sqlLite.Query<Contents>(sqlBuilder.ToString(), articleParam).ToList();
+            //var contents = _sqlLite.Query<Contents>(sqlBuilder.ToString(), articleParam).ToList();
 
-            return new Page<Contents>(count, articleParam.Page + 1, articleParam.Limit, contents);
+            //return new Page<Contents>(count, articleParam.Page + 1, articleParam.Limit, contents);
+            throw new NotImplementedException();
         }
     }
 }

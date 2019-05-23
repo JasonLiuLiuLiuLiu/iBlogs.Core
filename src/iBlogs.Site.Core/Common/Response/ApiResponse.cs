@@ -44,6 +44,29 @@ namespace iBlogs.Site.Core.Common.DTO
             response.SetCode(code);
             return response;
         }
+        public static Response<T> Ok()
+        {
+            return new Response<T>(){Success = true};
+        }
+        public static Response<T> Ok(int code)
+        {
+            return new Response<T>(){Success = true,Code = code};
+        }
+
+        public static Response<T> Fail()
+        {
+            return new Response<T>(){Success = false};
+        }
+
+        public static Response<T> Fail(string message)
+        {
+            return new Response<T>(){Success = false,Msg = message};
+        }
+
+        public static Response<T> Fail(int code, string message)
+        {
+            return new Response<T>(){ Success = false, Msg = message ,Code = code};
+        }
     }
 
     public class Response

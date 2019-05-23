@@ -1,28 +1,26 @@
 ﻿using System;
 using System.Data;
 using System.Threading.Tasks;
-using iBlogs.Site.Core.SqLite;
+using iBlogs.Site.Core.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Attach.Service
 {
     public class AttachService : IAttachService
     {
-        private readonly IDbConnection _sqlite;
+        private readonly IRepository<Attachment> _repository;
 
-        public AttachService(IDbBaseRepository sqlite)
+        public AttachService(IRepository<Attachment> repository)
         {
-            _sqlite = sqlite.DbConnection();
+            _repository = repository;
         }
 
         public async Task<bool> Save(Attachment attachment)
         {
-            if(attachment==null)
+            if (attachment == null)
                 throw new NullReferenceException();
 
-            var  result=await  _sqlite.ExecuteAsync(
-                "insert into t_attach (fname,ftype,fkey,author_id,created) values (@FName,@FType,@FKey,@AuthorId,@Created)",
-                attachment);
-            return result == 1;
+            var result = await _repository.InsertOrUpdateAndGetIdAsync(attachment);
+            return result != 0;
         }
     }
 }

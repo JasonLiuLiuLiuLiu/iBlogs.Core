@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using iBlogs.Site.Core.Comment;
+using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Content;
-using iBlogs.Site.Core.SqLite;
+using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.Relationship.Service;
 
 namespace iBlogs.Site.Core.Meta.Service
 {
     public class MetasService : IMetasService
     {
-        private readonly DbConnection _sqlite;
+        private readonly IRepository<Metas> _repository;
+        private readonly IRelationshipService _relationshipService;
 
-        public MetasService(IDbBaseRepository db)
+        public MetasService(IRepository<Metas> repository, IRelationshipService relationshipService)
         {
-            _sqlite = db.DbConnection();
+            _repository = repository;
+            _relationshipService = relationshipService;
         }
 
         /**
@@ -78,24 +83,21 @@ namespace iBlogs.Site.Core.Meta.Service
 
         private void saveOrUpdate(int cid, string name, string type)
         {
-            var metas = _sqlite.QueryFirstOrDefault<Metas>(
-                "select * from t_metas where name=@name and type=@type",new {cid,name,type});
+
+            var metas = _repository.GetAll().Where(m => m.Name == name).FirstOrDefault(m => m.Type == type);
             int mid;
-            if (null != metas) {
-                mid = metas.Mid;
-            } else {
-                metas = new Metas {Slug = name, Name = name, Type = type};
-                _sqlite.Execute("insert into t_metas (name,type) values (@Name,@Type)", metas);
-                mid = _sqlite.QueryFirstOrDefault<int>("select mid from t_metas where name=@name and type=@type", new { cid, name, type });
+            if (null != metas)
+            {
+                mid = metas.Id;
+            }
+            else
+            {
+                metas = new Metas { Slug = name, Name = name, Type = type };
+                mid = _repository.InsertAndGetId(metas);
             }
             if (mid != 0)
             {
-                var count = _sqlite.QueryFirstOrDefault<int>("select count(1) from t_relationships where cid=@cid and mid=@mid",
-                    new {cid, mid});
-                if (count == 0)
-                {
-                    _sqlite.Execute("insert into t_relationships (cid,mid) values (@cid,@mid)", new { cid, mid });
-                }
+                _relationshipService.SaveOrUpdate(cid, mid);
             }
         }
 
@@ -127,21 +129,49 @@ namespace iBlogs.Site.Core.Meta.Service
             {
                 return;
             }
+            _repository.InsertOrUpdate(new Metas() { Id = mid.ValueOrDefault(), Name = name, Type = type });
+        }
 
-            if (null != mid)
+        public List<Metas> getMetas(string searchType, string type, int limit)
+        {
+            if (stringKit.isBlank(searchType) || stringKit.isBlank(type))
             {
+                return new List<Metas>();
+            }
 
-                _sqlite.Execute("update t_metas set name=@name where mid=@mid", new { name, mid = mid.Value });
-            }
-            else
+            if (limit < 1 || limit > iBlogsConst.MAX_POSTS)
             {
-                var metas = _sqlite.QueryFirstOrDefault<Metas>("select * from t_metas WHERE type=@type and name=@name", new { type, name });
-                if (null != metas)
-                {
-                    throw new Exception("已经存在该项");
-                }
-                _sqlite.Execute("insert into t_metas (name,type) values (@name,@type)", new { name, type });
+                limit = 10;
             }
+
+            //// 获取最新的项目
+            //if (Types.RECENT_META.Equals(searchType))
+            //{
+            //    var sql =
+            //        "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
+            //        +
+            //        "where a.type = @type group by a.mid order by count desc, a.mid desc limit @limit";
+
+            //    return _.Query<Metas>(sql, new { type = type, limit = limit }).ToList();
+            //}
+
+            //// 随机获取项目
+            //if (Types.RANDOM_META.Equals(searchType))
+            //{
+            //    List<int> mids = _sqLite.Query<int>(
+            //        "select mid from t_metas where type = @type order by random() * mid limit @limit",
+            //        new { type = type, limit = limit }).ToList();
+            //    if (mids != null)
+            //    {
+            //        string sql =
+            //            "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
+            //            +
+            //            "where a.mid in @mids group by a.mid order by count desc, a.mid desc";
+
+            //        return _sqLite.Query<Metas>(sql, mids).ToList();
+            //    }
+            //}
+            return new List<Metas>();
         }
 
         private string reMeta(string name, string metas)

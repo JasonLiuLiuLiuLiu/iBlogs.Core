@@ -1,31 +1,26 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.SqLite;
+using iBlogs.Site.Core.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Option.Service
 {
     public class OptionService : IOptionService
     {
-        private IDbBaseRepository _dbBaseRepository;
+        private readonly IRepository<Options> _repository;
         private IDictionary<string, string> _options;
 
-        public OptionService(IDbBaseRepository dbBaseRepository)
+        public OptionService(IRepository<Options> repository)
         {
-            _dbBaseRepository = dbBaseRepository;
+            _repository = repository;
             _options = new Dictionary<string, string>();
             ReLoad();
         }
 
         public void ReLoad()
         {
-            var options =
-                _dbBaseRepository.DbConnection().QueryAsync<Options>("select * from t_options");
             _options.Clear();
-            foreach (var option in options.Result)
-            {
-                if (!_options.ContainsKey(option.Name))
-                    _options.Add(option.Name, option.Value);
-            }
+            _options = _repository.GetAll().ToDictionary(o => o.Name, o => o.Value);
         }
 
         public void Set(string key, string value)
@@ -35,14 +30,14 @@ namespace iBlogs.Site.Core.Option.Service
                     return;
                 else
                 {
-                    _dbBaseRepository.DbConnection().Execute("update t_options set value=@value where name=@name",
-                        new { value = value, name = key });
+                    var entity = _repository.GetAll().FirstOrDefault(o => o.Name == key);
+                    entity.Value = value;
+                    _repository.Update(entity);
                     _options[key] = value;
                 }
             else
             {
-                _dbBaseRepository.DbConnection().Execute("insert into t_options (name,value) values(@name,@value)",
-                    new { value = value, name = key });
+                _repository.Insert(new Options {Name = key, Value = value});
                 _options.Add(key, value);
             }
         }
@@ -92,7 +87,7 @@ namespace iBlogs.Site.Core.Option.Service
             if (_options.ContainsKey(key))
             {
                 _options.Remove(key);
-                _dbBaseRepository.DbConnection().Execute("delete options  where name=@name", new { name = key });
+                _repository.Delete(_repository.GetAll().FirstOrDefault(o=>o.Name==key));
             }
         }
 

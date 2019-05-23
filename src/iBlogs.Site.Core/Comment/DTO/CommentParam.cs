@@ -1,4 +1,5 @@
 ﻿using iBlogs.Site.Core.Common.DTO;
+using iBlogs.Site.Core.Common.Request;
 
 namespace iBlogs.Site.Core.Comment.DTO
 {

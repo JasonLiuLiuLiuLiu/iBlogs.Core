@@ -1,5 +1,6 @@
 ﻿using iBlogs.Site.Core.Comment;
 using iBlogs.Site.Core.Common.DTO;
+using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Content.DTO;
 
 namespace iBlogs.Site.Core.Content.Service

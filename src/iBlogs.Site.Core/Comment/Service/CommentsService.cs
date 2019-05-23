@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using iBlogs.Site.Core.Comment.DTO;
 using iBlogs.Site.Core.Common.DTO;
+using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Content;
 
 namespace iBlogs.Site.Core.Comment.Service

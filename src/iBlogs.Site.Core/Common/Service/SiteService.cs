@@ -6,17 +6,17 @@ using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Content;
 using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.Meta;
-using iBlogs.Site.Core.SqLite;
+using iBlogs.Site.Core.Meta.Service;
 
 namespace iBlogs.Site.Core.Common.Service
 {
     public class SiteService : ISiteService
     {
-        private readonly DbConnection _sqLite;
+        private readonly IMetasService _metasService;
 
-        public SiteService(IDbBaseRepository db)
+        public SiteService(IMetasService metasService)
         {
-            _sqLite = db.DbConnection();
+            _metasService = metasService;
         }
 
         /**
@@ -91,29 +91,29 @@ namespace iBlogs.Site.Core.Common.Service
             // 获取最新的项目
             if (Types.RECENT_META.Equals(searchType))
             {
-                var sql =
-                    "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
-                    +
-                    "where a.type = @type group by a.mid order by count desc, a.mid desc limit @limit";
+                //var sql =
+                //    "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
+                //    +
+                //    "where a.type = @type group by a.mid order by count desc, a.mid desc limit @limit";
 
-                return _sqLite.Query<Metas>(sql, new { type = type, limit = limit }).ToList();
+                //return _sqLite.Query<Metas>(sql, new { type = type, limit = limit }).ToList();
             }
 
             // 随机获取项目
             if (Types.RANDOM_META.Equals(searchType))
             {
-                List<int> mids = _sqLite.Query<int>(
-                "select mid from t_metas where type = @type order by random() * mid limit @limit",
-                new { type = type, limit = limit }).ToList();
-                if (mids != null)
-                {
-                    string sql =
-                        "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
-                        +
-                        "where a.mid in @mids group by a.mid order by count desc, a.mid desc";
+                //List<int> mids = _sqLite.Query<int>(
+                //"select mid from t_metas where type = @type order by random() * mid limit @limit",
+                //new { type = type, limit = limit }).ToList();
+                //if (mids != null)
+                //{
+                //    string sql =
+                //        "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
+                //        +
+                //        "where a.mid in @mids group by a.mid order by count desc, a.mid desc";
 
-                    return _sqLite.Query<Metas>(sql, mids).ToList();
-                }
+                //    return _sqLite.Query<Metas>(sql, mids).ToList();
+                //}
             }
             return new List<Metas>();
         }
