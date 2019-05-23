@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using iBlogs.Site.Core;
 using iBlogs.Site.Core.Common;
+using iBlogs.Site.Core.Common.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 

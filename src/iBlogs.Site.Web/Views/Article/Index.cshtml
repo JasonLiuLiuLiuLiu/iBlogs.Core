@@ -1,4 +1,5 @@
 ﻿@inject IViewService ViewService
+@using iBlogs.Site.Core.Common.Extensions
 @using iBlogs.Site.Core.Common.Service
 @model ViewBaseModel
 <article class="main-content page-page" itemscope itemtype="http://schema.org/Article">
@@ -94,7 +95,7 @@
                                         <p>@ViewService.article(comment.Content)</p>
                                     </div>
                                     <div class="comment-meta">
-                                        <time class="comment-time">@ViewService.fmtdate(comment.Created.Value)</time>
+                                        <time class="comment-time">@ViewService.fmtdate(comment.Created.ToUnixTimestamp())</time>
                                         <span class="comment-reply">
                                             <a rel="nofollow" onclick="TaleComment.reply('@comment.Id');">回复</a>
                                         </span>
@@ -124,7 +125,7 @@
                                                             <p>@ViewService.article(child.Content)</p>
                                                         </div>
                                                         <div class="comment-meta">
-                                                            <time class="comment-time">@ViewService.fmtdate(child.Created.Value)</time>
+                                                            <time class="comment-time">@ViewService.fmtdate(child.Created.ToUnixTimestamp())</time>
                                                             <span class="comment-reply">
                                                                 <a rel="nofollow" onclick="TaleComment.reply('@child.Id');">回复</a>
                                                             </span>

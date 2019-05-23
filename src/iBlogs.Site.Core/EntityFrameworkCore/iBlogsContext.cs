@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Mail;
+﻿using iBlogs.Site.Core.Attach;
 using iBlogs.Site.Core.Comment;
 using iBlogs.Site.Core.Content;
 using iBlogs.Site.Core.Log;

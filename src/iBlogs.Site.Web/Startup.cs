@@ -4,12 +4,14 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.CodeDi;
+using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.User.Service;
 using iBlogs.Site.Web.Filter;
 using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -21,7 +23,6 @@ namespace iBlogs.Site.Web
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            IBlogsBoot.Startup(Configuration);
         }
 
         public IConfiguration Configuration { get; }
@@ -29,6 +30,8 @@ namespace iBlogs.Site.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<iBlogsContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("iBlogs")));
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -46,8 +49,12 @@ namespace iBlogs.Site.Web
                         ValidateLifetime = true,
                     };
                 });
-            services.AddScoped<IUserService, UserService>();
-            services.AddCoreDi(options => { options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*" , "*Dapper*", "*Hangfire*" };});
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddCoreDi(options =>
+            {
+                options.IgnoreAssemblies = new[] {"*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*"};
+                options.IgnoreInterface = new[] {"*IEntityBase*"};
+            });
             // Add Hangfire services.
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)

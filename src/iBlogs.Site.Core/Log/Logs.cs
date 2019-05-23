@@ -18,6 +18,12 @@ namespace iBlogs.Site.Core.Log
         public string Action { get; set; }
         public string Data { get; set; }
         public string Ip { get; set; }
+
+        public Logs()
+        {
+
+        }
+
         public Logs(string action, string data, string ip, int uid)
         {
             this.Action = action;
