@@ -36,7 +36,6 @@
 
   <ItemGroup>
     <Folder Include="Common\Attribute\" />
-    <Folder Include="Log\Service\" />
   </ItemGroup>
 
 </Project>
