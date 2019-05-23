@@ -33,7 +33,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public RestResponse<string> Index(LoginParam loginParam)
+        public Response<string> Index(LoginParam loginParam)
         {
             var user = _userService.FindUsers(new Users
             {
@@ -41,8 +41,8 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                 Password = loginParam.Password
             }).FirstOrDefault();
             if (user != null)
-                return RestResponse<string>.ok(GenerateJsonWebToken(user));
-            return RestResponse<string>.fail("没有找到该用户!");
+                return Response<string>.Ok(GenerateJsonWebToken(user));
+            return Response<string>.fail("没有找到该用户!");
         }
 
         private string GenerateJsonWebToken(Users user)

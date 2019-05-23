@@ -48,7 +48,7 @@ namespace iBlogs.Site.Web.Controllers
         }
 
         [HttpPost]
-        public RestResponse<int> Index(InstallParam param)
+        public Response<int> Index(InstallParam param)
         {
 
             var installed = _configuration[ConfigKey.DbInstalled].ToBool();
@@ -62,15 +62,15 @@ namespace iBlogs.Site.Web.Controllers
                     };
                     if (!_userService.InsertUser(temp))
                     {
-                        return RestResponse<int>.fail("安装失败");
+                        return Response<int>.fail("安装失败");
                     }
                     var siteUrl = IBlogsUtils.buildURL(param.SiteUrl);
                     _optionService.saveOption("site_title", param.SiteTitle);
                     _optionService.saveOption("site_url", siteUrl);
-                    return RestResponse<int>.ok();
+                    return Response<int>.Ok();
                 }
             }
-            return RestResponse<int>.fail("安装失败");
+            return Response<int>.fail("安装失败");
         }
     }
 }
