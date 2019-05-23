@@ -2,74 +2,74 @@
 
 namespace iBlogs.Site.Core.Common.Response
 {
-    public class Response<T> : Response
+    public class ApiResponse<T> : ApiResponse
     {
         public T Payload { get; set; }
 
-        public Response()
+        public ApiResponse()
         {
         }
 
-        public Response(bool success, T payload) : base(success)
+        public ApiResponse(bool success, T payload) : base(success)
         {
             Payload = payload;
         }
 
 
-        public Response<T> SetPayload(T payload)
+        public ApiResponse<T> SetPayload(T payload)
         {
             Payload = payload;
             return this;
         }
 
-        public Response<T> SetMessage(string msg)
+        public ApiResponse<T> SetMessage(string msg)
         {
             Msg = msg;
             return this;
         }
 
-        public static Response<T> Ok(T payload)
+        public static ApiResponse<T> Ok(T payload)
         {
-            var response = new Response<T>();
+            var response = new ApiResponse<T>();
             response.SetSuccess(true);
             response.SetPayload(payload);
             return response;
         }
 
-        public static Response<T> Ok(T payload, int code)
+        public static ApiResponse<T> Ok(T payload, int code)
         {
-            var response = new Response<T>();
+            var response = new ApiResponse<T>();
             response.SetSuccess(true);
             response.SetPayload(payload);
             response.SetCode(code);
             return response;
         }
-        public static Response<T> Ok()
+        public static ApiResponse<T> Ok()
         {
-            return new Response<T>(){Success = true};
+            return new ApiResponse<T>(){Success = true};
         }
-        public static Response<T> Ok(int code)
+        public static ApiResponse<T> Ok(int code)
         {
-            return new Response<T>(){Success = true,Code = code};
-        }
-
-        public static Response<T> Fail()
-        {
-            return new Response<T>(){Success = false};
+            return new ApiResponse<T>(){Success = true,Code = code};
         }
 
-        public static Response<T> Fail(string message)
+        public static ApiResponse<T> Fail()
         {
-            return new Response<T>(){Success = false,Msg = message};
+            return new ApiResponse<T>(){Success = false};
         }
 
-        public static Response<T> Fail(int code, string message)
+        public static ApiResponse<T> Fail(string message)
         {
-            return new Response<T>(){ Success = false, Msg = message ,Code = code};
+            return new ApiResponse<T>(){Success = false,Msg = message};
+        }
+
+        public static ApiResponse<T> Fail(int code, string message)
+        {
+            return new ApiResponse<T>(){ Success = false, Msg = message ,Code = code};
         }
     }
 
-    public class Response
+    public class ApiResponse
     {
         /**
          * The request was successful
@@ -91,58 +91,58 @@ namespace iBlogs.Site.Core.Common.Response
          */
         public long Timestamp { get; set; }
 
-        public Response()
+        public ApiResponse()
         {
             Timestamp = DateTimeOffset.UtcNow.Millisecond;
         }
 
-        public Response(bool success) : this()
+        public ApiResponse(bool success) : this()
         {
             Success = success;
         }
 
 
-        public Response SetSuccess(bool success)
+        public ApiResponse SetSuccess(bool success)
         {
             Success = success;
             return this;
         }
 
 
-        public Response SetCode(int code)
+        public ApiResponse SetCode(int code)
         {
             Code = code;
             return this;
         }
 
-        public Response Message(string msg)
+        public ApiResponse Message(string msg)
         {
             Msg = msg;
             return this;
         }
 
-        public static Response Ok()
+        public static ApiResponse Ok()
         {
-            return new Response().SetSuccess(true);
+            return new ApiResponse().SetSuccess(true);
         }
-        public static Response Ok(int code)
+        public static ApiResponse Ok(int code)
         {
-            return new Response().SetSuccess(true).SetCode(code);
-        }
-
-        public static Response Fail()
-        {
-            return new Response().SetSuccess(false);
+            return new ApiResponse().SetSuccess(true).SetCode(code);
         }
 
-        public static Response Fail(string message)
+        public static ApiResponse Fail()
         {
-            return new Response().SetSuccess(false).Message(message);
+            return new ApiResponse().SetSuccess(false);
         }
 
-        public static Response Fail(int code, string message)
+        public static ApiResponse Fail(string message)
         {
-            return new Response().SetSuccess(false).Message(message).SetCode(code);
+            return new ApiResponse().SetSuccess(false).Message(message);
+        }
+
+        public static ApiResponse Fail(int code, string message)
+        {
+            return new ApiResponse().SetSuccess(false).Message(message).SetCode(code);
         }
     }
 }

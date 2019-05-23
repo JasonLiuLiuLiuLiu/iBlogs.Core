@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using iBlogs.Site.Core.Attach;
+using iBlogs.Site.Core.Attach.Service;
 using iBlogs.Site.Core.Comment;
 using iBlogs.Site.Core.Comment.DTO;
 using iBlogs.Site.Core.Common;
@@ -19,14 +19,11 @@ using iBlogs.Site.Core.Meta;
 using iBlogs.Site.Core.Meta.DTO;
 using iBlogs.Site.Core.Meta.Service;
 using iBlogs.Site.Core.Option.DTO;
-using iBlogs.Site.Core.Service;
 using iBlogs.Site.Core.User.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
 {
@@ -114,7 +111,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             contents.Type = Types.ARTICLE;
             var cid = contents.Id;
             _contentsService.updateArticle(contents);
-            return ApiResponse<int>.Ok(cid.ValueOrDefault());
+            return ApiResponse<int>.Ok(cid);
         }
 
         // @GetRoute("articles")
@@ -146,7 +143,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             contents.AuthorId=users.Uid;
             _contentsService.publish(contents);
             _siteService.cleanCache(Types.SYS_STATISTICS);
-            return Core.Common.DTO.ApiResponse.Ok();
+            return ApiResponse.Ok();
         }
 
         //@SysLog("修改页面")
@@ -155,12 +152,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
             if (null == contents.Id)
             {
-                return Core.Common.DTO.ApiResponse.Fail("缺少参数，请重试");
+                return ApiResponse.Fail("缺少参数，请重试");
             }
-            int cid = contents.Id.ValueOrDefault();
+            int cid = contents.Id;
             contents.Type=Types.PAGE;
             _contentsService.updateArticle(contents);
-            return Core.Common.DTO.ApiResponse.Ok(cid);
+            return ApiResponse.Ok(cid);
         }
 
         // @SysLog("保存分类")
@@ -169,7 +166,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
             _metasService.saveMeta(Types.CATEGORY, metaParam.cname, metaParam.mid);
             _siteService.cleanCache(Types.SYS_STATISTICS);
-            return Core.Common.DTO.ApiResponse.Ok();
+            return ApiResponse.Ok();
         }
 
         // @SysLog("删除分类/标签")

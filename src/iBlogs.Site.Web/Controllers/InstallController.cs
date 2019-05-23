@@ -11,7 +11,6 @@ using iBlogs.Site.Core.Install;
 using iBlogs.Site.Core.Install.DTO;
 using iBlogs.Site.Core.Install.Service;
 using iBlogs.Site.Core.Option.Service;
-using iBlogs.Site.Core.Service;
 using iBlogs.Site.Core.User;
 using iBlogs.Site.Core.User.Service;
 using iBlogs.Site.Web.Models;

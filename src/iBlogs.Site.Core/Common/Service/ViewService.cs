@@ -127,7 +127,7 @@ namespace iBlogs.Site.Core.Common.Service
          */
         public string permalink(Contents contents)
         {
-            return permalink(contents.Id.Value, contents.Slug);
+            return permalink(contents.Id, contents.Slug);
         }
 
         /**
@@ -151,7 +151,7 @@ namespace iBlogs.Site.Core.Common.Service
         public string created(string frm)
         {
             Contents contents = current_article();
-            return contents?.Created.Value.ToString(frm);
+            return contents?.Created.ToString(frm);
 
         }
 
@@ -432,7 +432,7 @@ namespace iBlogs.Site.Core.Common.Service
         public Contents article_next()
         {
             Contents cur = current_article();
-            return null != cur ? _siteService.getNhContent(Types.NEXT, cur.Created.Value) : null;
+            return null != cur ? _siteService.getNhContent(Types.NEXT, cur.Created.ToUnixTimestamp()) : null;
         }
 
         /**
@@ -443,7 +443,7 @@ namespace iBlogs.Site.Core.Common.Service
         public Contents article_prev()
         {
             Contents cur = current_article();
-            return null != cur ? _siteService.getNhContent(Types.PREV, cur.Created.Value) : null;
+            return null != cur ? _siteService.getNhContent(Types.PREV, cur.Created.ToUnixTimestamp()) : null;
         }
 
         /**
@@ -663,7 +663,7 @@ namespace iBlogs.Site.Core.Common.Service
             Contents contents = current_article();
             if (null != contents)
             {
-                return show_icon(contents.Id.Value);
+                return show_icon(contents.Id);
             }
             return show_icon(1);
         }
@@ -761,7 +761,7 @@ namespace iBlogs.Site.Core.Common.Service
             {
                 return 0;
             }
-            return _siteService.getCommentCount(contents.Id.Value);
+            return _siteService.getCommentCount(contents.Id);
         }
 
         /**

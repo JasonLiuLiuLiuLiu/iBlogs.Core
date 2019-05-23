@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using iBlogs.Site.Core.Common.DTO;
+using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.User;
 using iBlogs.Site.Core.User.DTO;
 using iBlogs.Site.Core.User.Service;
@@ -42,7 +43,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             }).FirstOrDefault();
             if (user != null)
                 return ApiResponse<string>.Ok(GenerateJsonWebToken(user));
-            return ApiResponse<string>.Fail("没有找到改用户");
+            return ApiResponse<string>.Fail("没有找到该用户");
         }
 
         private string GenerateJsonWebToken(Users user)

@@ -2,10 +2,9 @@
 using System.Text;
 using Hangfire;
 using Hangfire.MemoryStorage;
-using Hangfire.SQLite;
+using iBlogs.Site.Core.Common;
+using iBlogs.Site.Core.Common.CodeDi;
 using iBlogs.Site.Core.User.Service;
-using iBlogs.Site.Core.Utils;
-using iBlogs.Site.Core.Utils.CodeDi;
 using iBlogs.Site.Web.Filter;
 using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
