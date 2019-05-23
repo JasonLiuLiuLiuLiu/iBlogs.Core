@@ -131,7 +131,7 @@
                     @*@foreach (var comm in ViewService.recent_comments(8))
                         {
                         <li>
-                            <a href="@ViewService.site_url("/article/")@comm.Cid#comment-@comm.Coid">@comm.Author：@comm.Content</a>
+                            <a href="@ViewService.site_url("/article/")@comm.Id#comment-@comm.Id">@comm.Author：@comm.Content</a>
                         </li>
                         }*@
                 </div>

@@ -28,8 +28,8 @@ namespace iBlogs.Site.Core.User.Service
         {
             var sqlBuilder = new StringBuilder();
             sqlBuilder.AppendLine("select uid,username,email FROM t_users where 1=1 ");
-            if (user.Uid != 0)
-                sqlBuilder.Append(" and uid=@Uid ");
+            if (user.Id != 0)
+                sqlBuilder.Append(" and uid=@Id ");
             if (!user.Username.IsNullOrWhiteSpace())
                 sqlBuilder.Append(" and username=@Username ");
             if (!user.Email.IsNullOrWhiteSpace())

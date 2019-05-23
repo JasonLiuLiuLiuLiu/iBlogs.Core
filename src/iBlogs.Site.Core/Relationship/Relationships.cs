@@ -1,24 +1,27 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using iBlogs.Site.Core.Content;
+using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Meta;
 
 namespace iBlogs.Site.Core.Relationship
 {
-    public class Relationships
+    public class Relationships:IEntityBase
     {
-
+        public int Id { get; set; }
         /**
          * 文章主键
          */
         public int Cid;
-        [ForeignKey("Cid")]
+        [ForeignKey("Id")]
         public Contents Content { get; set; }
 
         /**
          * 项目主键
          */
         public int Mid;
-        [ForeignKey("Mid")]
+        [ForeignKey("Id")]
         public Metas Meta { get; set; }
+
+
     }
 }

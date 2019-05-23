@@ -49,7 +49,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.Uid, user.Uid.ToString()),
+                new Claim(ClaimTypes.Uid, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.Username)
             };

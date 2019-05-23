@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.User;
 
 namespace iBlogs.Site.Core.Attach
 {
-    public class Attachment
+    public class Attachment:IEntityBase
     {
         [Key]
         public int Id { get; set; }

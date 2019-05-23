@@ -126,7 +126,7 @@ namespace iBlogs.Site.Core.Common.Service
          */
         public string permalink(Contents contents)
         {
-            return permalink(contents.Cid.Value, contents.Slug);
+            return permalink(contents.Id.Value, contents.Slug);
         }
 
         /**
@@ -417,7 +417,7 @@ namespace iBlogs.Site.Core.Common.Service
             {
                 return img;
             }
-            int? cid = contents.Cid;
+            int? cid = contents.Id;
             int? size = cid % 20;
             size = size == 0 ? 1 : size;
             return "/templates/themes/default/static/img/rand/" + size + ".jpg";
@@ -662,7 +662,7 @@ namespace iBlogs.Site.Core.Common.Service
             Contents contents = current_article();
             if (null != contents)
             {
-                return show_icon(contents.Cid.Value);
+                return show_icon(contents.Id.Value);
             }
             return show_icon(1);
         }
@@ -743,7 +743,7 @@ namespace iBlogs.Site.Core.Common.Service
             //{
             //    page = (int)value;
             //}
-            //Page<Comments> comments = siteService.getComments(contents.Cid, page, limit);
+            //Page<Comments> comments = siteService.getComments(contents.Id, page, limit);
             //return comments;
             return new Page<CommentDto>();
         }
@@ -760,7 +760,7 @@ namespace iBlogs.Site.Core.Common.Service
             {
                 return 0;
             }
-            return _siteService.getCommentCount(contents.Cid.Value);
+            return _siteService.getCommentCount(contents.Id.Value);
         }
 
         /**

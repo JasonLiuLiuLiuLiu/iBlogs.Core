@@ -105,12 +105,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [AdminApiRoute("article/update")]
         public RestResponse<int> updateArticle([FromBody]Contents contents)
         {
-            if (contents?.Cid == null)
+            if (contents?.Id == null)
             {
                 return RestResponse<int>.fail("缺少参数，请重试");
             }
             contents.Type = Types.ARTICLE;
-            var cid = contents.Cid;
+            var cid = contents.Id;
             _contentsService.updateArticle(contents);
             return RestResponse<int>.ok(cid.ValueOrDefault());
         }
@@ -151,11 +151,11 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [AdminApiRoute("page/update")]
         public RestResponse updatePage([FromBody]Contents contents)
         {
-            if (null == contents.Cid)
+            if (null == contents.Id)
             {
                 return RestResponse.fail("缺少参数，请重试");
             }
-            int cid = contents.Cid.ValueOrDefault();
+            int cid = contents.Id.ValueOrDefault();
             contents.Type=Types.PAGE;
             _contentsService.updateArticle(contents);
             return RestResponse.ok(cid);

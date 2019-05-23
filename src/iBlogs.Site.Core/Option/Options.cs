@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using iBlogs.Site.Core.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Option
 {
-    public class Options
+    public class Options:IEntityBase
     {
         [Key]
         public int Id { get; set; }

@@ -89,10 +89,10 @@ namespace iBlogs.Site.Core.Content.Service
             contents.Tags=contents.Tags ?? "";
             contents.Categories=contents.Categories ?? "";
 
-            var cid = contents.Cid.ValueOrDefault();
+            var cid = contents.Id.ValueOrDefault();
 
             _sqlLite.Execute(
-                "UPDATE t_contents SET title=@Title,slug=@Slug,modified= @Modified,content=@Content,status=@Status,tags=@Tags,categories=@Categories,allow_comment=@AllowComment,allow_ping=@AllowPing,allow_feed=@AllowFeed,fmt_Type=@FmtType,thumb_img=@ThumbImg where cid=@Cid",
+                "UPDATE t_contents SET title=@Title,slug=@Slug,modified= @Modified,content=@Content,status=@Status,tags=@Tags,categories=@Categories,allow_comment=@AllowComment,allow_ping=@AllowPing,allow_feed=@AllowFeed,fmt_Type=@FmtType,thumb_img=@ThumbImg where cid=@Id",
                 contents);
 
             var tags = contents.Tags;
