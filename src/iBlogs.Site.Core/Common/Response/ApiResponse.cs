@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace iBlogs.Site.Core.Common.DTO
+namespace iBlogs.Site.Core.Common.Response
 {
     public class Response<T> : Response
     {

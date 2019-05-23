@@ -33,7 +33,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public Response<string> Index(LoginParam loginParam)
+        public ApiResponse<string> Index(LoginParam loginParam)
         {
             var user = _userService.FindUsers(new Users
             {
@@ -41,8 +41,8 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                 Password = loginParam.Password
             }).FirstOrDefault();
             if (user != null)
-                return Response<string>.Ok(GenerateJsonWebToken(user));
-            return iBlogs.Site.Core.Common.DTO.Response.Fail("没有找到改用户");
+                return ApiResponse<string>.Ok(GenerateJsonWebToken(user));
+            return ApiResponse<string>.Fail("没有找到改用户");
         }
 
         private string GenerateJsonWebToken(Users user)
