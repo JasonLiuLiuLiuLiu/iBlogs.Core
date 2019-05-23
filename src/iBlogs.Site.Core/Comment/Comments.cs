@@ -18,7 +18,7 @@ namespace iBlogs.Site.Core.Comment
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
         public int Cid { get; set; }
-        [ForeignKey("Cid")]
+        [ForeignKey("Id")]
         public Contents Article { get; set; }
         public string Author { get; set; }
         public int OwnerId { get; set; }

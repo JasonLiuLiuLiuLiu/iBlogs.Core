@@ -3,17 +3,18 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.User
 {
-    public class Users
+    public class Users:IEntityBase
     {
 
         /**
          * user表主键
          */
         [Key]
-        public int Uid { get; set; }
+        public int Id { get; set; }
 
         /**
          * 用户名称

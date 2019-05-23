@@ -107,7 +107,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
             if (contents?.Id == null)
             {
-                return Response<int>.fail("缺少参数，请重试");
+                return Response<int>.Fail("缺少参数，请重试");
             }
             contents.Type = Types.ARTICLE;
             var cid = contents.Id;
@@ -144,7 +144,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             contents.AuthorId=users.Uid;
             _contentsService.publish(contents);
             _siteService.cleanCache(Types.SYS_STATISTICS);
-            return Core.Common.DTO.Response.ok();
+            return Core.Common.DTO.Response.Ok();
         }
 
         //@SysLog("修改页面")
@@ -153,12 +153,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
             if (null == contents.Id)
             {
-                return Core.Common.DTO.Response.fail("缺少参数，请重试");
+                return Core.Common.DTO.Response.Fail("缺少参数，请重试");
             }
             int cid = contents.Id.ValueOrDefault();
             contents.Type=Types.PAGE;
             _contentsService.updateArticle(contents);
-            return Core.Common.DTO.Response.ok(cid);
+            return Core.Common.DTO.Response.Ok(cid);
         }
 
         // @SysLog("保存分类")
@@ -167,7 +167,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
             _metasService.saveMeta(Types.CATEGORY, metaParam.cname, metaParam.mid);
             _siteService.cleanCache(Types.SYS_STATISTICS);
-            return Core.Common.DTO.Response.ok();
+            return Core.Common.DTO.Response.Ok();
         }
 
         // @SysLog("删除分类/标签")
@@ -295,7 +295,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             var fileItems = HttpContext.Request.Form.Files;
             if (null == fileItems || fileItems.Count == 0)
             {
-                return Response<List<Attachment>>.fail("请选择文件上传");
+                return Response<List<Attachment>>.Fail("请选择文件上传");
             }
 
             foreach (var fileItem in fileItems)
@@ -349,7 +349,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
             if (errorFiles.Count > 0)
             {
-                return Response<List<Attachment>>.fail().SetPayload(errorFiles);
+                return Response<List<Attachment>>.Fail().SetPayload(errorFiles);
             }
             return Response<List<Attachment>>.Ok(urls);
         }

@@ -42,7 +42,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             }).FirstOrDefault();
             if (user != null)
                 return Response<string>.Ok(GenerateJsonWebToken(user));
-            return Response<string>.fail("没有找到该用户!");
+            return Response<string>.Fail("没有找到该用户!");
         }
 
         private string GenerateJsonWebToken(Users user)

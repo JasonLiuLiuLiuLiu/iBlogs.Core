@@ -62,7 +62,7 @@ namespace iBlogs.Site.Web.Controllers
                     };
                     if (!_userService.InsertUser(temp))
                     {
-                        return Response<int>.fail("安装失败");
+                        return Response<int>.Fail("安装失败");
                     }
                     var siteUrl = IBlogsUtils.buildURL(param.SiteUrl);
                     _optionService.saveOption("site_title", param.SiteTitle);
@@ -70,7 +70,7 @@ namespace iBlogs.Site.Web.Controllers
                     return Response<int>.Ok();
                 }
             }
-            return Response<int>.fail("安装失败");
+            return Response<int>.Fail("安装失败");
         }
     }
 }
