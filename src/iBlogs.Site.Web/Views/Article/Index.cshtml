@@ -74,10 +74,10 @@
                 <span class="response">评论已关闭.</span>
             }
 
-            @if (comments.rows.Count > 0)
+            @if (comments.Rows.Count > 0)
             {
                 <ol class="comment-list">
-                    @foreach (var comment in comments.rows)
+                    @foreach (var comment in comments.Rows)
                     {
                         <li id="li-comment-@comment.Id" class="comment-body comment-parent comment-odd">
                             <div id="comment-@comment.Id}">
@@ -143,21 +143,21 @@
 
             <div class="lists-navigator clearfix">
                 <ol class="page-navigator">
-                    @if (comments.hasPrevPage)
+                    @if (comments.HasPrevPage)
                     {
-                        <li class="prev"><a href="?cp=@comments.prevPage#comments">←</a></li>
+                        <li class="prev"><a href="?cp=@comments.PrevPage#comments">←</a></li>
                     }
 
 
-                    @foreach (var navIndex in comments.navPageNums)
+                    @foreach (var navIndex in comments.NavPageNums)
                     {
-                        <li class="@((comments.pageNum==Model.navIndex)?"current":"")"><a href="?cp=@navIndex#comments">@navIndex</a></li>
+                        <li class="@((comments.PageNum==Model.navIndex)?"current":"")"><a href="?cp=@navIndex#comments">@navIndex</a></li>
                     }
 
 
-                    @if (comments.hasNextPage)
+                    @if (comments.HasNextPage)
                     {
-                        <li class="next"><a href="?cp=@comments.nextPage#comments">→</a></li>
+                        <li class="next"><a href="?cp=@comments.NextPage#comments">→</a></li>
                     }
                 </ol>
 

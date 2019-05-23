@@ -7,7 +7,7 @@
 <div class="main-content index-page clearfix">
     <div class="post-lists">
         <div class="post-lists-body">
-            @foreach (var article in ContentsService.findArticles(new ArticleParam()).rows)
+            @foreach (var article in ContentsService.findArticles(new ArticleParam()).Rows)
             {
                 <div class="post-list-item">
                     <div class="post-list-item-container">
@@ -39,19 +39,19 @@
     <div class="lists-navigator clearfix">
         @{ var pageInfo = ContentsService.findArticles(new ArticleParam());
             <ol class="page-navigator">
-                @if (pageInfo.hasPrevPage)
+                @if (pageInfo.HasPrevPage)
                 {
-                    <li class="prev"><a href="/page/@pageInfo.prevPage">←</a></li>
+                    <li class="prev"><a href="/page/@pageInfo.PrevPage">←</a></li>
                 }
 
-                @foreach (var navIndex in pageInfo.navPageNums)
+                @foreach (var navIndex in pageInfo.NavPageNums)
                 {
-                    <li class="@(pageInfo.pageNum==Model.navIndex?"current":"")"><a href="/page/@navIndex">@navIndex</a></li>
+                    <li class="@(pageInfo.PageNum==Model.navIndex?"current":"")"><a href="/page/@navIndex">@navIndex</a></li>
                 }
 
-                @if (pageInfo.hasNextPage)
+                @if (pageInfo.HasNextPage)
                 {
-                    <li class="next"><a href="/page/@pageInfo.nextPage">→</a></li>
+                    <li class="next"><a href="/page/@pageInfo.NextPage">→</a></li>
                 }
             </ol>
         }

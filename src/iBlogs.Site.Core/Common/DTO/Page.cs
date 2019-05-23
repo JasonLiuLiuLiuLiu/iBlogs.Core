@@ -8,175 +8,175 @@ namespace iBlogs.Site.Core.Common.DTO
         /**
          * current pageNum number
          */
-        public int pageNum { get; set; } = 1;
+        public int PageNum { get; set; } = 1;
 
         /**
          * How many pages per pageNum
          */
-        public int limit { get; set; } = 10;
+        public int Limit { get; set; } = 10;
 
         /**
          * prev pageNum number
          */
-        public int prevPage { get; set; } = 1;
+        public int PrevPage { get; set; } = 1;
 
         /**
          * next pageNum number
          */
-        public int nextPage { get; set; } = 1;
+        public int NextPage { get; set; } = 1;
 
         /**
          * total pageNum count
          */
-        public int totalPages { get; set; } = 1;
+        public int TotalPages { get; set; } = 1;
 
         /**
          * total row count
          */
-        public long totalRows { get; set; }
+        public long TotalRows { get; set; }
 
         /**
          * row list
          */
-        public List<T> rows { get; set; }
+        public List<T> Rows { get; set; }
 
         /**
          * is first pageNum
          */
-        public bool isFirstPage { get; set; }
+        public bool IsFirstPage { get; set; }
 
         /**
          * is last pageNum
          */
-        public bool isLastPage { get; set; }
+        public bool IsLastPage { get; set; }
 
         /**
          * has prev pageNum
          */
-        public bool hasPrevPage { get; set; }
+        public bool HasPrevPage { get; set; }
 
         /**
          * has next pageNum
          */
-        public bool hasNextPage { get; set; }
+        public bool HasNextPage { get; set; }
 
         /**
          * navigation pageNum number
          */
-        public int navPages { get; set; } = 8;
+        public int NavPages { get; set; } = 8;
 
         /**
          * all navigation pageNum number
          */
-        public int[] navPageNums { get; set; }=new []{1};
+        public int[] NavPageNums { get; set; }=new []{1};
 
-        public Page<T> NavPages(int navPages)
+        public Page<T> SetNavPages(int navPages)
         {
             // calculation of navigation pageNum after basic parameter setting
-            this.calcNavigatePageNumbers(navPages);
+            CalcNavigatePageNumbers(navPages);
             return this;
         }
 
         public Page()
         {
-            rows=new List<T>();
+            Rows=new List<T>();
         }
 
         public Page(long total, int page, int limit)
         {
-            init(total, page, limit);
+            Init(total, page, limit);
         }
 
         public Page(long total, int page, int limit,List<T> rows)
         {
-            init(total, page, limit);
-            this.rows = rows;
+            Init(total, page, limit);
+            Rows = rows;
         }
 
-        public void init(long total, int pageNum, int limit)
+        public void Init(long total, int pageNum, int limit)
         {
             // set basic params
-            this.totalRows = total;
-            this.limit = limit;
-            this.totalPages = (int)((this.totalRows - 1) / this.limit + 1);
+            TotalRows = total;
+            Limit = limit;
+            TotalPages = (int)((TotalRows - 1) / Limit + 1);
 
             // automatic correction based on the current number of the wrong input
             if (pageNum < 1)
             {
-                this.pageNum = 1;
+                PageNum = 1;
             }
-            else if (pageNum > this.totalPages)
+            else if (pageNum > TotalPages)
             {
-                this.pageNum = this.totalPages;
+                PageNum = TotalPages;
             }
             else
             {
-                this.pageNum = pageNum;
+                PageNum = pageNum;
             }
 
             // calculation of navigation pageNum after basic parameter setting
-            this.calcNavigatePageNumbers(this.navPages);
+            CalcNavigatePageNumbers(NavPages);
 
             // and the determination of pageNum boundaries
-            judgePageBoudary();
+            JudgePageBoudary();
         }
 
-        public void calcNavigatePageNumbers(int navPages)
+        public void CalcNavigatePageNumbers(int navPages)
         {
             // when the total number of pages is less than or equal to the number of navigation pages
-            if (this.totalPages <= navPages)
+            if (TotalPages <= navPages)
             {
-                navPageNums = new int[totalPages];
-                for (int i = 0; i < totalPages; i++)
+                NavPageNums = new int[TotalPages];
+                for (int i = 0; i < TotalPages; i++)
                 {
-                    navPageNums[i] = i + 1;
+                    NavPageNums[i] = i + 1;
                 }
             }
             else
             {
                 // when the total number of pages is greater than the number of navigation pages
-                navPageNums = new int[navPages];
-                int startNum = pageNum - navPages / 2;
-                int endNum = pageNum + navPages / 2;
+                NavPageNums = new int[navPages];
+                int startNum = PageNum - navPages / 2;
+                int endNum = PageNum + navPages / 2;
                 if (startNum < 1)
                 {
                     startNum = 1;
                     for (int i = 0; i < navPages; i++)
                     {
-                        navPageNums[i] = startNum++;
+                        NavPageNums[i] = startNum++;
                     }
                 }
-                else if (endNum > totalPages)
+                else if (endNum > TotalPages)
                 {
-                    endNum = totalPages;
+                    endNum = TotalPages;
                     for (int i = navPages - 1; i >= 0; i--)
                     {
-                        navPageNums[i] = endNum--;
+                        NavPageNums[i] = endNum--;
                     }
                 }
                 else
                 {
                     for (int i = 0; i < navPages; i++)
                     {
-                        navPageNums[i] = startNum++;
+                        NavPageNums[i] = startNum++;
                     }
                 }
             }
         }
 
-        public void judgePageBoudary()
+        public void JudgePageBoudary()
         {
-            isFirstPage = pageNum == 1;
-            isLastPage = pageNum == totalPages && pageNum != 1;
-            hasPrevPage = pageNum != 1;
-            hasNextPage = pageNum != totalPages;
-            if (hasNextPage)
+            IsFirstPage = PageNum == 1;
+            IsLastPage = PageNum == TotalPages && PageNum != 1;
+            HasPrevPage = PageNum != 1;
+            HasNextPage = PageNum != TotalPages;
+            if (HasNextPage)
             {
-                nextPage = pageNum + 1;
+                NextPage = PageNum + 1;
             }
-            if (hasPrevPage)
+            if (HasPrevPage)
             {
-                prevPage = pageNum - 1;
+                PrevPage = PageNum - 1;
             }
         }
 
