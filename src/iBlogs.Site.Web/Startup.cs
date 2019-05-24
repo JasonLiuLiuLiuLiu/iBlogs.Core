@@ -50,11 +50,11 @@ namespace iBlogs.Site.Web
                     };
                 });
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddCoreDi(options =>
-            {
-                options.IgnoreAssemblies = new[] {"*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*"};
-                options.IgnoreInterface = new[] {"*IEntityBase*"};
-            });
+            //services.AddCoreDi(options =>
+            //{
+            //    options.IgnoreAssemblies = new[] {"*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*"};
+            //    options.IgnoreInterface = new[] {"*IEntityBase*"};
+            //});
             // Add Hangfire services.
             services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
