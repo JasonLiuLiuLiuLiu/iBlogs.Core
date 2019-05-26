@@ -48,25 +48,13 @@ namespace iBlogs.Site.Web.Controllers
         }
 
         [HttpPost]
-        public ApiResponse<int> Index(InstallParam param)
+        public async Task<ApiResponse<int>> Index(InstallParam param)
         {
-
             var installed = _configuration[ConfigKey.DbInstalled].ToBool();
             if (!param.AdminPwd.IsNullOrWhiteSpace() && !installed)
             {
-                if (_installService.InitializeDb())
+                if (await _installService.InitializeDb(param))
                 {
-                    Users temp = new Users
-                    {
-                        Username = param.AdminUser, Password =param.AdminPwd, Email = param.AdminEmail
-                    };
-                    if (!_userService.InsertUser(temp))
-                    {
-                        return ApiResponse<int>.Fail("安装失败");
-                    }
-                    var siteUrl = IBlogsUtils.buildURL(param.SiteUrl);
-                    _optionService.saveOption("site_title", param.SiteTitle);
-                    _optionService.saveOption("site_url", siteUrl);
                     return ApiResponse<int>.Ok();
                 }
             }

@@ -79,6 +79,7 @@ namespace iBlogs.Site.Core.Common.CodeDi
             if (_addedService.Where(u => u.ServiceType == serviceType).Any(u => u.ImplementationType == implementationType))
                 return;
             _service.Add(new ServiceDescriptor(serviceType, implementationType, serviceLifetime));
+            Console.WriteLine($"code add serviceType:{serviceType.FullName},implementation type:{implementationType.FullName},serviceLifetime:{serviceLifetime.ToString()}");
         }
 
 

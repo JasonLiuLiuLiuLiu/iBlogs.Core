@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace iBlogs.Site.Web
@@ -31,7 +32,9 @@ namespace iBlogs.Site.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<iBlogsContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("iBlogs")));
+                {
+                    options.UseMySql(Configuration.GetConnectionString("iBlogs"));
+                });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -50,20 +53,11 @@ namespace iBlogs.Site.Web
                     };
                 });
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            //services.AddCoreDi(options =>
-            //{
-            //    options.IgnoreAssemblies = new[] {"*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*"};
-            //    options.IgnoreInterface = new[] {"*IEntityBase*"};
-            //});
-            // Add Hangfire services.
-            services.AddHangfire(configuration => configuration
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UseMemoryStorage());
-
-            // Add the processing server as IHostedService
-            services.AddHangfireServer();
+            services.AddCoreDi(options =>
+            {
+                options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*" };
+                options.IgnoreInterface = new[] { "*IEntityBase*" };
+            });
             services.AddMvc(option => option.Filters.Add<LoginFilter>());
         }
 
@@ -72,7 +66,6 @@ namespace iBlogs.Site.Web
         {
             app.UseMiddleware<JwtInHeaderMiddleware>();
 
-            app.UseHangfireDashboard();
 
             app.UseStatusCodePages(async context =>
             {

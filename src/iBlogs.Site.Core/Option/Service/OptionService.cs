@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
@@ -14,13 +15,21 @@ namespace iBlogs.Site.Core.Option.Service
         {
             _repository = repository;
             _options = new Dictionary<string, string>();
-            ReLoad();
+            TryReLoad();
         }
 
-        public void ReLoad()
+        public void TryReLoad()
         {
-            _options.Clear();
-            _options = _repository.GetAll().ToDictionary(o => o.Name, o => o.Value);
+            try
+            {
+                _options.Clear();
+                _options = _repository.GetAll().ToDictionary(o => o.Name, o => o.Value);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+           
         }
 
         public void Set(string key, string value)

@@ -31,4 +31,7 @@
     <ProjectReference Include="..\iBlogs.Site.Core\iBlogs.Site.Core.csproj" />
   </ItemGroup>
 
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="y" /></VisualStudio></ProjectExtensions>
+
 </Project>

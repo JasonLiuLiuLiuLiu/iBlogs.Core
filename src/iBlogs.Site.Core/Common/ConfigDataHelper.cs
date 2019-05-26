@@ -12,5 +12,12 @@ namespace iBlogs.Site.Core.Common
             jObject[ConfigKey.DbInstalled] = status;
             File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }
+
+        public static void UpdateConnectionString(string connectionName,string value)
+        {
+            var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));
+            jObject[ConfigKey.ConnectionStrings][connectionName] = value;
+            File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
+        }
     }
 }
