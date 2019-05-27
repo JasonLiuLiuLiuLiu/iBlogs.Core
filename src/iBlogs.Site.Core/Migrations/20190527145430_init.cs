@@ -113,8 +113,7 @@ namespace iBlogs.Site.Core.Migrations
                     Url = table.Column<string>(nullable: true),
                     AuthorId = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Timestamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
                 },
                 constraints: table =>
                 {
@@ -193,19 +192,22 @@ namespace iBlogs.Site.Core.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Cid = table.Column<int>(nullable: false),
+                    Mid = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Relationships", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Relationships_Contents_Id",
-                        column: x => x.Id,
+                        name: "FK_Relationships_Contents_Cid",
+                        column: x => x.Cid,
                         principalTable: "Contents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Relationships_Metas_Id",
-                        column: x => x.Id,
+                        name: "FK_Relationships_Metas_Mid",
+                        column: x => x.Mid,
                         principalTable: "Metas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -230,6 +232,16 @@ namespace iBlogs.Site.Core.Migrations
                 name: "IX_Logs_AuthorId",
                 table: "Logs",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relationships_Cid",
+                table: "Relationships",
+                column: "Cid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Relationships_Mid",
+                table: "Relationships",
+                column: "Mid");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

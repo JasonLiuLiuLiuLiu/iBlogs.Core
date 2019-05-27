@@ -9,7 +9,7 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 namespace iBlogs.Site.Core.Migrations
 {
     [DbContext(typeof(iBlogsContext))]
-    [Migration("20190526103845_init")]
+    [Migration("20190527145430_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -116,10 +116,6 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<string>("ThumbImg");
 
-                    b.Property<DateTime?>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<string>("Title");
 
                     b.Property<string>("Type");
@@ -202,9 +198,18 @@ namespace iBlogs.Site.Core.Migrations
 
             modelBuilder.Entity("iBlogs.Site.Core.Relationship.Relationships", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Cid");
+
+                    b.Property<int>("Mid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Cid");
+
+                    b.HasIndex("Mid");
 
                     b.ToTable("Relationships");
                 });
@@ -277,12 +282,12 @@ namespace iBlogs.Site.Core.Migrations
                 {
                     b.HasOne("iBlogs.Site.Core.Content.Contents", "Content")
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("Cid")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("iBlogs.Site.Core.Meta.Metas", "Meta")
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("Mid")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

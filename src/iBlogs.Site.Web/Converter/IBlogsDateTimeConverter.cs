@@ -1,4 +1,5 @@
 ﻿using System;
+using iBlogs.Site.Core.Common.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -6,14 +7,13 @@ namespace iBlogs.Site.Web.Converter
 {
     public class SfaDateTimeConverter : DateTimeConverterBase
     {
-        //private static readonly DateTime StartTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local);
-
+       
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             try
             {
-                writer.WriteValue(value == null ? "" : ((DateTime)value).ToString("O"));
+                writer.WriteValue(value == null ? "" : ((DateTime)value).ToUnixTimestamp().ToString());
             }
             catch (Exception)
             {

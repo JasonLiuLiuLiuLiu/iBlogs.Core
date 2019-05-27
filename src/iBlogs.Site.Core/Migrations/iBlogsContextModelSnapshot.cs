@@ -114,10 +114,6 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<string>("ThumbImg");
 
-                    b.Property<DateTime?>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<string>("Title");
 
                     b.Property<string>("Type");

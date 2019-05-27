@@ -35,7 +35,5 @@ namespace iBlogs.Site.Core.Content
         public Users Author { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
     }
 }

@@ -23,7 +23,7 @@ namespace iBlogs.Site.Core.Relationship.Service
 
         public void DeleteByContentId(int cid)
         {
-            _repository.GetAll().Where(r => r.Cid == cid).ForEachAsync(r=>_repository.Delete(r));
+            _repository.GetAll().Where(r => r.Cid == cid).ToList().ForEach(r=>_repository.Delete(r));
         }
     }
 }
