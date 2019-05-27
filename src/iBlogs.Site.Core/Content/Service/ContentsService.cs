@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Data.Common;
 using System.Linq;
-using System.Text;
-using iBlogs.Site.Core.Comment;
 using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.Common.DTO;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Common.Service;
@@ -125,34 +121,22 @@ namespace iBlogs.Site.Core.Content.Service
 
         public Page<Contents> findArticles(ArticleParam articleParam)
         {
-            //var sqlBuilder = new StringBuilder();
-            //sqlBuilder.Append("select * from t_contents where 1=1");
+            var query = _repository.GetAll();
+
+            if (articleParam.Categories != null)
+                query = query.Where(p => p.Categories.Contains(articleParam.Categories));
 
 
+            if (articleParam.Status != null)
+                query = query.Where(p => p.Status == articleParam.Status);
 
-            //if (articleParam.Categories != null)
-            //    sqlBuilder.Append(" and categories like '%@categories%' ");
+            if (articleParam.Title != null)
+                query = query.Where(p => p.Title.Contains(articleParam.Title));
 
-            //if (articleParam.Status != null)
-            //    sqlBuilder.Append(" and status like '%@status%'");
+            if (articleParam.Type != null)
+                query = query.Where(p => p.Type == articleParam.Type);
 
-            //if (articleParam.Title != null)
-            //    sqlBuilder.Append(" and title like '%@Title%'");
-
-            //if (articleParam.Type != null)
-            //    sqlBuilder.Append(" and type=@Type");
-
-            //var count = _sqlLite.QueryCount(sqlBuilder.ToString(), articleParam);
-
-            //sqlBuilder.Append($" and {articleParam.OrderBy} NOT IN ( SELECT {articleParam.OrderBy} FROM t_contents ORDER BY {articleParam.OrderBy} {articleParam.OrderType} LIMIT {(articleParam.Page) * articleParam.Limit})");
-
-            //sqlBuilder.Append($" order by {articleParam.OrderBy} {articleParam.OrderType}");
-            //sqlBuilder.Append(" LIMIT @Limit ");
-
-            //var contents = _sqlLite.Query<Contents>(sqlBuilder.ToString(), articleParam).ToList();
-
-            //return new Page<Contents>(count, articleParam.Page + 1, articleParam.Limit, contents);
-            throw new NotImplementedException();
+            return _repository.Page(query, articleParam);
         }
     }
 }

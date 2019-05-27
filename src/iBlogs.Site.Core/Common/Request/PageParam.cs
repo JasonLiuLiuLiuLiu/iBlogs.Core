@@ -2,7 +2,7 @@
 {
     public class PageParam
     {
-        public int Page { get; set; }
+        public int Page { get; set; } = 1;
         public int Limit { get; set; } = 20;
         public string OrderBy { get; set; }
         public OrderType OrderType { get; set; }
