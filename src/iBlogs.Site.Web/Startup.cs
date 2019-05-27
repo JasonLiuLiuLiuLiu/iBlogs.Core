@@ -6,6 +6,7 @@ using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.CodeDi;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.User.Service;
+using iBlogs.Site.Web.Converter;
 using iBlogs.Site.Web.Filter;
 using iBlogs.Site.Web.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,10 +56,16 @@ namespace iBlogs.Site.Web
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddCoreDi(options =>
              {
-                 options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*","ef*" };
+                 options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*", "ef*" };
                  options.IgnoreInterface = new[] { "*IEntityBase*" };
              });
-            services.AddMvc(option => option.Filters.Add<LoginFilter>());
+            services.AddMvc(option =>
+            {
+                option.Filters.Add<LoginFilter>();
+            }).AddJsonOptions(options =>
+            {
+                options.SerializerSettings.ContractResolver = new IBlogsContractResolver();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
