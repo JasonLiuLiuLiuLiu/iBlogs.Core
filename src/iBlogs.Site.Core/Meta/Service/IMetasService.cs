@@ -6,7 +6,7 @@ namespace iBlogs.Site.Core.Meta.Service
 {
     public interface IMetasService
     {
-        List<Metas> getMetas(string type);
+        List<Metas> getMetas(string type,int limit=0);
         Dictionary<string, List<Contents>> getMetaMapping(string type);
         Metas getMeta(string type, string name);
         void saveMetas(int? cid, string names, string type);

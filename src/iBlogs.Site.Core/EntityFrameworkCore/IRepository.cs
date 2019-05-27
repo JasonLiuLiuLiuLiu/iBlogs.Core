@@ -53,5 +53,6 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         Task<TEntity> InsertOrUpdateAsync(TEntity entity);
         TEntity FirstOrDefault(int id);
         Page<TEntity> Page(IQueryable<TEntity> source, PageParam pageParam);
+        void SaveChanges();
     }
 }

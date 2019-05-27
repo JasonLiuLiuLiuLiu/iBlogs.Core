@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Data.Common;
 using iBlogs.Site.Core.Comment;
-using iBlogs.Site.Core.Common.DTO;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Content;
@@ -77,46 +75,9 @@ namespace iBlogs.Site.Core.Common.Service
         /**
          * 获取分类/标签列表
          */
-        public List<Metas> getMetas(string searchType, string type, int limit)
+        public List<Metas> getMetas(string type, int limit)
         {
-            if (stringKit.isBlank(searchType) || stringKit.isBlank(type))
-            {
-                return new List<Metas>();
-            }
-
-            if (limit < 1 || limit > iBlogsConst.MAX_POSTS)
-            {
-                limit = 10;
-            }
-
-            // 获取最新的项目
-            if (Types.RECENT_META.Equals(searchType))
-            {
-                //var sql =
-                //    "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
-                //    +
-                //    "where a.type = @type group by a.mid order by count desc, a.mid desc limit @limit";
-
-                //return _sqLite.Query<Metas>(sql, new { type = type, limit = limit }).ToList();
-            }
-
-            // 随机获取项目
-            if (Types.RANDOM_META.Equals(searchType))
-            {
-                //List<int> mids = _sqLite.Query<int>(
-                //"select mid from t_metas where type = @type order by random() * mid limit @limit",
-                //new { type = type, limit = limit }).ToList();
-                //if (mids != null)
-                //{
-                //    string sql =
-                //        "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
-                //        +
-                //        "where a.mid in @mids group by a.mid order by count desc, a.mid desc";
-
-                //    return _sqLite.Query<Metas>(sql, mids).ToList();
-                //}
-            }
-            return new List<Metas>();
+            return _metasService.getMetas(type, limit);
         }
 
         /**

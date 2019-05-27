@@ -8,6 +8,7 @@ using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Content;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Relationship.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Meta.Service
 {
@@ -27,9 +28,14 @@ namespace iBlogs.Site.Core.Meta.Service
         *
         * @param type 类型，tag or category
         */
-        public List<Metas> getMetas(string type)
+        public List<Metas> getMetas(string type, int limit = 0)
         {
-            return null;
+
+            if (limit < 1 || limit > iBlogsConst.MAX_POSTS)
+            {
+                limit = 10;
+            }
+            return _repository.GetAll().Where(m => m.Type == type).OrderByDescending(m => m.Id).Take(limit).ToList();
         }
 
         /**
@@ -130,6 +136,7 @@ namespace iBlogs.Site.Core.Meta.Service
                 return;
             }
             _repository.InsertOrUpdate(new Metas() { Id = mid.ValueOrDefault(), Name = name, Type = type });
+            _repository.SaveChanges();
         }
 
         public List<Metas> getMetas(string searchType, string type, int limit)

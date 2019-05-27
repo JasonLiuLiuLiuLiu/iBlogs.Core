@@ -564,7 +564,7 @@ namespace iBlogs.Site.Core.Common.Service
             {
                 return new List<Metas>();
             }
-            return _siteService.getMetas(Types.RECENT_META, Types.CATEGORY, limit);
+            return _siteService.getMetas( Types.CATEGORY, limit);
         }
 
         /**
@@ -575,11 +575,12 @@ namespace iBlogs.Site.Core.Common.Service
          */
         public List<Metas> rand_categories(int limit)
         {
-            if (null == _siteService)
-            {
-                return new List<Metas>();
-            }
-            return _siteService.getMetas(Types.RANDOM_META, Types.CATEGORY, limit);
+            //if (null == _siteService)
+            //{
+            //    return new List<Metas>();
+            //}
+            //return _siteService.getMetas(Types.RANDOM_META, Types.CATEGORY, limit);
+            throw new NotImplementedException();
         }
 
         /**
@@ -603,7 +604,7 @@ namespace iBlogs.Site.Core.Common.Service
             {
                 return new List<Metas>();
             }
-            return _siteService.getMetas(Types.RECENT_META, Types.TAG, limit);
+            return _siteService.getMetas( Types.TAG, limit);
         }
 
         /**
@@ -614,11 +615,12 @@ namespace iBlogs.Site.Core.Common.Service
          */
         public List<Metas> rand_tags(int limit)
         {
-            if (null == _siteService)
-            {
-                return new List<Metas>();
-            }
-            return _siteService.getMetas(Types.RANDOM_META, Types.TAG, limit);
+            //if (null == _siteService)
+            //{
+            //    return new List<Metas>();
+            //}
+            //return _siteService.getMetas(Types.RANDOM_META, Types.TAG, limit);
+            throw new NotImplementedException();
         }
 
         /**

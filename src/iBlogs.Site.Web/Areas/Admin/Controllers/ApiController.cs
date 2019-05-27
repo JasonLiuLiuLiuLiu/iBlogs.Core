@@ -126,7 +126,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [AdminApiRoute("pages")]
         public ApiResponse<Page<Contents>> pageList(ArticleParam articleParam)
         {
-            articleParam.Type=Types.PAGE;
+            articleParam.Type = Types.PAGE;
             articleParam.Page--;
             Page<Contents> articles = _contentsService.findArticles(articleParam);
             return ApiResponse<Page<Contents>>.Ok(articles);
@@ -138,9 +138,9 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
 
             var users = _userService.CurrentUsers;
-            contents.Type=Types.PAGE;
-            contents.AllowPing=true;
-            contents.AuthorId=users.Uid;
+            contents.Type = Types.PAGE;
+            contents.AllowPing = true;
+            contents.AuthorId = users.Uid;
             _contentsService.publish(contents);
             _siteService.cleanCache(Types.SYS_STATISTICS);
             return ApiResponse.Ok();
@@ -155,7 +155,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                 return ApiResponse.Fail("缺少参数，请重试");
             }
             int cid = contents.Id;
-            contents.Type=Types.PAGE;
+            contents.Type = Types.PAGE;
             _contentsService.updateArticle(contents);
             return ApiResponse.Ok(cid);
         }
@@ -164,7 +164,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [Route("/admin/api/category/save")]
         public ApiResponse saveCategory([FromBody]MetaParam metaParam)
         {
-            _metasService.saveMeta(Types.CATEGORY, metaParam.cname, metaParam.mid);
+            _metasService.saveMeta(Types.CATEGORY, metaParam.Cname, metaParam.Id);
             _siteService.cleanCache(Types.SYS_STATISTICS);
             return ApiResponse.Ok();
         }
@@ -220,13 +220,13 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         // @GetRoute("categories")
         public ApiResponse CategoryList()
         {
-            return ApiResponse<List<Metas>>.Ok(_siteService.getMetas(Types.RECENT_META, Types.CATEGORY, iBlogsConst.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_siteService.getMetas(Types.CATEGORY, iBlogsConst.MAX_POSTS));
         }
 
         // @GetRoute("tags")
         public ApiResponse TagList()
         {
-            return ApiResponse<List<Metas>>.Ok(_siteService.getMetas(Types.RECENT_META, Types.TAG, iBlogsConst.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_siteService.getMetas(Types.TAG, iBlogsConst.MAX_POSTS));
         }
 
         // @GetRoute("options")
@@ -322,11 +322,11 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
 
                     Attachment attachment = new Attachment();
-                    attachment.FName=fname;
-                    attachment.AuthorId=uid;
-                    attachment.FKey=fkey;
-                    attachment.FType=ftype;
-                    attachment.Created=DateTime.Now.ToUnixTimestamp();
+                    attachment.FName = fname;
+                    attachment.AuthorId = uid;
+                    attachment.FKey = fkey;
+                    attachment.FType = ftype;
+                    attachment.Created = DateTime.Now.ToUnixTimestamp();
                     if (await _attachService.Save(attachment))
                     {
                         urls.Add(attachment);
@@ -336,12 +336,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                     {
                         errorFiles.Add(attachment);
                     }
-                    
+
                 }
                 else
                 {
                     Attachment attachment = new Attachment();
-                    attachment.FName=fname;
+                    attachment.FName = fname;
                     errorFiles.Add(attachment);
                 }
             }

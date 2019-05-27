@@ -259,6 +259,11 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
             return new Page<TEntity>(total, pageParam.Page++, pageParam.Limit, rows);
         }
 
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
+
         private TEntity GetFromChangeTrackerOrNull(int id)
         {
             var entry = _context.ChangeTracker.Entries()

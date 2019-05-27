@@ -2,8 +2,8 @@
 {
     public class MetaParam
     {
-        public int? mid { get; set; }
-        public string cname { get; set; }
+        public int? Id { get; set; }
+        public string Cname { get; set; }
 
     }
 }
