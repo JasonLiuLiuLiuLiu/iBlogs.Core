@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace iBlogs.Site.Core.EntityFrameworkCore
@@ -26,10 +24,7 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
 
         public void Dispose()
         {
-            for (var i = Transactions.Count-1; i >= 0; i--)
-            {
-                Transactions[i].Dispose();
-            }
+          //TODO
         }
     }
 }

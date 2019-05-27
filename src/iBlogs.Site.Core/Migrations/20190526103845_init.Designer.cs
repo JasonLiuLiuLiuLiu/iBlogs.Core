@@ -9,7 +9,7 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 namespace iBlogs.Site.Core.Migrations
 {
     [DbContext(typeof(iBlogsContext))]
-    [Migration("20190524134414_init")]
+    [Migration("20190526103845_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

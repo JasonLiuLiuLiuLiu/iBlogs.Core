@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.Common.Request;
+using iBlogs.Site.Core.Common.Response;
 using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.EntityFrameworkCore
@@ -233,6 +237,26 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         public TEntity FirstOrDefault(int id)
         {
             return GetAll().FirstOrDefault(CreateEqualityExpressionForId(id));
+        }
+
+        public Page<TEntity> Page(IQueryable<TEntity> source, PageParam pageParam)
+        {
+            var orderByName = pageParam.OrderBy;
+            if (pageParam.OrderBy.IsNullOrWhiteSpace() || typeof(TEntity).GetProperties().FirstOrDefault(p => p.Name == pageParam.OrderBy) == null)
+                orderByName = _context.Model.FindEntityType(typeof(TEntity)).FindPrimaryKey().Properties.Select(x => x.Name).Single();
+            var orderProp = TypeDescriptor.GetProperties(typeof(TEntity)).Find(orderByName,true);
+            switch (pageParam.OrderType)
+            {
+                case OrderType.Asc:
+                    source = source.OrderBy(s => orderProp.GetValue(s));
+                    break;
+                default:
+                    source = source.OrderByDescending(s => orderProp.GetValue(s));
+                    break;
+            }
+            var total = source.Count();
+            var rows = source.Skip((pageParam.Page - 1) * pageParam.Limit).Take(pageParam.Limit).ToList();
+            return new Page<TEntity>(total, pageParam.Page++, pageParam.Limit, rows);
         }
 
         private TEntity GetFromChangeTrackerOrNull(int id)

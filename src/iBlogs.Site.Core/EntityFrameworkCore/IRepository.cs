@@ -5,6 +5,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Common.Request;
+using iBlogs.Site.Core.Common.Response;
 using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.EntityFrameworkCore
@@ -50,5 +52,6 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         TEntity InsertOrUpdate(TEntity entity);
         Task<TEntity> InsertOrUpdateAsync(TEntity entity);
         TEntity FirstOrDefault(int id);
+        Page<TEntity> Page(IQueryable<TEntity> source, PageParam pageParam);
     }
 }

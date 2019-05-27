@@ -32,7 +32,7 @@ namespace iBlogs.Site.Core.Option.Service
            
         }
 
-        public void Set(string key, string value)
+        public void Set(string key, string value,string description=null)
         {
             if (_options.ContainsKey(key))
                 if (_options[key] == value)
@@ -40,13 +40,19 @@ namespace iBlogs.Site.Core.Option.Service
                 else
                 {
                     var entity = _repository.GetAll().FirstOrDefault(o => o.Name == key);
-                    entity.Value = value;
-                    _repository.Update(entity);
+                    if (entity != null)
+                    {
+                        entity.Value = value;
+                        if (!description.IsNullOrWhiteSpace())
+                            entity.Description = description;
+                        _repository.Update(entity);
+                    }
+
                     _options[key] = value;
                 }
             else
             {
-                _repository.Insert(new Options {Name = key, Value = value});
+                _repository.Insert(new Options {Name = key, Value = value,Description = description});
                 _options.Add(key, value);
             }
         }
@@ -65,11 +71,11 @@ namespace iBlogs.Site.Core.Option.Service
         * @param key   配置key
         * @param value 配置值
         */
-        public void saveOption(string key, string value)
+        public void saveOption(string key, string value,string description=null)
         {
             if (stringKit.isNotBlank(key) && stringKit.isNotBlank(value))
             {
-                Set(key, value);
+                Set(key, value,description);
             }
         }
 

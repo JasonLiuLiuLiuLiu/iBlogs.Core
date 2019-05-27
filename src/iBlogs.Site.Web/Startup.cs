@@ -54,10 +54,10 @@ namespace iBlogs.Site.Web
                 });
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddCoreDi(options =>
-            {
-                options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*" };
-                options.IgnoreInterface = new[] { "*IEntityBase*" };
-            });
+             {
+                 options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*","ef*" };
+                 options.IgnoreInterface = new[] { "*IEntityBase*" };
+             });
             services.AddMvc(option => option.Filters.Add<LoginFilter>());
         }
 

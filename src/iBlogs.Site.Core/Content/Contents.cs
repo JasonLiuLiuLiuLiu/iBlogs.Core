@@ -27,8 +27,8 @@ namespace iBlogs.Site.Core.Content
         public string Status { get; set; }
         public int CommentsNum { get; set; }
         public bool AllowComment { get; set; }=true;
-        public bool AllowPing { get; set; }
-        public bool AllowFeed { get; set; }
+        public bool AllowPing { get; set; } = true;
+        public bool AllowFeed { get; set; } = true;
         public string Url { get; set; }
         public int AuthorId { get; set; }
         [ForeignKey("AuthorId")]

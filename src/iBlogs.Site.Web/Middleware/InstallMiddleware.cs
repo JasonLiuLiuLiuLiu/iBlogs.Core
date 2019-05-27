@@ -28,24 +28,14 @@ namespace iBlogs.Site.Web.Middleware
         public async Task Invoke(HttpContext context, iBlogsContext blogsContext)
         {
             _blogsContext = blogsContext;
-            if (!await Installed())
+            if (!Installed())
                 context.Request.Path = "/install";
             await _next.Invoke(context);
         }
 
-        private async Task<bool> Installed()
+        private bool Installed()
         {
-            if (_configuration[ConfigKey.DbInstalled].ToBool())
-                return true;
-            try
-            {
-                return await _blogsContext.Database.GetService<IRelationalDatabaseCreator>().ExistsAsync();
-            }
-            catch
-            {
-                return false;
-            }
-           
+            return _configuration[ConfigKey.DbInstalled].ToBool();
         }
     }
 }

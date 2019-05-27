@@ -501,6 +501,11 @@ namespace iBlogs.Site.Core.Common.Extensions
                 while (*wild == '*') wild++; return (*wild) == 0;
             }
         }
+
+        public static bool Like(this string toSearch, string toFind)
+        {
+            return new Regex(@"\A" + new Regex(@"\.|\$|\^|\{|\[|\(|\||\)|\*|\+|\?|\\").Replace(toFind, ch => @"\" + ch).Replace('_', '.').Replace("%", ".*") + @"\z", RegexOptions.Singleline).IsMatch(toSearch);
+        }
     }
 
     public static class stringKit
@@ -515,4 +520,6 @@ namespace iBlogs.Site.Core.Common.Extensions
             return str.IsNullOrWhiteSpace();
         }
     }
+
+
 }
