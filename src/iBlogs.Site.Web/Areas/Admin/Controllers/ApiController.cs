@@ -94,15 +94,15 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             }
             var cid = _contentsService.publish(contents);
             _siteService.cleanCache(Types.SYS_STATISTICS);
-            return ApiResponse<int>.Ok(cid,cid);
+            return ApiResponse<int>.Ok(cid, cid);
         }
 
         //@PostRoute("article/delete/:cid")
         [AdminApiRoute("article/delete/{cid}")]
         public ApiResponse deleteArticle(int cid)
         {
-           _contentsService.delete(cid);
-           return ApiResponse.Ok();
+            _contentsService.delete(cid);
+            return ApiResponse.Ok();
         }
 
         [AdminApiRoute("article/update")]
@@ -115,7 +115,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             contents.Type = Types.ARTICLE;
             var cid = contents.Id.Value;
             _contentsService.updateArticle(contents);
-            return ApiResponse<int>.Ok(cid,cid);
+            return ApiResponse<int>.Ok(cid, cid);
         }
 
         // @GetRoute("articles")
@@ -210,11 +210,10 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             throw new NotImplementedException();
         }
 
-        //  @GetRoute("attaches")
-        public ApiResponse attachList(PageParam pageParam)
+        [AdminApiRoute("attaches")]
+        public ApiResponse<Page<Attachment>> attachList(PageParam pageParam)
         {
-
-            throw new NotImplementedException();
+            return ApiResponse<Page<Attachment>>.Ok(_attachService.GetPage(pageParam));
         }
 
         //    @SysLog("删除附件")

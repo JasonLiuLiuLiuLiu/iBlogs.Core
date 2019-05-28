@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Common.Request;
+using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Attach.Service
@@ -21,6 +23,11 @@ namespace iBlogs.Site.Core.Attach.Service
 
             var result = await _repository.InsertOrUpdateAndGetIdAsync(attachment);
             return result != 0;
+        }
+
+        public Page<Attachment> GetPage(PageParam param)
+        {
+            return _repository.Page(_repository.GetAll(), param);
         }
     }
 }
