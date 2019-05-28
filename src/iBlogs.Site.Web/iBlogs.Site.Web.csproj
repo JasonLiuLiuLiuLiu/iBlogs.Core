@@ -6,12 +6,6 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="seed.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Hangfire" Version="1.7.2" />

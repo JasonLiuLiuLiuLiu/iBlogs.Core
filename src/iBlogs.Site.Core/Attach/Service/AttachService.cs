@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -48,6 +47,11 @@ namespace iBlogs.Site.Core.Attach.Service
             _repository.SaveChanges();
             File.Delete(filePath);
             File.Delete(thumbnailFilePath);
+        }
+
+        public int GetTotalCount()
+        {
+            return _repository.GetAll().Count();
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using iBlogs.Site.Core.Comment.DTO;
-using iBlogs.Site.Core.Common.DTO;
 using iBlogs.Site.Core.Common.Response;
-using iBlogs.Site.Core.Content;
+using iBlogs.Site.Core.EntityFrameworkCore;
+using System.Linq;
 
 namespace iBlogs.Site.Core.Comment.Service
 {
@@ -15,7 +15,17 @@ namespace iBlogs.Site.Core.Comment.Service
 
     public class CommentsService : ICommentsService
     {
+        private readonly IRepository<Comments> _repository;
 
+        public CommentsService(IRepository<Comments> repository)
+        {
+            _repository = repository;
+        }
+
+        public int GetTotalCount()
+        {
+            return _repository.GetAll().Count();
+        }
         /**
          * 保存评论
          *
