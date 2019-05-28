@@ -4,6 +4,7 @@ using Hangfire;
 using Hangfire.MemoryStorage;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.CodeDi;
+using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.User.Service;
 using iBlogs.Site.Web.Converter;
@@ -53,12 +54,7 @@ namespace iBlogs.Site.Web
                         ValidateLifetime = true,
                     };
                 });
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddCoreDi(options =>
-             {
-                 options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*", "ef*" };
-                 options.IgnoreInterface = new[] { "*IEntityBase*" };
-             });
+            services.AddIBlogs();
             services.AddMvc(option =>
             {
                 option.Filters.Add<LoginFilter>();

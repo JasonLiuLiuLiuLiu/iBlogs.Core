@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using AutoMapper;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Response;
@@ -17,13 +18,15 @@ namespace iBlogs.Site.Core.Content.Service
         private readonly IMetasService _metasService;
         private readonly IRepository<Contents> _repository;
         private readonly IRelationshipService _relationshipService;
+        private readonly IMapper _mapper;
 
-        public ContentsService( IViewService viewService, IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService)
+        public ContentsService(IViewService viewService, IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper)
         {
             _viewService = viewService;
             _metasService = metasService;
             _repository = repository;
             _relationshipService = relationshipService;
+            _mapper = mapper;
         }
 
         /**
@@ -47,7 +50,7 @@ namespace iBlogs.Site.Core.Content.Service
          *
          * @param contents 文章对象
          */
-        public int publish(Contents contents)
+        public int publish(ContentInput contents)
         {
             if (null == contents.AuthorId)
             {
@@ -63,7 +66,10 @@ namespace iBlogs.Site.Core.Content.Service
             var tags = contents.Tags;
             var categories = contents.Categories;
 
-            var cid = _repository.InsertOrUpdateAndGetId(contents);
+            var entity = new Contents();
+            _mapper.Map(contents, entity);
+
+            var cid = _repository.InsertOrUpdateAndGetId(entity);
 
             _metasService.saveMetas(cid, tags, Types.TAG);
             _metasService.saveMetas(cid, categories, Types.CATEGORY);
@@ -76,13 +82,16 @@ namespace iBlogs.Site.Core.Content.Service
          *
          * @param contents 文章对象
          */
-        public void updateArticle(Contents contents)
+        public void updateArticle(ContentInput contents)
         {
-            contents.Modified=DateTime.Now;
-            contents.Tags=contents.Tags ?? "";
-            contents.Categories=contents.Categories ?? "";
+            contents.Modified = DateTime.Now;
+            contents.Tags = contents.Tags ?? "";
+            contents.Categories = contents.Categories ?? "";
 
-            var cid = _repository.InsertOrUpdateAndGetId(contents);
+            var entity = new Contents();
+            _mapper.Map(contents, entity);
+
+            var cid = _repository.InsertOrUpdateAndGetId(entity);
 
             var tags = contents.Tags;
             var categories = contents.Categories;

@@ -27,7 +27,7 @@
                                     <option value="draft">草稿</option>
                                 </select>
                                 <button type="button" class="btn btn-success waves-effect waves-light m-l-10"
-                                        click="load(1)">
+                                        v-on:click="load(1)">
                                     查询
                                 </button>
                             </form>
@@ -186,5 +186,5 @@
             vm.isLoading = false;
             vueLoding.hide();
         });
-    </script>  
+    </script>
 }

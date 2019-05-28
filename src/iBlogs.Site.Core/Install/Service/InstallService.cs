@@ -95,7 +95,7 @@ namespace iBlogs.Site.Core.Install.Service
 
         private bool InitContent()
         {
-            var about = _contentsService.publish(new Contents
+            var about = _contentsService.publish(new ContentInput
             {
                 Title = "关于",
                 Slug = "about",
@@ -113,7 +113,7 @@ namespace iBlogs.Site.Core.Install.Service
                 AllowFeed = true
             }); 
 
-            var firstArticle = _contentsService.publish(new Contents
+            var firstArticle = _contentsService.publish(new ContentInput
             {
                 Title = "第一篇文章",
                 Created = DateTime.Now,
@@ -130,7 +130,7 @@ namespace iBlogs.Site.Core.Install.Service
                 AllowFeed = true
             });
 
-            var linkContent = _contentsService.publish(new Contents
+            var linkContent = _contentsService.publish(new ContentInput
             {
                 Title = "友情链接",
                 Slug = "links",

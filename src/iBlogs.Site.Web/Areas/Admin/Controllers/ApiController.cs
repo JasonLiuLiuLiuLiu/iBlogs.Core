@@ -77,7 +77,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
 
         [AdminApiRoute("article/new")]
-        public ApiResponse<int> newArticle([FromBody]Contents contents)
+        public ApiResponse<int> newArticle([FromBody]ContentInput contents)
         {
             var user = _userService.CurrentUsers;
             contents.Type = Types.ARTICLE;
@@ -92,7 +92,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             }
             var cid = _contentsService.publish(contents);
             _siteService.cleanCache(Types.SYS_STATISTICS);
-            return ApiResponse<int>.Ok(cid);
+            return ApiResponse<int>.Ok(cid,cid);
         }
 
         //@PostRoute("article/delete/:cid")
@@ -102,16 +102,16 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         [AdminApiRoute("article/update")]
-        public ApiResponse<int> updateArticle([FromBody]Contents contents)
+        public ApiResponse<int> updateArticle([FromBody]ContentInput contents)
         {
             if (contents?.Id == null)
             {
                 return ApiResponse<int>.Fail("缺少参数，请重试");
             }
             contents.Type = Types.ARTICLE;
-            var cid = contents.Id;
+            var cid = contents.Id.Value;
             _contentsService.updateArticle(contents);
-            return ApiResponse<int>.Ok(cid);
+            return ApiResponse<int>.Ok(cid,cid);
         }
 
         // @GetRoute("articles")
@@ -134,7 +134,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         //@SysLog("发布页面")
         [AdminApiRoute("page/new")]
-        public ApiResponse newPage([FromBody]Contents contents)
+        public ApiResponse newPage([FromBody]ContentInput contents)
         {
 
             var users = _userService.CurrentUsers;
@@ -148,13 +148,13 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         //@SysLog("修改页面")
         [AdminApiRoute("page/update")]
-        public ApiResponse updatePage([FromBody]Contents contents)
+        public ApiResponse updatePage([FromBody]ContentInput contents)
         {
             if (null == contents.Id)
             {
                 return ApiResponse.Fail("缺少参数，请重试");
             }
-            int cid = contents.Id;
+            int cid = contents.Id.Value;
             contents.Type = Types.PAGE;
             _contentsService.updateArticle(contents);
             return ApiResponse.Ok(cid);
