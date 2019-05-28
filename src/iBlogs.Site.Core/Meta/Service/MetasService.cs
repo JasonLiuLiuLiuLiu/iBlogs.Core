@@ -112,9 +112,10 @@ namespace iBlogs.Site.Core.Meta.Service
          *
          * @param mid 项目id
          */
-        public void delete(int mid)
+        public void delete(int id)
         {
-
+            _repository.Delete(id);
+            _relationshipService.DeleteByMetaId(id);
         }
 
         private void exec(string type, string name, Contents contents)

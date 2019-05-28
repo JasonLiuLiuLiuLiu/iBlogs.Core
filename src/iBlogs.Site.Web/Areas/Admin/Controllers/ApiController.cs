@@ -170,10 +170,13 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         // @SysLog("删除分类/标签")
-        // @PostRoute("category/delete/:mid")
-        public ApiResponse deleteMeta(int mid)
+        // @PostRoute()
+        [AdminApiRoute("category/delete/{id}")]
+        public ApiResponse deleteMeta(int id)
         {
-            throw new NotImplementedException();
+            _metasService.delete(id);
+            _siteService.cleanCache(Types.SYS_STATISTICS);
+            return ApiResponse.Ok();
         }
 
         // @GetRoute("comments")

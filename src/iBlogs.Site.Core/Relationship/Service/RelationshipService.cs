@@ -26,5 +26,11 @@ namespace iBlogs.Site.Core.Relationship.Service
             _repository.GetAll().Where(r => r.Cid == cid).ForEachAsync(r=>_repository.Delete(r)).Wait();
             _repository.SaveChanges();
         }
+
+        public void DeleteByMetaId(int id)
+        {
+            _repository.GetAll().Where(r => r.Mid == id).ForEachAsync(r => _repository.Delete(r)).Wait();
+            _repository.SaveChanges();
+        }
     }
 }

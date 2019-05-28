@@ -4,5 +4,6 @@
     {
         void SaveOrUpdate(int cid,int mid);
         void DeleteByContentId(int cid);
+        void DeleteByMetaId(int id);
     }
 }
