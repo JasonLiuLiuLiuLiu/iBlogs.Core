@@ -41,15 +41,6 @@ namespace iBlogs.Site.Core.Common.Service
         }
 
         /**
-         * 获取后台统计数据
-         */
-        public Statistics getStatistics()
-        {
-
-            return null;
-        }
-
-        /**
          * 查询文章归档
          */
         public List<Archive> getArchives()
@@ -111,16 +102,6 @@ namespace iBlogs.Site.Core.Common.Service
         public long getCommentCount(int cid)
         {
             return 0;
-        }
-
-        /**
-         * 清楚缓存
-         *
-         * @param key 缓存key
-         */
-        public void cleanCache(string key)
-        {
-
         }
 
     }

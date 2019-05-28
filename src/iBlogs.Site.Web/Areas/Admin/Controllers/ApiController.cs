@@ -93,7 +93,6 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                 contents.Categories = "默认分类";
             }
             var cid = _contentsService.publish(contents);
-            _siteService.cleanCache(Types.SYS_STATISTICS);
             return ApiResponse<int>.Ok(cid, cid);
         }
 
@@ -146,7 +145,6 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             contents.AllowPing = true;
             contents.AuthorId = users.Uid;
             _contentsService.publish(contents);
-            _siteService.cleanCache(Types.SYS_STATISTICS);
             return ApiResponse.Ok();
         }
 
@@ -169,7 +167,6 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         public ApiResponse saveCategory([FromBody]MetaParam metaParam)
         {
             _metasService.saveMeta(Types.CATEGORY, metaParam.Cname, metaParam.Id);
-            _siteService.cleanCache(Types.SYS_STATISTICS);
             return ApiResponse.Ok();
         }
 
@@ -179,7 +176,6 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         public ApiResponse deleteMeta(int id)
         {
             _metasService.delete(id);
-            _siteService.cleanCache(Types.SYS_STATISTICS);
             return ApiResponse.Ok();
         }
 
@@ -338,7 +334,6 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                     if (await _attachService.Save(attachment))
                     {
                         urls.Add(attachment);
-                        _siteService.cleanCache(Types.SYS_STATISTICS);
                     }
                     else
                     {
