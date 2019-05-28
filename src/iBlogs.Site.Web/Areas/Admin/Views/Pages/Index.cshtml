@@ -33,10 +33,10 @@
                                         <span v-show="item.status == 'draft'">草稿</span>
                                     </td>
                                     <td>
-                                        <a :href="'/admin/pages/edit/' + item.cid" class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
+                                        <a :href="'/admin/pages/edit/' + item.id" class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
                                             <i class="fa fa-edit"></i> <span>编辑</span>
                                         </a>
-                                        <a click="deleteArticle(item.cid)" href="javascript:void(0)" class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
+                                        <a v-on:click="deleteArticle(item.id)" href="javascript:void(0)" class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
                                             <i class="fa fa-trash-o"></i> <span>删除</span>
                                         </a>
                                         <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5" :href="'${site_url()}/' + item.slug"
@@ -108,12 +108,12 @@
                         }
                     });
                 },
-                deleteArticle: function (cid) {
+                deleteArticle: function (id) {
                     var $vm = this;
                     tale.alertConfirm({
                         title: '确定删除这个页面吗?', then: function () {
                             tale.post({
-                                url: '/admin/api/page/delete/' + cid,
+                                url: '/admin/api/page/delete/' + id,
                                 success: function (result) {
                                     if (result && result.success) {
                                         tale.alertOk('页面删除成功');

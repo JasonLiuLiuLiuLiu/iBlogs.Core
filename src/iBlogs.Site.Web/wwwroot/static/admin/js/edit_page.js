@@ -8,7 +8,7 @@ var vm = new Vue({
     el: '#app',
     data: {
         article: {
-            cid: '',
+            id: '',
             title: '',
             slug: '',
             tags: '',
@@ -88,9 +88,9 @@ var vm = new Vue({
         load: function () {
             var $vm = this;
             var pos = window.location.toString().lastIndexOf("/");
-            var cid = window.location.toString().substring(pos + 1)
+            var id = window.location.toString().substring(pos + 1)
             tale.get({
-                url: '/admin/api/articles/' + cid,
+                url: '/admin/api/articles/' + id,
                 success: function (data) {
                     $vm.article = data.payload;
                     $vm.article.createdTime = moment.unix($vm.article.created).format('YYYY-MM-DD HH:mm')
@@ -112,7 +112,7 @@ var vm = new Vue({
                     });
 
                     tale.get({
-                        url: '/admin/api/articles/content/' + cid,
+                        url: '/admin/api/articles/content/' + id,
                         success: function (data) {
                             if ($vm.article.fmtType === 'markdown') {
                                 mditor.value = data.payload;

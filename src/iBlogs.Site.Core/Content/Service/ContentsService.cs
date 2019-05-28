@@ -112,7 +112,8 @@ namespace iBlogs.Site.Core.Content.Service
          */
         public void delete(int cid)
         {
-
+            _repository.Delete(cid);
+            _repository.SaveChanges();
         }
 
         /**

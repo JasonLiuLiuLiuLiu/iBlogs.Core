@@ -88,10 +88,10 @@
                 <h3 class="panel-title">编辑页面</h3>
             </div>
             <div class="panel-body">
-                <input type="hidden" id="attach_url" value="${attachURL()}" />
+                <input type="hidden" id="attach_url" value="@ViewService.attachURL()" />
 
                 <form id="articleForm">
-                    <input type="hidden" v-model="article.cid" />
+                    <input type="hidden" v-model="article.id" />
                     <input type="hidden" v-model="article.status" />
                     <input type="hidden" v-model="article.allowCommentDto" />
                     <input type="hidden" v-model="article.allowFeed" />

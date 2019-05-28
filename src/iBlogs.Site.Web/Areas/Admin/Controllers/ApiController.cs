@@ -56,9 +56,11 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         // @SysLog("删除页面")
         // @PostRoute("page/delete/:cid")
+        [AdminApiRoute("page/delete/{cid}")]
         public ApiResponse deletePage(int cid)
         {
-            throw new NotImplementedException();
+            _contentsService.delete(cid);
+            return ApiResponse.Ok();
         }
         [AdminApiRoute("articles/{cid}")]
         public ApiResponse<Contents> article(string cid)
@@ -96,9 +98,11 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         //@PostRoute("article/delete/:cid")
+        [AdminApiRoute("article/delete/{cid}")]
         public ApiResponse deleteArticle(int cid)
         {
-            throw new NotImplementedException();
+           _contentsService.delete(cid);
+           return ApiResponse.Ok();
         }
 
         [AdminApiRoute("article/update")]

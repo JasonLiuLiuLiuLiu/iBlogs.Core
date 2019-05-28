@@ -8,7 +8,7 @@ var vm = new Vue({
     el: '#app',
     data: {
         article: {
-            cid: '',
+            id: '',
             title: '',
             slug: '',
             tags: '',
@@ -38,13 +38,13 @@ var vm = new Vue({
                 var params = tale.copy($vm.article);
                 params.created = moment($('#form_datetime').val(), "YYYY-MM-DD HH:mm").unix();
 
-                var url = $vm.article.cid !== '' ? '/admin/api/page/update' : '/admin/api/page/new';
+                var url = $vm.article.id !== '' ? '/admin/api/page/update' : '/admin/api/page/new';
                 tale.post({
                     url: url,
                     data: params,
                     success: function (result) {
                         if (result && result.success) {
-                            $vm.article.cid = result.payload;
+                            $vm.article.id = result.payload;
                             callback && callback();
                         } else {
                             tale.alertError(result.msg || '保存页面失败');
