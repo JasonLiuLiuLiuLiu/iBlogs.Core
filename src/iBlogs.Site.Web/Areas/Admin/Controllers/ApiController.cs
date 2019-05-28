@@ -218,9 +218,11 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         //    @SysLog("删除附件")
         //@PostRoute("attach/delete/:id")
+        [AdminApiRoute("attach/delete/{id}")]
         public ApiResponse deleteAttach(int id)
         {
-            throw new NotImplementedException();
+            _attachService.Delete(id);
+            return ApiResponse.Ok();
         }
 
         // @GetRoute("categories")

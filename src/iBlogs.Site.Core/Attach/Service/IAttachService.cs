@@ -8,5 +8,6 @@ namespace iBlogs.Site.Core.Attach.Service
     {
         Task<bool> Save(Attachment attachment);
         Page<Attachment> GetPage(PageParam param);
+        void Delete(int id);
     }
 }
