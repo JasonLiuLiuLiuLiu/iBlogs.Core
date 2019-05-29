@@ -2,7 +2,6 @@
 @inject IViewService ViewService
 
 <link href="@ViewService.cdnURL()/plugins/toggles/toggles.css" rel="stylesheet">
-
 <div id="app" class="row" v-cloak>
     <loading :active.sync="isLoading" :can-cancel="true"></loading>
     <div class="col-lg-12">
@@ -121,7 +120,7 @@
                                     </div>
 
                                     <input type="hidden" name="allowInstall" v-model="allowInstall" />
-                                    <input type="hidden" name="allowCommentDtoAudit" v-model="allowCommentDtoAudit" />
+                                    <input type="hidden" name="allowCommentAudit" v-model="allowCommentAudit" />
                                     <input type="hidden" name="allowCloudCDN" v-model="allowCloudCDN" />
 
                                     <div class="clearfix pull-right">
@@ -142,6 +141,7 @@
 {
     <script src="@ViewService.cdnURL()/plugins/jquery-toggles/2.0.4/toggles.min.js"></script>
     <script>
+
         var tale = new $.tale();
         var vm = new Vue({
             el: '#app',
@@ -251,6 +251,7 @@
             vm.isLoading = false;
             vueLoding.hide();
         });
+
 
     </script>
 }
