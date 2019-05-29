@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
@@ -43,6 +44,31 @@ namespace iBlogs.Site.Core.User.Service
             }
 
             return query.ToList();
+        }
+
+        public void UpdateUserInfo(UpdateUserParam param)
+        {
+            var user = _repository.FirstOrDefault(CurrentUsers.Uid);
+            user.ScreenName = param.ScreenName;
+            user.Email = param.Email;
+            _repository.SaveChanges();
+        }
+
+        public void UpdatePwd(PwdUpdateParam param)
+        {
+            var pwd = Users.PwdMd5(CurrentUsers.Username, param.OldPassword);
+            var user = _repository.FirstOrDefault(CurrentUsers.Uid);
+            if (user.Password != pwd)
+                throw new Exception("输入密码有误");
+            user.Password = param.Password;
+            user.PwdMd5();
+            LoginStaticToken.RemoveToken(user.Id);
+            _repository.SaveChanges();
+        }
+
+        public Users FindUserById(int id)
+        {
+            return _repository.FirstOrDefault(id);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace iBlogs.Site.Core.User
         /**
          * 用户密码
          */
-        public string Password { get; set; }
+        public string Password { get; set;}
 
         /**
          * 用户的邮箱
@@ -65,6 +65,11 @@ namespace iBlogs.Site.Core.User
         public void PwdMd5()
         {
             Password = IBlogsUtils.md5(Username, Password);
+        }
+
+        public static string PwdMd5(string userName, string password)
+        {
+            return IBlogsUtils.md5(userName, password);
         }
     }
 }

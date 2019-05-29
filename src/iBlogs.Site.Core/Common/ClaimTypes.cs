@@ -17,5 +17,9 @@
         /// Email
         /// </summary>
         public const string Email = "userEmail";
+        /// <summary>
+        /// Token
+        /// </summary>
+        public const string Token = "token";
     }
 }

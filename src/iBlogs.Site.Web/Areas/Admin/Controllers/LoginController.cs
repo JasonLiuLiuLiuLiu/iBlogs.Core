@@ -43,17 +43,21 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             }).FirstOrDefault();
             if (user != null)
                 return ApiResponse<string>.Ok(GenerateJsonWebToken(user));
-            return ApiResponse<string>.Fail("没有找到该用户");
+            return ApiResponse<string>.Fail("登录失败");
         }
 
         private string GenerateJsonWebToken(Users user)
         {
+            var token = Guid.NewGuid().ToString();
             var claims = new[]
             {
                 new Claim(ClaimTypes.Uid, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Token,token), 
             };
+
+            LoginStaticToken.SaveToken(user.Id,token);
 
             var days = _configuration["Auth:JwtExpireDays"];
             var key = _configuration["Auth:JwtKey"];
