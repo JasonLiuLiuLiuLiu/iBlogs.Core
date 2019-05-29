@@ -46,6 +46,7 @@ namespace iBlogs.Site.Core.Option.Service
                         if (!description.IsNullOrWhiteSpace())
                             entity.Description = description;
                         _repository.Update(entity);
+                        _repository.SaveChanges();
                     }
 
                     _options[key] = value;
@@ -54,6 +55,7 @@ namespace iBlogs.Site.Core.Option.Service
             {
                 _repository.Insert(new Options {Name = key, Value = value,Description = description});
                 _options.Add(key, value);
+                _repository.SaveChanges();
             }
         }
 
@@ -106,6 +108,20 @@ namespace iBlogs.Site.Core.Option.Service
             }
         }
 
+        public IDictionary<string,string> GetAll()
+        {
+            return _options;
+        }
+
+        public void SaveOptions(IDictionary<string, string> options)
+        {
+            if(options==null)
+                return;
+            foreach (var option in options)
+            {
+                saveOption(option.Key,option.Value);
+            }
+        }
 
     }
 }

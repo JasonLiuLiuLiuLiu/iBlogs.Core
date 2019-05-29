@@ -19,6 +19,7 @@ using iBlogs.Site.Core.Meta;
 using iBlogs.Site.Core.Meta.DTO;
 using iBlogs.Site.Core.Meta.Service;
 using iBlogs.Site.Core.Option.DTO;
+using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.User.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -37,8 +38,9 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         private readonly IUserService _userService;
         private readonly IHostingEnvironment _env;
         private readonly IAttachService _attachService;
+        private readonly IOptionService _optionService;
 
-        public ApiController(IMetasService metasService, ISiteService siteService, IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService)
+        public ApiController(IMetasService metasService, ISiteService siteService, IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService, IOptionService optionService)
         {
             _metasService = metasService;
             _siteService = siteService;
@@ -46,6 +48,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             _userService = userService;
             _env = env;
             _attachService = attachService;
+            _optionService = optionService;
         }
 
         //@GetRoute("logs")
@@ -234,24 +237,58 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         // @GetRoute("options")
-        public ApiResponse options()
+        [AdminApiRoute("options")]
+        public ApiResponse<IDictionary<string,string>> options()
         {
-            throw new NotImplementedException();
+            return ApiResponse<IDictionary<string, string>>.Ok(_optionService.GetAll());
         }
 
         //@SysLog("保存系统配置")
-        // @PostRoute("options/save")
-        public ApiResponse saveOptions()
+        [AdminApiRoute("options/save")]
+        public ApiResponse saveOptions(IDictionary<string,string> options)
         {
-            throw new NotImplementedException();
+            _optionService.SaveOptions(options);
+            return ApiResponse.Ok();
         }
 
         //@SysLog("保存高级选项设置")
         // @PostRoute("advanced/save")
+        [AdminApiRoute("advanced/save")]
         public ApiResponse saveAdvance(AdvanceParam advanceParam)
         {
-            // 清除缓存
-            throw new NotImplementedException();
+            // 要过过滤的黑名单列表
+            if (!advanceParam.BlockIps.IsNullOrWhiteSpace())
+            {
+                _optionService.saveOption(Types.BLOCK_IPS, advanceParam.BlockIps);
+            }
+            else
+            {
+                _optionService.saveOption(Types.BLOCK_IPS, "");
+            }
+
+            if (!advanceParam.CdnUrl.IsNullOrWhiteSpace())
+            {
+                _optionService.saveOption(iBlogsConst.OPTION_CDN_URL, advanceParam.CdnUrl);
+            }
+
+            // 是否允许重新安装
+            if (!advanceParam.AllowInstall.IsNullOrWhiteSpace())
+            {
+                _optionService.saveOption(iBlogsConst.OPTION_ALLOW_INSTALL, advanceParam.AllowInstall);
+            }
+
+            // 评论是否需要审核
+            if (!advanceParam.AllowCommentAudit.IsNullOrWhiteSpace())
+            {
+                _optionService.saveOption(iBlogsConst.OPTION_ALLOW_COMMENT_AUDIT, advanceParam.AllowCommentAudit);
+            }
+
+            // 是否允许公共资源CDN
+            if (!advanceParam.AllowCloudCdn.IsNullOrWhiteSpace())
+            {
+                _optionService.saveOption(iBlogsConst.OPTION_ALLOW_CLOUD_CDN, advanceParam.AllowCloudCdn);
+            }
+            return ApiResponse.Ok();
         }
 
         //@GetRoute("themes")
