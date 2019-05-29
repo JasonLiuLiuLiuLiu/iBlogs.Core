@@ -27,7 +27,7 @@
                                     <option value="draft">草稿</option>
                                 </select>
                                 <button type="button" class="btn btn-success waves-effect waves-light m-l-10"
-                                        click="load(1)">
+                                        v-on:click="load(1)">
                                     查询
                                 </button>
                             </form>
@@ -48,7 +48,7 @@
                                 <tbody>
                                     <tr v-for="item in articlePage.rows">
                                         <td>
-                                            <a :href="'/admin/article/edit/' + item.cid">{{ item.title }}</a>
+                                            <a :href="'/admin/article/edit/' + item.id">{{ item.title }}</a>
                                         </td>
                                         <td>{{ item.created | formatUnix }}</td>
                                         <td>{{ item.hits }}</td>
@@ -58,11 +58,11 @@
                                             <span v-show="item.status == 'draft'" class="label label-default">草稿</span>
                                         </td>
                                         <td>
-                                            <a :href="'/admin/article/edit/' + item.cid"
+                                            <a :href="'/admin/article/edit/' + item.id"
                                                class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
                                                 <i class="fa fa-edit"></i> <span>编辑</span>
                                             </a>
-                                            <a click="deleteArticle(item.cid)" href="javascript:void(0)"
+                                            <a v-on:click="deleteArticle(item.id)" href="javascript:void(0)"
                                                class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
                                                 <i class="fa fa-trash-o"></i> <span>删除</span>
                                             </a>
@@ -88,7 +88,7 @@
                             <li class="page-item" v-for="num in articlePage.navPageNums"
                                 :class="{ active: articlePage.pageNum == num }">
                                 <a click="load(num)">
-                                    {{ num }}</i>
+                                    {{ num }}
                                 </a>
                             </li>
                             <li v-if="articlePage.hasNextPage">
@@ -152,7 +152,7 @@
                         url: '/admin/api/articleList',
                         data: $vm.search,
                         success: function (data) {
-                            $vm.articlePage = data.payload
+                            $vm.articlePage = data.payload;
                         },
                         error: function (error) {
                             console.log(error);
@@ -186,5 +186,5 @@
             vm.isLoading = false;
             vueLoding.hide();
         });
-    </script>  
+    </script>
 }

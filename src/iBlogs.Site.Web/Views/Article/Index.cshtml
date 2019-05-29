@@ -1,5 +1,6 @@
-﻿@using iBlogs.Site.Core.Service.Common
-@inject IViewService ViewService
+﻿@inject IViewService ViewService
+@using iBlogs.Site.Core.Common.Extensions
+@using iBlogs.Site.Core.Common.Service
 @model ViewBaseModel
 <article class="main-content page-page" itemscope itemtype="http://schema.org/Article">
     <div class="post-header">
@@ -29,7 +30,7 @@
             <span class="bottom-bar-item bottom-bar-facebook"><a href="https://www.facebook.com/sharer/sharer.php?u=@ViewService.permalink()" target="_blank" title="@ViewService.Title()" rel="nofollow">facebook</a></span>
             <span class="bottom-bar-item bottom-bar-twitter"><a href="https://twitter.com/intent/tweet?url=@ViewService.permalink()&text=@ViewService.Title()" target="_blank" title="@ViewService.Title()" rel="nofollow">Twitter</a></span>
             <span class="bottom-bar-item bottom-bar-weibo"><a href="http://service.weibo.com/share/share.php?url=@ViewService.permalink()&amp;title=@ViewService.Title()" target="_blank" title="@ViewService.Title()" rel="nofollow">Weibo</a></span>
-            <span class="bottom-bar-item bottom-bar-qrcode"><a href="https://cli.im/api/qrcode/code?text=@ViewService.permalink()&mhid=50eWDQu6nc0hMHcrKtNXPKo" target="_blank" rel="nofollow">QRcode</a></span>
+            <span class="bottom-bar-item bottom-bar-qrcode"><a href="https://cli.im/api/qrSetCode/SetCode?text=@ViewService.permalink()&mhid=50eWDQu6nc0hMHcrKtNXPKo" target="_blank" rel="nofollow">QRSetCode</a></span>
         </div>
         <div class="bottom-bar-items right">
             <span class="bottom-bar-item">@ViewService.thePrev("→")</span>
@@ -43,7 +44,7 @@
 @{
     var article = ViewService.current_article();
     var comments = ViewService.comments(6);
-    <div id="@article.Cid" class="comment-container">
+    <div id="@article.Id" class="comment-container">
         <div id="comments" class="clearfix">
             @if (article.AllowComment)
             {
@@ -74,13 +75,13 @@
                 <span class="response">评论已关闭.</span>
             }
 
-            @if (comments.rows.Count > 0)
+            @if (comments.Rows.Count > 0)
             {
                 <ol class="comment-list">
-                    @foreach (var comment in comments.rows)
+                    @foreach (var comment in comments.Rows)
                     {
-                        <li id="li-comment-@comment.Coid" class="comment-body comment-parent comment-odd">
-                            <div id="comment-@comment.Coid}">
+                        <li id="li-comment-@comment.Id" class="comment-body comment-parent comment-odd">
+                            <div id="comment-@comment.Id}">
                                 <div class="comment-view" onclick="">
                                     <div class="comment-header">
                                         <img class="avatar" src="@ViewService.gravatar(comment.Mail)}?s=80&r=G&d=" title="@comment.Author}"
@@ -94,9 +95,9 @@
                                         <p>@ViewService.article(comment.Content)</p>
                                     </div>
                                     <div class="comment-meta">
-                                        <time class="comment-time">@ViewService.fmtdate(comment.Created.Value)</time>
+                                        <time class="comment-time">@ViewService.fmtdate(comment.Created.ToUnixTimestamp())</time>
                                         <span class="comment-reply">
-                                            <a rel="nofollow" onclick="TaleComment.reply('@comment.Coid');">回复</a>
+                                            <a rel="nofollow" onclick="TaleComment.reply('@comment.Id');">回复</a>
                                         </span>
                                     </div>
                                 </div>
@@ -107,9 +108,9 @@
                                     <ol class="comment-list">
                                         @foreach (var child in comment.children)
                                         {
-                                            <li id="li-comment-@child.Coid"
+                                            <li id="li-comment-@child.Id"
                                                 class="comment-body comment-child comment-level-odd comment-odd">
-                                                <div id="comment-@child.Coid">
+                                                <div id="comment-@child.Id">
                                                     <div class="comment-view">
                                                         <div class="comment-header">
                                                             <img class="avatar" src="@ViewService.gravatar(child.Mail)?s=80&r=G&d=" title="@child.Author" width="80" height="80">
@@ -124,9 +125,9 @@
                                                             <p>@ViewService.article(child.Content)</p>
                                                         </div>
                                                         <div class="comment-meta">
-                                                            <time class="comment-time">@ViewService.fmtdate(child.Created.Value)</time>
+                                                            <time class="comment-time">@ViewService.fmtdate(child.Created.ToUnixTimestamp())</time>
                                                             <span class="comment-reply">
-                                                                <a rel="nofollow" onclick="TaleComment.reply('@child.Coid');">回复</a>
+                                                                <a rel="nofollow" onclick="TaleComment.reply('@child.Id');">回复</a>
                                                             </span>
                                                         </div>
                                                     </div>
@@ -143,21 +144,21 @@
 
             <div class="lists-navigator clearfix">
                 <ol class="page-navigator">
-                    @if (comments.hasPrevPage)
+                    @if (comments.HasPrevPage)
                     {
-                        <li class="prev"><a href="?cp=@comments.prevPage#comments">←</a></li>
+                        <li class="prev"><a href="?cp=@comments.PrevPage#comments">←</a></li>
                     }
 
 
-                    @foreach (var navIndex in comments.navPageNums)
+                    @foreach (var navIndex in comments.NavPageNums)
                     {
-                        <li class="@((comments.pageNum==Model.navIndex)?"current":"")"><a href="?cp=@navIndex#comments">@navIndex</a></li>
+                        <li class="@((comments.PageNum==Model.navIndex)?"current":"")"><a href="?cp=@navIndex#comments">@navIndex</a></li>
                     }
 
 
-                    @if (comments.hasNextPage)
+                    @if (comments.HasNextPage)
                     {
-                        <li class="next"><a href="?cp=@comments.nextPage#comments">→</a></li>
+                        <li class="next"><a href="?cp=@comments.NextPage#comments">→</a></li>
                     }
                 </ol>
 

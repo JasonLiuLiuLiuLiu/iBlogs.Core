@@ -2,8 +2,13 @@
 using System.IO;
 using System.Threading.Tasks;
 using iBlogs.Site.Core;
-using iBlogs.Site.Core.Extensions;
+using iBlogs.Site.Core.Common;
+using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 
 namespace iBlogs.Site.Web.Middleware
@@ -12,6 +17,7 @@ namespace iBlogs.Site.Web.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
+        private iBlogsContext _blogsContext;
 
         public InstallMiddleware(RequestDelegate next, IConfiguration configuration)
         {
@@ -19,8 +25,9 @@ namespace iBlogs.Site.Web.Middleware
             _configuration = configuration;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, iBlogsContext blogsContext)
         {
+            _blogsContext = blogsContext;
             if (!Installed())
                 context.Request.Path = "/install";
             await _next.Invoke(context);
@@ -28,12 +35,7 @@ namespace iBlogs.Site.Web.Middleware
 
         private bool Installed()
         {
-            if (_configuration[ConfigKey.DbInstalled].ToBool())
-                return true;
-            if (File.Exists(Environment.CurrentDirectory +"\\"+
-                            _configuration[ConfigKey.SqLiteDbFileName].IfNullReturnDefaultValue("iBlogs.db")))
-                return true;
-            return false;
+            return _configuration[ConfigKey.DbInstalled].ToBool();
         }
     }
 }

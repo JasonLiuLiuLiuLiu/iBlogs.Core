@@ -1,8 +1,7 @@
-﻿@using iBlogs.Site.Core.Service.Common
+﻿@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
 
 <link href="@ViewService.cdnURL()/plugins/toggles/toggles.css" rel="stylesheet">
-
 <div id="app" class="row" v-cloak>
     <loading :active.sync="isLoading" :can-cancel="true"></loading>
     <div class="col-lg-12">
@@ -52,7 +51,7 @@
                                     </div>
 
                                     <div class="clearfix pull-right">
-                                        <button type="button" class="btn btn-inverse waves-effect waves-light" click="saveSetting">
+                                        <button type="button" class="btn btn-inverse waves-effect waves-light" v-on:click="saveSetting">
                                             保存设置
                                         </button>
                                     </div>
@@ -77,12 +76,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="col-md-3 control-label">清理缓存</label>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" name="cacheKey" placeholder="请输入缓存前缀，输入*删除所有缓存" />
-                                        </div>
-                                    </div>
 
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">黑名单IP列表</label>
@@ -91,12 +84,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="col-md-3 control-label">卸载插件</label>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" name="pluginName" placeholder="请输入插件名，输入*卸载所有插件" />
-                                        </div>
-                                    </div>
 
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">允许重新安装</label>
@@ -125,7 +112,7 @@
                                     <input type="hidden" name="allowCloudCDN" v-model="allowCloudCDN" />
 
                                     <div class="clearfix pull-right">
-                                        <button type="button" class="btn btn-inverse waves-effect waves-light" click="saveAdvanced">
+                                        <button type="button" class="btn btn-inverse waves-effect waves-light" v-on:click="saveAdvanced">
                                             保存设置
                                         </button>
                                     </div>
@@ -142,6 +129,7 @@
 {
     <script src="@ViewService.cdnURL()/plugins/jquery-toggles/2.0.4/toggles.min.js"></script>
     <script>
+
         var tale = new $.tale();
         var vm = new Vue({
             el: '#app',

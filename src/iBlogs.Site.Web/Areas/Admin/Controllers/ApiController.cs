@@ -1,22 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-using iBlogs.Site.Core.Entity;
-using iBlogs.Site.Core.Extensions;
-using iBlogs.Site.Core.Params;
-using iBlogs.Site.Core.Response;
-using iBlogs.Site.Core.Service;
-using iBlogs.Site.Core.Service.Common;
-using iBlogs.Site.Core.Service.Content;
-using iBlogs.Site.Core.Service.Users;
-using iBlogs.Site.Core.Utils;
-using iBlogs.Site.Core.Utils.Extensions;
+using iBlogs.Site.Core.Attach;
+using iBlogs.Site.Core.Attach.Service;
+using iBlogs.Site.Core.Comment;
+using iBlogs.Site.Core.Comment.DTO;
+using iBlogs.Site.Core.Common;
+using iBlogs.Site.Core.Common.DTO;
+using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.Common.Request;
+using iBlogs.Site.Core.Common.Response;
+using iBlogs.Site.Core.Common.Service;
+using iBlogs.Site.Core.Content;
+using iBlogs.Site.Core.Content.DTO;
+using iBlogs.Site.Core.Content.Service;
+using iBlogs.Site.Core.Meta;
+using iBlogs.Site.Core.Meta.DTO;
+using iBlogs.Site.Core.Meta.Service;
+using iBlogs.Site.Core.Option.DTO;
+using iBlogs.Site.Core.Option.Service;
+using iBlogs.Site.Core.User.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
@@ -31,8 +38,9 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         private readonly IUserService _userService;
         private readonly IHostingEnvironment _env;
         private readonly IAttachService _attachService;
+        private readonly IOptionService _optionService;
 
-        public ApiController(IMetasService metasService, ISiteService siteService, IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService)
+        public ApiController(IMetasService metasService, ISiteService siteService, IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService, IOptionService optionService)
         {
             _metasService = metasService;
             _siteService = siteService;
@@ -40,38 +48,41 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             _userService = userService;
             _env = env;
             _attachService = attachService;
+            _optionService = optionService;
         }
 
         //@GetRoute("logs")
-        public RestResponse sysLogs(PageParam pageParam)
+        public ApiResponse sysLogs(PageParam pageParam)
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("删除页面")
         // @PostRoute("page/delete/:cid")
-        public RestResponse deletePage(int cid)
+        [AdminApiRoute("page/delete/{cid}")]
+        public ApiResponse deletePage(int cid)
         {
-            throw new NotImplementedException();
+            _contentsService.delete(cid);
+            return ApiResponse.Ok();
         }
         [AdminApiRoute("articles/{cid}")]
-        public RestResponse<Contents> article(string cid)
+        public ApiResponse<Contents> article(string cid)
         {
             Contents contents = _contentsService.getContents(cid);
             contents.Content = "";
-            return RestResponse<Contents>.ok(contents);
+            return ApiResponse<Contents>.Ok(contents);
         }
 
         [AdminApiRoute("articles/content/{cid}")]
-        public RestResponse<string> articleContent(string cid)
+        public ApiResponse<string> articleContent(string cid)
         {
             Contents contents = _contentsService.getContents(cid);
-            return RestResponse<string>.ok(contents.Content);
+            return ApiResponse<string>.Ok(contents.Content);
         }
 
 
         [AdminApiRoute("article/new")]
-        public RestResponse<int> newArticle([FromBody]Contents contents)
+        public ApiResponse<int> newArticle([FromBody]ContentInput contents)
         {
             var user = _userService.CurrentUsers;
             contents.Type = Types.ARTICLE;
@@ -85,172 +96,224 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                 contents.Categories = "默认分类";
             }
             var cid = _contentsService.publish(contents);
-            _siteService.cleanCache(Types.SYS_STATISTICS);
-            return RestResponse<int>.ok(cid);
+            return ApiResponse<int>.Ok(cid, cid);
         }
 
         //@PostRoute("article/delete/:cid")
-        public RestResponse deleteArticle(int cid)
+        [AdminApiRoute("article/delete/{cid}")]
+        public ApiResponse deleteArticle(int cid)
         {
-            throw new NotImplementedException();
+            _contentsService.delete(cid);
+            return ApiResponse.Ok();
         }
 
         [AdminApiRoute("article/update")]
-        public RestResponse<int> updateArticle([FromBody]Contents contents)
+        public ApiResponse<int> updateArticle([FromBody]ContentInput contents)
         {
-            if (contents?.Cid == null)
+            if (contents?.Id == null)
             {
-                return RestResponse<int>.fail("缺少参数，请重试");
+                return ApiResponse<int>.Fail("缺少参数，请重试");
             }
             contents.Type = Types.ARTICLE;
-            var cid = contents.Cid;
+            var cid = contents.Id.Value;
             _contentsService.updateArticle(contents);
-            return RestResponse<int>.ok(cid.ValueOrDefault());
+            return ApiResponse<int>.Ok(cid, cid);
         }
 
         // @GetRoute("articles")
-        public RestResponse articleList(ArticleParam articleParam)
+        public ApiResponse articleList(ArticleParam articleParam)
         {
             articleParam.Type = Types.ARTICLE;
             articleParam.Page--;
             Page<Contents> articles = _contentsService.findArticles(articleParam);
-            return RestResponse<Page<Contents>>.ok(articles);
+            return ApiResponse<Page<Contents>>.Ok(articles);
         }
 
-        //@GetRoute("pages")
-        public RestResponse pageList(ArticleParam articleParam)
+        [AdminApiRoute("pages")]
+        public ApiResponse<Page<Contents>> pageList(ArticleParam articleParam)
         {
-            throw new NotImplementedException();
+            articleParam.Type = Types.PAGE;
+            articleParam.Page--;
+            Page<Contents> articles = _contentsService.findArticles(articleParam);
+            return ApiResponse<Page<Contents>>.Ok(articles);
         }
 
         //@SysLog("发布页面")
-        //@PostRoute("page/new")
-        public RestResponse newPage(Contents contents)
+        [AdminApiRoute("page/new")]
+        public ApiResponse newPage([FromBody]ContentInput contents)
         {
 
-            throw new NotImplementedException();
+            var users = _userService.CurrentUsers;
+            contents.Type = Types.PAGE;
+            contents.AllowPing = true;
+            contents.AuthorId = users.Uid;
+            _contentsService.publish(contents);
+            return ApiResponse.Ok();
         }
 
         //@SysLog("修改页面")
-        //@PostRoute("page/update")
-        public RestResponse updatePage(Contents contents)
+        [AdminApiRoute("page/update")]
+        public ApiResponse updatePage([FromBody]ContentInput contents)
         {
-            throw new NotImplementedException();
+            if (null == contents.Id)
+            {
+                return ApiResponse.Fail("缺少参数，请重试");
+            }
+            int cid = contents.Id.Value;
+            contents.Type = Types.PAGE;
+            _contentsService.updateArticle(contents);
+            return ApiResponse.Ok(cid);
         }
 
         // @SysLog("保存分类")
         [Route("/admin/api/category/save")]
-        public RestResponse saveCategory([FromBody]MetaParam metaParam)
+        public ApiResponse saveCategory([FromBody]MetaParam metaParam)
         {
-            _metasService.saveMeta(Types.CATEGORY, metaParam.cname, metaParam.mid);
-            _siteService.cleanCache(Types.SYS_STATISTICS);
-            return RestResponse.ok();
+            _metasService.saveMeta(Types.CATEGORY, metaParam.Cname, metaParam.Id);
+            return ApiResponse.Ok();
         }
 
         // @SysLog("删除分类/标签")
-        // @PostRoute("category/delete/:mid")
-        public RestResponse deleteMeta(int mid)
+        // @PostRoute()
+        [AdminApiRoute("category/delete/{id}")]
+        public ApiResponse deleteMeta(int id)
         {
-            throw new NotImplementedException();
+            _metasService.delete(id);
+            return ApiResponse.Ok();
         }
 
         // @GetRoute("comments")
-        public RestResponse commentList(CommentParam commentParam)
+        public ApiResponse commentList(CommentParam commentParam)
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("删除评论")
         //@PostRoute("comment/delete/:coid")
-        public RestResponse deleteComment(int coid)
+        public ApiResponse deleteComment(int coid)
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("修改评论状态")
         // @PostRoute("comment/status")
-        public RestResponse updateStatus(Comments comments)
+        public ApiResponse updateStatus(Comments comments)
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("回复评论")
         // @PostRoute("comment/reply")
-        public RestResponse replyComment(Comments comments)
+        public ApiResponse replyComment(Comments comments)
         {
             throw new NotImplementedException();
         }
 
-        //  @GetRoute("attaches")
-        public RestResponse attachList(PageParam pageParam)
+        [AdminApiRoute("attaches")]
+        public ApiResponse<Page<Attachment>> attachList(PageParam pageParam)
         {
-
-            throw new NotImplementedException();
+            return ApiResponse<Page<Attachment>>.Ok(_attachService.GetPage(pageParam));
         }
 
         //    @SysLog("删除附件")
         //@PostRoute("attach/delete/:id")
-        public RestResponse deleteAttach(int id)
+        [AdminApiRoute("attach/delete/{id}")]
+        public ApiResponse deleteAttach(int id)
         {
-            throw new NotImplementedException();
+            _attachService.Delete(id);
+            return ApiResponse.Ok();
         }
 
         // @GetRoute("categories")
-        public RestResponse CategoryList()
+        public ApiResponse CategoryList()
         {
-            return RestResponse<List<Metas>>.ok(_siteService.getMetas(Types.RECENT_META, Types.CATEGORY, iBlogsConst.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_siteService.getMetas(Types.CATEGORY, iBlogsConst.MAX_POSTS));
         }
 
         // @GetRoute("tags")
-        public RestResponse TagList()
+        public ApiResponse TagList()
         {
-            return RestResponse<List<Metas>>.ok(_siteService.getMetas(Types.RECENT_META, Types.TAG, iBlogsConst.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_siteService.getMetas(Types.TAG, iBlogsConst.MAX_POSTS));
         }
 
         // @GetRoute("options")
-        public RestResponse options()
+        [AdminApiRoute("options")]
+        public ApiResponse<IDictionary<string,string>> options()
         {
-            throw new NotImplementedException();
+            return ApiResponse<IDictionary<string, string>>.Ok(_optionService.GetAll());
         }
 
         //@SysLog("保存系统配置")
-        // @PostRoute("options/save")
-        public RestResponse saveOptions()
+        [AdminApiRoute("options/save")]
+        public ApiResponse saveOptions(IDictionary<string,string> options)
         {
-            throw new NotImplementedException();
+            _optionService.SaveOptions(options);
+            return ApiResponse.Ok();
         }
 
         //@SysLog("保存高级选项设置")
         // @PostRoute("advanced/save")
-        public RestResponse saveAdvance(AdvanceParam advanceParam)
+        [AdminApiRoute("advanced/save")]
+        public ApiResponse saveAdvance(AdvanceParam advanceParam)
         {
-            // 清除缓存
-            throw new NotImplementedException();
+            // 要过过滤的黑名单列表
+            if (!advanceParam.BlockIps.IsNullOrWhiteSpace())
+            {
+                _optionService.saveOption(Types.BLOCK_IPS, advanceParam.BlockIps);
+            }
+            else
+            {
+                _optionService.saveOption(Types.BLOCK_IPS, "");
+            }
+
+            if (!advanceParam.CdnUrl.IsNullOrWhiteSpace())
+            {
+                _optionService.saveOption(iBlogsConst.OPTION_CDN_URL, advanceParam.CdnUrl);
+            }
+
+            // 是否允许重新安装
+            if (!advanceParam.AllowInstall.IsNullOrWhiteSpace())
+            {
+                _optionService.saveOption(iBlogsConst.OPTION_ALLOW_INSTALL, advanceParam.AllowInstall);
+            }
+
+            // 评论是否需要审核
+            if (!advanceParam.AllowCommentAudit.IsNullOrWhiteSpace())
+            {
+                _optionService.saveOption(iBlogsConst.OPTION_ALLOW_COMMENT_AUDIT, advanceParam.AllowCommentAudit);
+            }
+
+            // 是否允许公共资源CDN
+            if (!advanceParam.AllowCloudCdn.IsNullOrWhiteSpace())
+            {
+                _optionService.saveOption(iBlogsConst.OPTION_ALLOW_CLOUD_CDN, advanceParam.AllowCloudCdn);
+            }
+            return ApiResponse.Ok();
         }
 
         //@GetRoute("themes")
-        public RestResponse getThemes()
+        public ApiResponse getThemes()
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("保存主题设置")
         //@PostRoute("themes/setting")
-        public RestResponse saveSetting()
+        public ApiResponse saveSetting()
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("激活主题")
         // @PostRoute("themes/active")
-        public RestResponse activeTheme()
+        public ApiResponse activeTheme()
         {
             throw new NotImplementedException();
         }
 
         // @SysLog("保存模板")
         // @PostRoute("template/save")
-        public RestResponse saveTpl(TemplateParam templateParam)
+        public ApiResponse saveTpl(TemplateParam templateParam)
         {
             throw new NotImplementedException();
         }
@@ -259,20 +322,20 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         * 上传文件接口
         */
         [AdminApiRoute("attach/upload")]
-        public async Task<RestResponse<List<Attach>>> uploadAsync(List<IFormFile> files)
+        public async Task<ApiResponse<List<Attachment>>> uploadAsync(List<IFormFile> files)
         {
 
             //log.info("UPLOAD DIR = {}", TaleUtils.UP_DIR);
 
             var users = _userService.CurrentUsers;
             var uid = users.Uid;
-            List<Attach> errorFiles = new List<Attach>();
-            List<Attach> urls = new List<Attach>();
+            List<Attachment> errorFiles = new List<Attachment>();
+            List<Attachment> urls = new List<Attachment>();
 
             var fileItems = HttpContext.Request.Form.Files;
             if (null == fileItems || fileItems.Count == 0)
             {
-                return RestResponse<List<Attach>>.fail("请选择文件上传");
+                return ApiResponse<List<Attachment>>.Fail("请选择文件上传");
             }
 
             foreach (var fileItem in fileItems)
@@ -299,36 +362,35 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                     }
 
 
-                    Attach attach = new Attach();
-                    attach.FName=fname;
-                    attach.AuthorId=uid;
-                    attach.FKey=fkey;
-                    attach.FType=ftype;
-                    attach.Created=DateTime.Now.ToUnixTimestamp();
-                    if (await _attachService.Save(attach))
+                    Attachment attachment = new Attachment();
+                    attachment.FName = fname;
+                    attachment.AuthorId = uid;
+                    attachment.FKey = fkey;
+                    attachment.FType = ftype;
+                    attachment.Created = DateTime.Now.ToUnixTimestamp();
+                    if (await _attachService.Save(attachment))
                     {
-                        urls.Add(attach);
-                        _siteService.cleanCache(Types.SYS_STATISTICS);
+                        urls.Add(attachment);
                     }
                     else
                     {
-                        errorFiles.Add(attach);
+                        errorFiles.Add(attachment);
                     }
-                    
+
                 }
                 else
                 {
-                    Attach attach = new Attach();
-                    attach.FName=fname;
-                    errorFiles.Add(attach);
+                    Attachment attachment = new Attachment();
+                    attachment.FName = fname;
+                    errorFiles.Add(attachment);
                 }
             }
 
             if (errorFiles.Count > 0)
             {
-                return RestResponse<List<Attach>>.fail().Payload(errorFiles);
+                return ApiResponse<List<Attachment>>.Fail().SetPayload(errorFiles);
             }
-            return RestResponse<List<Attach>>.ok(urls);
+            return ApiResponse<List<Attachment>>.Ok(urls);
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿@using iBlogs.Site.Core.Service.Common
-@using iBlogs.Site.Core.Utils
+﻿@using iBlogs.Site.Core.Common
+@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
-@*@(ViewService.active="home")
-    @(ViewService.title="管理中心")*@
+@model AdminIndexModel
 @section scripts
 {
     <script>
@@ -100,18 +99,18 @@
     <div class="col-lg-12">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">Tale仪表盘</h3>
+                <h3 class="panel-title">仪表盘</h3>
             </div>
             <div class="panel-body">
 
                 <div class="row">
                     <div class="col-md-4">
                         <div class="mini-stat clearfix bx-shadow bg-info">
-                            <a href="/admin/articles" class="text-white">
+                            <a href="/admin/article" class="text-white">
                                 <span class="mini-stat-icon"><i class="fa fa-quote-right" aria-hidden="true"></i></span>
                             </a>
                             <div class="mini-stat-info text-right">
-                                发表了<span class="counter">@statistics.articles</span>篇文章
+                                发表了<span class="counter">@Model.ArticlesCount</span>篇文章
                             </div>
                         </div>
                     </div>
@@ -121,7 +120,7 @@
                                 <span class="mini-stat-icon"><i class="fa fa-comments-o" aria-hidden="true"></i></span>
                             </a>
                             <div class="mini-stat-info text-right">
-                                收到了<span class="counter">@statistics.comments</span>条留言
+                                收到了<span class="counter">@Model.CommentsCount</span>条留言
                             </div>
                         </div>
                     </div>
@@ -132,7 +131,7 @@
                                 <span class="mini-stat-icon"><i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
                             </a>
                             <div class="mini-stat-info text-right">
-                                上传了<span class="counter">@statistics.attachs</span>个附件
+                                上传了<span class="counter">@Model.AttachCount</span>个附件
                             </div>
                         </div>
                     </div>
@@ -146,13 +145,14 @@
                             </div>
                             <div class="panel-body">
                                 <ul class="list-group">
-                                    #for(item : articles)
-                                    <li class="list-group-item">
-                                        <span class="badge badge-primary"
-                                              title="${item.commentsNum}条评论">${item.commentsNum}</span>
-                                        <a target="_blank" href="${site_url('/article/')}${item.cid}">${item.title}</a>
-                                    </li>
-                                    #end
+                                    @foreach (var item in Model.Articles)
+                                    {
+                                        <li class="list-group-item">
+                                            <span class="badge badge-primary"
+                                                  title="@(item.CommentsNum)条评论">@item.CommentsNum</span>
+                                            <a target="_blank" href="/admin/article/edit/@item.Id">@item.Title</a>
+                                        </li>
+                                    }
                                 </ul>
                             </div>
                         </div>
@@ -185,7 +185,7 @@
                                         <p class="inbox-item-date">{{item.created | formatUnix('MM月DD日 HH:mm')}}</p>
                                         <p v-if="item.status == 'no_audit'" class="pull-right">
                                             <button class="btn btn-sm btn-success" click="audit(item.coid, 'approved')">通过</button>
-                                            <button class="btn btn-sm btn-danger" click="deleteComment(item.coid)">删除</button>
+                                            <button class="btn btn-sm btn-danger" click="deleteCommentDto(item.coid)">删除</button>
                                         </p>
                                     </div>
                                 </div>

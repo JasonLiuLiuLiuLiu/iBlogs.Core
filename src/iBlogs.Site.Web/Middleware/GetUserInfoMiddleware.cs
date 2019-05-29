@@ -1,7 +1,8 @@
-﻿using iBlogs.Site.Core.Dto;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using iBlogs.Site.Core.Service.Users;
+using iBlogs.Site.Core.Common;
+using iBlogs.Site.Core.User.DTO;
+using iBlogs.Site.Core.User.Service;
 using Microsoft.AspNetCore.Http;
 
 namespace iBlogs.Site.Web.Middleware

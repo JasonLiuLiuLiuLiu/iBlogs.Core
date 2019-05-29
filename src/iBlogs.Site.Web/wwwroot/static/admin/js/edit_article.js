@@ -364,7 +364,8 @@ $(document).ready(function () {
                 console.log("upload success..");
                 console.log(" result => " + result);
                 if (result && result.success) {
-                    var url = attach_url + result.payload[0].fkey;
+                    var fKey = result.payload[0].fKey;
+                    var url = attach_url + fKey;
                     console.log('url => ' + url);
 
                     vm.article.thumbImg = url;

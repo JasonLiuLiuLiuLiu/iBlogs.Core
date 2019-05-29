@@ -1,4 +1,5 @@
 ﻿@using iBlogs.Site.Core
+@using iBlogs.Site.Core.Common
 @using Microsoft.Extensions.Configuration
 @model ViewBaseModel
 @inject IConfiguration Configuration
@@ -125,6 +126,34 @@
                                                    placeholder="请确认管理员密码" />
                                         </div>
                                     </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-3 control-label">* 数据库地址</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="dbUrl" name="dbUrl" type="text" placeholder="请输入数据库地址"
+                                                   required aria-required="true" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-3 control-label">* 数据库名称</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="dbName" name="dbName" type="text" placeholder="请输入数据库名称"
+                                                   required aria-required="true" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-3 control-label">* 数据库用户名</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="dbUserName" name="dbUserName" type="text" placeholder="请输入数据库用户名"
+                                                   required aria-required="true" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-md-3 control-label">* 数据库密码</label>
+                                        <div class="col-md-8">
+                                            <input class="form-control" id="dbUserPwd" name="dbUserPwd" type="password" placeholder="请输入数据库密码"
+                                                   required aria-required="true" />
+                                        </div>
+                                    </div>
                                 </section>
                                 <h3>安装完成</h3>
                                 <section>
@@ -156,7 +185,7 @@
     <script src="@Model.CdnUrl/plugins/jquery-validate/1.15.1/jquery.validate.min.js"></script>
     <script src="@Model.CdnUrl/plugins/jquery-validate/1.15.1/localization/messages_zh.min.js"></script>
     <script src="@Model.CdnUrl/plugins/jquery-steps/1.1.0/jquery.steps.min.js"></script>
-    <script src="@Model.CdnUrl/js/base.js?v=${version}"></script>
-    <script src="@Model.CdnUrl/js/install.js?v=${version}"></script>
+    <script src="@Model.CdnUrl/js/base.js" asp-append-version="true"></script>
+    <script src="@Model.CdnUrl/js/install.js" asp-append-version="true"></script>
 </body>
 </html>

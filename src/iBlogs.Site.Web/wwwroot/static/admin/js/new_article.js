@@ -10,7 +10,7 @@ var vm = new Vue({
     el: '#app',
     data: {
         article: {
-            cid: '',
+            id: '',
             title: '',
             slug: '',
             tags: '',
@@ -65,13 +65,13 @@ var vm = new Vue({
                 params.created = moment($('#form_datetime').val(), "YYYY-MM-DD HH:mm").unix();
                 params.tags = $('#tags').val();
 
-                var url = $vm.article.cid !== '' ? '/admin/api/article/update' : '/admin/api/article/new';
+                var url = $vm.article.id !== '' ? '/admin/api/article/update' : '/admin/api/article/new';
                 tale.post({
                     url: url,
                     data: params,
                     success: function (result) {
                         if (result && result.success) {
-                            $vm.article.cid = result.payload;
+                            $vm.article.id = result.payload;
                             callback && callback();
                         } else {
                             tale.alertError(result.msg || '保存文章失败');
@@ -278,7 +278,8 @@ $(document).ready(function () {
                 console.log("upload success..");
                 console.log(" result => " + result);
                 if (result && result.success) {
-                    var url = attach_url + result.payload[0].fkey;
+                    var fKey = result.payload[0].fKey;
+                    var url = attach_url + fKey;
                     console.log('url => ' + url);
 
                     vm.article.thumbImg = url;

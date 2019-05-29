@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using iBlogs.Site.Core;
-using iBlogs.Site.Core.Entity;
-using iBlogs.Site.Core.Extensions;
-using iBlogs.Site.Core.Params;
-using iBlogs.Site.Core.Response;
-using iBlogs.Site.Core.Service;
-using iBlogs.Site.Core.Service.Common;
-using iBlogs.Site.Core.Service.Install;
-using iBlogs.Site.Core.Service.Options;
-using iBlogs.Site.Core.Service.Users;
-using iBlogs.Site.Core.Utils;
+using iBlogs.Site.Core.Common;
+using iBlogs.Site.Core.Common.DTO;
+using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.Common.Response;
+using iBlogs.Site.Core.Common.Service;
+using iBlogs.Site.Core.Install;
+using iBlogs.Site.Core.Install.DTO;
+using iBlogs.Site.Core.Install.Service;
+using iBlogs.Site.Core.Option.Service;
+using iBlogs.Site.Core.User;
+using iBlogs.Site.Core.User.Service;
 using iBlogs.Site.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -47,29 +48,17 @@ namespace iBlogs.Site.Web.Controllers
         }
 
         [HttpPost]
-        public RestResponse<int> Index(InstallParam param)
+        public async Task<ApiResponse<int>> Index(InstallParam param)
         {
-
             var installed = _configuration[ConfigKey.DbInstalled].ToBool();
             if (!param.AdminPwd.IsNullOrWhiteSpace() && !installed)
             {
-                if (_installService.InitializeDb())
+                if (await _installService.InitializeDb(param))
                 {
-                    Users temp = new Users
-                    {
-                        Username = param.AdminUser, Password =param.AdminPwd, Email = param.AdminEmail
-                    };
-                    if (!_userService.InsertUser(temp))
-                    {
-                        return RestResponse<int>.fail("安装失败");
-                    }
-                    var siteUrl = IBlogsUtils.buildURL(param.SiteUrl);
-                    _optionService.saveOption("site_title", param.SiteTitle);
-                    _optionService.saveOption("site_url", siteUrl);
-                    return RestResponse<int>.ok();
+                    return ApiResponse<int>.Ok();
                 }
             }
-            return RestResponse<int>.fail("安装失败");
+            return ApiResponse<int>.Fail("安装失败");
         }
     }
 }

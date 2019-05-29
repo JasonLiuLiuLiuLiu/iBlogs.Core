@@ -1,4 +1,4 @@
-﻿@using iBlogs.Site.Core.Service.Common
+﻿@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
 
 <link href="@ViewService.cdnURL()/plugins/tagsinput/jquery.tagsinput.css" rel="stylesheet">
@@ -89,10 +89,10 @@
             </div>
             <div class="panel-body">
                 <form id="articleForm">
-                    <input type="hidden" v-model="article.cid" />
+                    <input type="hidden" v-model="article.id" />
                     <input type="hidden" v-model="article.created" />
                     <input type="hidden" v-model="article.status" />
-                    <input type="hidden" v-model="article.allowComment" />
+                    <input type="hidden" v-model="article.allowCommentDto" />
                     <input type="hidden" v-model="article.allowFeed" />
                     <input type="hidden" v-model="article.fmtType" />
 
@@ -149,10 +149,10 @@
                     <div class="form-group col-md-6">
                         <div class="text-right">
                             <a class="btn btn-default waves-effect waves-light" href="/admin/pages">返回列表</a>
-                            <button type="button" class="btn btn-primary waves-effect waves-light" click="publish('publish')">
+                            <button type="button" class="btn btn-primary waves-effect waves-light" v-on:click="publish('publish')">
                                 发布页面
                             </button>
-                            <button type="button" class="btn btn-warning waves-effect waves-light" click="publish('draft')">
+                            <button type="button" class="btn btn-warning waves-effect waves-light" v-on:click="publish('draft')">
                                 存为草稿
                             </button>
                         </div>

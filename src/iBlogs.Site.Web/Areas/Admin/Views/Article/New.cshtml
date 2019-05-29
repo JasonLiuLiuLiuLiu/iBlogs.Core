@@ -1,4 +1,4 @@
-﻿@using iBlogs.Site.Core.Service.Common
+﻿@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
 @section scripts
 {
@@ -103,12 +103,12 @@
                 <h3 class="panel-title">发布文章</h3>
             </div>
             <div class="panel-body">
-                <input type="hidden" id="attach_url" value="${attachURL()}" />
+                <input type="hidden" id="attach_url" value="@ViewService.attachURL()" />
                 <form id="articleForm">
-                    <input type="hidden" v-model="article.cid" />
+                    <input type="hidden" v-model="article.id" />
                     <input type="hidden" v-model="article.created" />
                     <input type="hidden" v-model="article.status" />
-                    <input type="hidden" v-model="article.allowComment" />
+                    <input type="hidden" v-model="article.allowCommentDto" />
                     <input type="hidden" v-model="article.allowPing" />
                     <input type="hidden" v-model="article.allowFeed" />
                     <input type="hidden" v-model="article.fmtType" />

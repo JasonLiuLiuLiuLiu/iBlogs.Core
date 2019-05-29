@@ -1,5 +1,4 @@
-﻿@using iBlogs.Site.Core.Service.Common
-
+﻿@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
 <link href="@ViewService.cdnURL()/plugins/dropzone/4.3.0/min/dropzone.min.css" rel="stylesheet">
 <style>
@@ -58,7 +57,7 @@
                                 <input name="file" type="file" multiple="multiple">
                             </div>
                             <div class="dz-message">
-                                <p>将文件拖至此处或点击上传.${attachURL()}</p>
+                                <p>将文件拖至此处或点击上传.@ViewService.attachURL()</p>
                                 <p>
                                     <span style="font-size: 16px; color: #d0d0d0;">一次最多可以上传10个文件</span>
                                 </p>
@@ -76,22 +75,22 @@
                     </div>
 
                     <div class="col-md-2 col-xs-6 text-center m-t-10" v-for="item in attachPage.rows">
-                        <a :href="'${attachURL()}' + item.fkey" target="_blank">
-                            <img v-if="item.ftype == 'image'" class="attach-img" :src="'${attachURL()}' + item.fkey"
+                        <a :href="'@ViewService.attachURL()' + item.fKey" target="_blank">
+                            <img v-if="item.fType == 'image'" class="attach-img" :src="'@ViewService.attachURL()' + item.fKey"
                                  :title="item.fname" />
-                            <img v-if="item.ftype != 'image'" class="attach-img" src="/static/admin/images/attach.png"
+                            <img v-if="item.fType != 'image'" class="attach-img" src="/static/admin/images/attach.png"
                                  :title="item.fname" />
                         </a>
                         <div class="clearfix m-t-10">
                             <span class="attach-text" data-toggle="tooltip" data-placement="top" :data-original-title="item.fname">{{item.fname | truncate(15)}}</span>
                         </div>
                         <div class="clearfix">
-                            <button :url="'${attachURL()}' + item.fkey" type="button"
+                            <button :url="'@ViewService.attachURL()' + item.fKey" type="button"
                                     class="btn btn-warning btn-sm waves-effect waves-light m-t-5 copy">
                                 <i class="fa fa-copy"></i> <span>复制</span>
                             </button>
                             <button type="button" class="btn btn-danger btn-sm waves-effect waves-light m-t-5"
-                                    click="deleteAttach(item.id)">
+                                    v-on:click="deleteAttach(item.id)">
                                 <i class="fa fa-trash-o"></i> <span>删除</span>
                             </button>
                         </div>
@@ -107,7 +106,7 @@
 
                         <li class="page-item" v-for="num in attachPage.navPageNums" :class="{ active: attachPage.pageNum == num }">
                             <a click="load(num)">
-                                {{ num }}</i>
+                                {{ num }}
                             </a>
                         </li>
                         <li v-if="attachPage.hasNextPage">
@@ -153,7 +152,7 @@
                             limit: 12
                         },
                         success: function (data) {
-                            $vm.attachPage = data.payload
+                            $vm.attachPage = data.payload;
                         },
                         error: function (error) {
                             console.log(error);
@@ -223,7 +222,7 @@
             }
         });
 
-        clipboard.on('success', function (e) {
+        clipboard.on('SetSuccess', function (e) {
             console.info('Action:', e.action);
             console.info('Text:', e.text);
             console.info('Trigger:', e.trigger);
