@@ -456,7 +456,7 @@ namespace iBlogs.Site.Core.Common.Extensions
             return str.Left(maxLength - postfix.Length) + postfix;
         }
 
-        public static string IfNullReturnDefaultValue(this string str,string defaultValue)
+        public static string IfNullReturnDefaultValue(this string str, string defaultValue)
         {
             if (!str.IsNullOrWhiteSpace())
                 return str;
@@ -520,6 +520,4 @@ namespace iBlogs.Site.Core.Common.Extensions
             return str.IsNullOrWhiteSpace();
         }
     }
-
-
 }

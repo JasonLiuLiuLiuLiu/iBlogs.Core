@@ -23,7 +23,7 @@ var vm = new Vue({
         },
         isLoading: true
     },
-    beforeCreate: function(){
+    beforeCreate: function () {
         vueLoding = this.$loading.show();
     },
     mounted: function () {
@@ -101,7 +101,7 @@ var vm = new Vue({
                 return;
             }
             clearInterval(refreshIntervalId);
-            $vm.article.status  = status;
+            $vm.article.status = status;
             $vm.autoSave(function () {
                 tale.alertOk({
                     text: '页面发布成功',
@@ -117,7 +117,6 @@ var vm = new Vue({
 });
 
 $(document).ready(function () {
-
     $("#form_datetime").datetimepicker({
         format: 'yyyy-mm-dd hh:ii',
         autoclose: true,
@@ -189,5 +188,4 @@ $(document).ready(function () {
 
     vm.isLoading = false;
     vueLoding.hide();
-
 });

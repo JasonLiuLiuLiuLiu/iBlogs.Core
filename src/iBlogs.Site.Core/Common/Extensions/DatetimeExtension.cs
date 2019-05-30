@@ -2,7 +2,7 @@
 
 namespace iBlogs.Site.Core.Common.Extensions
 {
-   public static class DatetimeExtension
+    public static class DatetimeExtension
     {
         public static int ToUnixTimestamp(this DateTime dateTime)
         {

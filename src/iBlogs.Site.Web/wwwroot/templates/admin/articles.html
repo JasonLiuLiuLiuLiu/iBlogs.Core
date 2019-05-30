@@ -28,7 +28,8 @@
                                     <option value="draft">草稿</option>
                                 </select>
                                 <button type="button" class="btn btn-success waves-effect waves-light m-l-10"
-                                        @click="load(1)">查询
+                                        @click="load(1)">
+                                    查询
                                 </button>
                             </form>
                         </div>
@@ -36,44 +37,44 @@
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
-                                <tr>
-                                    <th width="35%">文章标题</th>
-                                    <th width="15%">发布时间</th>
-                                    <th>浏览量</th>
-                                    <th>所属分类</th>
-                                    <th width="8%">发布状态</th>
-                                    <th>操作</th>
-                                </tr>
+                                    <tr>
+                                        <th width="35%">文章标题</th>
+                                        <th width="15%">发布时间</th>
+                                        <th>浏览量</th>
+                                        <th>所属分类</th>
+                                        <th width="8%">发布状态</th>
+                                        <th>操作</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="item in articlePage.rows">
-                                    <td>
-                                        <a :href="'/admin/article/edit/' + item.cid">{{ item.title }}</a>
-                                    </td>
-                                    <td>{{ item.created | formatUnix }}</td>
-                                    <td>{{ item.hits }}</td>
-                                    <td>{{ item.categories }}</td>
-                                    <td>
-                                        <span v-show="item.status == 'publish'" class="label label-success">已发布</span>
-                                        <span v-show="item.status == 'draft'" class="label label-default">草稿</span>
-                                    </td>
-                                    <td>
-                                        <a :href="'/admin/article/edit/' + item.cid"
-                                           class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
-                                            <i class="fa fa-edit"></i> <span>编辑</span>
-                                        </a>
-                                        <a @click="deleteArticle(item.cid)" href="javascript:void(0)"
-                                           class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
-                                            <i class="fa fa-trash-o"></i> <span>删除</span>
-                                        </a>
-                                        <a v-show="item.status == 'publish'"
-                                           class="btn btn-warning btn-sm waves-effect waves-light m-b-5"
-                                           :href="'${site_url()}' + item.url"
-                                           target="_blank">
-                                            <i class="fa fa-rocket"></i> <span>预览</span>
-                                        </a>
-                                    </td>
-                                </tr>
+                                    <tr v-for="item in articlePage.rows">
+                                        <td>
+                                            <a :href="'/admin/article/edit/' + item.cid">{{ item.title }}</a>
+                                        </td>
+                                        <td>{{ item.created | formatUnix }}</td>
+                                        <td>{{ item.hits }}</td>
+                                        <td>{{ item.categories }}</td>
+                                        <td>
+                                            <span v-show="item.status == 'publish'" class="label label-success">已发布</span>
+                                            <span v-show="item.status == 'draft'" class="label label-default">草稿</span>
+                                        </td>
+                                        <td>
+                                            <a :href="'/admin/article/edit/' + item.cid"
+                                               class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
+                                                <i class="fa fa-edit"></i> <span>编辑</span>
+                                            </a>
+                                            <a @click="deleteArticle(item.cid)" href="javascript:void(0)"
+                                               class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
+                                                <i class="fa fa-trash-o"></i> <span>删除</span>
+                                            </a>
+                                            <a v-show="item.status == 'publish'"
+                                               class="btn btn-warning btn-sm waves-effect waves-light m-b-5"
+                                               :href="'${site_url()}' + item.url"
+                                               target="_blank">
+                                                <i class="fa fa-rocket"></i> <span>预览</span>
+                                            </a>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -105,7 +106,7 @@
     </div>
 </div>
 #include('./footer.html')
-<script >
+<script>
     var tale = new $.tale();
     var vm = new Vue({
         el: '#app',
@@ -185,6 +186,5 @@
         vueLoding.hide();
     });
 </script>
-
 </body>
 </html>

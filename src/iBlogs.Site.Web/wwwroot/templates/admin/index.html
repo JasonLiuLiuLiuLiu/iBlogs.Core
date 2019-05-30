@@ -52,8 +52,8 @@
                                 <ul class="list-group">
                                     #for(item : articles)
                                     <li class="list-group-item">
-                            <span class="badge badge-primary"
-                                  title="${item.commentsNum}条评论">${item.commentsNum}</span>
+                                        <span class="badge badge-primary"
+                                              title="${item.commentsNum}条评论">${item.commentsNum}</span>
                                         <a target="_blank" href="${site_url('/article/')}${item.cid}">${item.title}</a>
                                     </li>
                                     #end
@@ -119,13 +119,12 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
 #include('./footer.html')
-<script >
+<script>
     var tale = new $.tale();
     var vm = new Vue({
         el: '#app',

@@ -1,13 +1,13 @@
-﻿using System;
+﻿using iBlogs.Site.Core.Common.Extensions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using iBlogs.Site.Core.Common.Extensions;
 
 namespace iBlogs.Site.Core.Common.CodeDi
 {
-    static class AssemblyLoader
+    internal static class AssemblyLoader
     {
         public static IList<Assembly> LoadAssembly(CodeDiOptions options)
         {
@@ -29,7 +29,6 @@ namespace iBlogs.Site.Core.Common.CodeDi
             return assemblies.Where(u => options.AssemblyNames.Any(name => u.GetAssemblyName().Matches(name)))
                 .Where(u => options.IgnoreAssemblies == null || options.IgnoreAssemblies.All(ignore => u.GetAssemblyName().Matches(ignore) == false))
                 .Distinct().ToList();
-
         }
 
         private static IEnumerable<Assembly> LoadFromPaths(string[] paths)

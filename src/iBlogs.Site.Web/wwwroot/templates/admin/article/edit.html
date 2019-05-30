@@ -11,23 +11,23 @@
                 <input type="hidden" id="attach_url" value="${attachURL()}" />
 
                 <form id="articleForm">
-                    <input type="hidden" v-model="article.cid"/>
-                    <input type="hidden" v-model="article.status"/>
+                    <input type="hidden" v-model="article.cid" />
+                    <input type="hidden" v-model="article.status" />
                     <input type="hidden" v-model="article.allowComment" />
                     <input type="hidden" v-model="article.allowPing" />
                     <input type="hidden" v-model="article.allowFeed" />
-                    <input type="hidden" v-model="article.fmtType"/>
+                    <input type="hidden" v-model="article.fmtType" />
 
                     <div class="form-group col-md-6" style="padding: 0 10px 0 0;">
-                        <input class="form-control" placeholder="请输入文章标题（必须）" v-model="article.title" required/>
+                        <input class="form-control" placeholder="请输入文章标题（必须）" v-model="article.title" required />
                     </div>
 
                     <div class="form-group col-md-6" style="padding: 0 0 0 10px;">
-                        <input class="form-control" placeholder="自定义访问路径，如：my-first-article  默认为文章id" v-model="article.slug"/>
+                        <input class="form-control" placeholder="自定义访问路径，如：my-first-article  默认为文章id" v-model="article.slug" />
                     </div>
 
                     <div class="form-group col-md-6" style="padding: 0 10px 0 0;">
-                        <input id="tags" type="text" class="form-control" placeholder="请填写文章标签" v-model="article.tags"/>
+                        <input id="tags" type="text" class="form-control" placeholder="请填写文章标签" v-model="article.tags" />
                     </div>
 
                     <div class="form-group col-md-6">
@@ -85,7 +85,7 @@
                                 <p>可以为你的文章添加一张缩略图 ;)</p>
                             </div>
                         </div>
-                        <input type="hidden" name="thumbImg" id="thumbImg"/>
+                        <input type="hidden" name="thumbImg" id="thumbImg" />
                     </div>
 
                     <div class="clearfix"></div>
@@ -116,6 +116,6 @@
     </div>
 </div>
 #include('./_footer.html')
-<script src="/static/admin/js/edit_article.js?v=${version}" ></script>
+<script src="/static/admin/js/edit_article.js?v=${version}"></script>
 </body>
 </html>

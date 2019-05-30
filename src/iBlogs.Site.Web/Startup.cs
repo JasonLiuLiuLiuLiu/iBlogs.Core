@@ -1,12 +1,5 @@
-﻿using System.Net;
-using System.Text;
-using Hangfire;
-using Hangfire.MemoryStorage;
-using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.Common.CodeDi;
-using iBlogs.Site.Core.Common.Extensions;
+﻿using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
-using iBlogs.Site.Core.User.Service;
 using iBlogs.Site.Web.Converter;
 using iBlogs.Site.Web.Filter;
 using iBlogs.Site.Web.Middleware;
@@ -16,8 +9,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using System.Net;
+using System.Text;
 
 namespace iBlogs.Site.Web
 {
@@ -68,7 +62,6 @@ namespace iBlogs.Site.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseMiddleware<JwtInHeaderMiddleware>();
-
 
             app.UseStatusCodePages(async context =>
             {

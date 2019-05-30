@@ -15,7 +15,6 @@ namespace iBlogs.Site.Core.Common.Response
             Payload = payload;
         }
 
-
         public ApiResponse<T> SetPayload(T payload)
         {
             Payload = payload;
@@ -44,28 +43,30 @@ namespace iBlogs.Site.Core.Common.Response
             response.SetCode(code);
             return response;
         }
+
         public static ApiResponse<T> Ok()
         {
-            return new ApiResponse<T>(){Success = true};
+            return new ApiResponse<T>() { Success = true };
         }
+
         public static ApiResponse<T> Ok(int code)
         {
-            return new ApiResponse<T>(){Success = true,Code = code};
+            return new ApiResponse<T>() { Success = true, Code = code };
         }
 
         public static ApiResponse<T> Fail()
         {
-            return new ApiResponse<T>(){Success = false};
+            return new ApiResponse<T>() { Success = false };
         }
 
         public static ApiResponse<T> Fail(string message)
         {
-            return new ApiResponse<T>(){Success = false,Msg = message};
+            return new ApiResponse<T>() { Success = false, Msg = message };
         }
 
         public static ApiResponse<T> Fail(int code, string message)
         {
-            return new ApiResponse<T>(){ Success = false, Msg = message ,Code = code};
+            return new ApiResponse<T>() { Success = false, Msg = message, Code = code };
         }
     }
 
@@ -101,13 +102,11 @@ namespace iBlogs.Site.Core.Common.Response
             Success = success;
         }
 
-
         public ApiResponse SetSuccess(bool success)
         {
             Success = success;
             return this;
         }
-
 
         public ApiResponse SetCode(int code)
         {
@@ -125,6 +124,7 @@ namespace iBlogs.Site.Core.Common.Response
         {
             return new ApiResponse().SetSuccess(true);
         }
+
         public static ApiResponse Ok(int code)
         {
             return new ApiResponse().SetSuccess(true).SetCode(code);

@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using iBlogs.Site.Core.Install.DTO;
+﻿using iBlogs.Site.Core.Install.DTO;
+using System.Threading.Tasks;
 
 namespace iBlogs.Site.Core.Install.Service
 {

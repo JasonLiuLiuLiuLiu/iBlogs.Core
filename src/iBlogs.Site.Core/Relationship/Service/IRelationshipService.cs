@@ -2,8 +2,10 @@
 {
     public interface IRelationshipService
     {
-        void SaveOrUpdate(int cid,int mid);
+        void SaveOrUpdate(int cid, int mid);
+
         void DeleteByContentId(int cid);
+
         void DeleteByMetaId(int id);
     }
 }

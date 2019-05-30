@@ -1,27 +1,29 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta content="${_csrf_token}" name="csrf_token"/>
-    <link rel="shortcut icon" href="/static/admin/images/favicon.png"/>
+    <meta content="${_csrf_token}" name="csrf_token" />
+    <link rel="shortcut icon" href="/static/admin/images/favicon.png" />
     <title>Tale - 用户登录</title>
     <link href="${cdnURL()}/plugins/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="${cdnURL()}/plugins/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
     <link href="${cdnURL()}/plugins/limonte-sweetalert2/6.4.1/sweetalert2.min.css" rel="stylesheet">
-    <link href="${cdnURL()}/plugins/vue-loading/vue-loading.min.css" rel="stylesheet" >
-    <link href="${cdnURL()}/css/style.min.css?v=${version}" rel="stylesheet" >
+    <link href="${cdnURL()}/plugins/vue-loading/vue-loading.min.css" rel="stylesheet">
+    <link href="${cdnURL()}/css/style.min.css?v=${version}" rel="stylesheet">
 
-    <style >
-        body,html {
+    <style>
+        body, html {
             background: url("${cdnURL()}/images/bg/${random(5, '.png')}") no-repeat;
             background-size: cover;
         }
+
         .panel-shadow {
             -moz-box-shadow: 0px 0px 10px 0px rgba(39, 49, 65, 0.1);
             -webkit-box-shadow: 0px 0px 10px 0px rgba(39, 49, 65, 0.1);
             box-shadow: 0px 0px 10px 0px rgba(39, 49, 65, 0.1);
         }
+
         .bg-overlay {
             -moz-border-radius: 6px 6px 0 0;
             -webkit-border-radius: 6px 6px 0 0;
@@ -33,6 +35,7 @@
             top: 0;
             width: 100%;
         }
+
         .input-border {
             font-size: 14px;
             width: 100%;
@@ -53,62 +56,61 @@
     <script src="${cdnURL()}/plugins/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="${cdnURL()}/plugins/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-
 </head>
 <body>
 
-<div style="margin: 0 auto; padding-bottom: 0%; padding-top: 7.5%; width: 380px;">
-    <div class="panel panel-color panel-danger panel-pages panel-shadow">
-        <div class="panel-heading bg-img">
-            <div class="bg-overlay"></div>
-            <h3 class="text-center m-t-10"> Login Tale</h3>
-        </div>
+    <div style="margin: 0 auto; padding-bottom: 0%; padding-top: 7.5%; width: 380px;">
+        <div class="panel panel-color panel-danger panel-pages panel-shadow">
+            <div class="panel-heading bg-img">
+                <div class="bg-overlay"></div>
+                <h3 class="text-center m-t-10"> Login Tale</h3>
+            </div>
 
-        <div class="panel-body">
-            <form class="form-horizontal m-t-20" method="post" id="loginForm" onsubmit="return checkForm()">
+            <div class="panel-body">
+                <form class="form-horizontal m-t-20" method="post" id="loginForm" onsubmit="return checkForm()">
 
-                <div class="form-group">
-                    <div class="col-xs-12">
-                        <input class=" input-lg input-border" name="username" type="text" required=""
-                               placeholder="请输入账号 :)">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-xs-12">
-                        <input class=" input-lg input-border" name="password" type="password" required=""
-                               placeholder="请输入密码">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-xs-12">
-                        <div class="checkbox checkbox-danger">
-                            <input id="checkbox-signup" name="rememberMe" type="checkbox">
-                            <label for="checkbox-signup">记住我</label>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input class=" input-lg input-border" name="username" type="text" required=""
+                                   placeholder="请输入账号 :)">
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group text-center m-t-40">
-                    <div class="col-xs-12">
-                        <button class="btn btn-danger btn-lg btn-rounded btn-block w-lg waves-effect waves-light" style="box-shadow: 0px 0px 4px #868282;" type="submit">登&nbsp;录
-                        </button>
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input class=" input-lg input-border" name="password" type="password" required=""
+                                   placeholder="请输入密码">
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
 
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <div class="checkbox checkbox-danger">
+                                <input id="checkbox-signup" name="rememberMe" type="checkbox">
+                                <label for="checkbox-signup">记住我</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center m-t-40">
+                        <div class="col-xs-12">
+                            <button class="btn btn-danger btn-lg btn-rounded btn-block w-lg waves-effect waves-light" style="box-shadow: 0px 0px 4px #868282;" type="submit">
+                                登&nbsp;录
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
-<!-- Main  -->
-<script src="${cdnURL()}/plugins/vue/vue.min.js"></script>
-<script src="${cdnURL()}/plugins/vue-loading/vue-loading.min.js"></script>
-<script src="${cdnURL()}/plugins/jquery/3.2.1/jquery.min.js"></script>
-<script src="${cdnURL()}/plugins/limonte-sweetalert2/6.4.1/sweetalert2.min.js"></script>
-<script src="${cdnURL()}/plugins/axios/axios.min.js"></script>
-<script src="${cdnURL()}/js/base.js"></script>
-<script >
+    <!-- Main  -->
+    <script src="${cdnURL()}/plugins/vue/vue.min.js"></script>
+    <script src="${cdnURL()}/plugins/vue-loading/vue-loading.min.js"></script>
+    <script src="${cdnURL()}/plugins/jquery/3.2.1/jquery.min.js"></script>
+    <script src="${cdnURL()}/plugins/limonte-sweetalert2/6.4.1/sweetalert2.min.js"></script>
+    <script src="${cdnURL()}/plugins/axios/axios.min.js"></script>
+    <script src="${cdnURL()}/js/base.js"></script>
+    <script>
     var tale = new $.tale();
     function checkForm() {
         tale.post({
@@ -124,6 +126,6 @@
         });
         return false;
     }
-</script>
+    </script>
 </body>
 </html>

@@ -27,7 +27,7 @@ var vm = new Vue({
         categories: [],
         isLoading: true
     },
-    beforeCreate: function(){
+    beforeCreate: function () {
         vueLoding = this.$loading.show();
     },
     mounted: function () {
@@ -89,7 +89,7 @@ var vm = new Vue({
             tale.get({
                 url: '/admin/api/categoryList',
                 success: function (data) {
-                    for(item in data.payload){
+                    for (item in data.payload) {
                         $vm.categories.push(data.payload[item].name);
                     }
                 },
@@ -107,14 +107,14 @@ var vm = new Vue({
                     $vm.article.selected = [];
 
                     var selected = data.payload.categories.split(',');
-                    for(item in selected){
+                    for (item in selected) {
                         $vm.article.selected.push(selected[item]);
                     }
 
                     $vm.article.createdTime = moment.unix($vm.article.created).format('YYYY-MM-DD HH:mm')
 
                     var tags = data.payload.tags.split(',');
-                    for(i in tags){
+                    for (i in tags) {
                         $('#tags').addTag(tags[i]);
                     }
 
@@ -142,7 +142,7 @@ var vm = new Vue({
                         }
                     });
 
-                    if($vm.article.thumbImg && $vm.article.thumbImg !== ''){
+                    if ($vm.article.thumbImg && $vm.article.thumbImg !== '') {
                         $('#addThumb').toggles({
                             on: true,
                             text: {
@@ -177,7 +177,6 @@ var vm = new Vue({
                             }
                         }
                     });
-
                 },
                 error: function (error) {
                     console.log(error);
@@ -273,7 +272,6 @@ var vm = new Vue({
 });
 
 $(document).ready(function () {
-
     // Tags Input
     $('#tags').tagsInput({
         width: '100%',
@@ -330,7 +328,7 @@ $(document).ready(function () {
             $('#dropzone-container').removeClass('hide');
             $('#dropzone-container').show();
             var thumbImage = $("#dropzone").css("backgroundImage");
-            if(thumbImage && thumbImage.indexOf('url') !== -1){
+            if (thumbImage && thumbImage.indexOf('url') !== -1) {
                 thumbImage = thumbImage.split("(")[1].split(")")[0];
                 vm.article.thumbImg = thumbImage.substring(1, thumbImage.length - 1);
             }
@@ -384,5 +382,4 @@ $(document).ready(function () {
 
     vm.isLoading = false;
     vueLoding.hide();
-
 });

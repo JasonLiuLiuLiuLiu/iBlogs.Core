@@ -5,7 +5,7 @@
     #end
 
     #for(navIndex : pageInfo.navPageNums)
-    <li #if(pageInfo.pageNum== navIndex) class="current" #end><a href="/page/${navIndex}">${navIndex}</a></li>
+    <li #if(pageInfo.pageNum= =navIndex) class="current" #end><a href="/page/${navIndex}">${navIndex}</a></li>
     #end
 
     #if(pageInfo.hasNextPage)

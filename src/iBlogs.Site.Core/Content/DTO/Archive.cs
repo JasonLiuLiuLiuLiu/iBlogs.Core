@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using iBlogs.Site.Core.Comment;
 
 namespace iBlogs.Site.Core.Content.DTO
 {

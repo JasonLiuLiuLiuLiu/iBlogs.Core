@@ -33,14 +33,14 @@
                 themes: [],
                 isLoading: true
             },
-            beforeCreate: function(){
+            beforeCreate: function () {
                 vueLoding = this.$loading.show();
             },
             mounted: function () {
                 this.load();
             },
             methods: {
-                load: function(){
+                load: function () {
                     var $vm = this;
                     tale.get({
                         url: '/admin/api/themes',
@@ -56,13 +56,13 @@
                 active: function (name) {
                     var $vm = this;
                     tale.alertConfirm({
-                        title:'确定启用该主题吗?',
+                        title: '确定启用该主题吗?',
                         then: function () {
                             tale.post({
-                                url : '/admin/api/themes/active',
-                                data: {siteTheme: name},
+                                url: '/admin/api/themes/active',
+                                data: { siteTheme: name },
                                 success: function (result) {
-                                    if(result && result.success){
+                                    if (result && result.success) {
                                         tale.alertOk('主题启用成功');
                                         $vm.load();
                                     } else {
@@ -80,6 +80,5 @@
             vm.isLoading = false;
             vueLoding.hide();
         });
-
     </script>
 }
