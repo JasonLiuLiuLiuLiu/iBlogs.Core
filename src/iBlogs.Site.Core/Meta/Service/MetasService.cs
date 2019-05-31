@@ -142,7 +142,7 @@ namespace iBlogs.Site.Core.Meta.Service
 
         public List<Metas> getMetas(string searchType, string type, int limit)
         {
-            if (stringKit.isBlank(searchType) || stringKit.isBlank(type))
+            if (StringKit.IsBlank(searchType) || StringKit.IsBlank(type))
             {
                 return new List<Metas>();
             }

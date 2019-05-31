@@ -81,7 +81,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         string thePrev();
 
-        string thePrev(string title);
+        string thePrev(string ti);
 
         List<Contents> recent_articles(int limit);
 

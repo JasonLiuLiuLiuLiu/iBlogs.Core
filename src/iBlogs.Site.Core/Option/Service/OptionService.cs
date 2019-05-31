@@ -29,10 +29,9 @@ namespace iBlogs.Site.Core.Option.Service
             {
                 Console.WriteLine(e);
             }
-           
         }
 
-        public void Set(string key, string value,string description=null)
+        public void Set(string key, string value, string description = null)
         {
             if (_options.ContainsKey(key))
                 if (_options[key] == value)
@@ -53,7 +52,7 @@ namespace iBlogs.Site.Core.Option.Service
                 }
             else
             {
-                _repository.Insert(new Options {Name = key, Value = value,Description = description});
+                _repository.Insert(new Options { Name = key, Value = value, Description = description });
                 _options.Add(key, value);
                 _repository.SaveChanges();
             }
@@ -73,17 +72,19 @@ namespace iBlogs.Site.Core.Option.Service
         * @param key   配置key
         * @param value 配置值
         */
-        public void saveOption(string key, string value,string description=null)
+
+        public void saveOption(string key, string value, string description = null)
         {
-            if (stringKit.isNotBlank(key) && stringKit.isNotBlank(value))
+            if (StringKit.IsNotBlank(key) && StringKit.IsNotBlank(value))
             {
-                Set(key, value,description);
+                Set(key, value, description);
             }
         }
 
         /**
          * 获取系统配置
          */
+
         public IDictionary<string, string> getOptions()
         {
             return _options;
@@ -99,29 +100,29 @@ namespace iBlogs.Site.Core.Option.Service
          *
          * @param key 配置key
          */
+
         public void deleteOption(string key)
         {
             if (_options.ContainsKey(key))
             {
                 _options.Remove(key);
-                _repository.Delete(_repository.GetAll().FirstOrDefault(o=>o.Name==key));
+                _repository.Delete(_repository.GetAll().FirstOrDefault(o => o.Name == key));
             }
         }
 
-        public IDictionary<string,string> GetAll()
+        public IDictionary<string, string> GetAll()
         {
             return _options;
         }
 
         public void SaveOptions(IDictionary<string, string> options)
         {
-            if(options==null)
+            if (options == null)
                 return;
             foreach (var option in options)
             {
-                saveOption(option.Key,option.Value);
+                saveOption(option.Key, option.Value);
             }
         }
-
     }
 }

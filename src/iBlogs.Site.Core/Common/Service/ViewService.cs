@@ -264,7 +264,7 @@ namespace iBlogs.Site.Core.Common.Service
         public string show_tags(string split)
         {
             Contents contents = current_article();
-            if (stringKit.isNotBlank(contents.Tags))
+            if (StringKit.IsNotBlank(contents.Tags))
             {
                 string[] arr = contents.Tags.Split(",");
                 StringBuilder sbuf = new StringBuilder();
@@ -350,7 +350,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string intro(string value)
         {
-            if (stringKit.isBlank(value))
+            if (StringKit.IsBlank(value))
             {
                 return null;
             }
@@ -402,7 +402,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string article(string value)
         {
-            if (stringKit.isNotBlank(value))
+            if (StringKit.IsNotBlank(value))
             {
                 value = value.Replace("<!--more-->", "\r\n");
                 return Markdown.ToHtml(value);
@@ -423,7 +423,7 @@ namespace iBlogs.Site.Core.Common.Service
                 return "";
             }
             Set_current_article(contents);
-            if (stringKit.isNotBlank(contents.ThumbImg))
+            if (StringKit.IsNotBlank(contents.ThumbImg))
             {
                 string newFileName = IBlogsUtils.getFileName(contents.ThumbImg);
                 string thumbnailImgUrl = (contents.ThumbImg).Replace(newFileName, "thumbnail_" + newFileName);
@@ -431,7 +431,7 @@ namespace iBlogs.Site.Core.Common.Service
             }
             string content = article(contents.Content);
             string img = IBlogsUtils.show_thumb(content);
-            if (stringKit.isNotBlank(img))
+            if (StringKit.IsNotBlank(img))
             {
                 return img;
             }
@@ -850,7 +850,7 @@ namespace iBlogs.Site.Core.Common.Service
         public string theme_option(string key, string defaultValue)
         {
             string option = theme_option(key);
-            if (stringKit.isBlank(option))
+            if (StringKit.IsBlank(option))
             {
                 return defaultValue;
             }
@@ -890,7 +890,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public bool not_empty(string str)
         {
-            return stringKit.isNotBlank(str);
+            return StringKit.IsNotBlank(str);
         }
 
         /**
@@ -959,7 +959,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string site_option(string key, string defalutValue)
         {
-            if (stringKit.isBlank(key))
+            if (StringKit.IsBlank(key))
             {
                 return "";
             }
@@ -1084,7 +1084,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string fmtdate(int unixTime, string patten)
         {
-            if (stringKit.isNotBlank(patten))
+            if (StringKit.IsNotBlank(patten))
             {
                 return Convert.ToDateTime(unixTime).ToString(patten);
             }
