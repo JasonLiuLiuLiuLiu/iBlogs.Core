@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.Common.Response;
+﻿using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Content;
 using iBlogs.Site.Core.Content.Service;
 using iBlogs.Site.Core.EntityFrameworkCore;
@@ -11,12 +7,13 @@ using iBlogs.Site.Core.Meta.Service;
 using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.User;
 using iBlogs.Site.Core.User.Service;
+using System;
+using System.Threading.Tasks;
 
 namespace iBlogs.Site.Core.Install.Service
 {
     public class InstallService : IInstallService
     {
-
         private readonly IOptionService _optionService;
         private readonly IUserService _userService;
         private readonly iBlogsContext _blogsContext;
@@ -60,14 +57,13 @@ namespace iBlogs.Site.Core.Install.Service
         {
             using (var tra = _transactionProvider.CreateTransaction())
             {
-                var result = CreateUser() && InitOptions()&& InitContent();
+                var result = CreateUser() && InitOptions() && InitContent();
                 if (result)
                     tra.Commit();
                 else
                     tra.Rollback();
                 return result;
             }
-
         }
 
         private bool CreateUser()
@@ -111,7 +107,7 @@ namespace iBlogs.Site.Core.Install.Service
                 AllowComment = true,
                 AllowPing = true,
                 AllowFeed = true
-            }); 
+            });
 
             var firstArticle = _contentsService.publish(new ContentInput
             {
@@ -150,6 +146,5 @@ namespace iBlogs.Site.Core.Install.Service
             _metasService.saveMetas(firstArticle, "默认分类", "category");
             return true;
         }
-
-}
+    }
 }

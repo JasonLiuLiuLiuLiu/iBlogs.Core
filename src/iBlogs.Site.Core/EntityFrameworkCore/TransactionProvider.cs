@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace iBlogs.Site.Core.EntityFrameworkCore
 {
-    public class TransactionProvider:IDisposable, ITransactionProvider
+    public class TransactionProvider : IDisposable, ITransactionProvider
     {
         private readonly iBlogsContext _blogsContext;
 
@@ -13,18 +13,18 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
             _blogsContext = blogsContext;
         }
 
-        public List<IDbContextTransaction> Transactions=new List<IDbContextTransaction>();
+        public List<IDbContextTransaction> Transactions = new List<IDbContextTransaction>();
 
         public IDbContextTransaction CreateTransaction()
         {
-            var tra=_blogsContext.Database.BeginTransaction();
+            var tra = _blogsContext.Database.BeginTransaction();
             Transactions.Add(tra);
             return tra;
         }
 
         public void Dispose()
         {
-          //TODO
+            //TODO
         }
     }
 }

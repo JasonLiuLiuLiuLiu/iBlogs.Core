@@ -1,6 +1,6 @@
-﻿using System.IO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace iBlogs.Site.Core.Common
 {
@@ -13,7 +13,7 @@ namespace iBlogs.Site.Core.Common
             File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }
 
-        public static void UpdateConnectionString(string connectionName,string value)
+        public static void UpdateConnectionString(string connectionName, string value)
         {
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));
             jObject[ConfigKey.ConnectionStrings][connectionName] = value;

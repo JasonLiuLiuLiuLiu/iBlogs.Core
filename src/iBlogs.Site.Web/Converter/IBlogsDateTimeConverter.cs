@@ -1,13 +1,12 @@
-﻿using System;
-using iBlogs.Site.Core.Common.Extensions;
+﻿using iBlogs.Site.Core.Common.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using System;
 
 namespace iBlogs.Site.Web.Converter
 {
     public class SfaDateTimeConverter : DateTimeConverterBase
     {
-       
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
@@ -30,7 +29,6 @@ namespace iBlogs.Site.Web.Converter
 
             return value;
         }
-
 
         /// <inheritdoc />
         public override bool CanConvert(Type objectType)

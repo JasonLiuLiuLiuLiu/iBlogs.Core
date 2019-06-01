@@ -9,30 +9,30 @@
         <div class="post-lists-body">
             @foreach (var article in ContentsService.findArticles(new ArticleParam()).Rows)
             {
-                <div class="post-list-item">
-                    <div class="post-list-item-container">
-                        <div class="item-thumb bg-deepgrey" style="background-image:url(@ViewService.show_thumb(article))"></div>
-                        <a href="@ViewService.permalink()">
-                            <div class="item-desc">
-                                <p>@ViewService.intro(75)...</p>
-                            </div>
-                        </a>
-                        <div class="item-slant reverse-slant bg-deepgrey"></div>
-                        <div class="item-slant"></div>
-                        <div class="item-label">
-                            <div class="item-title">
-                                <a href="@ViewService.permalink()">@ViewService.Title()</a>
-                            </div>
-                            <div class="item-meta clearfix">
-                                <div class="item-meta-ico @ViewService.show_icon()"
-                                     style="background: url(/templates/themes/default/static/img/bg-ico.png) no-repeat;background-size: 40px auto;"></div>
-                                <div class="item-meta-cat">
-                                    @Html.Raw(ViewService.show_categories())
-                                </div>
+            <div class="post-list-item">
+                <div class="post-list-item-container">
+                    <div class="item-thumb bg-deepgrey" style="background-image:url(@ViewService.show_thumb(article))"></div>
+                    <a href="@ViewService.permalink()">
+                        <div class="item-desc">
+                            <p>@ViewService.intro(75)...</p>
+                        </div>
+                    </a>
+                    <div class="item-slant reverse-slant bg-deepgrey"></div>
+                    <div class="item-slant"></div>
+                    <div class="item-label">
+                        <div class="item-title">
+                            <a href="@ViewService.permalink()">@ViewService.Title()</a>
+                        </div>
+                        <div class="item-meta clearfix">
+                            <div class="item-meta-ico @ViewService.show_icon()"
+                                 style="background: url(/templates/themes/default/static/img/bg-ico.png) no-repeat;background-size: 40px auto;"></div>
+                            <div class="item-meta-cat">
+                                @Html.Raw(ViewService.show_categories())
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             }
         </div>
     </div>
@@ -41,20 +41,19 @@
             <ol class="page-navigator">
                 @if (pageInfo.HasPrevPage)
                 {
-                    <li class="prev"><a href="/page/@pageInfo.PrevPage">←</a></li>
+                <li class="prev"><a href="/page/@pageInfo.PrevPage">←</a></li>
                 }
 
                 @foreach (var navIndex in pageInfo.NavPageNums)
                 {
-                    <li class="@(pageInfo.PageNum==Model.navIndex?"current":"")"><a href="/page/@navIndex">@navIndex</a></li>
+                <li class="@(pageInfo.PageNum==Model.navIndex?"current":"")"><a href="/page/@navIndex">@navIndex</a></li>
                 }
 
                 @if (pageInfo.HasNextPage)
                 {
-                    <li class="next"><a href="/page/@pageInfo.NextPage">→</a></li>
+                <li class="next"><a href="/page/@pageInfo.NextPage">→</a></li>
                 }
             </ol>
         }
-
     </div>
 </div>

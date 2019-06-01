@@ -4,7 +4,6 @@ namespace iBlogs.Site.Core.Common.Response
 {
     public class Page<T>
     {
-
         /**
          * current pageNum number
          */
@@ -68,7 +67,7 @@ namespace iBlogs.Site.Core.Common.Response
         /**
          * all navigation pageNum number
          */
-        public int[] NavPageNums { get; set; }=new []{1};
+        public int[] NavPageNums { get; set; } = new[] { 1 };
 
         public Page<T> SetNavPages(int navPages)
         {
@@ -79,7 +78,7 @@ namespace iBlogs.Site.Core.Common.Response
 
         public Page()
         {
-            Rows=new List<T>();
+            Rows = new List<T>();
         }
 
         public Page(long total, int page, int limit)
@@ -87,7 +86,7 @@ namespace iBlogs.Site.Core.Common.Response
             Init(total, page, limit);
         }
 
-        public Page(long total, int page, int limit,List<T> rows)
+        public Page(long total, int page, int limit, List<T> rows)
         {
             Init(total, page, limit);
             Rows = rows;
@@ -179,6 +178,5 @@ namespace iBlogs.Site.Core.Common.Response
                 PrevPage = PageNum - 1;
             }
         }
-
     }
 }

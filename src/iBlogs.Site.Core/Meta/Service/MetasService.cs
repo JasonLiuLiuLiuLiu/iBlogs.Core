@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using iBlogs.Site.Core.Comment;
-using iBlogs.Site.Core.Common;
+﻿using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Content;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Relationship.Service;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace iBlogs.Site.Core.Meta.Service
 {
@@ -28,9 +25,9 @@ namespace iBlogs.Site.Core.Meta.Service
         *
         * @param type 类型，tag or category
         */
+
         public List<Metas> getMetas(string type, int limit = 0)
         {
-
             if (limit < 1 || limit > iBlogsConst.MAX_POSTS)
             {
                 limit = 10;
@@ -43,6 +40,7 @@ namespace iBlogs.Site.Core.Meta.Service
          *
          * @param type 类型，tag or category
          */
+
         public Dictionary<string, List<Contents>> getMetaMapping(string type)
         {
             return null;
@@ -59,6 +57,7 @@ namespace iBlogs.Site.Core.Meta.Service
          * @param type 类型，tag or category
          * @param name 类型名
          */
+
         public Metas getMeta(string type, string name)
         {
             return null;
@@ -71,6 +70,7 @@ namespace iBlogs.Site.Core.Meta.Service
          * @param names 类型名称列表
          * @param type  类型，tag or category
          */
+
         public void saveMetas(int? cid, string names, string type)
         {
             if (null == cid)
@@ -89,7 +89,6 @@ namespace iBlogs.Site.Core.Meta.Service
 
         private void saveOrUpdate(int cid, string name, string type)
         {
-
             var metas = _repository.GetAll().Where(m => m.Name == name).FirstOrDefault(m => m.Type == type);
             int mid;
             if (null != metas)
@@ -112,6 +111,7 @@ namespace iBlogs.Site.Core.Meta.Service
          *
          * @param mid 项目id
          */
+
         public void delete(int id)
         {
             _repository.Delete(id);
@@ -120,7 +120,6 @@ namespace iBlogs.Site.Core.Meta.Service
 
         private void exec(string type, string name, Contents contents)
         {
-
         }
 
         /**
@@ -130,6 +129,7 @@ namespace iBlogs.Site.Core.Meta.Service
          * @param name
          * @param mid
          */
+
         public void saveMeta(string type, string name, int? mid)
         {
             if (type.IsNullOrWhiteSpace() || name.IsNullOrWhiteSpace())
@@ -142,7 +142,7 @@ namespace iBlogs.Site.Core.Meta.Service
 
         public List<Metas> getMetas(string searchType, string type, int limit)
         {
-            if (stringKit.isBlank(searchType) || stringKit.isBlank(type))
+            if (StringKit.IsBlank(searchType) || StringKit.IsBlank(type))
             {
                 return new List<Metas>();
             }

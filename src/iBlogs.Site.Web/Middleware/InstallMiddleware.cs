@@ -1,15 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using iBlogs.Site.Core;
-using iBlogs.Site.Core.Common;
+﻿using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace iBlogs.Site.Web.Middleware
 {

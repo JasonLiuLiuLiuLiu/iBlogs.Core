@@ -2,7 +2,6 @@
  * Created by biezhi on 2017/2/23.
  */
 !function ($) {
-
     "use strict";
     var tale = new $.tale();
     var FormWizard = function () {
@@ -29,11 +28,11 @@
             onStepChanging: function (event, currentIndex, newIndex) {
                 tale.showLoading();
                 $form_container.validate().settings.ignore = ":disabled,:hidden";
-                if(currentIndex === 1 && newIndex === 0){
+                if (currentIndex === 1 && newIndex === 0) {
                     return true;
                 }
                 var isValid = $form_container.valid();
-                if(!isValid){
+                if (!isValid) {
                     tale.hideLoading();
                 }
                 if (isValid && currentIndex === 0) {
@@ -86,6 +85,6 @@
 var siteUrl = document.location.protocol + '//' + document.location.host;
 var el = document.getElementById('siteUrl');
 // noinspection JSAnnotator
-if(el){
+if (el) {
     el.value = siteUrl;
 }

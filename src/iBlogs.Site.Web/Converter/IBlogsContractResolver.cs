@@ -1,9 +1,9 @@
-﻿using System;
-using Newtonsoft.Json.Serialization;
+﻿using Newtonsoft.Json.Serialization;
+using System;
 
 namespace iBlogs.Site.Web.Converter
 {
-    public class IBlogsContractResolver: CamelCasePropertyNamesContractResolver
+    public class IBlogsContractResolver : CamelCasePropertyNamesContractResolver
     {
         protected override JsonContract CreateContract(Type objectType)
         {

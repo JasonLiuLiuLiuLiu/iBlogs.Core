@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using iBlogs.Site.Core.Comment;
+﻿using iBlogs.Site.Core.Comment;
 using iBlogs.Site.Core.Comment.DTO;
-using iBlogs.Site.Core.Common.DTO;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Content;
@@ -12,6 +8,9 @@ using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.User.DTO;
 using iBlogs.Site.Core.User.Service;
 using Markdig;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace iBlogs.Site.Core.Common.Service
 {
@@ -21,6 +20,7 @@ namespace iBlogs.Site.Core.Common.Service
         private readonly ISiteService _siteService;
         private Contents _currentArticle;
         private readonly IUserService _userService;
+
         public ViewService(IOptionService optionService, ISiteService siteService, IUserService userService)
         {
             _optionService = optionService;
@@ -42,7 +42,6 @@ namespace iBlogs.Site.Core.Common.Service
             _currentArticle = contents;
         }
 
-
         public Contents current_article()
         {
             return _currentArticle;
@@ -53,9 +52,9 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string meta_keywords()
         {
-
             var value = _optionService.Get("keywords");
             if (null != value)
             {
@@ -69,9 +68,9 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string meta_description()
         {
-
             var value = _optionService.Get("description");
             if (null != value)
             {
@@ -85,9 +84,9 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string head_title()
         {
-
             var value = _optionService.Get("title");
 
             string p = "";
@@ -113,6 +112,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string permalink()
         {
             var contents = current_article();
@@ -125,6 +125,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param contents
          * @return
          */
+
         public string permalink(Contents contents)
         {
             return permalink(contents.Id, contents.Slug);
@@ -137,6 +138,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param slug
          * @return
          */
+
         public string permalink(int cid, string slug)
         {
             return "/article/" + (!slug.IsNullOrWhiteSpace() ? slug : cid.ToString());
@@ -148,11 +150,11 @@ namespace iBlogs.Site.Core.Common.Service
          * @param fmt
          * @return
          */
+
         public string created(string frm)
         {
             Contents contents = current_article();
             return contents?.Created.ToString(frm);
-
         }
 
         /**
@@ -161,11 +163,11 @@ namespace iBlogs.Site.Core.Common.Service
          * @param fmt
          * @return
          */
+
         public string modified(string fmt)
         {
             Contents contents = current_article();
             return contents?.Modified.ToString();
-
         }
 
         /**
@@ -173,6 +175,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public int hits()
         {
             Contents contents = current_article();
@@ -184,6 +187,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string show_categories()
         {
             Contents contents = current_article();
@@ -200,6 +204,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          * @since b1.3.0
          */
+
         public string[] category_list()
         {
             Contents contents = current_article();
@@ -216,6 +221,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          * @since b1.3.0
          */
+
         public string[] tag_list()
         {
             Contents contents = current_article();
@@ -232,6 +238,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param categories
          * @return
          */
+
         public string show_categories(string categories)
         {
             if (!categories.IsNullOrWhiteSpace())
@@ -253,10 +260,11 @@ namespace iBlogs.Site.Core.Common.Service
          * @param split 每个标签之间的分隔符
          * @return
          */
+
         public string show_tags(string split)
         {
             Contents contents = current_article();
-            if (stringKit.isNotBlank(contents.Tags))
+            if (StringKit.IsNotBlank(contents.Tags))
             {
                 string[] arr = contents.Tags.Split(",");
                 StringBuilder sbuf = new StringBuilder();
@@ -274,6 +282,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string views()
         {
             Contents contents = current_article();
@@ -285,6 +294,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string show_tags()
         {
             return show_tags("");
@@ -295,6 +305,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string show_content()
         {
             Contents contents = current_article();
@@ -307,6 +318,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param len
          * @return
          */
+
         public string excerpt(int len)
         {
             return intro(len);
@@ -318,6 +330,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param len
          * @return
          */
+
         public string intro(int len)
         {
             Contents contents = current_article();
@@ -334,9 +347,10 @@ namespace iBlogs.Site.Core.Common.Service
          * @param value 文章内容
          * @return 转换 markdown 为 html
          */
+
         public string intro(string value)
         {
-            if (stringKit.isBlank(value))
+            if (StringKit.IsBlank(value))
             {
                 return null;
             }
@@ -359,6 +373,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param len   要截取文字的个数
          * @return
          */
+
         public string intro(string value, int len)
         {
             int pos = value.IndexOf("<!--more-->");
@@ -384,9 +399,10 @@ namespace iBlogs.Site.Core.Common.Service
          * @param value
          * @return
          */
+
         public string article(string value)
         {
-            if (stringKit.isNotBlank(value))
+            if (StringKit.IsNotBlank(value))
             {
                 value = value.Replace("<!--more-->", "\r\n");
                 return Markdown.ToHtml(value);
@@ -399,6 +415,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string show_thumb(Contents contents)
         {
             if (null == contents)
@@ -406,7 +423,7 @@ namespace iBlogs.Site.Core.Common.Service
                 return "";
             }
             Set_current_article(contents);
-            if (stringKit.isNotBlank(contents.ThumbImg))
+            if (StringKit.IsNotBlank(contents.ThumbImg))
             {
                 string newFileName = IBlogsUtils.getFileName(contents.ThumbImg);
                 string thumbnailImgUrl = (contents.ThumbImg).Replace(newFileName, "thumbnail_" + newFileName);
@@ -414,7 +431,7 @@ namespace iBlogs.Site.Core.Common.Service
             }
             string content = article(contents.Content);
             string img = IBlogsUtils.show_thumb(content);
-            if (stringKit.isNotBlank(img))
+            if (StringKit.IsNotBlank(img))
             {
                 return img;
             }
@@ -429,6 +446,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public Contents article_next()
         {
             Contents cur = current_article();
@@ -440,6 +458,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public Contents article_prev()
         {
             Contents cur = current_article();
@@ -451,6 +470,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string theNext()
         {
             Contents contents = article_next();
@@ -467,6 +487,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param title 文章标题
          * @return
          */
+
         public string theNext(string title)
         {
             Contents contents = article_next();
@@ -482,6 +503,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string thePrev()
         {
             Contents contents = article_prev();
@@ -498,6 +520,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param title 文章标题
          * @return
          */
+
         public string thePrev(string title)
         {
             Contents contents = article_prev();
@@ -514,6 +537,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param limit
          * @return
          */
+
         public List<Contents> recent_articles(int limit)
         {
             if (null == _siteService)
@@ -529,6 +553,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param limit
          * @return
          */
+
         public List<Contents> rand_articles(int limit)
         {
             if (null == _siteService)
@@ -544,6 +569,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param limit
          * @return
          */
+
         public List<Comments> recent_comments(int limit)
         {
             if (null == _siteService)
@@ -558,13 +584,14 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public List<Metas> categories(int limit)
         {
             if (null == _siteService)
             {
                 return new List<Metas>();
             }
-            return _siteService.getMetas( Types.CATEGORY, limit);
+            return _siteService.getMetas(Types.CATEGORY, limit);
         }
 
         /**
@@ -573,6 +600,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param limit
          * @return
          */
+
         public List<Metas> rand_categories(int limit)
         {
             //if (null == _siteService)
@@ -588,6 +616,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public List<Metas> categories()
         {
             return categories(iBlogsConst.MAX_POSTS);
@@ -598,13 +627,14 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public List<Metas> tags(int limit)
         {
             if (null == _siteService)
             {
                 return new List<Metas>();
             }
-            return _siteService.getMetas( Types.TAG, limit);
+            return _siteService.getMetas(Types.TAG, limit);
         }
 
         /**
@@ -613,6 +643,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param limit
          * @return
          */
+
         public List<Metas> rand_tags(int limit)
         {
             //if (null == _siteService)
@@ -628,6 +659,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public List<Metas> tags()
         {
             return tags(iBlogsConst.MAX_POSTS);
@@ -639,6 +671,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param coid
          * @return
          */
+
         public string comment_at(int coid)
         {
             if (null == _siteService)
@@ -660,6 +693,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string show_icon()
         {
             Contents contents = current_article();
@@ -676,6 +710,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param cid
          * @return
          */
+
         public string show_icon(int cid)
         {
             return ICONS[cid % ICONS.Length];
@@ -686,6 +721,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string Title()
         {
             return Title(current_article());
@@ -697,6 +733,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param contents
          * @return
          */
+
         public string Title(Contents contents)
         {
             return null != contents ? contents.Title : site_title();
@@ -708,6 +745,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param type
          * @return
          */
+
         public string social_link(string type)
         {
             string id = site_option("social_" + type);
@@ -715,12 +753,16 @@ namespace iBlogs.Site.Core.Common.Service
             {
                 case "github":
                     return "https://github.com/" + id;
+
                 case "weibo":
                     return "http://weibo.com/" + id;
+
                 case "twitter":
                     return "https://twitter.com/" + id;
+
                 case "zhihu":
                     return "https://www.zhihu.com/people/" + id;
+
                 default:
                     return null;
             }
@@ -732,6 +774,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param limit
          * @return
          */
+
         public Page<CommentDto> comments(int limit)
         {
             //Contents contents = current_article();
@@ -756,6 +799,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return 当前页面的评论数量
          */
+
         public long commentsCount()
         {
             Contents contents = current_article();
@@ -772,11 +816,11 @@ namespace iBlogs.Site.Core.Common.Service
          * @param limit
          * @return
          */
+
         public Page<Contents> articles(int limit)
         {
             return null;
         }
-
 
         /**
          * 显示评论
@@ -785,6 +829,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param value     评论组装文本
          * @return
          */
+
         public string comments_num(string noComment, string value)
         {
             Contents contents = current_article();
@@ -801,10 +846,11 @@ namespace iBlogs.Site.Core.Common.Service
          * @param key
          * @return
          */
+
         public string theme_option(string key, string defaultValue)
         {
             string option = theme_option(key);
-            if (stringKit.isBlank(option))
+            if (StringKit.IsBlank(option))
             {
                 return defaultValue;
             }
@@ -817,6 +863,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param key
          * @return
          */
+
         public string theme_option(string key)
         {
             return null;
@@ -828,13 +875,11 @@ namespace iBlogs.Site.Core.Common.Service
          * @param pageName
          * @return
          */
+
         public bool is_slug(string pageName)
         {
             return false;
         }
-
-
-
 
         /**
          * 判断字符串不为空
@@ -842,9 +887,10 @@ namespace iBlogs.Site.Core.Common.Service
          * @param str
          * @return
          */
+
         public bool not_empty(string str)
         {
-            return stringKit.isNotBlank(str);
+            return StringKit.IsNotBlank(str);
         }
 
         /**
@@ -852,6 +898,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string site_url()
         {
             return site_url("");
@@ -862,6 +909,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string site_theme()
         {
             return site_option("site_theme", "default");
@@ -873,17 +921,18 @@ namespace iBlogs.Site.Core.Common.Service
          * @param sub 后面追加的地址
          * @return
          */
+
         public string site_url(string sub)
         {
             return site_option("site_url") + sub;
         }
-
 
         /**
          * 网站子标题
          *
          * @return
          */
+
         public string site_subtitle()
         {
             return site_option("site_subtitle");
@@ -894,11 +943,11 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string allow_cloud_CDN()
         {
             return site_option("allow_cloud_CDN");
         }
-
 
         /**
          * 网站配置项
@@ -907,9 +956,10 @@ namespace iBlogs.Site.Core.Common.Service
          * @param defalutValue 默认值
          * @return
          */
+
         public string site_option(string key, string defalutValue)
         {
-            if (stringKit.isBlank(key))
+            if (StringKit.IsBlank(key))
             {
                 return "";
             }
@@ -921,6 +971,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string site_description()
         {
             return site_option("site_description");
@@ -933,6 +984,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param len
          * @return
          */
+
         public string substr(string str, int len)
         {
             if (str.Length > len)
@@ -947,6 +999,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string theme_url()
         {
             return site_url(iBlogsConst.TEMPLATES + iBlogsConst.THEME);
@@ -958,11 +1011,11 @@ namespace iBlogs.Site.Core.Common.Service
          * @param sub
          * @return
          */
+
         public string theme_url(string sub)
         {
             return site_url(iBlogsConst.TEMPLATES + iBlogsConst.THEME + sub);
         }
-
 
         /**
          * 返回gravatar头像地址
@@ -970,12 +1023,14 @@ namespace iBlogs.Site.Core.Common.Service
          * @param email
          * @return
          */
+
         public string gravatar(string email)
         {
             if (email.IsNullOrWhiteSpace())
                 return "https://www.gravatar.com/avatar";
             return $"https://www.gravatar.com/avatar/{CreateMD5(email).ToLowerInvariant()}?s=60&d=blank";
         }
+
         private string CreateMD5(string input)
         {
             // Use input string to calculate MD5 hash
@@ -1000,6 +1055,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param unixTime
          * @return
          */
+
         public string fmtdate(long unixTime)
         {
             return Convert.ToDateTime(unixTime).ToString("yyyy-MM-dd");
@@ -1012,6 +1068,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param fmt
          * @return
          */
+
         public string fmtdate(DateTime date, string fmt)
         {
             return date.ToString(fmt);
@@ -1024,9 +1081,10 @@ namespace iBlogs.Site.Core.Common.Service
          * @param patten
          * @return
          */
+
         public string fmtdate(int unixTime, string patten)
         {
-            if (stringKit.isNotBlank(patten))
+            if (StringKit.IsNotBlank(patten))
             {
                 return Convert.ToDateTime(unixTime).ToString(patten);
             }
@@ -1040,6 +1098,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param str
          * @return
          */
+
         public string random(int max, string str)
         {
             return new Random().Next(1, max) + str;
@@ -1053,6 +1112,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param value
          * @return
          */
+
         public string emoji(string value)
         {
             throw new NotImplementedException();
@@ -1064,6 +1124,7 @@ namespace iBlogs.Site.Core.Common.Service
          *
          * @return
          */
+
         public string show_thumb(string content)
         {
             //content = TaleUtils.mdToHtml(content);
@@ -1107,6 +1168,4 @@ namespace iBlogs.Site.Core.Common.Service
             return "default";
         }
     }
-
 }
-

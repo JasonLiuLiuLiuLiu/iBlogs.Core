@@ -28,7 +28,7 @@ var vm = new Vue({
         categories: [],
         isLoading: true
     },
-    beforeCreate: function(){
+    beforeCreate: function () {
         vueLoding = this.$loading.show();
     },
     mounted: function () {
@@ -42,7 +42,7 @@ var vm = new Vue({
             tale.get({
                 url: '/admin/api/CategoryList',
                 success: function (data) {
-                    for(item in data.payload){
+                    for (item in data.payload) {
                         $vm.categories.push(data.payload[item].name);
                     }
                 },
@@ -56,7 +56,6 @@ var vm = new Vue({
             var $vm = this;
             var content = $vm.article.fmtType === 'markdown' ? mditor.value : htmlEditor.summernote('code');
             if ($vm.article.title !== '' && content !== '') {
-
                 $vm.article.content = content;
                 $vm.article.categories = $vm.article.selected.join(',');
 
@@ -128,7 +127,7 @@ var vm = new Vue({
                 return;
             }
             clearInterval(refreshIntervalId);
-            $vm.article.status  = status;
+            $vm.article.status = status;
 
             $vm.autoSave(function () {
                 tale.alertOk({
@@ -145,7 +144,6 @@ var vm = new Vue({
 });
 
 $(document).ready(function () {
-
     $("#form_datetime").datetimepicker({
         format: 'yyyy-mm-dd hh:ii',
         autoclose: true,
@@ -247,7 +245,7 @@ $(document).ready(function () {
             $('#dropzone-container').removeClass('hide');
             $('#dropzone-container').show();
             var thumbImage = $("#dropzone").css("backgroundImage");
-            if(thumbImage && thumbImage.indexOf('url') !== -1){
+            if (thumbImage && thumbImage.indexOf('url') !== -1) {
                 thumbImage = thumbImage.split("(")[1].split(")")[0];
                 vm.article.thumbImg = thumbImage.substring(1, thumbImage.length - 1);
             }

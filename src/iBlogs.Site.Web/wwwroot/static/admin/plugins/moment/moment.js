@@ -529,7 +529,6 @@
             Object.prototype.toString.call(sth) === '[object Function]';
     }
 
-
     function addRegexToken (token, regex, strictRegex) {
         regexes[token] = isFunction(regex) ? regex : function (isStrict) {
             return (isStrict && strictRegex) ? strictRegex : regex;
@@ -942,7 +941,6 @@
             daysToDayOfWeek = firstDayOfWeekOfYear - mom.day(),
             adjustedMoment;
 
-
         if (daysToDayOfWeek > end) {
             daysToDayOfWeek -= 7;
         }
@@ -1221,7 +1219,6 @@
         configFromArray(config);
         checkOverflow(config);
     }
-
 
     function meridiemFixWrap (locale, hour, meridiem) {
         var isPm;
@@ -2388,7 +2385,6 @@
         }
     }
 
-
     // MOMENTS
 
     // Setting the hour should keep the time, because the user explicitly
@@ -2456,7 +2452,6 @@
     addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
         return this.millisecond() * 1000000;
     });
-
 
     // ALIASES
 
@@ -3080,7 +3075,6 @@
         years  = absFloor(months / 12);
         months %= 12;
 
-
         // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
         var Y = years;
         var M = months;
@@ -3161,7 +3155,6 @@
 
     // Side effect imports
 
-
     utils_hooks__hooks.version = '2.10.6';
 
     setHookCallback(local__createLocal);
@@ -3191,5 +3184,4 @@
     var _moment = utils_hooks__hooks;
 
     return _moment;
-
 }));

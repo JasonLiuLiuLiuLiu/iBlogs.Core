@@ -22,7 +22,7 @@ var vm = new Vue({
         },
         isLoading: true
     },
-    beforeCreate: function(){
+    beforeCreate: function () {
         vueLoding = this.$loading.show();
     },
     mounted: function () {
@@ -127,7 +127,6 @@ var vm = new Vue({
                     alert(error || '数据加载失败');
                 }
             });
-
         },
         autoSave: function (callback) {
             var $vm = this;

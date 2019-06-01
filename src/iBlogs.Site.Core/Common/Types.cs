@@ -2,7 +2,6 @@
 {
     public static class Types
     {
-
         public static string TAG = "tag";
         public static string CATEGORY = "category";
         public static string ARTICLE = "post";
@@ -34,6 +33,5 @@
          * 网站要过滤，禁止访问的ip列表
          */
         public static string BLOCK_IPS = "site_block_ips";
-
     }
 }

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using iBlogs.Site.Core.EntityFrameworkCore;
+﻿using iBlogs.Site.Core.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace iBlogs.Site.Core.Relationship.Service
 {
@@ -16,14 +13,14 @@ namespace iBlogs.Site.Core.Relationship.Service
             _repository = repository;
         }
 
-        public void SaveOrUpdate(int cid,int mid)
+        public void SaveOrUpdate(int cid, int mid)
         {
-            _repository.InsertOrUpdate(new Relationships {Cid = cid, Mid = mid});
+            _repository.InsertOrUpdate(new Relationships { Cid = cid, Mid = mid });
         }
 
         public void DeleteByContentId(int cid)
         {
-            _repository.GetAll().Where(r => r.Cid == cid).ForEachAsync(r=>_repository.Delete(r)).Wait();
+            _repository.GetAll().Where(r => r.Cid == cid).ForEachAsync(r => _repository.Delete(r)).Wait();
             _repository.SaveChanges();
         }
 

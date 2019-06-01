@@ -1,13 +1,13 @@
-﻿using System;
+﻿using iBlogs.Site.Core.Common.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using iBlogs.Site.Core.Common.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace iBlogs.Site.Core.Common.CodeDi
 {
-    class CodeDiService
+    internal class CodeDiService
     {
         private readonly IServiceCollection _service;
         private readonly CodeDiOptions _options;
@@ -68,7 +68,6 @@ namespace iBlogs.Site.Core.Common.CodeDi
                         _options.ServiceLifeTimeMappings.FirstOrDefault(u => serviceType.FullName.Matches(u.Key));
 
                     serviceLifetime = lifeTimeMapping.Key != null ? lifeTimeMapping.Value : _options.DefaultServiceLifetime;
-
                 }
             }
             catch
@@ -83,8 +82,6 @@ namespace iBlogs.Site.Core.Common.CodeDi
             Console.WriteLine($"CodeDi add serviceType:{serviceType.FullName},implementation type:{implementationType.FullName},serviceLifetime:{serviceLifetime.ToString()},Assembly:{serviceType.Assembly}");
 #endif
         }
-
-
 
         private Dictionary<Type, List<Type>> GetInterfaceMapping(IList<Assembly> assemblies)
         {
