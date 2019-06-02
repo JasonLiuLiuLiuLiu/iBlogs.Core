@@ -298,7 +298,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string show_tags()
         {
-            return show_tags("");
+            return show_tags(",");
         }
 
         /**
