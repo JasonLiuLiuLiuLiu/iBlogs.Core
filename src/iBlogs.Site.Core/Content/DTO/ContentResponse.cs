@@ -292,5 +292,18 @@ namespace iBlogs.Site.Core.Content.DTO
         {
             return ICONS[Id % ICONS.Length];
         }
+
+        /**
+        * 显示评论
+        *
+        * @param noComment 评论为0的时候显示的文本
+        * @param value     评论组装文本
+        * @return
+        */
+
+        public string CommentsNumStr(string noComment, string value)
+        {
+            return CommentsNum > 0 ? string.Format(value, CommentsNum) : noComment;
+        }
     }
 }

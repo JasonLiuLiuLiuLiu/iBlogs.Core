@@ -11,7 +11,7 @@ namespace iBlogs.Site.Web.Controllers
 
         public ArticleController(IContentsService contentsService)
         {
-            this._contentsService = contentsService;
+            _contentsService = contentsService;
         }
 
         [HttpGet("/article/{url}")]

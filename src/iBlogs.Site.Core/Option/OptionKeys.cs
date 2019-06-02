@@ -19,5 +19,6 @@ namespace iBlogs.Site.Core.Option
         public const string AllowInstall = "allow_install";
         public const string SocialPre="social_";
         public const string AllowCommentAudit = "allow_comment_audit";
+        public const string Author = "author";
     }
 }
