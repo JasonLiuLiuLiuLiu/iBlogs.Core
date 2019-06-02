@@ -10,10 +10,10 @@ namespace iBlogs.Site.Core.Option
         public const string AttachUrl = "attach_url";
         public const string CdnUrl = "cdn_url";
         public const string Description = "description";
-        public const string SiteDescription = "SiteDescription";
-        public const string AllowCloudCdn = "AllowCloudCdn";
-        public const string SiteSubtitle = "SiteSubtitle";
-        public const string SiteUrl = "SiteUrl";
+        public const string SiteDescription = "site_description";
+        public const string AllowCloudCdn = "allow_cloud_cdn";
+        public const string SiteSubtitle = "site_subtitle";
+        public const string SiteUrl = "site_url";
         public const string Keywords = "keywords";
         public const string SiteKeywords = "keywords";
         public const string AllowInstall = "allow_install";
