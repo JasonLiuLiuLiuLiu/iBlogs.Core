@@ -171,14 +171,14 @@
                                     <div class="inbox-item" v-for="item in comments">
                                         <div class="inbox-item-img">
                                             <a :href="item.url" target="_blank">
-                                                <img :src="item.mail | gravatar" class="img-circle" :alt="item.author">
+                                                <img :src="item.mail | Gravatar" class="img-circle" :alt="item.author">
                                             </a>
                                         </div>
                                         <p class="inbox-item-author">
                                             <a :href="item.url" target="_blank">{{item.author}}</a>
                                         </p>
                                         <p class="inbox-item-text">
-                                            <a :href="'${site_url('/article/')}' + item.cid + '#comments'" target="_blank">
+                                            <a :href="'${SiteUrl('/article/')}' + item.cid + '#comments'" target="_blank">
                                                 ${article("{{item.content}}")}
                                             </a>
                                         </p>

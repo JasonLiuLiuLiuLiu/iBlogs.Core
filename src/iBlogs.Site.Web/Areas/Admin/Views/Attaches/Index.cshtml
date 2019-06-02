@@ -1,6 +1,6 @@
 ﻿@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
-<link href="@ViewService.cdnURL()/plugins/dropzone/4.3.0/min/dropzone.min.css" rel="stylesheet">
+<link href="@ViewService.CdnURL()/plugins/dropzone/4.3.0/min/dropzone.min.css" rel="stylesheet">
 <style>
     #dropzone {
         margin-bottom: 3rem;
@@ -57,7 +57,7 @@
                                 <input name="file" type="file" multiple="multiple">
                             </div>
                             <div class="dz-message">
-                                <p>将文件拖至此处或点击上传.@ViewService.attachURL()</p>
+                                <p>将文件拖至此处或点击上传.@ViewService.AttachURL()</p>
                                 <p>
                                     <span style="font-size: 16px; color: #d0d0d0;">一次最多可以上传10个文件</span>
                                 </p>
@@ -75,8 +75,8 @@
                     </div>
 
                     <div class="col-md-2 col-xs-6 text-center m-t-10" v-for="item in attachPage.rows">
-                        <a :href="'@ViewService.attachURL()' + item.fKey" target="_blank">
-                            <img v-if="item.fType == 'image'" class="attach-img" :src="'@ViewService.attachURL()' + item.fKey"
+                        <a :href="'@ViewService.AttachURL()' + item.fKey" target="_blank">
+                            <img v-if="item.fType == 'image'" class="attach-img" :src="'@ViewService.AttachURL()' + item.fKey"
                                  :title="item.fname" />
                             <img v-if="item.fType != 'image'" class="attach-img" src="/static/admin/images/attach.png"
                                  :title="item.fname" />
@@ -85,7 +85,7 @@
                             <span class="attach-text" data-toggle="tooltip" data-placement="top" :data-original-title="item.fname">{{item.fname | truncate(15)}}</span>
                         </div>
                         <div class="clearfix">
-                            <button :url="'@ViewService.attachURL()' + item.fKey" type="button"
+                            <button :url="'@ViewService.AttachURL()' + item.fKey" type="button"
                                     class="btn btn-warning btn-sm waves-effect waves-light m-t-5 copy">
                                 <i class="fa fa-copy"></i> <span>复制</span>
                             </button>
@@ -124,8 +124,8 @@
 </div>
 @section scripts
 {
-    <script src="@ViewService.cdnURL()/plugins/dropzone/4.3.0/min/dropzone.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/clipboard.js/1.6.0/clipboard.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/dropzone/4.3.0/min/dropzone.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/clipboard.js/1.6.0/clipboard.min.js"></script>
     <script>
         var tale = new $.tale();
         var vm = new Vue({

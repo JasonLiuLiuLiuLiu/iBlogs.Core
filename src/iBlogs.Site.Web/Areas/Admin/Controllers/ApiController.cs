@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Option;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
 {
@@ -223,13 +224,13 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         // @GetRoute("categories")
         public ApiResponse CategoryList()
         {
-            return ApiResponse<List<Metas>>.Ok(_metasService.getMetas(Types.CATEGORY, iBlogsConst.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_metasService.getMetas(Types.CATEGORY, iBlogsConfig.MAX_POSTS));
         }
 
         // @GetRoute("tags")
         public ApiResponse TagList()
         {
-            return ApiResponse<List<Metas>>.Ok(_metasService.getMetas(Types.TAG, iBlogsConst.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_metasService.getMetas(Types.TAG, iBlogsConfig.MAX_POSTS));
         }
 
         // @GetRoute("options")
@@ -264,25 +265,25 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
             if (!advanceParam.CdnUrl.IsNullOrWhiteSpace())
             {
-                _optionService.saveOption(iBlogsConst.OPTION_CDN_URL, advanceParam.CdnUrl);
+                _optionService.saveOption(OptionKeys.CdnUrl, advanceParam.CdnUrl);
             }
 
             // 是否允许重新安装
             if (!advanceParam.AllowInstall.IsNullOrWhiteSpace())
             {
-                _optionService.saveOption(iBlogsConst.OPTION_ALLOW_INSTALL, advanceParam.AllowInstall);
+                _optionService.saveOption(OptionKeys.AllowInstall, advanceParam.AllowInstall);
             }
 
             // 评论是否需要审核
             if (!advanceParam.AllowCommentAudit.IsNullOrWhiteSpace())
             {
-                _optionService.saveOption(iBlogsConst.OPTION_ALLOW_COMMENT_AUDIT, advanceParam.AllowCommentAudit);
+                _optionService.saveOption(OptionKeys.AllowCommentAudit, advanceParam.AllowCommentAudit);
             }
 
             // 是否允许公共资源CDN
             if (!advanceParam.AllowCloudCdn.IsNullOrWhiteSpace())
             {
-                _optionService.saveOption(iBlogsConst.OPTION_ALLOW_CLOUD_CDN, advanceParam.AllowCloudCdn);
+                _optionService.saveOption(OptionKeys.AllowCloudCdn, advanceParam.AllowCloudCdn);
             }
             return ApiResponse.Ok();
         }
@@ -310,7 +311,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             foreach (var fileItem in fileItems)
             {
                 string fname = fileItem.FileName;
-                if ((fileItem.Length / 1024) <= iBlogsConst.MAX_FILE_SIZE)
+                if ((fileItem.Length / 1024) <= iBlogsConfig.MAX_FILE_SIZE)
                 {
                     var fkey = BlogsUtils.GetFileKey(fname, _env.WebRootPath);
 

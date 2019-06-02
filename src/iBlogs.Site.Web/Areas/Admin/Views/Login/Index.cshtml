@@ -8,15 +8,15 @@
     <meta content="${_csrf_token}" name="csrf_token" />
     <link rel="shortcut icon" href="/static/admin/images/favicon.png" />
     <title>Tale - 用户登录</title>
-    <link href="@ViewService.cdnURL()/plugins/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="@ViewService.cdnURL()/plugins/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="@ViewService.cdnURL()/plugins/limonte-sweetalert2/6.4.1/sweetalert2.min.css" rel="stylesheet">
-    <link href="@ViewService.cdnURL()/plugins/vue-loading/vue-loading.min.css" rel="stylesheet">
-    <link href="@ViewService.cdnURL()/css/style.min.css" asp-append-version="true" rel="stylesheet">
+    <link href="@ViewService.CdnURL()/plugins/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="@ViewService.CdnURL()/plugins/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="@ViewService.CdnURL()/plugins/limonte-sweetalert2/6.4.1/sweetalert2.min.css" rel="stylesheet">
+    <link href="@ViewService.CdnURL()/plugins/vue-loading/vue-loading.min.css" rel="stylesheet">
+    <link href="@ViewService.CdnURL()/css/style.min.css" asp-append-version="true" rel="stylesheet">
 
     <style>
         body, html {
-            background: url("@ViewService.cdnURL()/images/bg/@(new Random().Next(1,5)).png") no-repeat;
+            background: url("@ViewService.CdnURL()/images/bg/@(new Random().Next(1,5)).png") no-repeat;
             background-size: cover;
         }
 
@@ -99,12 +99,12 @@
         </div>
     </div>
     <!-- Main  -->
-    <script src="@ViewService.cdnURL()/plugins/vue/vue.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/vue-loading/vue-loading.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/jquery/3.2.1/jquery.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/limonte-sweetalert2/6.4.1/sweetalert2.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/axios/axios.min.js"></script>
-    <script src="@ViewService.cdnURL()/js/base.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/vue/vue.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/vue-loading/vue-loading.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/jquery/3.2.1/jquery.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/limonte-sweetalert2/6.4.1/sweetalert2.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/axios/axios.min.js"></script>
+    <script src="@ViewService.CdnURL()/js/base.js"></script>
     <script>
         var tale = new $.tale();
         function setCookie(name, value, days) {

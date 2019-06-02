@@ -23,11 +23,8 @@
         public static string NEXT = "next";
         public static string PREV = "prev";
 
-        /**
-         * 附件存放的URL，默认为网站地址，如集成第三方则为第三方CDN域名
-         */
-        public static string ATTACH_URL = "attach_url";
-        public static string CDN_URL = "cdn_url";
+
+
 
         /**
          * 网站要过滤，禁止访问的ip列表

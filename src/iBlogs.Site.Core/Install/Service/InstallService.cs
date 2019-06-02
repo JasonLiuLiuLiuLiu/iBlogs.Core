@@ -9,6 +9,7 @@ using iBlogs.Site.Core.User;
 using iBlogs.Site.Core.User.Service;
 using System;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Option;
 
 namespace iBlogs.Site.Core.Install.Service
 {
@@ -79,13 +80,13 @@ namespace iBlogs.Site.Core.Install.Service
 
         private bool InitOptions()
         {
-            _optionService.saveOption("allow_install", "false", "是否允许重新安装博客");
-            _optionService.saveOption("allow_comment_audit", "true", "评论需要审核");
-            _optionService.saveOption("ite_keywords", "博客系统,asp.net core,iBlogs");
-            _optionService.saveOption("site_description", "博客系统,asp.net core,iBlogs");
+            _optionService.saveOption(OptionKeys.AllowInstall, "false", "是否允许重新安装博客");
+            _optionService.saveOption(OptionKeys.AllowCommentAudit, "true", "评论需要审核");
+            _optionService.saveOption(OptionKeys.SiteKeywords, "博客系统,asp.net core,iBlogs");
+            _optionService.saveOption(OptionKeys.SiteDescription, "博客系统,asp.net core,iBlogs");
             var siteUrl = BlogsUtils.BuildUrl(_param.SiteUrl);
-            _optionService.saveOption("site_title", _param.SiteTitle);
-            _optionService.saveOption("site_url", siteUrl);
+            _optionService.saveOption(OptionKeys.SiteTitle, _param.SiteTitle);
+            _optionService.saveOption(OptionKeys.SiteUrl, siteUrl);
             return true;
         }
 

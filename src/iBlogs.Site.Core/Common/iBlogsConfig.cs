@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace iBlogs.Site.Core.Common
 {
-    public static class iBlogsConst
+    public static class iBlogsConfig
     {
         public const string CLASSPATH = "";
 
@@ -90,12 +90,6 @@ namespace iBlogs.Site.Core.Common
         public const string COMMENT_APPROVED = "approved";
         public const string COMMENT_NO_AUDIT = "no_audit";
 
-        public const string OPTION_CDN_URL = "cdn_url";
-        public const string OPTION_SITE_THEME = "site_theme";
-        public const string OPTION_ALLOW_INSTALL = "allow_install";
-        public const string OPTION_ALLOW_COMMENT_AUDIT = "allow_comment_audit";
-        public const string OPTION_ALLOW_CLOUD_CDN = "allow_cloud_CDN";
-        public const string OPTION_SAFE_REMEMBER_ME = "safe_remember_me";
 
         public const string TEMPLATES = "/templates/";
         public const string THEME = "themes/default";

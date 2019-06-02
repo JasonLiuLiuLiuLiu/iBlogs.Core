@@ -10,17 +10,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-transform" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
-    <meta name="keywords" content="@ViewService.meta_keywords()" />
-    <meta name="description" content="@ViewService.meta_description()" />
+    <meta name="keywords" content="@ViewService.MetaKeywords()" />
+    <meta name="description" content="@ViewService.MetaDescription()" />
     <meta content="${_csrf_token}" name="csrf_token" />
     <link href="./css/app.css" rel="stylesheet">
     <link href="./css/topstory-routes.css" rel="stylesheet">
-    <link rel="shortcut icon" href="@ViewService.theme_url("/static/img/favicon.png")" />
-    <link rel="apple-touch-icon" href="@ViewService.theme_url("/static/img/apple-touch-icon.png")" />
+    <link rel="shortcut icon" href="@ViewService.ThemeUrl("/static/img/favicon.png")" />
+    <link rel="apple-touch-icon" href="@ViewService.ThemeUrl("/static/img/apple-touch-icon.png")" />
     <title>@ViewService.head_title()</title>
-    <link href="@ViewService.theme_url("/static/css/default.min.css")" rel="stylesheet">
-    <link href="@ViewService.theme_url("/static/css/style.min.css")" rel="stylesheet">
-    @if (ViewService.allow_cloud_CDN() == "true")
+    <link href="@ViewService.ThemeUrl("/static/css/default.min.css")" rel="stylesheet">
+    <link href="@ViewService.ThemeUrl("/static/css/style.min.css")" rel="stylesheet">
+    @if (ViewService.AllowCloudCdn() == "true")
     {
         <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     }
@@ -29,26 +29,26 @@
         <script src="/static/admin/plugins/jquery/3.2.1/jquery.min.js"></script>
     }
 
-    <script src="@ViewService.theme_url("/static/js/highlight.min.js")"></script>
-    <script src="@ViewService.theme_url("/static/js/instantclick.min.js")"></script>
+    <script src="@ViewService.ThemeUrl("/static/js/highlight.min.js")"></script>
+    <script src="@ViewService.ThemeUrl("/static/js/instantclick.min.js")"></script>
 </head>
 <body class="@(ViewService.is_post?"bg-grey":"" ) Entry-body" gtools_scp_screen_capture_injected="true">
     <header id="header" class="bg-white Sticky AppHeader header" style="position: relative" data-za-module="TopNavBar">
         <div class="navbar-container">
-            <a href="@ViewService.site_url()" class="navbar-logo">
+            <a href="@ViewService.SiteUrl()" class="navbar-logo">
                 @if (@ViewService.theme_option("logo_url").IsNullOrWhiteSpace())
                 {
-                    <img src="@ViewService.theme_url("/static/img/logo.png")" alt="@ViewService.site_title()" />
+                    <img src="@ViewService.ThemeUrl("/static/img/logo.png")" alt="@ViewService.SiteTitle()" />
                 }
                 else
                 {
-                    <img src="@ViewService.theme_option("logo_url")" alt="@ViewService.site_title()" />
+                    <img src="@ViewService.theme_option("logo_url")" alt="@ViewService.SiteTitle()" />
                 }
             </a>
             <div class="navbar-menu">
-                <a href="@ViewService.site_url("/archives")">归档</a>
-                <a href="@ViewService.site_url("/links")">友链</a>
-                <a href="@ViewService.site_url("/about")">关于</a>
+                <a href="@ViewService.SiteUrl("/archives")">归档</a>
+                <a href="@ViewService.SiteUrl("/links")">友链</a>
+                <a href="@ViewService.SiteUrl("/about")">关于</a>
             </div>
             <div class="navbar-search" onclick="">
                 <span class="icon-search"></span>
@@ -62,9 +62,9 @@
             <div class="navbar-mobile-menu" onclick="">
                 <span class="icon-menu cross"><span class="middle"></span></span>
                 <ul>
-                    <li><a href="@ViewService.site_url("/archives")">归档</a></li>
-                    <li><a href="@ViewService.site_url("/links")">友链</a></li>
-                    <li><a href="@ViewService.site_url("/about")">关于</a></li>
+                    <li><a href="@ViewService.SiteUrl("/archives")">归档</a></li>
+                    <li><a href="@ViewService.SiteUrl("/links")">友链</a></li>
+                    <li><a href="@ViewService.SiteUrl("/about")">关于</a></li>
                 </ul>
             </div>
         </div>
@@ -105,8 +105,8 @@
             <div class="footer-container">
                 <div class="meta-item meta-copyright">
                     <div class="meta-copyright-info">
-                        <a href="@ViewService.site_url()" class="info-logo">
-                            <img src="/templates/themes/default/static/img/logo.png" alt="@ViewService.site_title()">
+                        <a href="@ViewService.SiteUrl()" class="info-logo">
+                            <img src="/templates/themes/default/static/img/logo.png" alt="@ViewService.SiteTitle()">
                         </a>
                         <div class="info-text">
                             <p>Always coding,Always writing!</p>
@@ -227,8 +227,8 @@
             postDirectoryBuild();
         </script>
     }
-    <script src="@ViewService.theme_url("/static/js/headroom.min.js")"></script>
-    <script src="@ViewService.theme_url("/static/js/instantclick.min.js")"></script>
+    <script src="@ViewService.ThemeUrl("/static/js/headroom.min.js")"></script>
+    <script src="@ViewService.ThemeUrl("/static/js/instantclick.min.js")"></script>
     <script>
         hljs.initHighlightingOnLoad();
     </script>

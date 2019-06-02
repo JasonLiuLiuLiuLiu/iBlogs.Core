@@ -28,7 +28,7 @@ namespace iBlogs.Site.Core.Meta.Service
 
         public List<Metas> getMetas(string type, int limit = 0)
         {
-            if (limit < 1 || limit > iBlogsConst.MAX_POSTS)
+            if (limit < 1 || limit > iBlogsConfig.MAX_POSTS)
             {
                 limit = 10;
             }
@@ -147,7 +147,7 @@ namespace iBlogs.Site.Core.Meta.Service
                 return new List<Metas>();
             }
 
-            if (limit < 1 || limit > iBlogsConst.MAX_POSTS)
+            if (limit < 1 || limit > iBlogsConfig.MAX_POSTS)
             {
                 limit = 10;
             }

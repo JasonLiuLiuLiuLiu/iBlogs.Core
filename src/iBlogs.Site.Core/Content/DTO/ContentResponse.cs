@@ -185,7 +185,7 @@ namespace iBlogs.Site.Core.Content.DTO
 
         public string Intro()
         {
-            return Intro(Content, iBlogsConst.MAX_INTRO_COUNT);
+            return Intro(Content, iBlogsConfig.MAX_INTRO_COUNT);
         }
 
         /// <summary>
@@ -278,6 +278,19 @@ namespace iBlogs.Site.Core.Content.DTO
             int? size = cid % 20;
             size = size == 0 ? 1 : size;
             return "/templates/themes/default/static/img/rand/" + size + ".jpg";
+        }
+
+        private string[] ICONS = { "bg-ico-book", "bg-ico-game", "bg-ico-note", "bg-ico-chat", "bg-ico-SetCode", "bg-ico-image", "bg-ico-web", "bg-ico-link", "bg-ico-design", "bg-ico-lock" };
+
+        /**
+         * 显示文章图标
+         *
+         * @return
+         */
+
+        public string ShowIcon()
+        {
+            return ICONS[Id % ICONS.Length];
         }
     }
 }

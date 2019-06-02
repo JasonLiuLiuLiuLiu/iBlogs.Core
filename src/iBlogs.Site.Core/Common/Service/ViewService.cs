@@ -1,52 +1,23 @@
-﻿using iBlogs.Site.Core.Comment;
-using iBlogs.Site.Core.Comment.DTO;
-using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.Common.Response;
-using iBlogs.Site.Core.Content;
-using iBlogs.Site.Core.Meta;
+﻿using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.User.DTO;
 using iBlogs.Site.Core.User.Service;
-using Markdig;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
+using iBlogs.Site.Core.Option;
 
 namespace iBlogs.Site.Core.Common.Service
 {
-    public class ViewService : IViewServiceRe
+    public class ViewService : IViewService
     {
         private readonly IOptionService _optionService;
-        private readonly ISiteServiceRe _siteService;
-        private Contents _currentArticle;
         private readonly IUserService _userService;
 
-        public ViewService(IOptionService optionService, ISiteServiceRe siteService, IUserService userService)
+        public ViewService(IOptionService optionService,IUserService userService)
         {
             _optionService = optionService;
-            _siteService = siteService;
             _userService = userService;
         }
-
-        public string active { get; set; }
-        public string title { get; set; }
-
-        public string has_sub { get; set; }
-
         public CurrentUser User => _userService.CurrentUsers;
-
-        public bool is_post { get; set; }
-
-        public void Set_current_article(Contents contents)
-        {
-            _currentArticle = contents;
-        }
-
-        public Contents current_article()
-        {
-            return _currentArticle;
-        }
 
         /**
          * 获取header keywords
@@ -54,14 +25,14 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string meta_keywords()
+        public string MetaKeywords()
         {
-            var value = _optionService.Get("keywords");
+            var value = _optionService.Get(OptionKeys.Keywords);
             if (null != value)
             {
                 return value;
             }
-            return _optionService.Get("site_keywords");
+            return _optionService.Get(OptionKeys.SiteKeywords);
         }
 
         /**
@@ -70,674 +41,20 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string meta_description()
+        public string MetaDescription()
         {
-            var value = _optionService.Get("description");
+            var value = _optionService.Get(OptionKeys.Description);
             if (null != value)
             {
                 return value;
             }
-            return _optionService.Get("site_description");
+            return _optionService.Get(OptionKeys.SiteDescription);
         }
 
-        /**
-         * header title
-         *
-         * @return
-         */
 
-        public string head_title()
-        {
-            var value = _optionService.Get("title");
-
-            string p = "";
-            if (null != value)
-            {
-                p = value;
-            }
-            return p + _optionService.Get("site_title", "iBlogs");
-        }
-
-        public string site_title()
-        {
-            return _optionService.Get("site_title", "iBlogs");
-        }
-
-        public string site_option(string key)
+        public string SiteOption(string key)
         {
             return _optionService.Get(key);
-        }
-
-        /**
-         * 返回文章链接地址
-         *
-         * @return
-         */
-
-        public string permalink()
-        {
-            var contents = current_article();
-            return null != contents ? permalink(contents) : "";
-        }
-
-        /**
-         * 返回文章链接地址
-         *
-         * @param contents
-         * @return
-         */
-
-        public string permalink(Contents contents)
-        {
-            return permalink(contents.Id, contents.Slug);
-        }
-
-        /**
-         * 返回文章链接地址
-         *
-         * @param cid
-         * @param slug
-         * @return
-         */
-
-        public string permalink(int cid, string slug)
-        {
-            return "/article/" + (!slug.IsNullOrWhiteSpace() ? slug : cid.ToString());
-        }
-
-        /**
-         * 显示文章创建日期
-         *
-         * @param fmt
-         * @return
-         */
-
-        public string created(string frm)
-        {
-            Contents contents = current_article();
-            return contents?.Created.ToString(frm);
-        }
-
-        /**
-         * 获取文章最后修改时间
-         *
-         * @param fmt
-         * @return
-         */
-
-        public string modified(string fmt)
-        {
-            Contents contents = current_article();
-            return contents?.Modified.ToString(CultureInfo.InvariantCulture);
-        }
-
-        /**
-         * 返回文章浏览数
-         *
-         * @return
-         */
-
-        public int hits()
-        {
-            Contents contents = current_article();
-            return contents?.Hits ?? 0;
-        }
-
-        /**
-         * 显示分类
-         *
-         * @return
-         */
-
-        public string show_categories()
-        {
-            Contents contents = current_article();
-            if (null != contents)
-            {
-                return show_categories(contents.Categories);
-            }
-            return "";
-        }
-
-        /**
-         * 当前文章的分类列表
-         *
-         * @return
-         * @since b1.3.0
-         */
-
-        public string[] category_list()
-        {
-            Contents contents = current_article();
-            if (null != contents && !contents.Categories.IsNullOrWhiteSpace())
-            {
-                return contents.Categories.Split(',');
-            }
-            return null;
-        }
-
-        /**
-         * 当前文章的标签列表
-         *
-         * @return
-         * @since b1.3.0
-         */
-
-        public string[] tag_list()
-        {
-            Contents contents = current_article();
-            if (null != contents && !contents.Tags.IsNullOrWhiteSpace())
-            {
-                return contents.Tags.Split(',');
-            }
-            return null;
-        }
-
-        /**
-         * 显示分类
-         *
-         * @param categories
-         * @return
-         */
-
-        public string show_categories(string categories)
-        {
-            if (!categories.IsNullOrWhiteSpace())
-            {
-                string[] arr = categories.Split(",");
-                StringBuilder sbuf = new StringBuilder();
-                foreach (var s in arr)
-                {
-                    sbuf.Append("<a href=\"/category/" + s + "\">" + s + "</a>");
-                }
-                return sbuf.ToString();
-            }
-            return show_categories("默认分类");
-        }
-
-        /**
-         * 显示标签
-         *
-         * @param split 每个标签之间的分隔符
-         * @return
-         */
-
-        public string show_tags(string split)
-        {
-            Contents contents = current_article();
-            if (stringKit.isNotBlank(contents.Tags))
-            {
-                string[] arr = contents.Tags.Split(",");
-                StringBuilder sbuf = new StringBuilder();
-                foreach (string c in arr)
-                {
-                    sbuf.Append(split).Append("<a href=\"/tag/" + c + "\">" + c + "</a>");
-                }
-                return sbuf.Length > 0 ? sbuf.ToString().Substring(0, split.Length - 1) : sbuf.ToString();
-            }
-            return "";
-        }
-
-        /**
-         * 显示文章浏览量
-         *
-         * @return
-         */
-
-        public string views()
-        {
-            Contents contents = current_article();
-            return null != contents ? contents.Hits.ToString() : "0";
-        }
-
-        /**
-         * 显示标签
-         *
-         * @return
-         */
-
-        public string show_tags()
-        {
-            return show_tags(",");
-        }
-
-        /**
-         * 显示文章内容，格式化markdown后的
-         *
-         * @return
-         */
-
-        public string show_content()
-        {
-            Contents contents = current_article();
-            return null != contents ? article(contents.Content) : "";
-        }
-
-        /**
-         * 获取文章摘要
-         *
-         * @param len
-         * @return
-         */
-
-        public string excerpt(int len)
-        {
-            return intro(len);
-        }
-
-        /**
-         * 获取文章摘要
-         *
-         * @param len
-         * @return
-         */
-
-        public string intro(int len)
-        {
-            Contents contents = current_article();
-            if (null != contents)
-            {
-                return intro(contents.Content, len);
-            }
-            return "";
-        }
-
-        /**
-         * 截取文章摘要(返回HTML)
-         *
-         * @param value 文章内容
-         * @return 转换 markdown 为 html
-         */
-
-        public string intro(string value)
-        {
-            if (stringKit.isBlank(value))
-            {
-                return null;
-            }
-            int pos = value.IndexOf("<!--more-->", StringComparison.Ordinal);
-            if (pos != -1)
-            {
-                string html = value.Substring(0, pos);
-                return Markdown.ToHtml(html);
-            }
-            else
-            {
-                return Markdown.ToHtml(value);
-            }
-        }
-
-        /**
-         * 截取文章摘要
-         *
-         * @param value 文章内容
-         * @param len   要截取文字的个数
-         * @return
-         */
-
-        public string intro(string value, int len)
-        {
-            int pos = value.IndexOf("<!--more-->");
-            if (pos != -1)
-            {
-                string html = value.Substring(0, pos);
-                return BlogsUtils.HtmlToText(Markdown.ToHtml(html));
-            }
-            else
-            {
-                string text = BlogsUtils.HtmlToText(Markdown.ToHtml(value));
-                if (text.Length > len)
-                {
-                    return text.Substring(0, len);
-                }
-                return text;
-            }
-        }
-
-        /**
-         * 显示文章内容，转换markdown为html
-         *
-         * @param value
-         * @return
-         */
-
-        public string article(string value)
-        {
-            if (stringKit.isNotBlank(value))
-            {
-                value = value.Replace("<!--more-->", "\r\n");
-                return Markdown.ToHtml(value);
-            }
-            return "";
-        }
-
-        /**
-         * 显示文章缩略图，顺序为：文章第一张图 -> 随机获取
-         *
-         * @return
-         */
-
-        public string show_thumb(Contents contents)
-        {
-            if (null == contents)
-            {
-                return "";
-            }
-            Set_current_article(contents);
-            if (stringKit.isNotBlank(contents.ThumbImg))
-            {
-                string newFileName = BlogsUtils.GetFileName(contents.ThumbImg);
-                string thumbnailImgUrl = (contents.ThumbImg).Replace(newFileName, "thumbnail_" + newFileName);
-                return thumbnailImgUrl;
-            }
-            string content = article(contents.Content);
-            string img = BlogsUtils.ShowThumb(content);
-            if (stringKit.isNotBlank(img))
-            {
-                return img;
-            }
-            int? cid = contents.Id;
-            int? size = cid % 20;
-            size = size == 0 ? 1 : size;
-            return "/templates/themes/default/static/img/rand/" + size + ".jpg";
-        }
-
-        /**
-         * 获取当前文章的下一篇
-         *
-         * @return
-         */
-
-        public Contents article_next()
-        {
-            Contents cur = current_article();
-            return null != cur ? _siteService.getNhContent(Types.NEXT, cur.Created.ToUnixTimestamp()) : null;
-        }
-
-        /**
-         * 获取当前文章的上一篇
-         *
-         * @return
-         */
-
-        public Contents article_prev()
-        {
-            Contents cur = current_article();
-            return null != cur ? _siteService.getNhContent(Types.PREV, cur.Created.ToUnixTimestamp()) : null;
-        }
-
-        /**
-         * 当前文章的下一篇文章链接
-         *
-         * @return
-         */
-
-        public string theNext()
-        {
-            Contents contents = article_next();
-            if (null != contents)
-            {
-                return theNext(Title(contents));
-            }
-            return "";
-        }
-
-        /**
-         * 当前文章的下一篇文章链接
-         *
-         * @param title 文章标题
-         * @return
-         */
-
-        public string theNext(string title)
-        {
-            Contents contents = article_next();
-            if (null != contents)
-            {
-                return "<a href=\"" + permalink(contents) + "\" title=\"" + Title(contents) + "\">" + title + "</a>";
-            }
-            return "";
-        }
-
-        /**
-         * 当前文章的下一篇文章链接
-         *
-         * @return
-         */
-
-        public string thePrev()
-        {
-            Contents contents = article_prev();
-            if (null != contents)
-            {
-                return thePrev(Title(contents));
-            }
-            return "";
-        }
-
-        /**
-         * 当前文章的下一篇文章链接
-         *
-         * @param title 文章标题
-         * @return
-         */
-
-        public string thePrev(string title)
-        {
-            Contents contents = article_prev();
-            if (null != contents)
-            {
-                return "<a href=\"" + permalink(contents) + "\" title=\"" + Title(contents) + "\">" + title + "</a>";
-            }
-            return "";
-        }
-
-        /**
-         * 最新文章
-         *
-         * @param limit
-         * @return
-         */
-
-        public List<Contents> recent_articles(int limit)
-        {
-            if (null == _siteService)
-            {
-                return new List<Contents>();
-            }
-            return _siteService.getContens(Types.RECENT_ARTICLE, limit);
-        }
-
-        /**
-         * 随机获取文章
-         *
-         * @param limit
-         * @return
-         */
-
-        public List<Contents> rand_articles(int limit)
-        {
-            if (null == _siteService)
-            {
-                return new List<Contents>();
-            }
-            return _siteService.getContens(Types.RANDOM_ARTICLE, limit);
-        }
-
-        /**
-         * 最新评论
-         *
-         * @param limit
-         * @return
-         */
-
-        public List<Comments> recent_comments(int limit)
-        {
-            if (null == _siteService)
-            {
-                return new List<Comments>();
-            }
-            return _siteService.recentComments(limit);
-        }
-
-        /**
-         * 获取分类列表
-         *
-         * @return
-         */
-
-        public List<Metas> categories(int limit)
-        {
-            if (null == _siteService)
-            {
-                return new List<Metas>();
-            }
-            return _siteService.getMetas(Types.CATEGORY, limit);
-        }
-
-        /**
-         * 随机获取limit个分类
-         *
-         * @param limit
-         * @return
-         */
-
-        public List<Metas> rand_categories(int limit)
-        {
-            //if (null == _siteService)
-            //{
-            //    return new List<Metas>();
-            //}
-            //return _siteService.getMetas(Types.RANDOM_META, Types.CATEGORY, limit);
-            throw new NotImplementedException();
-        }
-
-        /**
-         * 获取所有分类
-         *
-         * @return
-         */
-
-        public List<Metas> categories()
-        {
-            return categories(iBlogsConst.MAX_POSTS);
-        }
-
-        /**
-         * 获取标签列表
-         *
-         * @return
-         */
-
-        public List<Metas> tags(int limit)
-        {
-            if (null == _siteService)
-            {
-                return new List<Metas>();
-            }
-            return _siteService.getMetas(Types.TAG, limit);
-        }
-
-        /**
-         * 随机获取limit个标签
-         *
-         * @param limit
-         * @return
-         */
-
-        public List<Metas> rand_tags(int limit)
-        {
-            //if (null == _siteService)
-            //{
-            //    return new List<Metas>();
-            //}
-            //return _siteService.getMetas(Types.RANDOM_META, Types.TAG, limit);
-            throw new NotImplementedException();
-        }
-
-        /**
-         * 获取所有标签
-         *
-         * @return
-         */
-
-        public List<Metas> tags()
-        {
-            return tags(iBlogsConst.MAX_POSTS);
-        }
-
-        /**
-         * 获取评论at信息
-         *
-         * @param coid
-         * @return
-         */
-
-        public string comment_at(int coid)
-        {
-            if (null == _siteService)
-            {
-                return "";
-            }
-            Comments comments = _siteService.getComment(coid);
-            if (null != comments)
-            {
-                return "<a href=\"#comment-" + coid + "\">@" + comments.Author + "</a>";
-            }
-            return "";
-        }
-
-        private string[] ICONS = { "bg-ico-book", "bg-ico-game", "bg-ico-note", "bg-ico-chat", "bg-ico-SetCode", "bg-ico-image", "bg-ico-web", "bg-ico-link", "bg-ico-design", "bg-ico-lock" };
-
-        /**
-         * 显示文章图标
-         *
-         * @return
-         */
-
-        public string show_icon()
-        {
-            Contents contents = current_article();
-            if (null != contents)
-            {
-                return show_icon(contents.Id);
-            }
-            return show_icon(1);
-        }
-
-        /**
-         * 显示文章图标
-         *
-         * @param cid
-         * @return
-         */
-
-        public string show_icon(int cid)
-        {
-            return ICONS[cid % ICONS.Length];
-        }
-
-        /**
-         * 显示文章标题
-         *
-         * @return
-         */
-
-        public string Title()
-        {
-            return Title(current_article());
-        }
-
-        /**
-         * 返回文章标题
-         *
-         * @param contents
-         * @return
-         */
-
-        public string Title(Contents contents)
-        {
-            return null != contents ? contents.Title : site_title();
         }
 
         /**
@@ -747,9 +64,9 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string social_link(string type)
+        public string SocialLink(string type)
         {
-            string id = site_option("social_" + type);
+            string id = SiteOption(OptionKeys.SocialPre + type);
             switch (type)
             {
                 case "github":
@@ -770,150 +87,14 @@ namespace iBlogs.Site.Core.Common.Service
         }
 
         /**
-         * 获取当前文章/页面的评论
-         *
-         * @param limit
-         * @return
-         */
-
-        public Page<CommentDto> comments(int limit)
-        {
-            //Contents contents = current_article();
-            //if (null == contents)
-            //{
-            //    return new Page<>();
-            //}
-            //InterpretContext ctx = InterpretContext.current();
-            //var value = ctx.getValueStack().getValue("cp");
-            //int page = 1;
-            //if (null != value)
-            //{
-            //    page = (int)value;
-            //}
-            //Page<Comments> comments = siteService.getComments(contents.Id, page, limit);
-            //return comments;
-            return new Page<CommentDto>();
-        }
-
-        /**
-         * 获取当前文章/页面的评论数量
-         *
-         * @return 当前页面的评论数量
-         */
-
-        public long commentsCount()
-        {
-            Contents contents = current_article();
-            if (null == contents)
-            {
-                return 0;
-            }
-            return _siteService.getCommentCount(contents.Id);
-        }
-
-        /**
-         * 分页
-         *
-         * @param limit
-         * @return
-         */
-
-        public Page<Contents> articles(int limit)
-        {
-            return null;
-        }
-
-        /**
-         * 显示评论
-         *
-         * @param noComment 评论为0的时候显示的文本
-         * @param value     评论组装文本
-         * @return
-         */
-
-        public string comments_num(string noComment, string value)
-        {
-            Contents contents = current_article();
-            if (null == contents)
-            {
-                return noComment;
-            }
-            return contents.CommentsNum > 0 ? string.Format(value, contents.CommentsNum) : noComment;
-        }
-
-        /**
-         * 返回主题设置选项
-         *
-         * @param key
-         * @return
-         */
-
-        public string theme_option(string key, string defaultValue)
-        {
-            string option = theme_option(key);
-            if (stringKit.isBlank(option))
-            {
-                return defaultValue;
-            }
-            return option;
-        }
-
-        /**
-         * 返回主题设置选项
-         *
-         * @param key
-         * @return
-         */
-
-        public string theme_option(string key)
-        {
-            return null;
-        }
-
-        /**
-         * 返回是否是某个页面
-         *
-         * @param pageName
-         * @return
-         */
-
-        public bool is_slug(string pageName)
-        {
-            return false;
-        }
-
-        /**
-         * 判断字符串不为空
-         *
-         * @param str
-         * @return
-         */
-
-        public bool not_empty(string str)
-        {
-            return stringKit.isNotBlank(str);
-        }
-
-        /**
          * 返回网站首页链接，如：http://tale.biezhi.me
          *
          * @return
          */
 
-        public string site_url()
+        public string SiteUrl()
         {
-            return site_url("");
-        }
-
-        /**
-         * 返回当前主题名称
-         *
-         * @return
-         */
-
-        public string site_theme()
-        {
-            return site_option("site_theme", "default");
+            return SiteUrl("");
         }
 
         /**
@@ -923,9 +104,9 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string site_url(string sub)
+        public string SiteUrl(string sub)
         {
-            return site_option("site_url") + sub;
+            return SiteOption(OptionKeys.SiteUrl) + sub;
         }
 
         /**
@@ -934,9 +115,9 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string site_subtitle()
+        public string SiteSubtitle()
         {
-            return site_option("site_subtitle");
+            return SiteOption(OptionKeys.SiteSubtitle);
         }
 
         /**
@@ -945,26 +126,26 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string allow_cloud_CDN()
+        public string AllowCloudCdn()
         {
-            return site_option("allow_cloud_CDN");
+            return SiteOption(OptionKeys.AllowCloudCdn);
         }
 
         /**
          * 网站配置项
          *
          * @param key
-         * @param defalutValue 默认值
+         * @param defaultValue 默认值
          * @return
          */
 
-        public string site_option(string key, string defalutValue)
+        public string SiteOption(string key, string defaultValue)
         {
             if (stringKit.isBlank(key))
             {
                 return "";
             }
-            return _optionService.Get(key, defalutValue);
+            return _optionService.Get(key, defaultValue);
         }
 
         /**
@@ -973,37 +154,9 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string site_description()
+        public string SiteDescription()
         {
-            return site_option("site_description");
-        }
-
-        /**
-         * 截取字符串
-         *
-         * @param str
-         * @param len
-         * @return
-         */
-
-        public string substr(string str, int len)
-        {
-            if (str.Length > len)
-            {
-                return str.Substring(0, len);
-            }
-            return str;
-        }
-
-        /**
-         * 返回主题URL
-         *
-         * @return
-         */
-
-        public string theme_url()
-        {
-            return site_url(iBlogsConst.TEMPLATES + iBlogsConst.THEME);
+            return SiteOption(OptionKeys.SiteDescription);
         }
 
         /**
@@ -1013,9 +166,9 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string theme_url(string sub)
+        public string ThemeUrl(string sub)
         {
-            return site_url(iBlogsConst.TEMPLATES + iBlogsConst.THEME + sub);
+            return SiteUrl(iBlogsConfig.TEMPLATES + iBlogsConfig.THEME + sub);
         }
 
         /**
@@ -1025,11 +178,11 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string gravatar(string email)
+        public string Gravatar(string email)
         {
             if (email.IsNullOrWhiteSpace())
-                return "https://www.gravatar.com/avatar";
-            return $"https://www.gravatar.com/avatar/{CreateMD5(email).ToLowerInvariant()}?s=60&d=blank";
+                return "https://www.Gravatar.com/avatar";
+            return $"https://www.Gravatar.com/avatar/{CreateMD5(email).ToLowerInvariant()}?s=60&d=blank";
         }
 
         private string CreateMD5(string input)
@@ -1042,131 +195,24 @@ namespace iBlogs.Site.Core.Common.Service
 
                 // Convert the byte array to hexadecimal string
                 StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
+                foreach (var t in hashBytes)
                 {
-                    sb.Append(hashBytes[i].ToString("X2"));
+                    sb.Append(t.ToString("X2"));
                 }
                 return sb.ToString();
             }
         }
 
-        /**
-         * 格式化unix时间戳为日期
-         *
-         * @param unixTime
-         * @return
-         */
 
-        public string fmtdate(long unixTime)
+        public string AttachURL()
         {
-            return Convert.ToDateTime(unixTime).ToString("yyyy-MM-dd");
+            return _optionService.Get(OptionKeys.AttachUrl, SiteUrl());
         }
 
-        /**
-         * 格式化日期
-         *
-         * @param date
-         * @param fmt
-         * @return
-         */
 
-        public string fmtdate(DateTime date, string fmt)
+        public string CdnURL()
         {
-            return date.ToString(fmt);
-        }
-
-        /**
-         * 格式化unix时间戳为日期
-         *
-         * @param unixTime
-         * @param patten
-         * @return
-         */
-
-        public string fmtdate(int unixTime, string patten)
-        {
-            if (stringKit.isNotBlank(patten))
-            {
-                return Convert.ToDateTime(unixTime).ToString(patten);
-            }
-            return "";
-        }
-
-        /**
-         * 获取随机数
-         *
-         * @param max
-         * @param str
-         * @return
-         */
-
-        public string random(int max, string str)
-        {
-            return new Random().Next(1, max) + str;
-        }
-
-        /**
-         * An :grinning:awesome :smiley:string &#128516;with a few :wink:emojis!
-         * <p>
-         * 这种格式的字符转换为emoji表情
-         *
-         * @param value
-         * @return
-         */
-
-        public string emoji(string value)
-        {
-            throw new NotImplementedException();
-        }
-
-        // private final Pattern SRC_PATTERN = Pattern.compile("src\\s*=\\s*\'?\"?(.*?)(\'|\"|>|\\s+)");
-        /**
-         * 获取文章第一张图片
-         *
-         * @return
-         */
-
-        public string show_thumb(string content)
-        {
-            //content = TaleUtils.mdToHtml(content);
-            //if (content.contains("<img"))
-            //{
-            //    string img = "";
-            //    string regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
-            //    Pattern p_image = Pattern.compile(regEx_img, Pattern.CASE_INSENSITIVE);
-            //    Matcher m_image = p_image.matcher(content);
-            //    if (m_image.find())
-            //    {
-            //        img = img + "," + m_image.group();
-            //        // //匹配src
-            //        Matcher m = SRC_PATTERN.matcher(img);
-            //        if (m.find())
-            //        {
-            //            return m.group(1);
-            //        }
-            //    }
-            //}
-            return "";
-        }
-
-        public string attachURL()
-        {
-            return _optionService.Get(Types.ATTACH_URL, site_url());
-        }
-
-        public int maxFileSize()
-        {
-            return iBlogsConst.MAX_FILE_SIZE / 1024;
-        }
-
-        public string cdnURL()
-        {
-            return _optionService.Get(Types.CDN_URL, "/static/admin");
-        }
-
-        public string siteTheme()
-        {
-            return "default";
+            return _optionService.Get(OptionKeys.CdnUrl, "/static/admin");
         }
     }
 }

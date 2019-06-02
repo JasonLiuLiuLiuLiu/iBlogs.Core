@@ -84,7 +84,7 @@
                             <div id="comment-@comment.Id}">
                                 <div class="comment-view" onclick="">
                                     <div class="comment-header">
-                                        <img class="avatar" src="@ViewService.gravatar(comment.Mail)}?s=80&r=G&d=" title="@comment.Author}"
+                                        <img class="avatar" src="@ViewService.Gravatar(comment.Mail)}?s=80&r=G&d=" title="@comment.Author}"
                                              width="80" height="80">
                                         <span class="comment-author">
                                             <a href="@comment.Url}" target="_blank" rel="external nofollow">@comment.Author</a>
@@ -95,7 +95,7 @@
                                         <p>@ViewService.article(comment.Content)</p>
                                     </div>
                                     <div class="comment-meta">
-                                        <time class="comment-time">@ViewService.fmtdate(comment.Created.ToUnixTimestamp())</time>
+                                        <time class="comment-time">@ViewService.FmtDate(comment.Created.ToUnixTimestamp())</time>
                                         <span class="comment-reply">
                                             <a rel="nofollow" onclick="TaleComment.reply('@comment.Id');">回复</a>
                                         </span>
@@ -113,7 +113,7 @@
                                                 <div id="comment-@child.Id">
                                                     <div class="comment-view">
                                                         <div class="comment-header">
-                                                            <img class="avatar" src="@ViewService.gravatar(child.Mail)?s=80&r=G&d=" title="@child.Author" width="80" height="80">
+                                                            <img class="avatar" src="@ViewService.Gravatar(child.Mail)?s=80&r=G&d=" title="@child.Author" width="80" height="80">
                                                             <span class="comment-author comment-by-author">
                                                                 <a href="@child.Url" target="_blank" rel="external nofollow">@child.Author</a>
                                                             </span>
@@ -125,7 +125,7 @@
                                                             <p>@ViewService.article(child.Content)</p>
                                                         </div>
                                                         <div class="comment-meta">
-                                                            <time class="comment-time">@ViewService.fmtdate(child.Created.ToUnixTimestamp())</time>
+                                                            <time class="comment-time">@ViewService.FmtDate(child.Created.ToUnixTimestamp())</time>
                                                             <span class="comment-reply">
                                                                 <a rel="nofollow" onclick="TaleComment.reply('@child.Id');">回复</a>
                                                             </span>
