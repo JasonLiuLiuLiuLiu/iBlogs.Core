@@ -34,6 +34,11 @@ namespace iBlogs.Site.Core.Common
          */
         public const int MAX_TITLE_COUNT = 200;
 
+        /// <summary>
+        /// 文章摘要字数
+        /// </summary>
+        public const int MAX_INTRO_COUNT = 500;
+
 
         /**
          * 上传文件最大20M

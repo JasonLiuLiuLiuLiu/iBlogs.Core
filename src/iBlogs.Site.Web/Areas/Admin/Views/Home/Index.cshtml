@@ -72,7 +72,7 @@
                         title: '确定删除该评论吗?',
                         then: function () {
                             tale.post({
-                                url: '/admin/api/comment/delete/' + coid,
+                                url: '/admin/api/comment/Delete/' + coid,
                                 success: function (result) {
                                     if (result && result.success) {
                                         tale.alertOk('评论删除成功');
@@ -185,7 +185,7 @@
                                         <p class="inbox-item-date">{{item.created | formatUnix('MM月DD日 HH:mm')}}</p>
                                         <p v-if="item.status == 'no_audit'" class="pull-right">
                                             <button class="btn btn-sm btn-success" click="audit(item.coid, 'approved')">通过</button>
-                                            <button class="btn btn-sm btn-danger" click="deleteCommentDto(item.coid)">删除</button>
+                                            <button class="btn btn-sm btn-danger" click="DeleteCommentDto(item.coid)">删除</button>
                                         </p>
                                     </div>
                                 </div>

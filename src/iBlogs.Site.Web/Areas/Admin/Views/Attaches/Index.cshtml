@@ -90,7 +90,7 @@
                                 <i class="fa fa-copy"></i> <span>复制</span>
                             </button>
                             <button type="button" class="btn btn-danger btn-sm waves-effect waves-light m-t-5"
-                                    v-on:click="deleteAttach(item.id)">
+                                    v-on:click="DeleteAttach(item.id)">
                                 <i class="fa fa-trash-o"></i> <span>删除</span>
                             </button>
                         </div>
@@ -166,7 +166,7 @@
                         title: '确定删除该附件吗?',
                         then: function () {
                             tale.post({
-                                url: '/admin/api/attach/delete/' + id,
+                                url: '/admin/api/attach/Delete/' + id,
                                 success: function (result) {
                                     if (result && result.success) {
                                         tale.alertOk('附件删除成功');

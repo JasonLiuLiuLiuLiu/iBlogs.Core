@@ -91,7 +91,7 @@ namespace iBlogs.Site.Core.Install.Service
 
         private bool InitContent()
         {
-            var about = _contentsService.publish(new ContentInput
+            var about = _contentsService.Publish(new ContentInput
             {
                 Title = "关于",
                 Slug = "about",
@@ -100,7 +100,7 @@ namespace iBlogs.Site.Core.Install.Service
                 Content = "### Hello World\r\n\r\n这是我的关于页面\r\n\r\n### 当然还有其他\r\n\r\n具体你来写点什么吧",
                 AuthorId = _users.Id,
                 Type = "page",
-                Status = "publish",
+                Status = "Publish",
                 Categories = "默认分类",
                 Hits = 0,
                 CommentsNum = 0,
@@ -109,7 +109,7 @@ namespace iBlogs.Site.Core.Install.Service
                 AllowFeed = true
             });
 
-            var firstArticle = _contentsService.publish(new ContentInput
+            var firstArticle = _contentsService.Publish(new ContentInput
             {
                 Title = "第一篇文章",
                 Created = DateTime.Now,
@@ -117,7 +117,7 @@ namespace iBlogs.Site.Core.Install.Service
                 Content = "## Hello  World.\r\n\r\n> 第一篇文章总得写点儿什么?...\r\n\r\n----------\r\n\r\n\r\n<!--more-->\r\n\r\n```java\r\npublic static void main(string[] args){\r\n    System.out.println(\\\"Hello Tale.\\\");\r\n}\r\n```",
                 AuthorId = _users.Id,
                 Type = "post",
-                Status = "publish",
+                Status = "Publish",
                 Categories = "默认分类",
                 Hits = 10,
                 CommentsNum = 0,
@@ -126,7 +126,7 @@ namespace iBlogs.Site.Core.Install.Service
                 AllowFeed = true
             });
 
-            var linkContent = _contentsService.publish(new ContentInput
+            var linkContent = _contentsService.Publish(new ContentInput
             {
                 Title = "友情链接",
                 Slug = "links",
@@ -135,7 +135,7 @@ namespace iBlogs.Site.Core.Install.Service
                 Content = "## 友情链接\r\n\r\n- :lock: [王爵的技术博客]()\r\n- :lock: [cyang.tech]()\r\n- :lock: [Bakumon''s Blog]()\r\n\r\n## 链接须知\r\n\r\n> 请确定贵站可以稳定运营\r\n> 原创博客优先，技术类博客优先，设计、视觉类博客优先\r\n> 经常过来访问和评论，眼熟的\r\n\r\n备注：默认申请友情链接均为内页（当前页面）\r\n\r\n## 基本信息\r\n\r\n                网站名称：Tale博客\r\n                网站地址：https://tale.biezhi.me\r\n\r\n请在当页通过评论来申请友链，其他地方不予回复\r\n\r\n暂时先这样，同时欢迎互换友链，这个页面留言即可。 ^_^\r\n\r\n还有，我会不定时对无法访问的网址进行清理，请保证自己的链接长期有效。'",
                 AuthorId = _users.Id,
                 Type = "page",
-                Status = "publish",
+                Status = "Publish",
                 Categories = "默认分类",
                 Hits = 10,
                 CommentsNum = 0,

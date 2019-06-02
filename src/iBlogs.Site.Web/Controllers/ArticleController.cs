@@ -18,7 +18,7 @@ namespace iBlogs.Site.Web.Controllers
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
         public IActionResult Index(string url)
         {
-            _contentsService.getContents(url);
+            _contentsService.GetContents(url);
             return View(new ViewBaseModel());
         }
     }

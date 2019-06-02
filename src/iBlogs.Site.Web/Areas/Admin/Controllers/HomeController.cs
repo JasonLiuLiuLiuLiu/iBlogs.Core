@@ -27,7 +27,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [ViewLayout("~/Areas/Admin/Views/Layout/Layout.cshtml")]
         public IActionResult Index()
         {
-            var articles = _contentsService.findArticles(new ArticleParam());
+            var articles = _contentsService.FindArticles(new ArticleParam());
             return View(new AdminIndexModel
             {
                 Articles = articles.Rows,

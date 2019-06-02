@@ -51,7 +51,7 @@
                                     <button v-if="item.status == 'no_audit' && item.authorId != ${login_user.uid}" class="btn btn-success btn-sm waves-effect waves-light m-b-5" click="audit(item.coid, 'approved')">
                                         <i class="fa fa-check-circle"></i> 通过</span>
                                     </button>
-                                    <button class="btn btn-danger btn-sm waves-effect waves-light m-b-5" click="deleteCommentDto(item.coid)"><i class="fa fa-trash-o"></i> 删除</button>
+                                    <button class="btn btn-danger btn-sm waves-effect waves-light m-b-5" click="DeleteCommentDto(item.coid)"><i class="fa fa-trash-o"></i> 删除</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -170,7 +170,7 @@
                         title: '确定删除该评论吗?',
                         then: function () {
                             tale.post({
-                                url: '/admin/api/comment/delete/' + coid,
+                                url: '/admin/api/comment/Delete/' + coid,
                                 success: function (result) {
                                     if (result && result.success) {
                                         tale.alertOk('评论删除成功');

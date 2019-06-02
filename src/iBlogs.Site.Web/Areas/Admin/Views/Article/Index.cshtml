@@ -23,7 +23,7 @@
 
                                 <select v-model="search.status" class="form-control">
                                     <option value="" selected>发布状态</option>
-                                    <option value="publish">已发布</option>
+                                    <option value="Publish">已发布</option>
                                     <option value="draft">草稿</option>
                                 </select>
                                 <button type="button" class="btn btn-success waves-effect waves-light m-l-10"
@@ -54,7 +54,7 @@
                                         <td>{{ item.hits }}</td>
                                         <td>{{ item.categories }}</td>
                                         <td>
-                                            <span v-show="item.status == 'publish'" class="label label-success">已发布</span>
+                                            <span v-show="item.status == 'Publish'" class="label label-success">已发布</span>
                                             <span v-show="item.status == 'draft'" class="label label-default">草稿</span>
                                         </td>
                                         <td>
@@ -62,11 +62,11 @@
                                                class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
                                                 <i class="fa fa-edit"></i> <span>编辑</span>
                                             </a>
-                                            <a v-on:click="deleteArticle(item.id)" href="javascript:void(0)"
+                                            <a v-on:click="DeleteArticle(item.id)" href="javascript:void(0)"
                                                class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
                                                 <i class="fa fa-trash-o"></i> <span>删除</span>
                                             </a>
-                                            <a v-show="item.status == 'publish'"
+                                            <a v-show="item.status == 'Publish'"
                                                class="btn btn-warning btn-sm waves-effect waves-light m-b-5"
                                                :href="'${site_url()}' + item.url"
                                                target="_blank">
@@ -166,7 +166,7 @@
                         title: '确定删除该文章吗?',
                         then: function () {
                             tale.post({
-                                url: '/admin/api/article/delete/' + cid,
+                                url: '/admin/api/article/Delete/' + cid,
                                 success: function (result) {
                                     if (result && result.success) {
                                         tale.alertOk('文章删除成功');

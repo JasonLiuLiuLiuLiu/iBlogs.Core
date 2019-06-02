@@ -29,7 +29,7 @@
                                             <a class="edit-category" v-on:click="edit(index)">修改</a>
                                         </li>
                                         <li>
-                                            <a class="del-category" v-on:click="deleteCategory(item.id)">删除</a>
+                                            <a class="del-category" v-on:click="DeleteCategory(item.id)">删除</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -49,7 +49,7 @@
                                     </button>
                                     &nbsp;
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a class="del-category" v-on:click="deleteCategory(item.id)">删除</a></li>
+                                        <li><a class="del-category" v-on:click="DeleteCategory(item.id)">删除</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -154,7 +154,7 @@
                         title: '确定删除该项吗?',
                         then: function () {
                             tale.post({
-                                url: '/admin/api/category/delete/' + id,
+                                url: '/admin/api/category/Delete/' + id,
                                 success: function (result) {
                                     if (result && result.success) {
                                         tale.alertOk('删除成功');

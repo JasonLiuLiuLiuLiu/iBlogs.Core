@@ -5,7 +5,7 @@
         public static string TAG = "tag";
         public static string CATEGORY = "category";
         public static string ARTICLE = "post";
-        public static string PUBLISH = "publish";
+        public static string PUBLISH = "Publish";
         public static string PAGE = "page";
         public static string DRAFT = "draft";
         public static string IMAGE = "image";

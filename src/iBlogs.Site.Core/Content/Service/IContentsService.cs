@@ -5,16 +5,16 @@ namespace iBlogs.Site.Core.Content.Service
 {
     public interface IContentsService
     {
-        Contents getContents(string id);
+        ContentResponse GetContents(string id);
 
-        int publish(ContentInput contents);
+        int Publish(ContentInput contents);
 
-        void updateArticle(ContentInput contents);
+        void UpdateArticle(ContentInput contents);
 
-        void delete(int cid);
+        void Delete(int cid);
 
-        Page<Contents> getArticles(int mid, int page, int limit);
+        Page<ContentResponse> GetArticles(int mid, int page, int limit);
 
-        Page<Contents> findArticles(ArticleParam articleParam);
+        Page<ContentResponse> FindArticles(ArticleParam articleParam);
     }
 }

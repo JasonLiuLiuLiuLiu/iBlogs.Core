@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using iBlogs.Site.Core.Content;
+using iBlogs.Site.Core.Content.DTO;
 
 namespace iBlogs.Site.Core.Common.AutoMapper
 {
@@ -12,6 +10,8 @@ namespace iBlogs.Site.Core.Common.AutoMapper
         {
             CreateMap<ContentInput, Contents>();
             CreateMap<Contents, ContentInput>();
+            CreateMap<Contents,ContentResponse>();
+            CreateMap<ContentResponse, Contents>();
         }
     }
 }

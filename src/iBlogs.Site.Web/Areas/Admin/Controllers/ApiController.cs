@@ -58,26 +58,26 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         // @SysLog("删除页面")
-        // @PostRoute("page/delete/:cid")
-        [AdminApiRoute("page/delete/{cid}")]
+        // @PostRoute("page/Delete/:cid")
+        [AdminApiRoute("page/Delete/{cid}")]
         public ApiResponse DeletePage(int cid)
         {
-            _contentsService.delete(cid);
+            _contentsService.Delete(cid);
             return ApiResponse.Ok();
         }
 
         [AdminApiRoute("articles/{cid}")]
-        public ApiResponse<Contents> Article(string cid)
+        public ApiResponse<ContentResponse> Article(string cid)
         {
-            Contents contents = _contentsService.getContents(cid);
+            var contents = _contentsService.GetContents(cid);
             contents.Content = "";
-            return ApiResponse<Contents>.Ok(contents);
+            return ApiResponse<ContentResponse>.Ok(contents);
         }
 
         [AdminApiRoute("articles/content/{cid}")]
         public ApiResponse<string> ArticleContent(string cid)
         {
-            Contents contents = _contentsService.getContents(cid);
+            var contents = _contentsService.GetContents(cid);
             return ApiResponse<string>.Ok(contents.Content);
         }
 
@@ -95,15 +95,15 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             {
                 contents.Categories = "默认分类";
             }
-            var cid = _contentsService.publish(contents);
+            var cid = _contentsService.Publish(contents);
             return ApiResponse<int>.Ok(cid, cid);
         }
 
-        //@PostRoute("article/delete/:cid")
-        [AdminApiRoute("article/delete/{cid}")]
+        //@PostRoute("article/Delete/:cid")
+        [AdminApiRoute("article/Delete/{cid}")]
         public ApiResponse DeleteArticle(int cid)
         {
-            _contentsService.delete(cid);
+            _contentsService.Delete(cid);
             return ApiResponse.Ok();
         }
 
@@ -116,7 +116,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             }
             contents.Type = Types.ARTICLE;
             var cid = contents.Id.Value;
-            _contentsService.updateArticle(contents);
+            _contentsService.UpdateArticle(contents);
             return ApiResponse<int>.Ok(cid, cid);
         }
 
@@ -125,17 +125,17 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         {
             articleParam.Type = Types.ARTICLE;
             articleParam.Page--;
-            Page<Contents> articles = _contentsService.findArticles(articleParam);
-            return ApiResponse<Page<Contents>>.Ok(articles);
+            var articles = _contentsService.FindArticles(articleParam);
+            return ApiResponse<Page<ContentResponse>>.Ok(articles);
         }
 
         [AdminApiRoute("pages")]
-        public ApiResponse<Page<Contents>> PageList(ArticleParam articleParam)
+        public ApiResponse<Page<ContentResponse>> PageList(ArticleParam articleParam)
         {
             articleParam.Type = Types.PAGE;
             articleParam.Page--;
-            Page<Contents> articles = _contentsService.findArticles(articleParam);
-            return ApiResponse<Page<Contents>>.Ok(articles);
+            var articles = _contentsService.FindArticles(articleParam);
+            return ApiResponse<Page<ContentResponse>>.Ok(articles);
         }
 
         //@SysLog("发布页面")
@@ -146,7 +146,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             contents.Type = Types.PAGE;
             contents.AllowPing = true;
             contents.AuthorId = users.Uid;
-            _contentsService.publish(contents);
+            _contentsService.Publish(contents);
             return ApiResponse.Ok();
         }
 
@@ -160,7 +160,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             }
             int cid = contents.Id.Value;
             contents.Type = Types.PAGE;
-            _contentsService.updateArticle(contents);
+            _contentsService.UpdateArticle(contents);
             return ApiResponse.Ok(cid);
         }
 
@@ -174,7 +174,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         // @SysLog("删除分类/标签")
         // @PostRoute()
-        [AdminApiRoute("category/delete/{id}")]
+        [AdminApiRoute("category/Delete/{id}")]
         public ApiResponse DeleteMeta(int id)
         {
             _metasService.delete(id);
@@ -188,7 +188,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         // @SysLog("删除评论")
-        //@PostRoute("comment/delete/:coid")
+        //@PostRoute("comment/Delete/:coid")
         public ApiResponse DeleteComment(int coid)
         {
             throw new NotImplementedException();
@@ -215,8 +215,8 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         //    @SysLog("删除附件")
-        //@PostRoute("attach/delete/:id")
-        [AdminApiRoute("attach/delete/{id}")]
+        //@PostRoute("attach/Delete/:id")
+        [AdminApiRoute("attach/Delete/{id}")]
         public ApiResponse DeleteAttach(int id)
         {
             _attachService.Delete(id);
@@ -315,7 +315,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                 string fname = fileItem.FileName;
                 if ((fileItem.Length / 1024) <= iBlogsConst.MAX_FILE_SIZE)
                 {
-                    var fkey = IBlogsUtils.getFileKey(fname, _env.WebRootPath);
+                    var fkey = BlogsUtils.GetFileKey(fname, _env.WebRootPath);
 
                     var ftype = fileItem.ContentType.Contains("image") ? Types.IMAGE : Types.FILE;
                     var filePath = _env.WebRootPath + fkey;
@@ -324,11 +324,11 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                     {
                         await fileItem.CopyToAsync(stream);
                     }
-                    if (IBlogsUtils.isImage(filePath))
+                    if (BlogsUtils.IsImage(filePath))
                     {
-                        var newFileName = IBlogsUtils.getFileName(fkey);
+                        var newFileName = BlogsUtils.GetFileName(fkey);
                         var thumbnailFilePath = _env.WebRootPath + fkey.Replace(newFileName, "thumbnail_" + newFileName);
-                        IBlogsUtils.cutCenterImage(_env.WebRootPath + fkey, thumbnailFilePath, 270, 380);
+                        BlogsUtils.CutCenterImage(_env.WebRootPath + fkey, thumbnailFilePath, 270, 380);
                     }
 
                     Attachment attachment = new Attachment();

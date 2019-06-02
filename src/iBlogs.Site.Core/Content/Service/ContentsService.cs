@@ -34,7 +34,7 @@ namespace iBlogs.Site.Core.Content.Service
          *
          * @param id 唯一标识
          */
-        public Contents getContents(string id)
+        public ContentResponse GetContents(string id)
         {
             var contents = _repository.GetAll().FirstOrDefault(c => c.Slug == id) ?? _repository.FirstOrDefault(int.Parse(id));
             _viewService.Set_current_article(contents);
@@ -42,7 +42,7 @@ namespace iBlogs.Site.Core.Content.Service
             {
                 contents.FmtType = "markdown";
             }
-            return contents;
+            return _mapper.Map<ContentResponse>(contents);
         }
 
         /**
@@ -50,12 +50,8 @@ namespace iBlogs.Site.Core.Content.Service
          *
          * @param contents 文章对象
          */
-        public int publish(ContentInput contents)
+        public int Publish(ContentInput contents)
         {
-            if (null == contents.AuthorId)
-            {
-                throw new Exception("请登录后发布文章");
-            }
             contents.Created = DateTime.Now;
             contents.Modified = DateTime.Now;
             contents.Hits = 0;
@@ -82,7 +78,7 @@ namespace iBlogs.Site.Core.Content.Service
          *
          * @param contents 文章对象
          */
-        public void updateArticle(ContentInput contents)
+        public void UpdateArticle(ContentInput contents)
         {
             contents.Modified = DateTime.Now;
             contents.Tags = contents.Tags ?? "";
@@ -110,7 +106,7 @@ namespace iBlogs.Site.Core.Content.Service
          *
          * @param cid 文章id
          */
-        public void delete(int cid)
+        public void Delete(int cid)
         {
             _repository.Delete(cid);
             _repository.SaveChanges();
@@ -124,12 +120,12 @@ namespace iBlogs.Site.Core.Content.Service
          * @param limit 每页条数
          * @return
          */
-        public Page<Contents> getArticles(int mid, int page, int limit)
+        public Page<ContentResponse> GetArticles(int mid, int page, int limit)
         {
             return null;
         }
 
-        public Page<Contents> findArticles(ArticleParam articleParam)
+        public Page<ContentResponse> FindArticles(ArticleParam articleParam)
         {
             var query = _repository.GetAll();
 
@@ -146,7 +142,7 @@ namespace iBlogs.Site.Core.Content.Service
             if (articleParam.Type != null)
                 query = query.Where(p => p.Type == articleParam.Type);
 
-            return _repository.Page(query, articleParam);
+            return _mapper.Map<Page<ContentResponse>>(_repository.Page(query, articleParam));
         }
     }
 }
