@@ -16,5 +16,9 @@ namespace iBlogs.Site.Core.Content.Service
         Page<ContentResponse> GetArticles(int mid, int page, int limit);
 
         Page<ContentResponse> FindArticles(ArticleParam articleParam);
+
+        ContentResponse GetPre(int id);
+
+        ContentResponse GetNext(int id);
     }
 }

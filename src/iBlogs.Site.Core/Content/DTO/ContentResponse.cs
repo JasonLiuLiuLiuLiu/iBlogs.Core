@@ -165,7 +165,7 @@ namespace iBlogs.Site.Core.Content.DTO
 
         public string ShowTags()
         {
-            return ShowTags("");
+            return ShowTags(",");
         }
 
         /// <summary>

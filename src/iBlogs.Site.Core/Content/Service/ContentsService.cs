@@ -4,7 +4,6 @@ using AutoMapper;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Response;
-using iBlogs.Site.Core.Common.Service;
 using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Meta.Service;
@@ -140,6 +139,20 @@ namespace iBlogs.Site.Core.Content.Service
                 query = query.Where(p => p.Type == articleParam.Type);
 
             return _mapper.Map<Page<ContentResponse>>(_repository.Page(query, articleParam));
+        }
+
+        public ContentResponse GetPre(int id)
+        {
+            var query = _repository.GetAll().OrderByDescending(u => u.Created);
+            return _mapper.Map<ContentResponse>(query.FirstOrDefault(u =>
+                u.Created > query.FirstOrDefault(s => s.Id == id).Created));
+        }
+
+        public ContentResponse GetNext(int id)
+        {
+            var query = _repository.GetAll().OrderByDescending(u => u.Created);
+            return _mapper.Map<ContentResponse>(query.FirstOrDefault(u =>
+                u.Created < query.FirstOrDefault(s => s.Id == id).Created));
         }
     }
 }
