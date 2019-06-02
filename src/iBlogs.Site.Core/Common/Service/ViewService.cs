@@ -10,6 +10,7 @@ using iBlogs.Site.Core.User.Service;
 using Markdig;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace iBlogs.Site.Core.Common.Service
@@ -167,7 +168,7 @@ namespace iBlogs.Site.Core.Common.Service
         public string modified(string fmt)
         {
             Contents contents = current_article();
-            return contents?.Modified.ToString();
+            return contents?.Modified.ToString(CultureInfo.InvariantCulture);
         }
 
         /**
@@ -380,11 +381,11 @@ namespace iBlogs.Site.Core.Common.Service
             if (pos != -1)
             {
                 string html = value.Substring(0, pos);
-                return IBlogsUtils.htmlToText(Markdown.ToHtml(html));
+                return BlogsUtils.HtmlToText(Markdown.ToHtml(html));
             }
             else
             {
-                string text = IBlogsUtils.htmlToText(Markdown.ToHtml(value));
+                string text = BlogsUtils.HtmlToText(Markdown.ToHtml(value));
                 if (text.Length > len)
                 {
                     return text.Substring(0, len);
@@ -425,12 +426,12 @@ namespace iBlogs.Site.Core.Common.Service
             Set_current_article(contents);
             if (stringKit.isNotBlank(contents.ThumbImg))
             {
-                string newFileName = IBlogsUtils.getFileName(contents.ThumbImg);
+                string newFileName = BlogsUtils.GetFileName(contents.ThumbImg);
                 string thumbnailImgUrl = (contents.ThumbImg).Replace(newFileName, "thumbnail_" + newFileName);
                 return thumbnailImgUrl;
             }
             string content = article(contents.Content);
-            string img = IBlogsUtils.show_thumb(content);
+            string img = BlogsUtils.ShowThumb(content);
             if (stringKit.isNotBlank(img))
             {
                 return img;

@@ -41,7 +41,7 @@ namespace iBlogs.Site.Core.Attach.Service
             if(attach==null)
                 return;
             var filePath = _env.WebRootPath + attach.FKey;
-            var newFileName = IBlogsUtils.getFileName(attach.FKey);
+            var newFileName = BlogsUtils.GetFileName(attach.FKey);
             var thumbnailFilePath = _env.WebRootPath + attach.FKey.Replace(newFileName, "thumbnail_" + newFileName);
             _repository.Delete(attach);
             _repository.SaveChanges();

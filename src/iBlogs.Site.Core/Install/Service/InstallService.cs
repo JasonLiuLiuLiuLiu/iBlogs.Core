@@ -83,7 +83,7 @@ namespace iBlogs.Site.Core.Install.Service
             _optionService.saveOption("allow_comment_audit", "true", "评论需要审核");
             _optionService.saveOption("ite_keywords", "博客系统,asp.net core,iBlogs");
             _optionService.saveOption("site_description", "博客系统,asp.net core,iBlogs");
-            var siteUrl = IBlogsUtils.buildURL(_param.SiteUrl);
+            var siteUrl = BlogsUtils.BuildUrl(_param.SiteUrl);
             _optionService.saveOption("site_title", _param.SiteTitle);
             _optionService.saveOption("site_url", siteUrl);
             return true;

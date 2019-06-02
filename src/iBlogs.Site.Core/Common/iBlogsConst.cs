@@ -34,10 +34,6 @@ namespace iBlogs.Site.Core.Common
          */
         public const int MAX_TITLE_COUNT = 200;
 
-        /**
-         * 插件菜单
-         */
-        public static readonly List<PluginMenu> PLUGIN_MENUS = new List<PluginMenu>();
 
         /**
          * 上传文件最大20M
@@ -74,10 +70,6 @@ namespace iBlogs.Site.Core.Common
          */
         public const string LOGIN_URI = "/admin/login";
 
-        /**
-         * 插件菜单 Attribute Name
-         */
-        public const string PLUGINS_MENU_NAME = "plugin_menus";
 
         public const string ENV_SUPPORT_163_MUSIC = "app.support_163_music";
         public const string ENV_SUPPORT_GIST = "app.support_gist";
@@ -89,11 +81,6 @@ namespace iBlogs.Site.Core.Common
         public const string GIST_REPLATE_PATTERN = "<script src=\"https://gist.github.com/$1/$2\\.js\"></script>";
 
 
-        public const string SQL_QUERY_METAS = "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid " +
-                "where a.type = ? and a.name = ? group by a.mid";
-
-        public const string SQL_QUERY_ARTICLES = "select a.* from t_contents a left join t_relationships b on a.cid = b.cid " +
-                "where b.mid = ? and a.status = 'publish' and a.type = 'post' order by a.created desc";
 
         public const string COMMENT_APPROVED = "approved";
         public const string COMMENT_NO_AUDIT = "no_audit";
