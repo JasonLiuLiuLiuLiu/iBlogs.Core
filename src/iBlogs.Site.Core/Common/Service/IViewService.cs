@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace iBlogs.Site.Core.Common.Service
 {
-    public interface IViewService
+    public interface IViewServiceRe
     {
         string active { get; set; }
         string title { get; set; }

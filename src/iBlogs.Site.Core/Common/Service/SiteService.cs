@@ -9,7 +9,7 @@ using iBlogs.Site.Core.Meta.Service;
 
 namespace iBlogs.Site.Core.Common.Service
 {
-    public class SiteService : ISiteService
+    public class SiteService : ISiteServiceRe
     {
         private readonly IMetasService _metasService;
 

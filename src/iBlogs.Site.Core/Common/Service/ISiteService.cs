@@ -8,7 +8,7 @@ using iBlogs.Site.Core.Meta;
 
 namespace iBlogs.Site.Core.Common.Service
 {
-    public interface ISiteService
+    public interface ISiteServiceRe
     {
         List<Comments> recentComments(int limit);
         List<Contents> getContens(string type, int limit);

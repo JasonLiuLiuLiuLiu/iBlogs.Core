@@ -14,15 +14,13 @@ namespace iBlogs.Site.Core.Content.Service
 {
     public class ContentsService : IContentsService
     {
-        private readonly IViewService _viewService;
         private readonly IMetasService _metasService;
         private readonly IRepository<Contents> _repository;
         private readonly IRelationshipService _relationshipService;
         private readonly IMapper _mapper;
 
-        public ContentsService(IViewService viewService, IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper)
+        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper)
         {
-            _viewService = viewService;
             _metasService = metasService;
             _repository = repository;
             _relationshipService = relationshipService;
@@ -37,7 +35,6 @@ namespace iBlogs.Site.Core.Content.Service
         public ContentResponse GetContents(string id)
         {
             var contents = _repository.GetAll().FirstOrDefault(c => c.Slug == id) ?? _repository.FirstOrDefault(int.Parse(id));
-            _viewService.Set_current_article(contents);
             if (contents.FmtType.IsNullOrWhiteSpace())
             {
                 contents.FmtType = "markdown";

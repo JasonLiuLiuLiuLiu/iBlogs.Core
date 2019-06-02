@@ -15,14 +15,14 @@ using System.Text;
 
 namespace iBlogs.Site.Core.Common.Service
 {
-    public class ViewService : IViewService
+    public class ViewService : IViewServiceRe
     {
         private readonly IOptionService _optionService;
-        private readonly ISiteService _siteService;
+        private readonly ISiteServiceRe _siteService;
         private Contents _currentArticle;
         private readonly IUserService _userService;
 
-        public ViewService(IOptionService optionService, ISiteService siteService, IUserService userService)
+        public ViewService(IOptionService optionService, ISiteServiceRe siteService, IUserService userService)
         {
             _optionService = optionService;
             _siteService = siteService;

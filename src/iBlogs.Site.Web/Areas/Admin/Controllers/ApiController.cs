@@ -6,7 +6,6 @@ using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
-using iBlogs.Site.Core.Common.Service;
 using iBlogs.Site.Core.Content;
 using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.Content.Service;
@@ -33,17 +32,15 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
     public class ApiController : Controller
     {
         private readonly IMetasService _metasService;
-        private readonly ISiteService _siteService;
         private readonly IContentsService _contentsService;
         private readonly IUserService _userService;
         private readonly IHostingEnvironment _env;
         private readonly IAttachService _attachService;
         private readonly IOptionService _optionService;
 
-        public ApiController(IMetasService metasService, ISiteService siteService, IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService, IOptionService optionService)
+        public ApiController(IMetasService metasService,  IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService, IOptionService optionService)
         {
             _metasService = metasService;
-            _siteService = siteService;
             _contentsService = contentsService;
             _userService = userService;
             _env = env;
@@ -226,13 +223,13 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         // @GetRoute("categories")
         public ApiResponse CategoryList()
         {
-            return ApiResponse<List<Metas>>.Ok(_siteService.getMetas(Types.CATEGORY, iBlogsConst.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_metasService.getMetas(Types.CATEGORY, iBlogsConst.MAX_POSTS));
         }
 
         // @GetRoute("tags")
         public ApiResponse TagList()
         {
-            return ApiResponse<List<Metas>>.Ok(_siteService.getMetas(Types.TAG, iBlogsConst.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_metasService.getMetas(Types.TAG, iBlogsConst.MAX_POSTS));
         }
 
         // @GetRoute("options")
