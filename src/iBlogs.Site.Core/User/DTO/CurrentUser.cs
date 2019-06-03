@@ -23,5 +23,10 @@
          * 用户显示的名称
          */
         public string ScreenName { get; set; }
+
+        /**
+        * 用户的主页
+        */
+        public string HomeUrl { get; set; }
     }
 }

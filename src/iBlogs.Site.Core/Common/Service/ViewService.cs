@@ -12,11 +12,12 @@ namespace iBlogs.Site.Core.Common.Service
         private readonly IOptionService _optionService;
         private readonly IUserService _userService;
 
-        public ViewService(IOptionService optionService,IUserService userService)
+        public ViewService(IOptionService optionService, IUserService userService)
         {
             _optionService = optionService;
             _userService = userService;
         }
+
         public CurrentUser User => _userService.CurrentUsers;
 
         /**

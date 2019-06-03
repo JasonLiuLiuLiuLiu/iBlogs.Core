@@ -54,7 +54,7 @@ namespace iBlogs.Site.Web
                 option.Filters.Add<LoginFilter>();
             }).AddJsonOptions(options =>
             {
-                options.SerializerSettings.ContractResolver = new IBlogsContractResolver();
+                options.SerializerSettings.ContractResolver = new BlogsContractResolver();
             });
         }
 

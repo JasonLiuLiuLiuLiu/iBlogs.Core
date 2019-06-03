@@ -9,7 +9,7 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 namespace iBlogs.Site.Core.Migrations
 {
     [DbContext(typeof(iBlogsContext))]
-    [Migration("20190527145430_init")]
+    [Migration("20190603141555_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,13 +43,12 @@ namespace iBlogs.Site.Core.Migrations
 
             modelBuilder.Entity("iBlogs.Site.Core.Comment.Comments", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Agent");
 
                     b.Property<string>("Author");
-
-                    b.Property<int?>("AuthorId");
 
                     b.Property<int>("Cid");
 
@@ -59,6 +58,8 @@ namespace iBlogs.Site.Core.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Ip");
+
+                    b.Property<bool>("IsAuthor");
 
                     b.Property<string>("Mail");
 
@@ -74,7 +75,7 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("Cid");
 
                     b.ToTable("Comments");
                 });
@@ -253,13 +254,9 @@ namespace iBlogs.Site.Core.Migrations
 
             modelBuilder.Entity("iBlogs.Site.Core.Comment.Comments", b =>
                 {
-                    b.HasOne("iBlogs.Site.Core.User.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
                     b.HasOne("iBlogs.Site.Core.Content.Contents", "Article")
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("Cid")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

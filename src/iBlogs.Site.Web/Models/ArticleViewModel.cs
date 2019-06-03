@@ -1,7 +1,7 @@
-﻿using iBlogs.Site.Core.Comment;
-using iBlogs.Site.Core.Comment.DTO;
+﻿using iBlogs.Site.Core.Comment.DTO;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Content.DTO;
+using iBlogs.Site.Core.User.DTO;
 
 namespace iBlogs.Site.Web.Models
 {
@@ -11,6 +11,7 @@ namespace iBlogs.Site.Web.Models
         public Page<CommentResponse> Comments { get; set; }
         public ContentResponse Pre { get; set; }
         public ContentResponse Next { get; set; }
+        public CurrentUser User { get; set; }
 
         /**
         * 当前文章的下一篇文章链接
@@ -26,7 +27,7 @@ namespace iBlogs.Site.Web.Models
                 return "<a href=\"" + Next.Permalink() + "\" title=\"" + Next.Title + "\">" + title + "</a>";
             }
             return "";
-           
+
         }
 
         /**

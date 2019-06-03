@@ -3,7 +3,7 @@ using System;
 
 namespace iBlogs.Site.Web.Converter
 {
-    public class IBlogsContractResolver : CamelCasePropertyNamesContractResolver
+    public class BlogsContractResolver : CamelCasePropertyNamesContractResolver
     {
         protected override JsonContract CreateContract(Type objectType)
         {
@@ -13,7 +13,7 @@ namespace iBlogs.Site.Web.Converter
                 objectType == typeof(DateTimeOffset) ||
                 objectType == typeof(DateTime?))
             {
-                contract.Converter = new SfaDateTimeConverter();
+                contract.Converter = new BlogsDateTimeConverter();
             }
 
             return contract;

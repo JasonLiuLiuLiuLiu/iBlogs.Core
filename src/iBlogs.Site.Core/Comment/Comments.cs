@@ -12,17 +12,14 @@ namespace iBlogs.Site.Core.Comment
         [Key]
         public int Id { get; set; }
 
-        public int? AuthorId { get; set; }
-
-        [ForeignKey("AuthorId")]
-        public Users User { get; set; }
+        public bool IsAuthor { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
         public int Cid { get; set; }
 
-        [ForeignKey("Id")]
+        [ForeignKey("Cid")]
         public Contents Article { get; set; }
 
         public string Author { get; set; }

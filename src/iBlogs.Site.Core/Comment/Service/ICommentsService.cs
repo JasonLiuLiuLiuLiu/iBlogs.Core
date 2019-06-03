@@ -8,9 +8,9 @@ namespace iBlogs.Site.Core.Comment.Service
     public interface ICommentsService
     {
         int GetTotalCount();
-        void saveComment(Comments comments);
+        void SaveComment(Comments comments);
         void delete(int coid, int cid);
-        Page<Comments> getComments(int cid, int page, int limit);
+        Page<CommentResponse> GetComments(CommentPageParam param);
         long getCommentCount(int cid);
         Page<Comments> findComments(CommentParam commentParam);
     }

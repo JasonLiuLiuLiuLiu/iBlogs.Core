@@ -3,6 +3,7 @@ using iBlogs.Site.Core.Comment.DTO;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using System.Linq;
+using AutoMapper;
 
 namespace iBlogs.Site.Core.Comment.Service
 {
@@ -16,10 +17,12 @@ namespace iBlogs.Site.Core.Comment.Service
     public class CommentsService : ICommentsService
     {
         private readonly IRepository<Comments> _repository;
+        private readonly IMapper _mapper;
 
-        public CommentsService(IRepository<Comments> repository)
+        public CommentsService(IRepository<Comments> repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public int GetTotalCount()
@@ -31,10 +34,10 @@ namespace iBlogs.Site.Core.Comment.Service
          *
          * @param comments
          */
-        public void saveComment(Comments comments)
+        public void SaveComment(Comments comments)
         {
-
-
+            _repository.InsertOrUpdate(comments);
+            _repository.SaveChanges();
         }
 
         /**
@@ -58,9 +61,10 @@ namespace iBlogs.Site.Core.Comment.Service
          * @param limit
          * @return
          */
-        public Page<Comments> getComments(int cid, int page, int limit)
+        public Page<CommentResponse> GetComments(CommentPageParam param)
         {
-            return null;
+            var query = _repository.GetAll().Where(c => c.Cid == param.Cid);
+            return _mapper.Map<Page<CommentResponse>>(_repository.Page(query, param));
         }
 
         /**
@@ -79,15 +83,11 @@ namespace iBlogs.Site.Core.Comment.Service
          * @param coid
          * @return
          */
-        private void getChildren(List<Comments> list, int coid)
+        private void GetChildren(List<Comments> list, int coid)
         {
 
         }
 
-        private Comments apply(Comments parent)
-        {
-            return null;
-        }
 
         public Page<Comments> findComments(CommentParam commentParam)
         {

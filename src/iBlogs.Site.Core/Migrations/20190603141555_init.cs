@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
 
 namespace iBlogs.Site.Core.Migrations
 {
@@ -154,8 +154,9 @@ namespace iBlogs.Site.Core.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
-                    AuthorId = table.Column<int>(nullable: true),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IsAuthor = table.Column<bool>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Cid = table.Column<int>(nullable: false),
@@ -174,14 +175,8 @@ namespace iBlogs.Site.Core.Migrations
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_Users_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Comments_Contents_Id",
-                        column: x => x.Id,
+                        name: "FK_Comments_Contents_Cid",
+                        column: x => x.Cid,
                         principalTable: "Contents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -219,9 +214,9 @@ namespace iBlogs.Site.Core.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_AuthorId",
+                name: "IX_Comments_Cid",
                 table: "Comments",
-                column: "AuthorId");
+                column: "Cid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contents_AuthorId",

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.User.DTO;
 using iBlogs.Site.Core.User.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +19,7 @@ namespace iBlogs.Site.Web.Filter
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if(context.Filters.All(f=>!(f is AuthorizeFilter)))
+            if (context.Filters.All(f => !(f is AuthorizeFilter)))
                 return;
             if (context.HttpContext.User.Claims.Any())
             {
@@ -31,13 +27,17 @@ namespace iBlogs.Site.Web.Filter
                 var token = context.HttpContext.User.FindFirst(ClaimTypes.Token)?.Value;
                 if (LoginStaticToken.CheckToken(uid, token))
                 {
-                    if (_userService.CurrentUsers.Username.IsNullOrWhiteSpace())
+                    if (_userService.CurrentUsers == null)
                     {
                         var user = _userService.FindUserById(uid);
-                        _userService.CurrentUsers.Uid = uid;
-                        _userService.CurrentUsers.Email = user.Email;
-                        _userService.CurrentUsers.Username = user.Username;
-                        _userService.CurrentUsers.ScreenName = user.ScreenName;
+                        _userService.CurrentUsers = new CurrentUser
+                        {
+                            Uid = uid,
+                            Email = user.Email,
+                            Username = user.Username,
+                            ScreenName = user.ScreenName,
+                            HomeUrl = user.HomeUrl
+                        };
                         return;
                     }
                 }

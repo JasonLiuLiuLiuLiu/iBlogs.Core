@@ -5,7 +5,7 @@ using System;
 
 namespace iBlogs.Site.Web.Converter
 {
-    public class SfaDateTimeConverter : DateTimeConverterBase
+    public class BlogsDateTimeConverter : DateTimeConverterBase
     {
         /// <inheritdoc />
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
