@@ -16,9 +16,11 @@
     <meta content="${_csrf_token}" name="csrf_token" />
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/topstory-routes.css" rel="stylesheet">
+    <script src="@ViewService.ThemeUrl("/static/js/headroom.min.js")"></script>
+    <script src="@ViewService.ThemeUrl("/static/js/instantclick.min.js")"></script>
     <link rel="shortcut icon" href="@ViewService.ThemeUrl("/static/img/favicon.png")" />
     <link rel="apple-touch-icon" href="@ViewService.ThemeUrl("/static/img/apple-touch-icon.png")" />
-    <title>@(ViewData["title"]??"iBlogs")</title>
+    <title>@(ViewData["title"] ?? "iBlogs")</title>
     <link href="@ViewService.ThemeUrl("/static/css/default.min.css")" rel="stylesheet">
     <link href="@ViewService.ThemeUrl("/static/css/style.min.css")" rel="stylesheet">
     @if (ViewService.AllowCloudCdn() == "true")
@@ -124,8 +126,6 @@
             </div>
         </div>
     </footer>
-    <script src="@ViewService.ThemeUrl("/static/js/headroom.min.js")"></script>
-    <script src="@ViewService.ThemeUrl("/static/js/instantclick.min.js")"></script>
     <script>
         hljs.initHighlightingOnLoad();
     </script>

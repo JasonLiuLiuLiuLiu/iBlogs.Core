@@ -88,7 +88,7 @@
                             <div id="comment-@comment.Id}">
                                 <div class="comment-view" onclick="">
                                     <div class="comment-header">
-                                        <img class="avatar" src="@ViewService.Gravatar(comment.Mail)}?s=80&r=G&d=" title="@comment.Author}"
+                                        <img class="avatar" src="@ViewService.Gravatar(comment.Mail)?s=80&r=G&d=" title="@comment.Author"
                                              width="80" height="80">
                                         <span class="comment-author">
                                             <a href="@comment.Url}" target="_blank" rel="external nofollow">@comment.Author</a>
@@ -99,9 +99,9 @@
                                         <p>@comment.Content</p>
                                     </div>
                                     <div class="comment-meta">
-                                        <time class="comment-time">@comment.Created.ToString("yyyy-MM-dd")ViewService.FmtDate()</time>
+                                        <time class="comment-time">@comment.Created.ToString("yyyy-MM-dd")</time>
                                         <span class="comment-reply">
-                                            <a rel="nofollow" onclick="TaleComment.reply('@comment.Id');">回复</a>
+                                            <a rel="nofollow" onclick="TaleComment.reply('@comment.Id','@comment.Author');">回复</a>
                                         </span>
                                     </div>
                                 </div>
@@ -131,7 +131,7 @@
                                                         <div class="comment-meta">
                                                             <time class="comment-time">@child.Created.ToString("yyyy-MM-dd")</time>
                                                             <span class="comment-reply">
-                                                                <a rel="nofollow" onclick="TaleComment.reply('@child.Id');">回复</a>
+                                                                <a rel="nofollow" onclick="TaleComment.reply('@child.Id','@child.Author');">回复</a>
                                                             </span>
                                                         </div>
                                                     </div>
@@ -179,10 +179,11 @@
 <script>
     (function () {
         window.TaleComment = {
-            reply: function (coid) {
+            reply: function (coid,author) {
                 $('#comment-form input[name=coid]').val(coid);
                 $("html,body").animate({ scrollTop: $('div.comment-container').offset().top }, 500);
                 $('#comment-form #textarea').focus();
+                $('#comment-form #textarea').val('@@'+author+'  ');
             },
             subComment: function () {
                 $.ajax({
