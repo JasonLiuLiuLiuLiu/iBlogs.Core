@@ -45,7 +45,7 @@ namespace iBlogs.Site.Web.Controllers
         {
             return View("Index", new IndexViewModel
             {
-                DisplayType = "标签",
+                DisplayType = "分类",
                 DisplayMeta = category,
                 Contents = _contentsService.FindArticles(new ArticleParam
                 {
