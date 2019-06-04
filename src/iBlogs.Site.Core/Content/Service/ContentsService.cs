@@ -8,6 +8,7 @@ using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Meta.Service;
 using iBlogs.Site.Core.Relationship.Service;
+using iBlogs.Site.Core.User.Service;
 
 namespace iBlogs.Site.Core.Content.Service
 {
@@ -17,13 +18,15 @@ namespace iBlogs.Site.Core.Content.Service
         private readonly IRepository<Contents> _repository;
         private readonly IRelationshipService _relationshipService;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper)
+        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper, IUserService userService)
         {
             _metasService = metasService;
             _repository = repository;
             _relationshipService = relationshipService;
             _mapper = mapper;
+            _userService = userService;
         }
 
         /**
@@ -60,6 +63,7 @@ namespace iBlogs.Site.Core.Content.Service
 
             var entity = new Contents();
             _mapper.Map(contents, entity);
+            entity.AuthorId = _userService.CurrentUsers.Uid;
 
             var cid = _repository.InsertOrUpdateAndGetId(entity);
 
@@ -82,6 +86,7 @@ namespace iBlogs.Site.Core.Content.Service
 
             var entity = new Contents();
             _mapper.Map(contents, entity);
+            entity.AuthorId = _userService.CurrentUsers.Uid;
 
             var cid = _repository.InsertOrUpdateAndGetId(entity);
 

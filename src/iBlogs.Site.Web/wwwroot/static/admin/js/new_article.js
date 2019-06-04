@@ -134,7 +134,7 @@ var vm = new Vue({
                     text: '文章发布成功',
                     then: function () {
                         setTimeout(function () {
-                            window.location.href = '/admin/articles';
+                            window.location.href = '/admin/article';
                         }, 500);
                     }
                 });
