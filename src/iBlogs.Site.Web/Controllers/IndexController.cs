@@ -18,7 +18,41 @@ namespace iBlogs.Site.Web.Controllers
         {
             if (articleParam == null)
                 articleParam = new ArticleParam();
-            return View(_contentsService.FindArticles(articleParam));
+            return View(new IndexViewModel
+            {
+                Contents = _contentsService.FindArticles(articleParam)
+            });
         }
+
+        [HttpGet("/tag/{tag}")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult Tag(string tag)
+        {
+            return View("Index", new IndexViewModel
+            {
+                DisplayType = "标签",
+                DisplayMeta = tag,
+                Contents = _contentsService.FindArticles(new ArticleParam
+                {
+                    Tag = tag
+                })
+            });
+        }
+
+        [HttpGet("/category/{category}")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult Category(string category)
+        {
+            return View("Index", new IndexViewModel
+            {
+                DisplayType = "标签",
+                DisplayMeta = category,
+                Contents = _contentsService.FindArticles(new ArticleParam
+                {
+                    Categories = category
+                })
+            });
+        }
+
     }
 }

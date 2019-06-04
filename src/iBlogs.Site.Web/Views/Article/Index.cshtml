@@ -15,7 +15,7 @@
         </div>
     </div>
     <div id="post-content" class="post-content" itemprop="articleBody">
-        <p class="post-tags">@Model.Content.ShowTags()</p>
+        <p class="post-tags">@Html.Raw(Model.Content.ShowTags())</p>
         @Html.Raw(Model.Content.ShowContent())
         <p class="post-info">
             本文由 <a href="">@(ViewService.SiteOption(OptionKeys.Author, "阿宇"))</a> 创作，采用 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank"

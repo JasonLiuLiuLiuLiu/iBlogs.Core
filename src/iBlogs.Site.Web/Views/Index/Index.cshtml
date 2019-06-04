@@ -1,13 +1,20 @@
-﻿@model iBlogs.Site.Core.Common.Response.Page<iBlogs.Site.Core.Content.DTO.ContentResponse>
+﻿@model IndexViewModel
 <main role="main" class="App-main">
     <div class="Topstory">
         <div class="Topstory-container">
             <div class="Topstory-mainColumn">
                 <div class="Card Topstory-noMarginCard Topstory-tabCard">
                     <nav class="TopstoryTabs Topstory-tabs">
-                        <a aria-controls="Topstory-recommend" class="TopstoryTabs-link Topstory-tabsLink is-active" href="https://www.Blogs.com/">推荐</a>
-                        <a aria-controls="Topstory-follow" class="TopstoryTabs-link Topstory-tabsLink" href="https://www.Blogs.com/follow">阅读量</a>
-                        <a aria-controls="Topstory-hot" class="TopstoryTabs-link Topstory-tabsLink" href="https://www.Blogs.com/hot">随机</a>
+                        @if (string.IsNullOrEmpty(Model.DisplayType))
+                        {
+                            <a class="TopstoryTabs-link Topstory-tabsLink is-active" href="https://www.Blogs.com/">推荐</a>
+                            <a class="TopstoryTabs-link Topstory-tabsLink" href="https://www.Blogs.com/follow">阅读量</a>
+                            <a class="TopstoryTabs-link Topstory-tabsLink" href="https://www.Blogs.com/hot">随机</a>
+                        }
+                        else
+                        {
+                            <span class="TagsHeader"> #@Model.DisplayType / @Model.DisplayMeta </span>
+                        }
                     </nav>
                 </div>
                 <div id="TopstoryContent" class="Topstory-content">
@@ -15,14 +22,14 @@
                         <div class="Topstory-recommend">
                             <div class="">
                                 @{
-                                    foreach (var article in Model.Rows)
+                                    foreach (var article in Model.Contents.Rows)
                                     {
                                         <div class="Card TopstoryItem TopstoryItem-isRecommend" tabindex="0">
                                             <div class="Feed">
-                                                <div class="ContentItem AnswerItem" >
+                                                <div class="ContentItem AnswerItem">
                                                     <h2 class="ContentItem-title">
                                                         <div itemprop="Blogs:question" itemtype="http://schema.org/Question" itemscope="">
-                                                            <a target="_blank" data-za-detail-view-element_name="Title" data-za-detail-view-id="2812" href="@article.Permalink()">@article.Title</a>
+                                                            <a data-za-detail-view-element_name="Title" data-za-detail-view-id="2812" href="@article.Permalink()">@article.Title</a>
                                                         </div>
                                                     </h2>
                                                     <div class="RichContent is-collapsed">
@@ -33,7 +40,7 @@
                                                             <span class="RichText ztext CopyrightRichText-richText" itemprop="text">
                                                                 @Html.Raw(article.Intro())
                                                             </span>
-                                                            <a class="Button ContentItem-more Button--plain" href="@article.Permalink()" target="_blank">
+                                                            <a class="Button ContentItem-more Button--plain" href="@article.Permalink()">
                                                                 阅读全文
                                                             </a>
                                                         </div>
@@ -108,7 +115,7 @@
                     </div>
                 </div>
                 <div class="lists-navigator clearfix">
-                    @{ var pageInfo = Model;
+                    @{ var pageInfo = Model.Contents;
                         <ol class="page-navigator">
                             @if (pageInfo.HasPrevPage)
                             {

@@ -129,9 +129,9 @@ namespace iBlogs.Site.Core.Content.DTO
                 StringBuilder sbuf = new StringBuilder();
                 foreach (var s in arr)
                 {
-                    sbuf.Append("<a href=\"/category/" + s + "\">" + s + "</a>");
+                    sbuf.Append("/ ").Append("<a href=\"/category/" + s + "\">" + s + "</a>");
                 }
-                return sbuf.ToString();
+                return sbuf.Length>0?sbuf.ToString().Substring(1,sbuf.Length-1): sbuf.ToString();
             }
             return ShowCategories("默认分类");
         }
@@ -151,9 +151,9 @@ namespace iBlogs.Site.Core.Content.DTO
                 StringBuilder sbuf = new StringBuilder();
                 foreach (string c in arr)
                 {
-                    sbuf.Append(split).Append("<a href=\"/tag/" + c + "\">" + c + "</a>");
+                    sbuf.Append("<a href=\"/tag/" + c + "\">" + c + "</a>");
                 }
-                return sbuf.Length > 0 ? sbuf.ToString().Substring(0, split.Length - 1) : sbuf.ToString();
+                return sbuf.ToString();
             }
             return "";
         }

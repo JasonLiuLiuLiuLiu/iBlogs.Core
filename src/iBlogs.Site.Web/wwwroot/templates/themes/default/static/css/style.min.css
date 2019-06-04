@@ -983,7 +983,7 @@ button, input, select, textarea {
 .post-header-thumb-container {
     position: relative;
     top: 100px;
-    max-width: 700px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 30px 25px 20px;
     -webkit-animation: fade-in .5s;
@@ -1017,13 +1017,13 @@ button, input, select, textarea {
     }
 
 .post-page {
-    max-width: 700px;
+    max-width: 1000px;
     padding: 30px 25px 20px
 }
 
 .page-page {
-    max-width: 700px;
-    padding: 130px 25px 20px
+    max-width: 1000px;
+    padding: 30px 25px 20px
 }
 
 .post-content p {
@@ -1715,7 +1715,7 @@ button, input, select, textarea {
 }
 
 #comments {
-    max-width: 700px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 20px
 }
@@ -2090,7 +2090,7 @@ button, input, select, textarea {
     }
 }
 
-@media(max-width:700px) {
+@media(max-width:1000px) {
     .comment-form .input-control {
         max-width: 100%
     }

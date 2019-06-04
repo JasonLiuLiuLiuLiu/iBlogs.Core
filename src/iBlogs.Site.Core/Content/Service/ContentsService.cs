@@ -133,6 +133,8 @@ namespace iBlogs.Site.Core.Content.Service
             if (articleParam.Categories != null)
                 query = query.Where(p => p.Categories.Contains(articleParam.Categories));
 
+            if (articleParam.Tag != null)
+                query = query.Where(p => p.Tags.Contains(articleParam.Tag));
 
             if (articleParam.Status != null)
                 query = query.Where(p => p.Status == articleParam.Status);
