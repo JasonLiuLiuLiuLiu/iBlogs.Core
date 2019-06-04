@@ -1,5 +1,6 @@
 ﻿using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.Content.Service;
+using iBlogs.Site.Core.Meta.DTO;
 using iBlogs.Site.Web.Attribute;
 using iBlogs.Site.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -32,10 +33,7 @@ namespace iBlogs.Site.Web.Controllers
             {
                 DisplayType = "标签",
                 DisplayMeta = tag,
-                Contents = _contentsService.FindArticles(new ArticleParam
-                {
-                    Tag = tag
-                })
+                Contents = _contentsService.FindContentByMeta(MetaType.Tag,tag,new ArticleParam())
             });
         }
 
@@ -47,10 +45,7 @@ namespace iBlogs.Site.Web.Controllers
             {
                 DisplayType = "分类",
                 DisplayMeta = category,
-                Contents = _contentsService.FindArticles(new ArticleParam
-                {
-                    Categories = category
-                })
+                Contents = _contentsService.FindContentByMeta(MetaType.Category, category, new ArticleParam())
             });
         }
 

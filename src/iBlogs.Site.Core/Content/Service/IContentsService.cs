@@ -20,5 +20,7 @@ namespace iBlogs.Site.Core.Content.Service
         ContentResponse GetPre(int id);
 
         ContentResponse GetNext(int id);
+
+        Page<ContentResponse> FindContentByMeta(string metaType, string value, ArticleParam articleParam);
     }
 }

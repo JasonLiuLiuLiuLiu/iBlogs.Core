@@ -16,6 +16,7 @@ namespace iBlogs.Site.Core.Relationship.Service
         public void SaveOrUpdate(int cid, int mid)
         {
             _repository.InsertOrUpdate(new Relationships { Cid = cid, Mid = mid });
+            _repository.SaveChanges();
         }
 
         public void DeleteByContentId(int cid)

@@ -16,6 +16,7 @@
     </div>
     <div id="post-content" class="post-content" itemprop="articleBody">
         <p class="post-tags">@Html.Raw(Model.Content.ShowTags())</p>
+        <a ></a>
         @Html.Raw(Model.Content.ShowContent())
         <p class="post-info">
             本文由 <a href="">@(ViewService.SiteOption(OptionKeys.Author, "阿宇"))</a> 创作，采用 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank"
@@ -34,8 +35,8 @@
             <span class="bottom-bar-item bottom-bar-qrcode"><a href="https://cli.im/api/qrSetCode/SetCode?text=@Model.Content.Permalink()&mhid=50eWDQu6nc0hMHcrKtNXPKo" target="_blank" rel="nofollow">QRSetCode</a></span>
         </div>
         <div class="bottom-bar-items right">
-            <span class="bottom-bar-item">@Model.ThePrev("→")</span>
-            <span class="bottom-bar-item">@Model.ThePrev("←")</span>
+            <span class="bottom-bar-item">@Html.Raw(Model.ThePrev("←"))</span>
+            <span class="bottom-bar-item">@Html.Raw(Model.TheNext("→"))</span>
             <span class="bottom-bar-item"><a href="#footer">↓</a></span>
             <span class="bottom-bar-item"><a href="#">↑</a></span>
         </div>

@@ -6,7 +6,9 @@ using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.Meta.DTO;
 using iBlogs.Site.Core.Meta.Service;
+using iBlogs.Site.Core.Relationship;
 using iBlogs.Site.Core.Relationship.Service;
 using iBlogs.Site.Core.User.Service;
 
@@ -16,17 +18,19 @@ namespace iBlogs.Site.Core.Content.Service
     {
         private readonly IMetasService _metasService;
         private readonly IRepository<Contents> _repository;
+        private readonly IRepository<Relationships> _relRepository;
         private readonly IRelationshipService _relationshipService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper, IUserService userService)
+        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper, IUserService userService, IRepository<Relationships> relRepository)
         {
             _metasService = metasService;
             _repository = repository;
             _relationshipService = relationshipService;
             _mapper = mapper;
             _userService = userService;
+            _relRepository = relRepository;
         }
 
         /**
@@ -128,6 +132,8 @@ namespace iBlogs.Site.Core.Content.Service
 
         public Page<ContentResponse> FindArticles(ArticleParam articleParam)
         {
+            articleParam.OrderBy = "Created";
+
             var query = _repository.GetAll();
 
             if (articleParam.Categories != null)
@@ -150,16 +156,27 @@ namespace iBlogs.Site.Core.Content.Service
 
         public ContentResponse GetPre(int id)
         {
-            var query = _repository.GetAll().OrderByDescending(u => u.Created);
-            return _mapper.Map<ContentResponse>(query.FirstOrDefault(u =>
-                u.Created > query.FirstOrDefault(s => s.Id == id).Created));
+            var query = _repository.GetAll().Where(u => u.Type == ContentType.Post).OrderByDescending(u => u.Created);
+            return _mapper.Map<ContentResponse>(query.Where(u =>
+                u.Created > query.FirstOrDefault(s => s.Id == id).Created).OrderBy(u => u.Created).FirstOrDefault());
         }
 
         public ContentResponse GetNext(int id)
         {
-            var query = _repository.GetAll().OrderByDescending(u => u.Created);
-            return _mapper.Map<ContentResponse>(query.FirstOrDefault(u =>
-                u.Created < query.FirstOrDefault(s => s.Id == id).Created));
+            var query = _repository.GetAll().Where(u => u.Type == ContentType.Post).OrderByDescending(u => u.Created);
+            return _mapper.Map<ContentResponse>(query.Where(u =>
+                u.Created < query.FirstOrDefault(s => s.Id == id).Created).OrderByDescending(u => u.Created).FirstOrDefault());
+        }
+
+        public Page<ContentResponse> FindContentByMeta(string metaType, string value, ArticleParam articleParam)
+        {
+            var query = _relRepository.GetAll()
+                .Where(r => r.Meta.Type == metaType)
+                .Where(r => r.Content.Type == ContentType.Post)
+                .Where(r => r.Meta.Name == value)
+                .Select(r => r.Content);
+            articleParam.OrderBy = "Created";
+            return _mapper.Map<Page<ContentResponse>>(_repository.Page(query, articleParam));
         }
     }
 }
