@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace iBlogs.Site.Core.Migrations
 {
-    public partial class init : Migration
+    public partial class InitDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,7 +21,9 @@ namespace iBlogs.Site.Core.Migrations
                     Sort = table.Column<int>(nullable: false),
                     Parent = table.Column<int>(nullable: false),
                     Count = table.Column<int>(nullable: false),
-                    Timestamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                    Timestamp = table.Column<DateTime>(rowVersion: true, nullable: true),
+                    Created = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
                 },
                 constraints: table =>
                 {
@@ -36,7 +38,9 @@ namespace iBlogs.Site.Core.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Value = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true)
+                    Description = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
                 },
                 constraints: table =>
                 {
@@ -72,10 +76,11 @@ namespace iBlogs.Site.Core.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     AuthorId = table.Column<int>(nullable: false),
-                    Created = table.Column<long>(nullable: false),
                     FName = table.Column<string>(nullable: true),
                     FType = table.Column<string>(nullable: true),
-                    FKey = table.Column<string>(nullable: true)
+                    FKey = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
                 },
                 constraints: table =>
                 {
@@ -189,7 +194,9 @@ namespace iBlogs.Site.Core.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Cid = table.Column<int>(nullable: false),
-                    Mid = table.Column<int>(nullable: false)
+                    Mid = table.Column<int>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
                 },
                 constraints: table =>
                 {

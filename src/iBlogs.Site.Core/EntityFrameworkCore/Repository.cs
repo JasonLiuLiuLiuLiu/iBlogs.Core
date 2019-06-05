@@ -5,8 +5,6 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using iBlogs.Site.Core.Common.Extensions;
@@ -31,7 +29,7 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
 
         public Repository(iBlogsContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public virtual DbConnection Connection
@@ -137,6 +135,7 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         {
             AttachIfNot(entity);
             _context.Entry(entity).State = EntityState.Modified;
+            _context.Entry(entity).Property(x => x.Created).IsModified = false;
             return entity;
         }
 
@@ -165,7 +164,6 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
             if (entity != null)
             {
                 Delete(entity);
-                return;
             }
 
             //Could not found the entity, do nothing.
@@ -244,7 +242,7 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
             var orderByName = pageParam.OrderBy;
             if (pageParam.OrderBy.IsNullOrWhiteSpace() || typeof(TEntity).GetProperties().FirstOrDefault(p => p.Name == pageParam.OrderBy) == null)
                 orderByName = _context.Model.FindEntityType(typeof(TEntity)).FindPrimaryKey().Properties.Select(x => x.Name).Single();
-            var orderProp = TypeDescriptor.GetProperties(typeof(TEntity)).Find(orderByName,true);
+            var orderProp = TypeDescriptor.GetProperties(typeof(TEntity)).Find(orderByName, true);
             switch (pageParam.OrderType)
             {
                 case OrderType.Asc:
@@ -274,11 +272,6 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
                 );
 
             return entry?.Entity as TEntity;
-        }
-
-        private static bool MayHaveTemporaryKey(TEntity entity)
-        {
-            return Convert.ToInt32(entity.Id) <= 0;
         }
 
         private Expression<Func<TEntity, bool>> CreateEqualityExpressionForId(int id)

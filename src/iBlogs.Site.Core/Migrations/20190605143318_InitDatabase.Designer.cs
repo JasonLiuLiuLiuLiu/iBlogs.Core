@@ -9,8 +9,8 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 namespace iBlogs.Site.Core.Migrations
 {
     [DbContext(typeof(iBlogsContext))]
-    [Migration("20190603141555_init")]
-    partial class init
+    [Migration("20190605143318_InitDatabase")]
+    partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,8 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<int>("AuthorId");
 
-                    b.Property<long>("Created");
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("FKey");
 
@@ -160,6 +161,9 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<int>("Count");
 
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd();
+
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
@@ -186,6 +190,9 @@ namespace iBlogs.Site.Core.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd();
+
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
@@ -203,6 +210,9 @@ namespace iBlogs.Site.Core.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("Cid");
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("Mid");
 

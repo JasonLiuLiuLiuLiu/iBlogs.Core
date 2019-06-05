@@ -334,7 +334,6 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                     attachment.AuthorId = uid;
                     attachment.FKey = fkey;
                     attachment.FType = ftype;
-                    attachment.Created = DateTime.Now.ToUnixTimestamp();
                     if (await _attachService.Save(attachment))
                     {
                         urls.Add(attachment);

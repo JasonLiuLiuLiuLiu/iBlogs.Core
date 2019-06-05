@@ -1,4 +1,5 @@
-﻿using iBlogs.Site.Core.EntityFrameworkCore;
+﻿using System;
+using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.User;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,10 +15,10 @@ namespace iBlogs.Site.Core.Attach
 
         [ForeignKey("AuthorId")]
         public Users Author { get; set; }
-
-        public long Created { get; set; }
         public string FName { get; set; }
         public string FType { get; set; }
         public string FKey { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Created { get; set; }
     }
 }

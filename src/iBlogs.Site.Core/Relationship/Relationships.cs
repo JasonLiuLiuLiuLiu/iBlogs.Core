@@ -1,4 +1,5 @@
-﻿using iBlogs.Site.Core.Content;
+﻿using System;
+using iBlogs.Site.Core.Content;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Meta;
 using System.ComponentModel.DataAnnotations;
@@ -26,5 +27,8 @@ namespace iBlogs.Site.Core.Relationship
 
         [ForeignKey("Mid")]
         public Metas Meta { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Created { get; set; }
     }
 }
