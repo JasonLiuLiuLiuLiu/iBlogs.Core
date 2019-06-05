@@ -1,4 +1,5 @@
-﻿using iBlogs.Site.Core.Common.Response;
+﻿using iBlogs.Site.Core.Common.Request;
+using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Content.DTO;
 
 namespace iBlogs.Site.Core.Content.Service
@@ -22,5 +23,7 @@ namespace iBlogs.Site.Core.Content.Service
         ContentResponse GetNext(int id);
 
         Page<ContentResponse> FindContentByMeta(string metaType, string value, ArticleParam articleParam);
+
+        Page<Archive> GetArchive(PageParam pageParam);
     }
 }

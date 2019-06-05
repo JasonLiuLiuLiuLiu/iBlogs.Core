@@ -1,4 +1,5 @@
-﻿using iBlogs.Site.Core.Content.DTO;
+﻿using iBlogs.Site.Core.Common.Request;
+using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.Content.Service;
 using iBlogs.Site.Core.Meta.DTO;
 using iBlogs.Site.Web.Attribute;
@@ -47,6 +48,13 @@ namespace iBlogs.Site.Web.Controllers
                 DisplayMeta = category,
                 Contents = _contentsService.FindContentByMeta(MetaType.Category, category, new ArticleParam())
             });
+        }
+
+        [HttpGet("/archives")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult Archive(PageParam param)
+        {
+            return View(_contentsService.GetArchive(param ?? new PageParam()));
         }
 
     }

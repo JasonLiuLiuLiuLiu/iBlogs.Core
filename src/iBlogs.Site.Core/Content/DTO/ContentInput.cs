@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace iBlogs.Site.Core.Content
+namespace iBlogs.Site.Core.Content.DTO
 {
     public class ContentInput
     {

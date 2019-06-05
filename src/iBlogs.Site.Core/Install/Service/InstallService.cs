@@ -9,6 +9,7 @@ using iBlogs.Site.Core.User;
 using iBlogs.Site.Core.User.Service;
 using System;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.Option;
 
 namespace iBlogs.Site.Core.Install.Service

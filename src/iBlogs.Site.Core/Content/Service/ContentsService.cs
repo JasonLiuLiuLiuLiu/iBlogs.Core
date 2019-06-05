@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.EntityFrameworkCore;
@@ -67,7 +68,10 @@ namespace iBlogs.Site.Core.Content.Service
 
             var entity = new Contents();
             _mapper.Map(contents, entity);
-            entity.AuthorId = _userService.CurrentUsers.Uid;
+            if (entity.AuthorId==0)
+            {
+                entity.AuthorId = _userService.CurrentUsers?.Uid ?? 0;
+            }
 
             var cid = _repository.InsertOrUpdateAndGetId(entity);
 
@@ -177,6 +181,30 @@ namespace iBlogs.Site.Core.Content.Service
                 .Select(r => r.Content);
             articleParam.OrderBy = "Created";
             return _mapper.Map<Page<ContentResponse>>(_repository.Page(query, articleParam));
+        }
+
+        public Page<Archive> GetArchive(PageParam pageParam)
+        {
+            var query = _repository.GetAll()
+                .Where(u=>u.Type==ContentType.Post)
+                .GroupBy(u => new {u.Created.Year, u.Created.Month})
+                .OrderByDescending(g=>g.Key.Year)
+                .ThenByDescending(g=>g.Key.Month)
+                .Select(g => new ArchiveEntity
+                {
+                    DateStr = $"{g.Key.Year}年{g.Key.Month}月",
+                    Count = g.Count(),
+                    Contents = g.Select(c=>c)
+                });
+            var total = query.Count();
+            var rowsEntity = query.Skip((pageParam.Page - 1) * pageParam.Limit).Take(pageParam.Limit).ToList();
+            var rows = rowsEntity.Select(u => new Archive
+            {
+                DateStr = u.DateStr,
+                Count = u.Count,
+                Contents = u.Contents.Select(c => _mapper.Map<ContentResponse>(c))
+            });
+            return new Page<Archive>(total, pageParam.Page++, pageParam.Limit, rows.ToList());
         }
     }
 }
