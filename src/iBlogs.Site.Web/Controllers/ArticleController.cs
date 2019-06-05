@@ -26,6 +26,7 @@ namespace iBlogs.Site.Web.Controllers
             _commentsService = commentsService;
         }
 
+        [HttpGet("/{url}")]
         [HttpGet("/article/{url}")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
         public IActionResult Index(string url,CommentPageParam commentPage)
@@ -64,6 +65,7 @@ namespace iBlogs.Site.Web.Controllers
                 Comments = pageComments,
             });
         }
+
 
         public ApiResponse Comment(CommentRequest input)
         {
