@@ -6,6 +6,8 @@ using iBlogs.Site.Core.Relationship.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using iBlogs.Site.Core.Meta.DTO;
+using iBlogs.Site.Core.Relationship;
 
 namespace iBlogs.Site.Core.Meta.Service
 {
@@ -13,11 +15,28 @@ namespace iBlogs.Site.Core.Meta.Service
     {
         private readonly IRepository<Metas> _repository;
         private readonly IRelationshipService _relationshipService;
+        private readonly IRepository<Relationships> _relRepository;
 
-        public MetasService(IRepository<Metas> repository, IRelationshipService relationshipService)
+        public MetasService(IRepository<Metas> repository, IRelationshipService relationshipService, IRepository<Relationships> relRepository)
         {
             _repository = repository;
             _relationshipService = relationshipService;
+            _relRepository = relRepository;
+        }
+
+        public TagViewModel LoadTagViewModel()
+        {
+            var countPair=_relRepository.GetAll()
+                .Where(r=>r.Meta.Type==MetaType.Tag)
+                .Join(_repository.GetAll(), r => r.Mid, c => c.Id, (r, c) => new {r.Cid, c.Name})
+                .GroupBy(g => g.Name)
+                .Select(g => new KeyValuePair<string, int>(g.Key, g.Count())).ToList();
+            var count = _repository.GetAll().Count(t => t.Type == MetaType.Tag);
+            return new TagViewModel
+            {
+                Total = count,
+                Tags = countPair,
+            };
         }
 
         /**

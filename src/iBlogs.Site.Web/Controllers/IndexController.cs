@@ -2,6 +2,7 @@
 using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.Content.Service;
 using iBlogs.Site.Core.Meta.DTO;
+using iBlogs.Site.Core.Meta.Service;
 using iBlogs.Site.Web.Attribute;
 using iBlogs.Site.Web.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ namespace iBlogs.Site.Web.Controllers
     public class IndexController : Controller
     {
         private readonly IContentsService _contentsService;
-        public IndexController(IContentsService contentsService)
+        private readonly IMetasService _metasService;
+        public IndexController(IContentsService contentsService, IMetasService metasService)
         {
             _contentsService = contentsService;
+            _metasService = metasService;
         }
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
         public IActionResult Index(ArticleParam articleParam)
@@ -55,6 +58,13 @@ namespace iBlogs.Site.Web.Controllers
         public IActionResult Archive(PageParam param)
         {
             return View(_contentsService.GetArchive(param ?? new PageParam()));
+        }
+
+        [HttpGet("AllTags")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult AllTags()
+        {
+            return View("AllTags", _metasService.LoadTagViewModel());
         }
 
     }

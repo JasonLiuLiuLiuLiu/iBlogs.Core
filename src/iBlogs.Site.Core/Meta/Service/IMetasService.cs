@@ -1,10 +1,13 @@
 ﻿using iBlogs.Site.Core.Content;
 using System.Collections.Generic;
+using iBlogs.Site.Core.Meta.DTO;
 
 namespace iBlogs.Site.Core.Meta.Service
 {
     public interface IMetasService
     {
+        TagViewModel LoadTagViewModel();
+
         List<Metas> getMetas(string type, int limit = 0);
 
         Dictionary<string, List<Contents>> getMetaMapping(string type);

@@ -1,0 +1,50 @@
+﻿@model iBlogs.Site.Core.Meta.DTO.TagViewModel
+<main role="main" class="App-main">
+    <div class="Topstory">
+        <div class="Topstory-container">
+            <div class="Topstory-mainColumn">
+               
+                <div class="Card Topstory-noMarginCard Topstory-tabCard">
+                    <nav class="TopstoryTabs Topstory-tabs">
+
+                        <span class="TagsHeader">
+                            <svg class="Zi Zi--Live"
+                                 fill="currentColor" viewBox="0 0 24 24" width="24"
+                                 height="24" style="color: rgb(255, 207, 0);">
+                                <path d="M13.693 10.354l1.634-7.542c.195-.901-.16-1.083-.798-.39l-9.18 9.97c-.638.693-.377 1.254.582 1.254h5.376l-1.634 7.542c-.195.901.16 1.083.798.39l9.18-9.97c.638-.693.377-1.254-.582-1.254h-5.376z">
+                                </path>
+                            </svg>
+                            所有标签
+                        </span>
+                        <span class="TagsHeader">
+                            Total:(@Model.Total)
+                        </span>
+                    </nav>
+                </div>
+                <div id="TopstoryContent" class="Topstory-content">
+                    <div class="ListShortcut">
+                        <div class="Topstory-recommend">
+                            <div class="">
+                                <div class="QuestionHeader-topics Card TopstoryItem TopstoryItem-isRecommend">
+                                    @foreach (var tag in Model.Tags)
+                                    {
+                                        <div class="Tag QuestionTopic">
+                                            <span class="Tag-content">
+                                                <a class="TopicLink" href="/tag/@tag.Key">
+                                                    <div class="Popover">
+                                                        <div id="Popover7-toggle" aria-haspopup="true" aria-expanded="false" aria-owns="Popover7-content">@(tag.Key)(@tag.Value)</div>
+                                                    </div>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <partial name="SideBar" />
+        </div>
+    </div>
+</main>
