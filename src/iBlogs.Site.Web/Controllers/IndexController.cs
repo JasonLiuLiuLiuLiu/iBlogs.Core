@@ -64,14 +64,14 @@ namespace iBlogs.Site.Web.Controllers
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
         public IActionResult AllTags()
         {
-            return View("AllTags", _metasService.LoadTagViewModel());
+            return View("AllTags", _metasService.LoadMetaDataViewModel(MetaType.Tag));
         }
 
         [HttpGet("AllCategories")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
         public IActionResult AllCategories()
         {
-            return View("AllCategories");
+            return View("AllCategories", _metasService.LoadMetaDataViewModel(MetaType.Category));
         }
 
     }

@@ -166,7 +166,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [Route("/admin/api/category/save")]
         public ApiResponse SaveCategory([FromBody]MetaParam metaParam)
         {
-            _metasService.saveMeta(Types.CATEGORY, metaParam.Cname, metaParam.Id);
+            _metasService.SaveMeta(Types.CATEGORY, metaParam.Cname, metaParam.Id);
             return ApiResponse.Ok();
         }
 
@@ -175,7 +175,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [AdminApiRoute("category/Delete/{id}")]
         public ApiResponse DeleteMeta(int id)
         {
-            _metasService.delete(id);
+            _metasService.Delete(id);
             return ApiResponse.Ok();
         }
 
@@ -224,13 +224,13 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         // @GetRoute("categories")
         public ApiResponse CategoryList()
         {
-            return ApiResponse<List<Metas>>.Ok(_metasService.getMetas(Types.CATEGORY, iBlogsConfig.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_metasService.GetMetas(Types.CATEGORY, iBlogsConfig.MAX_POSTS));
         }
 
         // @GetRoute("tags")
         public ApiResponse TagList()
         {
-            return ApiResponse<List<Metas>>.Ok(_metasService.getMetas(Types.TAG, iBlogsConfig.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_metasService.GetMetas(Types.TAG, iBlogsConfig.MAX_POSTS));
         }
 
         // @GetRoute("options")

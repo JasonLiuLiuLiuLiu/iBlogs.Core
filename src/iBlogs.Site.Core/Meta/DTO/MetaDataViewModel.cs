@@ -2,9 +2,9 @@
 
 namespace iBlogs.Site.Core.Meta.DTO
 {
-    public class TagViewModel
+    public class MetaDataViewModel
     {
         public int Total { get; set; }
-        public List<KeyValuePair<string, int>> Tags { get; set; }
+        public List<KeyValuePair<string, int>> Data { get; set; }
     }
 }

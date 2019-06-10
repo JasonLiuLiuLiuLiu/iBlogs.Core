@@ -24,18 +24,20 @@ namespace iBlogs.Site.Core.Meta.Service
             _relRepository = relRepository;
         }
 
-        public TagViewModel LoadTagViewModel()
+        public MetaDataViewModel LoadMetaDataViewModel(string type)
         {
             var countPair=_relRepository.GetAll()
-                .Where(r=>r.Meta.Type==MetaType.Tag)
+                .Where(r=>r.Meta.Type==type)
                 .Join(_repository.GetAll(), r => r.Mid, c => c.Id, (r, c) => new {r.Cid, c.Name})
                 .GroupBy(g => g.Name)
-                .Select(g => new KeyValuePair<string, int>(g.Key, g.Count())).ToList();
+                .Select(g => new KeyValuePair<string, int>(g.Key, g.Count()))
+                .OrderByDescending(g=>g.Value)
+                .ToList();
             var count = _repository.GetAll().Count(t => t.Type == MetaType.Tag);
-            return new TagViewModel
+            return new MetaDataViewModel
             {
                 Total = count,
-                Tags = countPair,
+                Data = countPair,
             };
         }
 
@@ -45,7 +47,7 @@ namespace iBlogs.Site.Core.Meta.Service
         * @param type 类型，tag or category
         */
 
-        public List<Metas> getMetas(string type, int limit = 0)
+        public List<Metas> GetMetas(string type, int limit = 0)
         {
             if (limit < 1 || limit > iBlogsConfig.MAX_POSTS)
             {
@@ -60,7 +62,7 @@ namespace iBlogs.Site.Core.Meta.Service
          * @param type 类型，tag or category
          */
 
-        public Dictionary<string, List<Contents>> getMetaMapping(string type)
+        public Dictionary<string, List<Contents>> GetMetaMapping(string type)
         {
             return null;
         }
@@ -77,7 +79,7 @@ namespace iBlogs.Site.Core.Meta.Service
          * @param name 类型名
          */
 
-        public Metas getMeta(string type, string name)
+        public Metas GetMeta(string type, string name)
         {
             return null;
         }
@@ -90,7 +92,7 @@ namespace iBlogs.Site.Core.Meta.Service
          * @param type  类型，tag or category
          */
 
-        public void saveMetas(int? cid, string names, string type)
+        public void SaveMetas(int? cid, string names, string type)
         {
             if (null == cid)
             {
@@ -131,7 +133,7 @@ namespace iBlogs.Site.Core.Meta.Service
          * @param mid 项目id
          */
 
-        public void delete(int id)
+        public void Delete(int id)
         {
             _repository.Delete(id);
             _relationshipService.DeleteByMetaId(id);
@@ -149,7 +151,7 @@ namespace iBlogs.Site.Core.Meta.Service
          * @param mid
          */
 
-        public void saveMeta(string type, string name, int? mid)
+        public void SaveMeta(string type, string name, int? mid)
         {
             if (type.IsNullOrWhiteSpace() || name.IsNullOrWhiteSpace())
             {

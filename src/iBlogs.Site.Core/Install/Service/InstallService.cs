@@ -145,7 +145,7 @@ namespace iBlogs.Site.Core.Install.Service
                 AllowPing = true,
                 AllowFeed = true
             });
-            _metasService.saveMetas(firstArticle, "默认分类", "category");
+            _metasService.SaveMetas(firstArticle, "默认分类", "category");
             return true;
         }
     }

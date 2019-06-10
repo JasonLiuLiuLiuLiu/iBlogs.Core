@@ -68,7 +68,7 @@ namespace iBlogs.Site.Core.Common.Service
          */
         public List<Metas> getMetas(string type, int limit)
         {
-            return _metasService.getMetas(type, limit);
+            return _metasService.GetMetas(type, limit);
         }
 
         /**

@@ -6,18 +6,18 @@ namespace iBlogs.Site.Core.Meta.Service
 {
     public interface IMetasService
     {
-        TagViewModel LoadTagViewModel();
+        MetaDataViewModel LoadMetaDataViewModel(string type);
 
-        List<Metas> getMetas(string type, int limit = 0);
+        List<Metas> GetMetas(string type, int limit = 0);
 
-        Dictionary<string, List<Contents>> getMetaMapping(string type);
+        Dictionary<string, List<Contents>> GetMetaMapping(string type);
 
-        Metas getMeta(string type, string name);
+        Metas GetMeta(string type, string name);
 
-        void saveMetas(int? cid, string names, string type);
+        void SaveMetas(int? cid, string names, string type);
 
-        void delete(int mid);
+        void Delete(int mid);
 
-        void saveMeta(string type, string name, int? mid);
+        void SaveMeta(string type, string name, int? mid);
     }
 }

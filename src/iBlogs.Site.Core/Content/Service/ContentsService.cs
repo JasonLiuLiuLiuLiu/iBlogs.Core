@@ -75,8 +75,8 @@ namespace iBlogs.Site.Core.Content.Service
 
             var cid = _repository.InsertOrUpdateAndGetId(entity);
 
-            _metasService.saveMetas(cid, tags, Types.TAG);
-            _metasService.saveMetas(cid, categories, Types.CATEGORY);
+            _metasService.SaveMetas(cid, tags, Types.TAG);
+            _metasService.SaveMetas(cid, categories, Types.CATEGORY);
 
             return cid;
         }
@@ -106,8 +106,8 @@ namespace iBlogs.Site.Core.Content.Service
                 _relationshipService.DeleteByContentId(cid);
             }
 
-            _metasService.saveMetas(cid, tags, Types.TAG);
-            _metasService.saveMetas(cid, categories, Types.CATEGORY);
+            _metasService.SaveMetas(cid, tags, Types.TAG);
+            _metasService.SaveMetas(cid, categories, Types.CATEGORY);
         }
 
         /**
