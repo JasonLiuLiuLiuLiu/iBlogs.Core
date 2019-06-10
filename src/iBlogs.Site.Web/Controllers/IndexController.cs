@@ -67,5 +67,12 @@ namespace iBlogs.Site.Web.Controllers
             return View("AllTags", _metasService.LoadTagViewModel());
         }
 
+        [HttpGet("AllCategories")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult AllCategories()
+        {
+            return View("AllCategories");
+        }
+
     }
 }
