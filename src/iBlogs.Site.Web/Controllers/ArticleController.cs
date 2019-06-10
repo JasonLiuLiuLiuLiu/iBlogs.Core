@@ -28,34 +28,34 @@ namespace iBlogs.Site.Web.Controllers
 
         [HttpGet("/article/{url}")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
-        public IActionResult Index(string url,CommentPageParam commentPage)
+        public IActionResult Index(string url, CommentPageParam commentPage)
         {
             var content = _contentsService.GetContents(url);
             var pre = _contentsService.GetPre(content.Id);
             var next = _contentsService.GetNext(content.Id);
             commentPage.Cid = content.Id;
             var pageComments = _commentsService.GetComments(commentPage);
-            CurrentUser currentUser=null;
+            CurrentUser currentUser = null;
             if (HttpContext.User.Claims.Any())
             {
                 var uid = int.Parse(HttpContext.User.FindFirst(ClaimTypes.Uid)?.Value);
                 var token = HttpContext.User.FindFirst(ClaimTypes.Token)?.Value;
                 if (LoginStaticToken.CheckToken(uid, token))
                 {
-                   
-                        var user = _userService.FindUserById(uid);
-                        currentUser = new CurrentUser
-                        {
-                            Uid = uid,
-                            Email = user.Email,
-                            Username = user.Username,
-                            ScreenName = user.ScreenName,
-                            HomeUrl = user.HomeUrl
-                        };
-                    
+
+                    var user = _userService.FindUserById(uid);
+                    currentUser = new CurrentUser
+                    {
+                        Uid = uid,
+                        Email = user.Email,
+                        Username = user.Username,
+                        ScreenName = user.ScreenName,
+                        HomeUrl = user.HomeUrl
+                    };
+
                 }
             }
-            return View(new ArticleViewModel
+            return View("Index",new ArticleViewModel
             {
                 Content = content,
                 Pre = pre,
@@ -63,6 +63,20 @@ namespace iBlogs.Site.Web.Controllers
                 User = currentUser,
                 Comments = pageComments,
             });
+        }
+
+        [HttpGet("/links")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult Links()
+        {
+            return Index("links", new CommentPageParam());
+        }
+
+        [HttpGet("/about")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult About()
+        {
+            return Index("about", new CommentPageParam());
         }
 
 
