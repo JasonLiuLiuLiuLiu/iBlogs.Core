@@ -4,6 +4,7 @@ using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using System.Linq;
 using AutoMapper;
+using iBlogs.Site.Core.Content.Service;
 
 namespace iBlogs.Site.Core.Comment.Service
 {
@@ -17,12 +18,14 @@ namespace iBlogs.Site.Core.Comment.Service
     public class CommentsService : ICommentsService
     {
         private readonly IRepository<Comments> _repository;
+        private readonly IContentsService _contentsService;
         private readonly IMapper _mapper;
 
-        public CommentsService(IRepository<Comments> repository, IMapper mapper)
+        public CommentsService(IRepository<Comments> repository, IMapper mapper, IContentsService contentsService)
         {
             _repository = repository;
             _mapper = mapper;
+            _contentsService = contentsService;
         }
 
         public int GetTotalCount()
@@ -38,6 +41,7 @@ namespace iBlogs.Site.Core.Comment.Service
         {
             _repository.InsertOrUpdate(comments);
             _repository.SaveChanges();
+            _contentsService.UpdateCommentCount(comments.Cid,1);
         }
 
         /**

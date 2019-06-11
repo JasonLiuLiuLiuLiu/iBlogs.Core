@@ -25,5 +25,7 @@ namespace iBlogs.Site.Core.Content.Service
         Page<ContentResponse> FindContentByMeta(string metaType, string value, ArticleParam articleParam);
 
         Page<Archive> GetArchive(PageParam pageParam);
+
+        void UpdateCommentCount(int cid,int updateCount);
     }
 }

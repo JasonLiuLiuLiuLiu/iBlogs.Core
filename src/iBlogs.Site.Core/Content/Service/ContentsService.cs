@@ -211,5 +211,20 @@ namespace iBlogs.Site.Core.Content.Service
             });
             return new Page<Archive>(total, pageParam.Page++, pageParam.Limit, rows.ToList());
         }
+
+        public void UpdateCommentCount(int cid,int updateCount)
+        {
+            var content = _repository.FirstOrDefault(cid);
+
+            if(content==null)
+                throw new Exception("没找到此文章");
+
+            if(content.CommentsNum+updateCount<0)
+                throw new Exception("评论数不能为负数");
+
+            content.CommentsNum += updateCount;
+            _repository.Update(content);
+            _repository.SaveChanges();
+        }
     }
 }
