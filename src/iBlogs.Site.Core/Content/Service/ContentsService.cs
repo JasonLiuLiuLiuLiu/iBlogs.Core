@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
@@ -12,6 +13,7 @@ using iBlogs.Site.Core.Meta.Service;
 using iBlogs.Site.Core.Relationship;
 using iBlogs.Site.Core.Relationship.Service;
 using iBlogs.Site.Core.User.Service;
+using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Content.Service
 {
@@ -41,11 +43,14 @@ namespace iBlogs.Site.Core.Content.Service
          */
         public ContentResponse GetContents(string id)
         {
-            var contents = _repository.GetAll().FirstOrDefault(c => c.Slug == id) ?? _repository.FirstOrDefault(int.Parse(id));
+            var contents = _repository.GetAll().AsNoTracking().FirstOrDefault(c => c.Slug == id) ?? _repository.FirstOrDefault(int.Parse(id));
             if (contents.FmtType.IsNullOrWhiteSpace())
             {
                 contents.FmtType = "markdown";
             }
+            contents.Hits++;
+            _repository.UpdateAsync(contents);
+            _repository.SaveChanges();
             return _mapper.Map<ContentResponse>(contents);
         }
 
@@ -68,7 +73,7 @@ namespace iBlogs.Site.Core.Content.Service
 
             var entity = new Contents();
             _mapper.Map(contents, entity);
-            if (entity.AuthorId==0)
+            if (entity.AuthorId == 0)
             {
                 entity.AuthorId = _userService.CurrentUsers?.Uid ?? 0;
             }
@@ -186,15 +191,15 @@ namespace iBlogs.Site.Core.Content.Service
         public Page<Archive> GetArchive(PageParam pageParam)
         {
             var query = _repository.GetAll()
-                .Where(u=>u.Type==ContentType.Post)
-                .GroupBy(u => new {u.Created.Year, u.Created.Month})
-                .OrderByDescending(g=>g.Key.Year)
-                .ThenByDescending(g=>g.Key.Month)
+                .Where(u => u.Type == ContentType.Post)
+                .GroupBy(u => new { u.Created.Year, u.Created.Month })
+                .OrderByDescending(g => g.Key.Year)
+                .ThenByDescending(g => g.Key.Month)
                 .Select(g => new ArchiveEntity
                 {
                     DateStr = $"{g.Key.Year}年{g.Key.Month}月",
                     Count = g.Count(),
-                    Contents = g.Select(c=>c)
+                    Contents = g.Select(c => c)
                 });
             var total = query.Count();
             var rowsEntity = query.Skip((pageParam.Page - 1) * pageParam.Limit).Take(pageParam.Limit).ToList();
