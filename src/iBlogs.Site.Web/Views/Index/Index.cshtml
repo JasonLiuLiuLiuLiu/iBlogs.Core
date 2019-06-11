@@ -7,9 +7,9 @@
                     <nav class="TopstoryTabs Topstory-tabs">
                         @if (string.IsNullOrEmpty(Model.DisplayType))
                         {
-                            <a class="TopstoryTabs-link Topstory-tabsLink is-active" href="https://www.Blogs.com/">推荐</a>
-                            <a class="TopstoryTabs-link Topstory-tabsLink" href="https://www.Blogs.com/follow">阅读量</a>
-                            <a class="TopstoryTabs-link Topstory-tabsLink" href="https://www.Blogs.com/hot">随机</a>
+                            <a class="TopstoryTabs-link Topstory-tabsLink is-active" href="/">时间</a>
+                            <a class="TopstoryTabs-link Topstory-tabsLink" href="/hot">热度</a>
+                            <a class="TopstoryTabs-link Topstory-tabsLink" href="/random">随机</a>
                         }
                         else
                         {
@@ -79,6 +79,16 @@
                                                                     </svg>
                                                                 </span>1,143 条评论
                                                             </button>
+                                                            <button type="button" class="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
+                                                                <span style="display: inline-flex; align-items: center;">
+                                                                    <svg class="Zi Zi--Heart Button-zi"
+                                                                         fill="currentColor" viewBox="0 0 24 24"
+                                                                         width="1.2em" height="1.2em">
+                                                                        <path d="M2 8.437C2 5.505 4.294 3.094 7.207 3 9.243 3 11.092 4.19 12 6c.823-1.758 2.649-3 4.651-3C19.545 3 22 5.507 22 8.432 22 16.24 13.842 21 12 21 10.158 21 2 16.24 2 8.437z"
+                                                                              fill-rule="evenodd"></path>
+                                                                    </svg>
+                                                                </span>感谢
+                                                            </button>
                                                             <div class="Popover ShareMenu ContentItem-action">
                                                                 <div class="ShareMenu-toggler" id="Popover11-toggle" aria-haspopup="true" aria-expanded="false" aria-owns="Popover11-content">
                                                                     <button type="button" class="Button Button--plain Button--withIcon Button--withLabel">
@@ -90,41 +100,9 @@
                                                                                 <path d="M2.931 7.89c-1.067.24-1.275 1.669-.318 2.207l5.277 2.908 8.168-4.776c.25-.127.477.198.273.39L9.05 14.66l.927 5.953c.18 1.084 1.593 1.376 2.182.456l9.644-15.242c.584-.892-.212-2.029-1.234-1.796L2.93 7.89z"
                                                                                       fill-rule="evenodd"></path>
                                                                             </svg>
-                                                                        </span>分享
+                                                                        </span>@article.CreatedStr("MM/dd/yyyy hh:mm tt")
                                                                     </button>
                                                                 </div>
-                                                            </div>
-                                                            <button type="button" class="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
-                                                                <span style="display: inline-flex; align-items: center;">
-                                                                    <svg class="Zi Zi--Star Button-zi"
-                                                                         fill="currentColor" viewBox="0 0 24 24"
-                                                                         width="1.2em" height="1.2em">
-                                                                        <path d="M5.515 19.64l.918-5.355-3.89-3.792c-.926-.902-.639-1.784.64-1.97L8.56 7.74l2.404-4.871c.572-1.16 1.5-1.16 2.072 0L15.44 7.74l5.377.782c1.28.186 1.566 1.068.64 1.97l-3.89 3.793.918 5.354c.219 1.274-.532 1.82-1.676 1.218L12 18.33l-4.808 2.528c-1.145.602-1.896.056-1.677-1.218z"
-                                                                              fill-rule="evenodd"></path>
-                                                                    </svg>
-                                                                </span>收藏
-                                                            </button>
-                                                            <button type="button" class="Button ContentItem-action Button--plain Button--withIcon Button--withLabel">
-                                                                <span style="display: inline-flex; align-items: center;">
-                                                                    <svg class="Zi Zi--Heart Button-zi"
-                                                                         fill="currentColor" viewBox="0 0 24 24"
-                                                                         width="1.2em" height="1.2em">
-                                                                        <path d="M2 8.437C2 5.505 4.294 3.094 7.207 3 9.243 3 11.092 4.19 12 6c.823-1.758 2.649-3 4.651-3C19.545 3 22 5.507 22 8.432 22 16.24 13.842 21 12 21 10.158 21 2 16.24 2 8.437z"
-                                                                              fill-rule="evenodd"></path>
-                                                                    </svg>
-                                                                </span>感谢
-                                                            </button>
-                                                            <div class="Popover ContentItem-action">
-                                                                <button aria-label="更多" type="button" id="Popover12-toggle" aria-haspopup="true" aria-expanded="false" aria-owns="Popover12-content" class="Button OptionsButton Button--plain Button--withIcon Button--iconOnly">
-                                                                    <span style="display: inline-flex; align-items: center;">
-                                                                        <svg class="Zi Zi--Dots Button-zi"
-                                                                             fill="currentColor" viewBox="0 0 24 24"
-                                                                             width="1.2em" height="1.2em">
-                                                                            <path d="M5 14a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm7 0a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"
-                                                                                  fill-rule="evenodd"></path>
-                                                                        </svg>
-                                                                    </span>
-                                                                </button>
                                                             </div>
                                                         </div>
                                                     </div>
