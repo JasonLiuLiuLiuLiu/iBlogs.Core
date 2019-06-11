@@ -241,23 +241,21 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         {
             var orderByName = pageParam.OrderBy;
             if (orderByName.ToUpper() == "RANDOM")
+                source = source.OrderBy(r => Guid.NewGuid());
+            else
             {
-                source = source.OrderBy(r => Guid.NewGuid()).Take(20);
-                return new Page<TEntity>(20, pageParam.Page++, pageParam.Limit, source.ToList());
-            }
-
-
-            if (pageParam.OrderBy.IsNullOrWhiteSpace() || typeof(TEntity).GetProperties().FirstOrDefault(p => p.Name == pageParam.OrderBy) == null)
-                orderByName = _context.Model.FindEntityType(typeof(TEntity)).FindPrimaryKey().Properties.Select(x => x.Name).Single();
-            var orderProp = TypeDescriptor.GetProperties(typeof(TEntity)).Find(orderByName, true);
-            switch (pageParam.OrderType)
-            {
-                case OrderType.Asc:
-                    source = source.OrderBy(s => orderProp.GetValue(s));
-                    break;
-                default:
-                    source = source.OrderByDescending(s => orderProp.GetValue(s));
-                    break;
+                if (pageParam.OrderBy.IsNullOrWhiteSpace() || typeof(TEntity).GetProperties().FirstOrDefault(p => p.Name == pageParam.OrderBy) == null)
+                    orderByName = _context.Model.FindEntityType(typeof(TEntity)).FindPrimaryKey().Properties.Select(x => x.Name).Single();
+                var orderProp = TypeDescriptor.GetProperties(typeof(TEntity)).Find(orderByName, true);
+                switch (pageParam.OrderType)
+                {
+                    case OrderType.Asc:
+                        source = source.OrderBy(s => orderProp.GetValue(s));
+                        break;
+                    default:
+                        source = source.OrderByDescending(s => orderProp.GetValue(s));
+                        break;
+                }
             }
             var total = source.Count();
             var rows = source.Skip((pageParam.Page - 1) * pageParam.Limit).Take(pageParam.Limit).ToList();
