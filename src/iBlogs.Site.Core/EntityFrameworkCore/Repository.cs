@@ -240,7 +240,7 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         public Page<TEntity> Page(IQueryable<TEntity> source, PageParam pageParam)
         {
             var orderByName = pageParam.OrderBy;
-            if (orderByName.ToUpper() == "RANDOM")
+            if (!orderByName.IsNullOrWhiteSpace()&&orderByName.ToUpper() == "RANDOM")
                 source = source.OrderBy(r => Guid.NewGuid());
             else
             {
