@@ -617,7 +617,8 @@ html[data-theme=dark] .Topstory-mainColumn {
     margin-bottom: 0;
     -webkit-box-shadow: none;
     box-shadow: none;
-    border-bottom: 1px solid #f0f2f7
+    border-bottom: 1px solid #f0f2f7;
+    padding: 10px 10px 10px;
 }
 
 html[data-theme=dark] .Topstory-mainColumn .Card:not(.Topstory-tabCard) {

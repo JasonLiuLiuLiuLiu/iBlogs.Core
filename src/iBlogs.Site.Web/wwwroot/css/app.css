@@ -9382,7 +9382,7 @@ html[data-theme=dark] .ContentItem-status {
     -ms-flex-align: center;
     align-items: center;
     padding: 10px 20px;
-    margin: 0 -20px -10px;
+    margin: 0 0 -10px;
     color: #646464;
     background: #fff;
     clear: both
