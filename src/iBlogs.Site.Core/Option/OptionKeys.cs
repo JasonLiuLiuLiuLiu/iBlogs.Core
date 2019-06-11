@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace iBlogs.Site.Core.Option
+﻿namespace iBlogs.Site.Core.Option
 {
     public class OptionKeys
     {
@@ -20,5 +16,7 @@ namespace iBlogs.Site.Core.Option
         public const string SocialPre="social_";
         public const string AllowCommentAudit = "allow_comment_audit";
         public const string Author = "author";
+        public const string SideBarTagsCount = "SideBarTagsCount";
+        public const string SideBarCategoriesCount = "SideBarCategoriesCount";
     }
 }

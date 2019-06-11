@@ -24,15 +24,20 @@ namespace iBlogs.Site.Core.Meta.Service
             _relRepository = relRepository;
         }
 
-        public MetaDataViewModel LoadMetaDataViewModel(string type)
+        public MetaDataViewModel LoadMetaDataViewModel(string type,int topCount=0)
         {
-            var countPair=_relRepository.GetAll()
+            var query=_relRepository.GetAll()
                 .Where(r=>r.Meta.Type==type)
                 .Join(_repository.GetAll(), r => r.Mid, c => c.Id, (r, c) => new {r.Cid, c.Name})
                 .GroupBy(g => g.Name)
                 .Select(g => new KeyValuePair<string, int>(g.Key, g.Count()))
-                .OrderByDescending(g=>g.Value)
-                .ToList();
+                .OrderByDescending(g=>g.Value);
+
+            if (topCount > 0)
+                query = query.Take(topCount).OrderByDescending(g => g.Value);
+
+            var countPair = query.ToList();
+
             var count = _repository.GetAll().Count(t => t.Type == MetaType.Tag);
             return new MetaDataViewModel
             {
@@ -67,7 +72,7 @@ namespace iBlogs.Site.Core.Meta.Service
             return null;
         }
 
-        private List<Contents> getMetaContents(Metas m)
+        private List<Contents> GetMetaContents(Metas m)
         {
             return null;
         }

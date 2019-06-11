@@ -6,7 +6,7 @@ namespace iBlogs.Site.Core.Meta.Service
 {
     public interface IMetasService
     {
-        MetaDataViewModel LoadMetaDataViewModel(string type);
+        MetaDataViewModel LoadMetaDataViewModel(string type,int topCount= 0);
 
         List<Metas> GetMetas(string type, int limit = 0);
 
