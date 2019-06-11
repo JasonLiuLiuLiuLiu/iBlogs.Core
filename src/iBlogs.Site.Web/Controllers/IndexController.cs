@@ -74,5 +74,32 @@ namespace iBlogs.Site.Web.Controllers
             return View("AllCategories", _metasService.LoadMetaDataViewModel(MetaType.Category));
         }
 
+        [HttpGet("hot")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult Hot(ArticleParam articleParam)
+        {
+            if (articleParam == null)
+                articleParam = new ArticleParam();
+            articleParam.OrderBy = "Hits";
+            return View("Index",new IndexViewModel
+            {
+                Contents = _contentsService.FindArticles(articleParam),
+                OrderType = "Hot"
+            });
+        }
+
+        [HttpGet("Random")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult Random(ArticleParam articleParam)
+        {
+            if (articleParam == null)
+                articleParam = new ArticleParam();
+            articleParam.OrderBy = "Random";
+            return View("Index", new IndexViewModel
+            {
+                Contents = _contentsService.FindArticles(articleParam),
+                OrderType = "Random"
+            });
+        }
     }
 }

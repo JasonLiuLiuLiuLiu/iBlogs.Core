@@ -240,6 +240,13 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         public Page<TEntity> Page(IQueryable<TEntity> source, PageParam pageParam)
         {
             var orderByName = pageParam.OrderBy;
+            if (orderByName.ToUpper() == "RANDOM")
+            {
+                source = source.OrderBy(r => Guid.NewGuid()).Take(20);
+                return new Page<TEntity>(20, pageParam.Page++, pageParam.Limit, source.ToList());
+            }
+
+
             if (pageParam.OrderBy.IsNullOrWhiteSpace() || typeof(TEntity).GetProperties().FirstOrDefault(p => p.Name == pageParam.OrderBy) == null)
                 orderByName = _context.Model.FindEntityType(typeof(TEntity)).FindPrimaryKey().Properties.Select(x => x.Name).Single();
             var orderProp = TypeDescriptor.GetProperties(typeof(TEntity)).Find(orderByName, true);

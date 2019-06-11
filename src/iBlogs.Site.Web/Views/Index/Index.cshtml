@@ -7,9 +7,9 @@
                     <nav class="TopstoryTabs Topstory-tabs">
                         @if (string.IsNullOrEmpty(Model.DisplayType))
                         {
-                            <a class="TopstoryTabs-link Topstory-tabsLink is-active" href="/">时间</a>
-                            <a class="TopstoryTabs-link Topstory-tabsLink" href="/hot">热度</a>
-                            <a class="TopstoryTabs-link Topstory-tabsLink" href="/random">随机</a>
+                            <a class="TopstoryTabs-link Topstory-tabsLink @(string.IsNullOrWhiteSpace(Model.OrderType)?"is-active":"")" href="/">时间</a>
+                            <a class="TopstoryTabs-link Topstory-tabsLink @(!string.IsNullOrWhiteSpace(Model.OrderType)&&Model.OrderType=="Hot"?"is-active":"")" href="/hot">热度</a>
+                            <a class="TopstoryTabs-link Topstory-tabsLink @(!string.IsNullOrWhiteSpace(Model.OrderType)&&Model.OrderType=="Random"?"is-active":"")" href="/random">随机</a>
                         }
                         else
                         {
