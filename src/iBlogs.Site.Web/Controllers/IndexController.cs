@@ -60,15 +60,17 @@ namespace iBlogs.Site.Web.Controllers
             });
         }
 
+        [HttpGet("/index/tag/{tag}/{index}")]
         [HttpGet("/tag/{tag}")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
-        public IActionResult Tag(string tag)
+        public IActionResult Tag(string tag,int index)
         {
             return View("Index", new IndexViewModel
             {
                 DisplayType = "标签",
                 DisplayMeta = tag,
-                Contents = _contentsService.FindContentByMeta(MetaType.Tag, tag, new ArticleParam())
+                OrderType = "tag",
+                Contents = _contentsService.FindContentByMeta(MetaType.Tag, tag, new ArticleParam { Page = index==0?1:index})
             });
         }
 
