@@ -72,15 +72,20 @@ namespace iBlogs.Site.Web.Controllers
             });
         }
 
+        [HttpGet("/index/category/{category}/{index}")]
         [HttpGet("/category/{category}")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
-        public IActionResult Category(string category)
+        public IActionResult Category(string category,int index)
         {
             return View("Index", new IndexViewModel
             {
                 DisplayType = "分类",
                 DisplayMeta = category,
-                Contents = _contentsService.FindContentByMeta(MetaType.Category, category, new ArticleParam())
+                OrderType = "category",
+                Contents = _contentsService.FindContentByMeta(MetaType.Category, category, new ArticleParam
+                {
+                    Page = index==0?1:index
+                })
             });
         }
 
