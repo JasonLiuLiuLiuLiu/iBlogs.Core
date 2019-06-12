@@ -7,7 +7,7 @@
                     <nav class="TopstoryTabs Topstory-tabs">
                         @if (string.IsNullOrEmpty(Model.DisplayType))
                         {
-                            <a class="TopstoryTabs-link Topstory-tabsLink @(string.IsNullOrWhiteSpace(Model.OrderType)?"is-active":"")" href="/">时间</a>
+                            <a class="TopstoryTabs-link Topstory-tabsLink @(!string.IsNullOrWhiteSpace(Model.OrderType)&&Model.OrderType=="Index"?"is-active":"")" href="/">时间</a>
                             <a class="TopstoryTabs-link Topstory-tabsLink @(!string.IsNullOrWhiteSpace(Model.OrderType)&&Model.OrderType=="Hot"?"is-active":"")" href="/hot">热度</a>
                             <a class="TopstoryTabs-link Topstory-tabsLink @(!string.IsNullOrWhiteSpace(Model.OrderType)&&Model.OrderType=="Random"?"is-active":"")" href="/random">随机</a>
                         }
@@ -121,17 +121,17 @@
                         <ol class="page-navigator">
                             @if (pageInfo.HasPrevPage)
                             {
-                                <li class="prev"><a href="/page/@pageInfo.PrevPage">←</a></li>
+                                <li class="prev"><a href="/index/@Model.OrderType/@pageInfo.PrevPage">←</a></li>
                             }
 
                             @foreach (var navIndex in pageInfo.NavPageNums)
                             {
-                                <li class="@(pageInfo.PageNum==navIndex?"current":"")"><a href="/page/@navIndex">@navIndex</a></li>
+                                <li class="@(pageInfo.PageNum==navIndex?"current":"")"><a href="/index/@Model.OrderType/@navIndex">@navIndex</a></li>
                             }
 
                             @if (pageInfo.HasNextPage)
                             {
-                                <li class="next"><a href="/page/@pageInfo.NextPage">→</a></li>
+                                <li class="next"><a href="/index/@Model.OrderType/@pageInfo.NextPage">→</a></li>
                             }
                         </ol>
                     }

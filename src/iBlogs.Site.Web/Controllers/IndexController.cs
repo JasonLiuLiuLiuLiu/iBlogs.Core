@@ -18,14 +18,45 @@ namespace iBlogs.Site.Web.Controllers
             _contentsService = contentsService;
             _metasService = metasService;
         }
+        [HttpGet("")]
+        [HttpGet("/index/index/{index}")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
-        public IActionResult Index(ArticleParam articleParam)
+        public IActionResult Index(int index)
         {
-            if (articleParam == null)
-                articleParam = new ArticleParam();
+            var articleParam = new ArticleParam
+            {
+                Page = index==0?1:index
+            };
             return View(new IndexViewModel
             {
+                OrderType = "Index",
                 Contents = _contentsService.FindArticles(articleParam)
+            });
+        }
+
+        [HttpGet("hot")]
+        [HttpGet("/index/hot/{index}")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult Hot(int index)
+        {
+            var articleParam = new ArticleParam {Page = index == 0 ? 1 : index, OrderBy = "Hits"};
+            return View("Index", new IndexViewModel
+            {
+                Contents = _contentsService.FindArticles(articleParam),
+                OrderType = "Hot"
+            });
+        }
+
+        [HttpGet("random")]
+        [HttpGet("/index/Random/{index}")]
+        [ViewLayout("~/Views/Layout/Layout.cshtml")]
+        public IActionResult Random(int index)
+        {
+            var articleParam = new ArticleParam {Page = index == 0 ? 1 : index, OrderBy = "Random"};
+            return View("Index", new IndexViewModel
+            {
+                Contents = _contentsService.FindArticles(articleParam),
+                OrderType = "Random"
             });
         }
 
@@ -37,7 +68,7 @@ namespace iBlogs.Site.Web.Controllers
             {
                 DisplayType = "标签",
                 DisplayMeta = tag,
-                Contents = _contentsService.FindContentByMeta(MetaType.Tag,tag,new ArticleParam())
+                Contents = _contentsService.FindContentByMeta(MetaType.Tag, tag, new ArticleParam())
             });
         }
 
@@ -72,34 +103,6 @@ namespace iBlogs.Site.Web.Controllers
         public IActionResult AllCategories()
         {
             return View("AllCategories", _metasService.LoadMetaDataViewModel(MetaType.Category));
-        }
-
-        [HttpGet("hot")]
-        [ViewLayout("~/Views/Layout/Layout.cshtml")]
-        public IActionResult Hot(ArticleParam articleParam)
-        {
-            if (articleParam == null)
-                articleParam = new ArticleParam();
-            articleParam.OrderBy = "Hits";
-            return View("Index",new IndexViewModel
-            {
-                Contents = _contentsService.FindArticles(articleParam),
-                OrderType = "Hot"
-            });
-        }
-
-        [HttpGet("Random")]
-        [ViewLayout("~/Views/Layout/Layout.cshtml")]
-        public IActionResult Random(ArticleParam articleParam)
-        {
-            if (articleParam == null)
-                articleParam = new ArticleParam();
-            articleParam.OrderBy = "Random";
-            return View("Index", new IndexViewModel
-            {
-                Contents = _contentsService.FindArticles(articleParam),
-                OrderType = "Random"
-            });
         }
     }
 }
