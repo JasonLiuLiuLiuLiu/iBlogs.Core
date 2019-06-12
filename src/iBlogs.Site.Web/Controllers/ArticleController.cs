@@ -28,12 +28,12 @@ namespace iBlogs.Site.Web.Controllers
 
         [HttpGet("/article/{url}")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
-        public IActionResult Index(string url, CommentPageParam commentPage)
+        public IActionResult Index(string url, int cp)
         {
             var content = _contentsService.GetContents(url);
             var pre = _contentsService.GetPre(content.Id);
             var next = _contentsService.GetNext(content.Id);
-            commentPage.Cid = content.Id;
+            var commentPage = new CommentPageParam { Page = cp == 0 ? 1 : cp, Cid = content.Id };
             var pageComments = _commentsService.GetComments(commentPage);
             CurrentUser currentUser = null;
             if (HttpContext.User.Claims.Any())
@@ -55,7 +55,7 @@ namespace iBlogs.Site.Web.Controllers
 
                 }
             }
-            return View("Index",new ArticleViewModel
+            return View("Index", new ArticleViewModel
             {
                 Content = content,
                 Pre = pre,
@@ -67,16 +67,16 @@ namespace iBlogs.Site.Web.Controllers
 
         [HttpGet("/links")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
-        public IActionResult Links()
+        public IActionResult Links(int cp)
         {
-            return Index("links", new CommentPageParam());
+            return Index("links", cp);
         }
 
         [HttpGet("/about")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
-        public IActionResult About()
+        public IActionResult About(int cp)
         {
-            return Index("about", new CommentPageParam());
+            return Index("about", cp);
         }
 
 
