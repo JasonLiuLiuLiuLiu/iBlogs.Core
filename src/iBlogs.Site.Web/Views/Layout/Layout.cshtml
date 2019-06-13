@@ -75,25 +75,26 @@
                 <div class="social-list">
                     @if (!ViewService.SiteOption("social_weibo").IsNullOrWhiteSpace())
                     {
-                    <a class="social weibo" target="blank" href="http://weibo.com/@ViewService.SiteOption(" social_weibo")">微博</a>
+                        <a class="social weibo" target="_blank" href="http://weibo.com/@ViewService.SiteOption(" social_weibo")">微博</a>
                     }
 
                     @if (!ViewService.SiteOption("social_zhihu").IsNullOrWhiteSpace())
                     {
-                    <a class="social zhihu" target="blank" href="https://www.zhihu.com/people/@ViewService.SiteOption(" social_zhihu")">知乎</a>
+                        <a class="social zhihu" target="_blank" href="https://www.zhihu.com/people/@ViewService.SiteOption(" social_zhihu")">知乎</a>
                     }
 
-                    <a class="social rss" target="blank" href="/feed">RSS</a>
+                    <a class="social rss" target="_blank" href="/feed">RSS</a>
+                    <a class="social rss" target="_blank" href="/sitemap.xml">Site Map</a>
 
                     @if (!ViewService.SiteOption("social_github").IsNullOrWhiteSpace())
                     {
-                    <a class="social github" target="blank"
-                       href="https://github.com/@ViewService.SiteOption(" social_github")">Github</a>
+                        <a class="social github" target="_blank"
+                           href="https://github.com/@ViewService.SiteOption(" social_github")">Github</a>
                     }
 
                     @if (!ViewService.SiteOption("social_twitter").IsNullOrWhiteSpace())
                     {
-                    <a class="social twitter" target="blank" href="https://twitter.com/@ViewService.SiteOption(" social_twitter")">Twitter</a>
+                        <a class="social twitter" target="_blank" href="https://twitter.com/@ViewService.SiteOption(" social_twitter")">Twitter</a>
                     }
                 </div>
             </div>

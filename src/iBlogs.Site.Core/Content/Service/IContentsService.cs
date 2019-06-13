@@ -1,4 +1,6 @@
-﻿using iBlogs.Site.Core.Common.Request;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Content.DTO;
 
@@ -27,5 +29,6 @@ namespace iBlogs.Site.Core.Content.Service
         Page<Archive> GetArchive(PageParam pageParam);
 
         void UpdateCommentCount(int cid,int updateCount);
+        Task<List<ContentResponse>> GetContent(int limit);
     }
 }

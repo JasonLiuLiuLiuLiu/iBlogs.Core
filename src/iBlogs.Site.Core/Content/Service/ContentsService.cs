@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -226,6 +227,15 @@ namespace iBlogs.Site.Core.Content.Service
             content.CommentsNum += updateCount;
             _repository.Update(content);
             _repository.SaveChanges();
+        }
+
+        public async Task<List<ContentResponse>> GetContent(int limit)
+        {
+            var contents=_repository.GetAll()
+                .Where(u=>u.Status== "Publish")
+                .OrderByDescending(u => u.Created)
+                .Take(limit).ToListAsync();
+            return _mapper.Map<List<ContentResponse>>(await contents);
         }
     }
 }
