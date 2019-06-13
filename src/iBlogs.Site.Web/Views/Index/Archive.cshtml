@@ -94,17 +94,17 @@
                         <ol class="page-navigator">
                             @if (pageInfo.HasPrevPage)
                         {
-                            <li class="prev"><a href="/page/@pageInfo.PrevPage">←</a></li>
+                            <li class="prev"><a href="/index/archives/@pageInfo.PrevPage">←</a></li>
                         }
 
                             @foreach (var navIndex in pageInfo.NavPageNums)
                         {
-                            <li class="@(pageInfo.PageNum == navIndex ? "current" : "")"><a href="/page/@navIndex">@navIndex</a></li>
+                            <li class="@(pageInfo.PageNum == navIndex ? "current" : "")"><a href="/index/archives/@navIndex">@navIndex</a></li>
                         }
 
                             @if (pageInfo.HasNextPage)
                         {
-                            <li class="next"><a href="/page/@pageInfo.NextPage">→</a></li>
+                            <li class="next"><a href="/index/archives/@pageInfo.NextPage">→</a></li>
                         }
                         </ol>
                     }

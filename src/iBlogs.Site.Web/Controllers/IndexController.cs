@@ -92,10 +92,14 @@ namespace iBlogs.Site.Web.Controllers
         }
 
         [HttpGet("/archives")]
+        [HttpGet("/index/archives/{index}")]
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
-        public IActionResult Archive(PageParam param)
+        public IActionResult Archive(int index)
         {
-            return View(_contentsService.GetArchive(param ?? new PageParam()));
+            return View(_contentsService.GetArchive(new PageParam
+            {
+                Page = index==0?1:index
+            }));
         }
 
         [HttpGet("AllTags")]
