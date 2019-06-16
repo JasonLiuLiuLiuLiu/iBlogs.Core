@@ -19,21 +19,24 @@
                             <svg class="Zi Zi--WritePin GlobalWrite-navIcon" fill="currentColor" width="24" height="24" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3655">
                                 <defs>
                                     <style type="text/css">
-                                    </style>
+                                        </style>
                                 </defs>
                                 <path d="M512 0c282.784 0 512 229.216 512 512s-229.216 512-512 512S0 794.784 0 512 229.216 0 512 0z m189.952 752l11.2-108.224c-31.904 9.536-100.928 16.128-147.712 16.128-134.464 0-205.728-47.296-195.328-146.304 11.584-110.688 113.152-145.696 232.64-145.696 54.784 0 122.432 8.8 151.296 18.336L768 272.704C724.544 262.24 678.272 256 599.584 256c-203.2 0-388.704 94.88-406.4 263.488C178.336 660.96 303.584 768 535.616 768c80.672 0 138.464-6.432 166.336-16z" fill="#CE000D" p-id="3656">
                                 </path>
                             </svg>
                             <div class="GlobalWrite-navTitle">CSDN</div>
                         </a>
-                        <div class="GlobalWrite-navItem">
+                        <a class="GlobalWrite-navItem" onmousemove="WeChatShow()" onmouseout="WeChatHide()">
                             <svg class="Zi Zi--Paper GlobalWrite-navIcon" fill="currentColor" width="24" height="24" viewBox="0 0 1025 1024">
                                 <path d="M1024.16 694.816c0-149.92-143.104-271.392-319.584-271.392-176.576 0-319.68 121.504-319.68 271.392S528 966.208 704.576 966.208c55.456 0 107.648-12.096 153.184-33.248l125.984 54.528-14.592-140.544c34.784-43.392 55.04-95.808 55.04-152.128zM596.832 621.28c-25.152 0-45.472-20.352-45.472-45.472s20.32-45.472 45.472-45.472c25.12 0 45.44 20.384 45.44 45.472s-20.384 45.472-45.44 45.472zm215.392 0c-25.056 0-45.44-20.352-45.44-45.472s20.384-45.472 45.44-45.472c25.184 0 45.536 20.384 45.536 45.472s-20.352 45.472-45.536 45.472zM704.576 387.488c49.376 0 96.416 8.8 139.264 24.64.32-5.728.992-11.232.992-16.992 0-198.08-189.152-358.624-422.432-358.624C189.184 36.512.032 197.024.032 395.136c0 74.496 26.816 143.776 72.704 201.12L53.472 781.92l166.432-72.096c41.216 19.2 86.784 32.16 134.88 38.784-3.616-17.504-5.824-35.424-5.824-53.792.032-169.44 159.552-307.296 355.616-307.296zm-139.808-209.6c33.184 0 60 26.88 60 60 0 33.184-26.816 60.064-60 60.064s-60.032-26.88-60.032-60.064c0-33.152 26.88-60 60.032-60zM280.032 297.952c-33.184 0-60-26.88-60-60.064 0-33.152 26.848-60 60-60 33.184 0 60.032 26.88 60.032 60s-26.88 60.064-60.032 60.064z" fill="#51C332" />
                             </svg>
                             <div class="GlobalWrite-navTitle">公众号</div>
-                        </div>
+                        </a>
                     </div>
                 </div>
+            </div>
+            <div id="WeChat" class="Pc-card Card" style="display: none">
+                <img class="Banner-image" src="https://raw.githubusercontent.com/liuzhenyulive/iBlogs/Development/coderayu.png" alt="码农阿宇">
             </div>
             <div class="Card">
                 <ul class="GlobalSideBar-categoryList">
@@ -185,3 +188,13 @@
         </div>
     </div>
 </div>
+<script>
+    
+    function WeChatShow() {
+        document.getElementById("WeChat").style.display = "block";
+    }
+
+    function WeChatHide() {
+        document.getElementById("WeChat").style.display = "none";
+    }
+</script>
