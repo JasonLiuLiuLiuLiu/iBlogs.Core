@@ -39,7 +39,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         private readonly IAttachService _attachService;
         private readonly IOptionService _optionService;
 
-        public ApiController(IMetasService metasService,  IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService, IOptionService optionService)
+        public ApiController(IMetasService metasService, IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService, IOptionService optionService)
         {
             _metasService = metasService;
             _contentsService = contentsService;
@@ -180,9 +180,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         [AdminApiRoute("comments")]
-        public ApiResponse<List<Comments>> CommentList(CommentParam commentParam)
+        public ApiResponse<Page<CommentResponse>> CommentList(CommentParam commentParam)
         {
-            return ApiResponse<List<Comments>>.Ok(new List<Comments>());
+            if (commentParam == null)
+                commentParam = new CommentParam();
+
+            return ApiResponse<Page<CommentResponse>>.Ok(null);
         }
 
         // @SysLog("删除评论")
