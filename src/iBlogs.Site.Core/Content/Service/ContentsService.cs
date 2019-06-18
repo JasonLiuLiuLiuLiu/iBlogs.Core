@@ -9,6 +9,7 @@ using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.Meta;
 using iBlogs.Site.Core.Meta.DTO;
 using iBlogs.Site.Core.Meta.Service;
 using iBlogs.Site.Core.Relationship;
@@ -81,8 +82,8 @@ namespace iBlogs.Site.Core.Content.Service
 
             var cid = _repository.InsertOrUpdateAndGetId(entity);
 
-            _metasService.SaveMetas(cid, tags, Types.TAG);
-            _metasService.SaveMetas(cid, categories, Types.CATEGORY);
+            _metasService.SaveMetas(cid, tags, MetaType.Tag);
+            _metasService.SaveMetas(cid, categories, MetaType.Category);
 
             return cid;
         }
@@ -107,13 +108,13 @@ namespace iBlogs.Site.Core.Content.Service
             var tags = contents.Tags;
             var categories = contents.Categories;
 
-            if (null != contents.Type && !contents.Type.Equals(Types.PAGE))
+            if (contents.Type!=ContentType.Page)
             {
                 _relationshipService.DeleteByContentId(cid);
             }
 
-            _metasService.SaveMetas(cid, tags, Types.TAG);
-            _metasService.SaveMetas(cid, categories, Types.CATEGORY);
+            _metasService.SaveMetas(cid, tags, MetaType.Tag);
+            _metasService.SaveMetas(cid, categories, MetaType.Category);
         }
 
         /**
@@ -153,14 +154,12 @@ namespace iBlogs.Site.Core.Content.Service
             if (articleParam.Tag != null)
                 query = query.Where(p => p.Tags.Contains(articleParam.Tag));
 
-            if (articleParam.Status != null)
-                query = query.Where(p => p.Status == articleParam.Status);
+            query = query.Where(p => p.Status == articleParam.Status);
 
             if (articleParam.Title != null)
                 query = query.Where(p => p.Title.Contains(articleParam.Title));
 
-            if (articleParam.Type != null)
-                query = query.Where(p => p.Type == articleParam.Type);
+            query = query.Where(p => p.Type == articleParam.Type);
 
             return _mapper.Map<Page<ContentResponse>>(_repository.Page(query, articleParam));
         }
@@ -179,7 +178,7 @@ namespace iBlogs.Site.Core.Content.Service
                 u.Created < query.FirstOrDefault(s => s.Id == id).Created).OrderByDescending(u => u.Created).FirstOrDefault());
         }
 
-        public Page<ContentResponse> FindContentByMeta(string metaType, string value, ArticleParam articleParam)
+        public Page<ContentResponse> FindContentByMeta(MetaType metaType, string value, ArticleParam articleParam)
         {
             var query = _relRepository.GetAll()
                 .Where(r => r.Meta.Type == metaType)
@@ -231,8 +230,8 @@ namespace iBlogs.Site.Core.Content.Service
 
         public async Task<List<ContentResponse>> GetContent(int limit)
         {
-            var contents=_repository.GetAll()
-                .Where(u=>u.Status== "Publish")
+            var contents = _repository.GetAll()
+                .Where(u => u.Status == ContentStatus.Publish)
                 .OrderByDescending(u => u.Created)
                 .Take(limit).ToListAsync();
             return _mapper.Map<List<ContentResponse>>(await contents);

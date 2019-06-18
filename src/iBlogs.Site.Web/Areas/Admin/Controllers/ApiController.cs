@@ -83,7 +83,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         public ApiResponse<int> NewArticle([FromBody]ContentInput contents)
         {
             var user = _userService.CurrentUsers;
-            contents.Type = Types.ARTICLE;
+            contents.Type = ContentType.Post;
             contents.AuthorId = user.Uid;
             //将点击数设初始化为0
             contents.Hits = 0;
@@ -112,7 +112,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             {
                 return ApiResponse<int>.Fail("缺少参数，请重试");
             }
-            contents.Type = Types.ARTICLE;
+            contents.Type = ContentType.Post;
             var cid = contents.Id.Value;
             _contentsService.UpdateArticle(contents);
             return ApiResponse<int>.Ok(cid, cid);
@@ -121,7 +121,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         // @GetRoute("articles")
         public ApiResponse ArticleList(ArticleParam articleParam)
         {
-            articleParam.Type = Types.ARTICLE;
+            articleParam.Type = ContentType.Post;
             articleParam.Page--;
             var articles = _contentsService.FindArticles(articleParam);
             return ApiResponse<Page<ContentResponse>>.Ok(articles);
@@ -130,7 +130,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [AdminApiRoute("pages")]
         public ApiResponse<Page<ContentResponse>> PageList(ArticleParam articleParam)
         {
-            articleParam.Type = Types.PAGE;
+            articleParam.Type = ContentType.Page;
             articleParam.Page--;
             var articles = _contentsService.FindArticles(articleParam);
             return ApiResponse<Page<ContentResponse>>.Ok(articles);
@@ -141,7 +141,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         public ApiResponse NewPage([FromBody]ContentInput contents)
         {
             var users = _userService.CurrentUsers;
-            contents.Type = Types.PAGE;
+            contents.Type = ContentType.Page;
             contents.AllowPing = true;
             contents.AuthorId = users.Uid;
             _contentsService.Publish(contents);
@@ -157,7 +157,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                 return ApiResponse.Fail("缺少参数，请重试");
             }
             int cid = contents.Id.Value;
-            contents.Type = Types.PAGE;
+            contents.Type = ContentType.Page;
             _contentsService.UpdateArticle(contents);
             return ApiResponse.Ok(cid);
         }
@@ -166,7 +166,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [Route("/admin/api/category/save")]
         public ApiResponse SaveCategory([FromBody]MetaParam metaParam)
         {
-            _metasService.SaveMeta(Types.CATEGORY, metaParam.Cname, metaParam.Id);
+            _metasService.SaveMeta(MetaType.Category, metaParam.Cname, metaParam.Id);
             return ApiResponse.Ok();
         }
 
@@ -227,13 +227,13 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         // @GetRoute("categories")
         public ApiResponse CategoryList()
         {
-            return ApiResponse<List<Metas>>.Ok(_metasService.GetMetas(Types.CATEGORY, iBlogsConfig.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_metasService.GetMetas(MetaType.Category, iBlogsConfig.MAX_POSTS));
         }
 
         // @GetRoute("tags")
         public ApiResponse TagList()
         {
-            return ApiResponse<List<Metas>>.Ok(_metasService.GetMetas(Types.TAG, iBlogsConfig.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_metasService.GetMetas(MetaType.Tag, iBlogsConfig.MAX_POSTS));
         }
 
         // @GetRoute("options")

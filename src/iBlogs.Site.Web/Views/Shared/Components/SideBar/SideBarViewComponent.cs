@@ -1,4 +1,4 @@
-﻿using iBlogs.Site.Core.Meta.DTO;
+﻿using iBlogs.Site.Core.Meta;
 using iBlogs.Site.Core.Meta.Service;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;

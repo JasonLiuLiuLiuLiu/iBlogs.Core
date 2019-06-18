@@ -24,7 +24,7 @@ namespace iBlogs.Site.Core.Meta.Service
             _relRepository = relRepository;
         }
 
-        public MetaDataViewModel LoadMetaDataViewModel(string type,int topCount=0)
+        public MetaDataViewModel LoadMetaDataViewModel(MetaType type,int topCount=0)
         {
             var query=_relRepository.GetAll()
                 .Where(r=>r.Meta.Type==type)
@@ -52,7 +52,7 @@ namespace iBlogs.Site.Core.Meta.Service
         * @param type 类型，tag or category
         */
 
-        public List<Metas> GetMetas(string type, int limit = 0)
+        public List<Metas> GetMetas(MetaType type, int limit = 0)
         {
             if (limit < 1 || limit > iBlogsConfig.MAX_POSTS)
             {
@@ -97,13 +97,13 @@ namespace iBlogs.Site.Core.Meta.Service
          * @param type  类型，tag or category
          */
 
-        public void SaveMetas(int? cid, string names, string type)
+        public void SaveMetas(int? cid, string names, MetaType type)
         {
             if (null == cid)
             {
                 throw new Exception("项目关联id不能为空");
             }
-            if (!names.IsNullOrWhiteSpace() && !type.IsNullOrWhiteSpace())
+            if (!names.IsNullOrWhiteSpace())
             {
                 var nameArr = names.Split(",");
                 foreach (var name in nameArr)
@@ -113,7 +113,7 @@ namespace iBlogs.Site.Core.Meta.Service
             }
         }
 
-        private void saveOrUpdate(int cid, string name, string type)
+        private void saveOrUpdate(int cid, string name, MetaType type)
         {
             var metas = _repository.GetAll().Where(m => m.Name == name).FirstOrDefault(m => m.Type == type);
             int mid;
@@ -156,9 +156,9 @@ namespace iBlogs.Site.Core.Meta.Service
          * @param mid
          */
 
-        public void SaveMeta(string type, string name, int? mid)
+        public void SaveMeta(MetaType type, string name, int? mid)
         {
-            if (type.IsNullOrWhiteSpace() || name.IsNullOrWhiteSpace())
+            if (name.IsNullOrWhiteSpace())
             {
                 return;
             }
