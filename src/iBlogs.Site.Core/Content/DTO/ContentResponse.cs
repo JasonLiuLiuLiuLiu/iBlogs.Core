@@ -11,7 +11,7 @@ namespace iBlogs.Site.Core.Content.DTO
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Slug { get; set; }
+        public string Slug => Id.ToString();
         public DateTime Modified { get; set; }
         public string Content { get; set; }
         public int Hits { get; set; }

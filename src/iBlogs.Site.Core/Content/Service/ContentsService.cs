@@ -108,7 +108,7 @@ namespace iBlogs.Site.Core.Content.Service
             var tags = contents.Tags;
             var categories = contents.Categories;
 
-            if (contents.Type!=ContentType.Page)
+            if (contents.Type != ContentType.Page)
             {
                 _relationshipService.DeleteByContentId(cid);
             }
@@ -154,7 +154,8 @@ namespace iBlogs.Site.Core.Content.Service
             if (articleParam.Tag != null)
                 query = query.Where(p => p.Tags.Contains(articleParam.Tag));
 
-            query = query.Where(p => p.Status == articleParam.Status);
+            if (articleParam.Status.HasValue)
+                query = query.Where(p => p.Status == articleParam.Status.Value);
 
             if (articleParam.Title != null)
                 query = query.Where(p => p.Title.Contains(articleParam.Title));

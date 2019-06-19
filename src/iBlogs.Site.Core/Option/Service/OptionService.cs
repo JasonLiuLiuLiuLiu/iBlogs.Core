@@ -9,30 +9,29 @@ namespace iBlogs.Site.Core.Option.Service
     public class OptionService : IOptionService
     {
         private readonly IRepository<Options> _repository;
-        private IDictionary<string, string> _options;
+        private static IDictionary<string, string> _options = new Dictionary<string, string>();
 
         public OptionService(IRepository<Options> repository)
         {
             _repository = repository;
-            _options = new Dictionary<string, string>();
-            TryReLoad();
+            TryLoad();
         }
 
-        public void TryReLoad()
+        public void TryLoad()
         {
             try
             {
-                _options.Clear();
-                _options = _repository.GetAll().ToDictionary(o => o.Name, o => o.Value);
+                if (_options.Count == 0)
+                    _options = _repository.GetAll().ToDictionary(o => o.Name, o => o.Value);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
-           
+
         }
 
-        public void Set(string key, string value,string description=null)
+        public void Set(string key, string value, string description = null)
         {
             if (_options.ContainsKey(key))
                 if (_options[key] == value)
@@ -53,7 +52,7 @@ namespace iBlogs.Site.Core.Option.Service
                 }
             else
             {
-                _repository.Insert(new Options {Name = key, Value = value,Description = description});
+                _repository.Insert(new Options { Name = key, Value = value, Description = description });
                 _options.Add(key, value);
                 _repository.SaveChanges();
             }
@@ -73,11 +72,11 @@ namespace iBlogs.Site.Core.Option.Service
         * @param key   配置key
         * @param value 配置值
         */
-        public void saveOption(string key, string value,string description=null)
+        public void saveOption(string key, string value, string description = null)
         {
             if (stringKit.isNotBlank(key) && stringKit.isNotBlank(value))
             {
-                Set(key, value,description);
+                Set(key, value, description);
             }
         }
 
@@ -104,22 +103,22 @@ namespace iBlogs.Site.Core.Option.Service
             if (_options.ContainsKey(key))
             {
                 _options.Remove(key);
-                _repository.Delete(_repository.GetAll().FirstOrDefault(o=>o.Name==key));
+                _repository.Delete(_repository.GetAll().FirstOrDefault(o => o.Name == key));
             }
         }
 
-        public IDictionary<string,string> GetAll()
+        public IDictionary<string, string> GetAll()
         {
             return _options;
         }
 
         public void SaveOptions(IDictionary<string, string> options)
         {
-            if(options==null)
+            if (options == null)
                 return;
             foreach (var option in options)
             {
-                saveOption(option.Key,option.Value);
+                saveOption(option.Key, option.Value);
             }
         }
 

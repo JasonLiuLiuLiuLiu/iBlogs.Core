@@ -18,9 +18,6 @@ namespace iBlogs.Site.Core.Meta
         public int Parent { get; set; }
         public int Count { get; set; }
 
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
     }

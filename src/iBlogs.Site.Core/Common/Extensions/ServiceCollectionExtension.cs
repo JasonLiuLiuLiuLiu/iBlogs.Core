@@ -13,7 +13,6 @@ namespace iBlogs.Site.Core.Common.Extensions
         public static IServiceCollection AddIBlogs(this IServiceCollection services)
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddSingleton<IOptionService, OptionService>();
             services.AddCoreDi(options =>
             {
                 options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*", "ef*", "*AutoMapper*" };

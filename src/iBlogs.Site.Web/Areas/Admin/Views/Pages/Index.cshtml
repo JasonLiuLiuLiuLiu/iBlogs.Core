@@ -29,17 +29,17 @@
                                     <td>{{ item.slug }}</td>
                                     <td>{{ item.created | formatUnix }}</td>
                                     <td>
-                                        <span v-show="item.status == 'Publish'">已发布</span>
-                                        <span v-show="item.status == 'draft'">草稿</span>
+                                        <span v-show="item.status == 'Publish'" class="label label-success">已发布</span>
+                                        <span v-show="item.status == 'Draft'" class="label label-default">草稿</span>
                                     </td>
                                     <td>
                                         <a :href="'/admin/pages/edit/' + item.id" class="btn btn-primary btn-sm waves-effect waves-light m-b-5">
                                             <i class="fa fa-edit"></i> <span>编辑</span>
                                         </a>
-                                        <a v-on:click="DeleteArticle(item.id)" href="javascript:void(0)" class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
+                                        <a v-on:click="deleteArticle(item.id)" href="javascript:void(0)" class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
                                             <i class="fa fa-trash-o"></i> <span>删除</span>
                                         </a>
-                                        <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5" :href="'${SiteUrl()}/' + item.slug"
+                                        <a class="btn btn-warning btn-sm waves-effect waves-light m-b-5" :href="'../article/' + item.slug"
                                            target="_blank">
                                             <i class="fa fa-rocket"></i> <span>预览</span>
                                         </a>
