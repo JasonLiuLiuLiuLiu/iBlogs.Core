@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using iBlogs.Site.Core.Comment.DTO;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.EntityFrameworkCore;
@@ -8,13 +8,7 @@ using iBlogs.Site.Core.Content.Service;
 
 namespace iBlogs.Site.Core.Comment.Service
 {
-    /**
-     * 评论Service
-     *
-     * @author biezhi
-     * @since 1.3.1
-     */
-
+    
     public class CommentsService : ICommentsService
     {
         private readonly IRepository<Comments> _repository;
@@ -41,7 +35,7 @@ namespace iBlogs.Site.Core.Comment.Service
         {
             _repository.InsertOrUpdate(comments);
             _repository.SaveChanges();
-            _contentsService.UpdateCommentCount(comments.Cid,1);
+            _contentsService.UpdateCommentCount(comments.Cid, 1);
         }
 
         /**
@@ -51,10 +45,22 @@ namespace iBlogs.Site.Core.Comment.Service
          * @param cid
          * @throws Exception
          */
-        public void delete(int coid, int cid)
+        public void Delete(int? id)
         {
+            if(!id.HasValue)
+                throw new Exception("没找到该评论!");
+            _repository.Delete(id.Value);
+            _repository.SaveChanges();
+        }
 
-
+        public void UpdateComment(CommentParam param)
+        {
+            var comment=_repository.FirstOrDefault(param.Coid);
+            if(comment==null)
+                throw new Exception("没找到该评论!");
+            comment.Status = param.Status;
+            _repository.Update(comment);
+            _repository.SaveChanges();
         }
 
         /**
@@ -67,36 +73,15 @@ namespace iBlogs.Site.Core.Comment.Service
          */
         public Page<CommentResponse> GetComments(CommentPageParam param)
         {
-            var query = _repository.GetAll().Where(c => c.Cid == param.Cid);
+            var query = _repository.GetAll()
+                .Where(c => c.Status == param.Status);
+
+            if (param.Cid.HasValue)
+                query = query.Where(c => c.Cid == param.Cid);
+
             return _mapper.Map<Page<CommentResponse>>(_repository.Page(query, param));
         }
 
-        /**
-         * 获取文章下的评论统计
-         *
-         * @param cid 文章ID
-         */
-        public long getCommentCount(int cid)
-        {
-            return 0;
-        }
-
-        /**
-         * 获取该评论下的追加评论
-         *
-         * @param coid
-         * @return
-         */
-        private void GetChildren(List<Comments> list, int coid)
-        {
-
-        }
-
-
-        public Page<Comments> findComments(CommentParam commentParam)
-        {
-            return null;
-        }
 
     }
 }

@@ -4,7 +4,8 @@ namespace iBlogs.Site.Core.Comment.DTO
 {
     public class CommentParam : PageParam
     {
-
+        public int Coid { get; set; }
+        public CommentStatus Status { get; set; }
         public int ExcludeUid { get; set; }
     }
 }

@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Comment.Service;
 using iBlogs.Site.Core.Option;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
@@ -38,8 +39,9 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         private readonly IHostingEnvironment _env;
         private readonly IAttachService _attachService;
         private readonly IOptionService _optionService;
+        private readonly ICommentsService _commentsService;
 
-        public ApiController(IMetasService metasService, IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService, IOptionService optionService)
+        public ApiController(IMetasService metasService, IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService, IOptionService optionService, ICommentsService commentsService)
         {
             _metasService = metasService;
             _contentsService = contentsService;
@@ -47,6 +49,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             _env = env;
             _attachService = attachService;
             _optionService = optionService;
+            _commentsService = commentsService;
         }
 
         [AdminApiRoute("logs")]
@@ -180,26 +183,28 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         [AdminApiRoute("comments")]
-        public ApiResponse<Page<CommentResponse>> CommentList(CommentParam commentParam)
+        public ApiResponse<Page<CommentResponse>> CommentList(CommentPageParam commentParam)
         {
             if (commentParam == null)
-                commentParam = new CommentParam();
+                commentParam = new CommentPageParam();
 
-            return ApiResponse<Page<CommentResponse>>.Ok(null);
+            return ApiResponse<Page<CommentResponse>>.Ok(_commentsService.GetComments(commentParam));
         }
 
         // @SysLog("删除评论")
-        //@PostRoute("comment/Delete/:coid")
-        public ApiResponse DeleteComment(int coid)
+        [AdminApiRoute("comment/Delete/{coid}")]
+        public ApiResponse DeleteComment(int? coid)
         {
-            throw new NotImplementedException();
+            _commentsService.Delete(coid);
+           return ApiResponse.Ok();
         }
 
         // @SysLog("修改评论状态")
-        // @PostRoute("comment/status")
-        public ApiResponse UpdateStatus(Comments comments)
+        [AdminApiRoute("comment/status")]
+        public ApiResponse UpdateStatus([FromBody]CommentParam param)
         {
-            throw new NotImplementedException();
+            _commentsService.UpdateComment(param);
+           return ApiResponse.Ok();
         }
 
         // @SysLog("回复评论")
