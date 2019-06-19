@@ -6,10 +6,10 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Option.Service
 {
-    public class OptionService : IOptionService
+    public class OptionService 
     {
         private readonly IRepository<Options> _repository;
-        private static IDictionary<string, string> _options = new Dictionary<string, string>();
+        private static IDictionary<ConfigKey, string> _options = new Dictionary<ConfigKey, string>();
 
         public OptionService(IRepository<Options> repository)
         {
@@ -17,12 +17,12 @@ namespace iBlogs.Site.Core.Option.Service
             TryLoad();
         }
 
-        public void TryLoad()
+        private void TryLoad()
         {
             try
             {
                 if (_options.Count == 0)
-                    _options = _repository.GetAll().ToDictionary(o => o.Name, o => o.Value);
+                    _options = _repository.GetAll().ToDictionary(o => (ConfigKey)Enum.Parse(typeof(ConfigKey),o.Name), o => o.Value);
             }
             catch (Exception e)
             {
@@ -31,7 +31,7 @@ namespace iBlogs.Site.Core.Option.Service
 
         }
 
-        public void Set(string key, string value, string description = null)
+        public void Set(ConfigKey key, string value, string description = null)
         {
             if (_options.ContainsKey(key))
                 if (_options[key] == value)
@@ -58,7 +58,7 @@ namespace iBlogs.Site.Core.Option.Service
             }
         }
 
-        public string Get(string key, string defaultValue = null)
+        public string Get(ConfigKey key, string defaultValue = null)
         {
             key = key.Trim().ToLower();
             if (_options.TryGetValue(key, out string value))
@@ -72,7 +72,7 @@ namespace iBlogs.Site.Core.Option.Service
         * @param key   配置key
         * @param value 配置值
         */
-        public void saveOption(string key, string value, string description = null)
+        public void saveOption(ConfigKey key, string value, string description = null)
         {
             if (stringKit.isNotBlank(key) && stringKit.isNotBlank(value))
             {
@@ -88,7 +88,7 @@ namespace iBlogs.Site.Core.Option.Service
             return _options;
         }
 
-        public string getOption(string key)
+        public string getOption(ConfigKey key)
         {
             return Get(key);
         }
@@ -98,7 +98,7 @@ namespace iBlogs.Site.Core.Option.Service
          *
          * @param key 配置key
          */
-        public void deleteOption(string key)
+        public void deleteOption(ConfigKey key)
         {
             if (_options.ContainsKey(key))
             {

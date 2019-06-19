@@ -20,7 +20,7 @@ namespace iBlogs.Site.Web.Attribute
 
             if (context.Result is ViewResult viewResult)
             {
-                viewResult.ViewData["title"] = _title + optionService.Get(OptionKeys.SiteTitle, "iBlogs");
+                viewResult.ViewData["title"] = _title + optionService.Get(ConfigKeys.SiteTitle, "iBlogs");
             }
         }
     }
