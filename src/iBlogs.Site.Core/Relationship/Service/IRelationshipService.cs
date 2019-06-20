@@ -7,5 +7,7 @@
         void DeleteByContentId(int cid);
 
         void DeleteByMetaId(int id);
+
+        int GetContentCountByMetaDataId(int mid);
     }
 }

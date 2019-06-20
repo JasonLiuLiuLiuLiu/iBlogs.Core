@@ -23,14 +23,14 @@ namespace iBlogs.Site.Core.Meta.Service
             _relRepository = relRepository;
         }
 
-        public MetaDataViewModel LoadMetaDataViewModel(MetaType type,int topCount=0)
+        public MetaDataViewModel LoadMetaDataViewModel(MetaType type, int topCount = 0)
         {
-            var query=_relRepository.GetAll()
-                .Where(r=>r.Meta.Type==type)
-                .Join(_repository.GetAll(), r => r.Mid, c => c.Id, (r, c) => new {r.Cid, c.Name})
+            var query = _relRepository.GetAll()
+                .Where(r => r.Meta.Type == type)
+                .Join(_repository.GetAll(), r => r.Mid, c => c.Id, (r, c) => new { r.Cid, c.Name })
                 .GroupBy(g => g.Name)
                 .Select(g => new KeyValuePair<string, int>(g.Key, g.Count()))
-                .OrderByDescending(g=>g.Value);
+                .OrderByDescending(g => g.Value);
 
             if (topCount > 0)
                 query = query.Take(topCount).OrderByDescending(g => g.Value);
@@ -53,7 +53,7 @@ namespace iBlogs.Site.Core.Meta.Service
 
         public List<Metas> GetMetas(MetaType type, int limit = 0)
         {
-            if (limit < 1 || limit > int.Parse(ConfigData.Get(ConfigKey.MaxPage,999.ToString())))
+            if (limit < 1 || limit > int.Parse(ConfigData.Get(ConfigKey.MaxPage, 999.ToString())))
             {
                 limit = 10;
             }
@@ -84,25 +84,6 @@ namespace iBlogs.Site.Core.Meta.Service
             }
         }
 
-        private void SaveOrUpdate(int cid, string name, MetaType type)
-        {
-            var metas = _repository.GetAll().Where(m => m.Name == name).FirstOrDefault(m => m.Type == type);
-            int mid;
-            if (null != metas)
-            {
-                mid = metas.Id;
-            }
-            else
-            {
-                metas = new Metas { Slug = name, Name = name, Type = type };
-                mid = _repository.InsertAndGetId(metas);
-            }
-            if (mid != 0)
-            {
-                _relationshipService.SaveOrUpdate(cid, mid);
-            }
-        }
-
         /**
          * 删除项目
          *
@@ -129,6 +110,28 @@ namespace iBlogs.Site.Core.Meta.Service
                 return;
             }
             _repository.InsertOrUpdate(new Metas() { Id = mid.ValueOrDefault(), Name = name, Type = type });
+            _repository.SaveChanges();
+        }
+
+        private void SaveOrUpdate(int cid, string name, MetaType type)
+        {
+            var metas = _repository.GetAll().Where(m => m.Name == name).FirstOrDefault(m => m.Type == type);
+            int mid;
+            if (null != metas)
+            {
+                mid = metas.Id;
+            }
+            else
+            {
+                metas = new Metas { Slug = name, Name = name, Type = type };
+                mid = _repository.InsertAndGetId(metas);
+            }
+            if (mid != 0)
+            {
+                _relationshipService.SaveOrUpdate(cid, mid);
+            }
+            metas.Count = _relationshipService.GetContentCountByMetaDataId(mid);
+            _repository.Update(metas);
             _repository.SaveChanges();
         }
     }

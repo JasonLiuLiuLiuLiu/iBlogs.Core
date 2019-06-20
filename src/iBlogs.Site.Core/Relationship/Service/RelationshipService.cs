@@ -13,6 +13,11 @@ namespace iBlogs.Site.Core.Relationship.Service
             _repository = repository;
         }
 
+        public int GetContentCountByMetaDataId(int mid)
+        {
+            return _repository.GetAll().Count(u => u.Mid == mid);
+        }
+
         public void SaveOrUpdate(int cid, int mid)
         {
             _repository.InsertOrUpdate(new Relationships { Cid = cid, Mid = mid });
