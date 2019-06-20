@@ -2,6 +2,7 @@
 using System.Text;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.Option;
 using Markdig;
 
 namespace iBlogs.Site.Core.Content.DTO
@@ -185,7 +186,7 @@ namespace iBlogs.Site.Core.Content.DTO
 
         public string Intro()
         {
-            return Intro(Content, iBlogsConfig.MAX_INTRO_COUNT);
+            return Intro(Content, int.Parse(ConfigData.Get(ConfigKey.MaxIntroCount,1000.ToString())));
         }
 
         /// <summary>

@@ -26,6 +26,7 @@ using System.IO;
 using System.Threading.Tasks;
 using iBlogs.Site.Core.Comment.Service;
 using iBlogs.Site.Core.Option;
+using ConfigKey = iBlogs.Site.Core.Option.ConfigKey;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
 {
@@ -196,7 +197,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         public ApiResponse DeleteComment(int? coid)
         {
             _commentsService.Delete(coid);
-           return ApiResponse.Ok();
+            return ApiResponse.Ok();
         }
 
         // @SysLog("修改评论状态")
@@ -204,7 +205,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         public ApiResponse UpdateStatus([FromBody]CommentParam param)
         {
             _commentsService.UpdateComment(param);
-           return ApiResponse.Ok();
+            return ApiResponse.Ok();
         }
 
         // @SysLog("回复评论")
@@ -232,27 +233,30 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         // @GetRoute("categories")
         public ApiResponse CategoryList()
         {
-            return ApiResponse<List<Metas>>.Ok(_metasService.GetMetas(MetaType.Category, iBlogsConfig.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_metasService.GetMetas(MetaType.Category, int.Parse(ConfigData.Get(ConfigKey.MaxPage))));
         }
 
         // @GetRoute("tags")
         public ApiResponse TagList()
         {
-            return ApiResponse<List<Metas>>.Ok(_metasService.GetMetas(MetaType.Tag, iBlogsConfig.MAX_POSTS));
+            return ApiResponse<List<Metas>>.Ok(_metasService.GetMetas(MetaType.Tag, int.Parse(ConfigData.Get(ConfigKey.MaxPage))));
         }
 
         // @GetRoute("options")
         [AdminApiRoute("options")]
-        public ApiResponse<IDictionary<string, string>> Options()
+        public ApiResponse<IDictionary<ConfigKey, string>> Options()
         {
-            return ApiResponse<IDictionary<string, string>>.Ok(_optionService.GetAll());
+            return ApiResponse<IDictionary<ConfigKey, string>>.Ok(ConfigData.GetAll());
         }
 
         //@SysLog("保存系统配置")
         [AdminApiRoute("options/save")]
-        public ApiResponse SaveOptions(IDictionary<string, string> options)
+        public ApiResponse SaveOptions(IDictionary<ConfigKey, string> options)
         {
-            _optionService.SaveOptions(options);
+            foreach (var keyValuePair in options)
+            {
+                _optionService.Set(keyValuePair.Key, keyValuePair.Value);
+            }
             return ApiResponse.Ok();
         }
 
@@ -264,34 +268,30 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             // 要过过滤的黑名单列表
             if (!advanceParam.BlockIps.IsNullOrWhiteSpace())
             {
-                _optionService.saveOption(Types.BLOCK_IPS, advanceParam.BlockIps);
-            }
-            else
-            {
-                _optionService.saveOption(Types.BLOCK_IPS, "");
+                _optionService.Set(ConfigKey.BlockIpList, advanceParam.BlockIps);
             }
 
             if (!advanceParam.CdnUrl.IsNullOrWhiteSpace())
             {
-                _optionService.saveOption(OptionKeys.CdnUrl, advanceParam.CdnUrl);
+                _optionService.Set(ConfigKey.CdnUrl, advanceParam.CdnUrl);
             }
 
             // 是否允许重新安装
             if (!advanceParam.AllowInstall.IsNullOrWhiteSpace())
             {
-                _optionService.saveOption(OptionKeys.AllowInstall, advanceParam.AllowInstall);
+                _optionService.Set(ConfigKey.AllowInstall, advanceParam.AllowInstall);
             }
 
             // 评论是否需要审核
             if (!advanceParam.AllowCommentAudit.IsNullOrWhiteSpace())
             {
-                _optionService.saveOption(OptionKeys.AllowCommentAudit, advanceParam.AllowCommentAudit);
+                _optionService.Set(ConfigKey.AllowCommentAudit, advanceParam.AllowCommentAudit);
             }
 
             // 是否允许公共资源CDN
             if (!advanceParam.AllowCloudCdn.IsNullOrWhiteSpace())
             {
-                _optionService.saveOption(OptionKeys.AllowCloudCdn, advanceParam.AllowCloudCdn);
+                _optionService.Set(ConfigKey.AllowCloudCdn, advanceParam.AllowCloudCdn);
             }
             return ApiResponse.Ok();
         }
@@ -319,7 +319,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             foreach (var fileItem in fileItems)
             {
                 string fname = fileItem.FileName;
-                if ((fileItem.Length / 1024) <= iBlogsConfig.MAX_FILE_SIZE)
+                if ((fileItem.Length / 1024) <= int.Parse(ConfigData.Get(ConfigKey.MaxFileSize, 204800.ToString())))
                 {
                     var fkey = BlogsUtils.GetFileKey(fname, _env.WebRootPath);
 

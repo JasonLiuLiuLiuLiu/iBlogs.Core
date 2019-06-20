@@ -28,12 +28,12 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string MetaKeywords()
         {
-            var value = _optionService.Get(OptionKeys.Keywords);
+            var value = _optionService.Get(Option.ConfigKey.Keywords);
             if (null != value)
             {
                 return value;
             }
-            return _optionService.Get(OptionKeys.SiteKeywords);
+            return _optionService.Get(Option.ConfigKey.SiteKeywords);
         }
 
         /**
@@ -44,16 +44,16 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string MetaDescription()
         {
-            var value = _optionService.Get(OptionKeys.Description);
+            var value = _optionService.Get(Option.ConfigKey.Description);
             if (null != value)
             {
                 return value;
             }
-            return _optionService.Get(OptionKeys.SiteDescription);
+            return _optionService.Get(Option.ConfigKey.SiteDescription);
         }
 
 
-        public string SiteOption(string key)
+        public string SiteOption(ConfigKey key)
         {
             return _optionService.Get(key);
         }
@@ -65,21 +65,21 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string SocialLink(string type)
+        public string SocialLink(ConfigKey key)
         {
-            string id = SiteOption(OptionKeys.SocialPre + type);
-            switch (type)
+            string id = SiteOption(key);
+            switch (key)
             {
-                case "github":
+                case ConfigKey.Github:
                     return "https://github.com/" + id;
 
-                case "weibo":
+                case ConfigKey.WeiBo:
                     return "http://weibo.com/" + id;
 
-                case "twitter":
+                case ConfigKey.Twitter:
                     return "https://twitter.com/" + id;
 
-                case "zhihu":
+                case ConfigKey.ZhiHu:
                     return "https://www.zhihu.com/people/" + id;
 
                 default:
@@ -107,7 +107,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string SiteUrl(string sub)
         {
-            return SiteOption(OptionKeys.SiteUrl) + sub;
+            return SiteOption(Option.ConfigKey.SiteUrl) + sub;
         }
 
         /**
@@ -118,7 +118,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string SiteSubtitle()
         {
-            return SiteOption(OptionKeys.SiteSubtitle);
+            return SiteOption(Option.ConfigKey.SiteSubtitle);
         }
 
         /**
@@ -129,7 +129,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string AllowCloudCdn()
         {
-            return SiteOption(OptionKeys.AllowCloudCdn);
+            return SiteOption(Option.ConfigKey.AllowCloudCdn);
         }
 
         /**
@@ -140,13 +140,9 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string SiteOption(string key, string defaultValue)
+        public string SiteOption(ConfigKey key, string defaultValue)
         {
-            if (stringKit.isBlank(key))
-            {
-                return "";
-            }
-            return _optionService.Get(key, defaultValue);
+            return ConfigData.Get(key, defaultValue);
         }
 
         /**
@@ -157,7 +153,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string SiteDescription()
         {
-            return SiteOption(OptionKeys.SiteDescription);
+            return SiteOption(Option.ConfigKey.SiteDescription);
         }
 
         /**
@@ -169,7 +165,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string ThemeUrl(string sub)
         {
-            return SiteUrl(iBlogsConfig.TEMPLATES + iBlogsConfig.THEME + sub);
+            return SiteUrl(ConfigData.Get(ConfigKey.TemplesPath) + ConfigData.Get(ConfigKey.ThemePath) + sub);
         }
 
         /**
@@ -207,13 +203,13 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string AttachURL()
         {
-            return _optionService.Get(OptionKeys.AttachUrl, SiteUrl());
+            return _optionService.Get(Option.ConfigKey.AttachUrl, SiteUrl());
         }
 
 
         public string CdnURL()
         {
-            return _optionService.Get(OptionKeys.CdnUrl, "/static/admin");
+            return _optionService.Get(Option.ConfigKey.CdnUrl, "/static/admin");
         }
     }
 }

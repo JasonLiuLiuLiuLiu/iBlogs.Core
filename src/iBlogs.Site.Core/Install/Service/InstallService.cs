@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.Meta;
 using iBlogs.Site.Core.Option;
+using ConfigKey = iBlogs.Site.Core.Option.ConfigKey;
 
 namespace iBlogs.Site.Core.Install.Service
 {
@@ -42,7 +43,7 @@ namespace iBlogs.Site.Core.Install.Service
             try
             {
                 var connectString = $"Server={param.DbUrl};Database={param.DbName};uid={param.DbUserName};pwd={param.DbUserPwd}";
-                ConfigDataHelper.UpdateConnectionString(ConfigKey.BlogsConnectionString, connectString);
+                ConfigDataHelper.UpdateConnectionString("iBlogs", connectString);
                 await _blogsContext.Database.EnsureCreatedAsync();
                 Seed();
                 ConfigDataHelper.UpdateDbInstallStatus(true);
@@ -52,7 +53,7 @@ namespace iBlogs.Site.Core.Install.Service
                 Console.WriteLine(e);
                 throw;
             }
-
+            _optionService.Load();
             return true;
         }
 
@@ -82,13 +83,13 @@ namespace iBlogs.Site.Core.Install.Service
 
         private bool InitOptions()
         {
-            _optionService.saveOption(OptionKeys.AllowInstall, "false", "是否允许重新安装博客");
-            _optionService.saveOption(OptionKeys.AllowCommentAudit, "true", "评论需要审核");
-            _optionService.saveOption(OptionKeys.SiteKeywords, "博客系统,asp.net core,iBlogs");
-            _optionService.saveOption(OptionKeys.SiteDescription, "博客系统,asp.net core,iBlogs");
+            _optionService.Set(ConfigKey.AllowInstall, "false", "是否允许重新安装博客");
+            _optionService.Set(ConfigKey.AllowCommentAudit, "true", "评论需要审核");
+            _optionService.Set(ConfigKey.SiteKeywords, "博客系统,asp.net core,iBlogs");
+            _optionService.Set(ConfigKey.SiteDescription, "博客系统,asp.net core,iBlogs");
             var siteUrl = BlogsUtils.BuildUrl(_param.SiteUrl);
-            _optionService.saveOption(OptionKeys.SiteTitle, _param.SiteTitle);
-            _optionService.saveOption(OptionKeys.SiteUrl, siteUrl);
+            _optionService.Set(ConfigKey.SiteTitle, _param.SiteTitle);
+            _optionService.Set(ConfigKey.SiteUrl, siteUrl);
             return true;
         }
 
@@ -120,7 +121,7 @@ namespace iBlogs.Site.Core.Install.Service
                 Content = "## Hello  World.\r\n\r\n> 第一篇文章总得写点儿什么?...\r\n\r\n----------\r\n\r\n\r\n<!--more-->\r\n\r\n```java\r\npublic static void main(string[] args){\r\n    System.out.println(\\\"Hello Tale.\\\");\r\n}\r\n```",
                 AuthorId = _users.Id,
                 Type = ContentType.Post,
-                Status =ContentStatus.Publish,
+                Status = ContentStatus.Publish,
                 Categories = "默认分类",
                 Hits = 10,
                 CommentsNum = 0,

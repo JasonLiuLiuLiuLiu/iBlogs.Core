@@ -40,7 +40,7 @@
     <header id="header" class="bg-white Sticky AppHeader header" style="position: relative" data-za-module="TopNavBar">
         <div class="navbar-container">
             <a href="@ViewService.SiteUrl()" class="navbar-logo">
-                <img src="@ViewService.ThemeUrl("/static/img/logo.png")" alt="@ViewService.SiteOption(OptionKeys.SiteTitle)" />
+                <img src="@ViewService.ThemeUrl("/static/img/logo.png")" alt="@ViewService.SiteOption(ConfigKey.SiteTitle)" />
             </a>
             <div class="navbar-menu">
                 <a href="@ViewService.SiteUrl("/archives")">归档</a>
@@ -73,28 +73,28 @@
         <div class="footer-social">
             <div class="footer-container clearfix">
                 <div class="social-list">
-                    @if (!ViewService.SiteOption("social_weibo").IsNullOrWhiteSpace())
+                    @if (!ViewService.SiteOption(ConfigKey.WeiBo).IsNullOrWhiteSpace())
                     {
-                        <a class="social weibo" target="_blank" href="http://weibo.com/@ViewService.SiteOption(" social_weibo")">微博</a>
+                        <a class="social weibo" target="_blank" href="http://weibo.com/@ViewService.SiteOption(ConfigKey.WeiBo)">微博</a>
                     }
 
-                    @if (!ViewService.SiteOption("social_zhihu").IsNullOrWhiteSpace())
+                    @if (!ViewService.SiteOption(ConfigKey.ZhiHu).IsNullOrWhiteSpace())
                     {
-                        <a class="social zhihu" target="_blank" href="https://www.zhihu.com/people/@ViewService.SiteOption(" social_zhihu")">知乎</a>
+                        <a class="social zhihu" target="_blank" href="https://www.zhihu.com/people/@ViewService.SiteOption(ConfigKey.ZhiHu)">知乎</a>
                     }
 
                     <a class="social rss" target="_blank" href="/feed">RSS</a>
                     <a class="social rss" target="_blank" href="/sitemap.xml">Site Map</a>
 
-                    @if (!ViewService.SiteOption("social_github").IsNullOrWhiteSpace())
+                    @if (!ViewService.SiteOption(ConfigKey.Github).IsNullOrWhiteSpace())
                     {
                         <a class="social github" target="_blank"
-                           href="https://github.com/@ViewService.SiteOption(" social_github")">Github</a>
+                           href="https://github.com/@ViewService.SiteOption(ConfigKey.Github)">Github</a>
                     }
 
-                    @if (!ViewService.SiteOption("social_twitter").IsNullOrWhiteSpace())
+                    @if (!ViewService.SiteOption(ConfigKey.Twitter).IsNullOrWhiteSpace())
                     {
-                        <a class="social twitter" target="_blank" href="https://twitter.com/@ViewService.SiteOption(" social_twitter")">Twitter</a>
+                        <a class="social twitter" target="_blank" href="https://twitter.com/@ViewService.SiteOption(ConfigKey.Twitter)">Twitter</a>
                     }
                 </div>
             </div>
@@ -104,7 +104,7 @@
                 <div class="meta-item meta-copyright">
                     <div class="meta-copyright-info">
                         <a href="@ViewService.SiteUrl()" class="info-logo">
-                            <img src="/templates/themes/default/static/img/logo.png" alt="@ViewService.SiteOption(OptionKeys.SiteTitle)">
+                            <img src="/templates/themes/default/static/img/logo.png" alt="@ViewService.SiteOption(ConfigKey.SiteTitle)">
                         </a>
                         <div class="info-text">
                             <p>Always coding,Always writing!</p>

@@ -1,8 +1,9 @@
 ﻿namespace iBlogs.Site.Core.Option
 {
-    public enum ConfigKeys
+    public enum ConfigKey
     {
         Default,
+        ConfigLoaded,
         SiteTitle,
         AttachUrl,
         CdnUrl,
@@ -18,6 +19,21 @@
         AllowCommentAudit,
         Author,
         SideBarTagsCount,
-        SideBarCategoriesCount
+        SideBarCategoriesCount,
+        LoginErrorCount,
+        Installed,
+        MaxPage,
+        MaxTextCount,
+        MaxTitleCount,
+        MaxIntroCount,
+        MaxFileSize,
+        BlockIpList,
+        StaticUrl,
+        TemplesPath,
+        ThemePath,
+        Github,
+        WeiBo,
+        Twitter,
+        ZhiHu
     }
 }

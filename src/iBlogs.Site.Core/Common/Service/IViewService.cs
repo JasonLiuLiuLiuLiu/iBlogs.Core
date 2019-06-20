@@ -1,4 +1,5 @@
-﻿using iBlogs.Site.Core.User.DTO;
+﻿using iBlogs.Site.Core.Option;
+using iBlogs.Site.Core.User.DTO;
 
 namespace iBlogs.Site.Core.Common.Service
 {
@@ -7,13 +8,13 @@ namespace iBlogs.Site.Core.Common.Service
         CurrentUser User { get; }
         string MetaKeywords();
         string MetaDescription();
-        string SiteOption(string key);
-        string SocialLink(string type);
+        string SiteOption(ConfigKey key);
+        string SocialLink(ConfigKey key);
         string SiteUrl();
         string SiteUrl(string sub);
         string SiteSubtitle();
         string AllowCloudCdn();
-        string SiteOption(string key, string defaultValue);
+        string SiteOption(ConfigKey key, string defaultValue);
         string SiteDescription();
         string ThemeUrl(string sub);
         string Gravatar(string email);

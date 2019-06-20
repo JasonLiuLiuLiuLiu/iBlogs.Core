@@ -9,14 +9,14 @@ namespace iBlogs.Site.Core.Common
         public static void UpdateDbInstallStatus(bool status)
         {
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));
-            jObject[ConfigKey.DbInstalled] = status;
+            jObject["DbInstalled"] = status;
             File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }
 
         public static void UpdateConnectionString(string connectionName, string value)
         {
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));
-            jObject[ConfigKey.ConnectionStrings][connectionName] = value;
+            jObject["ConnectionStrings"][connectionName] = value;
             File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }
     }

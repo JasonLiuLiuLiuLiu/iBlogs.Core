@@ -155,9 +155,9 @@ namespace iBlogs.Site.Web.Controllers
             }
 
             var atom = new AtomFeedWriter(xmlWriter);
-            await atom.WriteTitle(_optionService.getOption(OptionKeys.SiteTitle));
+            await atom.WriteTitle(_optionService.Get(ConfigKey.SiteTitle,"iBlogs"));
             await atom.WriteId(host);
-            await atom.WriteSubtitle(_optionService.getOption(OptionKeys.SiteDescription));
+            await atom.WriteSubtitle(_optionService.Get(ConfigKey.SiteDescription,"iBlogs"));
             await atom.WriteGenerator("iBlogs", "https://github.com/liuzhenyulive/iblogs", "1.0");
             await atom.WriteValue("updated", updated.ToString("yyyy-MM-ddTHH:mm:ssZ"));
             return atom;

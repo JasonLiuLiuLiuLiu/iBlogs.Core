@@ -24,7 +24,7 @@ namespace iBlogs.Site.Web.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var installed = _configuration[ConfigKey.DbInstalled].ToBool();
+            var installed = _configuration["DbInstalled"].ToBool();
             return View(new ViewBaseModel
             {
                 Installed = installed
@@ -34,7 +34,7 @@ namespace iBlogs.Site.Web.Controllers
         [HttpPost]
         public async Task<ApiResponse<int>> Index(InstallParam param)
         {
-            var installed = _configuration[ConfigKey.DbInstalled].ToBool();
+            var installed = _configuration["DbInstalled"].ToBool();
             if (!param.AdminPwd.IsNullOrWhiteSpace() && !installed)
             {
                 if (await _installService.InitializeDb(param))

@@ -1,12 +1,11 @@
-﻿using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.Content;
+﻿using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Relationship.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using iBlogs.Site.Core.Meta.DTO;
+using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Relationship;
 
 namespace iBlogs.Site.Core.Meta.Service
@@ -54,39 +53,11 @@ namespace iBlogs.Site.Core.Meta.Service
 
         public List<Metas> GetMetas(MetaType type, int limit = 0)
         {
-            if (limit < 1 || limit > iBlogsConfig.MAX_POSTS)
+            if (limit < 1 || limit > int.Parse(ConfigData.Get(ConfigKey.MaxPage,999.ToString())))
             {
                 limit = 10;
             }
             return _repository.GetAll().Where(m => m.Type == type).OrderByDescending(m => m.Id).Take(limit).ToList();
-        }
-
-        /**
-         * 查询项目映射
-         *
-         * @param type 类型，tag or category
-         */
-
-        public Dictionary<string, List<Contents>> GetMetaMapping(string type)
-        {
-            return null;
-        }
-
-        private List<Contents> GetMetaContents(Metas m)
-        {
-            return null;
-        }
-
-        /**
-         * 根据类型和名字查询项
-         *
-         * @param type 类型，tag or category
-         * @param name 类型名
-         */
-
-        public Metas GetMeta(string type, string name)
-        {
-            return null;
         }
 
         /**
@@ -108,12 +79,12 @@ namespace iBlogs.Site.Core.Meta.Service
                 var nameArr = names.Split(",");
                 foreach (var name in nameArr)
                 {
-                    saveOrUpdate(cid.ValueOrDefault(), name, type);
+                    SaveOrUpdate(cid.ValueOrDefault(), name, type);
                 }
             }
         }
 
-        private void saveOrUpdate(int cid, string name, MetaType type)
+        private void SaveOrUpdate(int cid, string name, MetaType type)
         {
             var metas = _repository.GetAll().Where(m => m.Name == name).FirstOrDefault(m => m.Type == type);
             int mid;
@@ -143,11 +114,6 @@ namespace iBlogs.Site.Core.Meta.Service
             _repository.Delete(id);
             _relationshipService.DeleteByMetaId(id);
         }
-
-        private void exec(string type, string name, Contents contents)
-        {
-        }
-
         /**
          * 保存项目
          *
@@ -164,53 +130,6 @@ namespace iBlogs.Site.Core.Meta.Service
             }
             _repository.InsertOrUpdate(new Metas() { Id = mid.ValueOrDefault(), Name = name, Type = type });
             _repository.SaveChanges();
-        }
-
-        public List<Metas> getMetas(string searchType, string type, int limit)
-        {
-            if (stringKit.isBlank(searchType) || stringKit.isBlank(type))
-            {
-                return new List<Metas>();
-            }
-
-            if (limit < 1 || limit > iBlogsConfig.MAX_POSTS)
-            {
-                limit = 10;
-            }
-
-            //// 获取最新的项目
-            //if (Types.RECENT_META.Equals(searchType))
-            //{
-            //    var sql =
-            //        "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
-            //        +
-            //        "where a.type = @type group by a.mid order by count desc, a.mid desc limit @limit";
-
-            //    return _.Query<Metas>(sql, new { type = type, limit = limit }).ToList();
-            //}
-
-            //// 随机获取项目
-            //if (Types.RANDOM_META.Equals(searchType))
-            //{
-            //    List<int> mids = _sqLite.Query<int>(
-            //        "select mid from t_metas where type = @type order by random() * mid limit @limit",
-            //        new { type = type, limit = limit }).ToList();
-            //    if (mids != null)
-            //    {
-            //        string sql =
-            //            "select a.*, count(b.cid) as count from t_metas a left join `t_relationships` b on a.mid = b.mid "
-            //            +
-            //            "where a.mid in @mids group by a.mid order by count desc, a.mid desc";
-
-            //        return _sqLite.Query<Metas>(sql, mids).ToList();
-            //    }
-            //}
-            return new List<Metas>();
-        }
-
-        private string reMeta(string name, string metas)
-        {
-            return null;
         }
     }
 }

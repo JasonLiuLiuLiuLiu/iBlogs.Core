@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using System.Text;
+using iBlogs.Site.Core.Option.Service;
 
 namespace iBlogs.Site.Web
 {
@@ -59,8 +60,11 @@ namespace iBlogs.Site.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptionService option)
         {
+            if (Configuration["DbInstalled"].ToBool())
+                option.Load();
+
             app.UseMiddleware<JwtInHeaderMiddleware>();
 
             app.UseStatusCodePages(async context =>

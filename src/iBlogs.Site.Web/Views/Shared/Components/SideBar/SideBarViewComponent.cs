@@ -20,9 +20,9 @@ namespace iBlogs.Site.Web.Views.Shared.Components.SideBar
         public IViewComponentResult Invoke()
         {
             var tags = _metasService.LoadMetaDataViewModel(MetaType.Tag,
-                int.Parse(_optionService.Get(OptionKeys.SideBarTagsCount, "10")));
+                int.Parse(_optionService.Get(ConfigKey.SideBarTagsCount, "10")));
             var categories= _metasService.LoadMetaDataViewModel(MetaType.Category,
-                int.Parse(_optionService.Get(OptionKeys.SideBarCategoriesCount, "10")));
+                int.Parse(_optionService.Get(ConfigKey.SideBarCategoriesCount, "10")));
             return View(new SideBarViewModel {Tags = tags.Data, Categories = categories.Data});
         }
     }
