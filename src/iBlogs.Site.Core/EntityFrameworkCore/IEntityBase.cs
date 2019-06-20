@@ -6,5 +6,6 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
     {
         int Id { get; set; }
         DateTime Created { get; set; }
+        bool Deleted { get; set; }
     }
 }

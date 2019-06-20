@@ -65,6 +65,8 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
                 }
             }
 
+            query = query.Where(u => u.Deleted == false);
+
             return query;
         }
 
@@ -148,7 +150,7 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         public void Delete(TEntity entity)
         {
             AttachIfNot(entity);
-            Table.Remove(entity);
+            entity.Deleted = true;
         }
 
         public void Delete(int id)

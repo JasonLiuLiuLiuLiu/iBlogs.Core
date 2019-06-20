@@ -57,7 +57,7 @@ namespace iBlogs.Site.Core.Install.Service
             return true;
         }
 
-        private bool Seed()
+        private void Seed()
         {
             using (var tra = _transactionProvider.CreateTransaction())
             {
@@ -66,7 +66,6 @@ namespace iBlogs.Site.Core.Install.Service
                     tra.Commit();
                 else
                     tra.Rollback();
-                return result;
             }
         }
 
