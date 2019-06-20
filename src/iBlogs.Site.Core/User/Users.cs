@@ -44,7 +44,9 @@ namespace iBlogs.Site.Core.User
          * 用户注册时的GMT unix时间戳
          */
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; } 
+        public DateTime Created { get; set; }
+
+        public bool Deleted { get; set; }
 
         /**
          * 最后活动时间

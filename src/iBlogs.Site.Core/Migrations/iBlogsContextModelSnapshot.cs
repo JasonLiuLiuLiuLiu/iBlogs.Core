@@ -27,6 +27,8 @@ namespace iBlogs.Site.Core.Migrations
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("Deleted");
+
                     b.Property<string>("FKey");
 
                     b.Property<string>("FName");
@@ -55,6 +57,8 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
 
                     b.Property<string>("Ip");
 
@@ -101,6 +105,8 @@ namespace iBlogs.Site.Core.Migrations
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("Deleted");
+
                     b.Property<string>("FmtType");
 
                     b.Property<int>("Hits");
@@ -143,6 +149,8 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<string>("Data");
 
+                    b.Property<bool>("Deleted");
+
                     b.Property<string>("Ip");
 
                     b.HasKey("Id");
@@ -162,6 +170,8 @@ namespace iBlogs.Site.Core.Migrations
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("Deleted");
+
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
@@ -171,10 +181,6 @@ namespace iBlogs.Site.Core.Migrations
                     b.Property<string>("Slug");
 
                     b.Property<int>("Sort");
-
-                    b.Property<DateTime?>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<int>("Type");
 
@@ -190,6 +196,8 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
 
                     b.Property<string>("Description");
 
@@ -212,6 +220,8 @@ namespace iBlogs.Site.Core.Migrations
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("Deleted");
+
                     b.Property<int>("Mid");
 
                     b.HasKey("Id");
@@ -232,6 +242,8 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
 
                     b.Property<string>("Email");
 

@@ -20,5 +20,7 @@ namespace iBlogs.Site.Core.Meta
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
+
+        public bool Deleted { get; set; }
     }
 }

@@ -30,5 +30,7 @@ namespace iBlogs.Site.Core.Relationship
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
+
+        public bool Deleted { get; set; }
     }
 }

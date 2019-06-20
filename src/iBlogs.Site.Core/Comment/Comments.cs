@@ -16,6 +16,8 @@ namespace iBlogs.Site.Core.Comment
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
+        public bool Deleted { get; set; }
+
         public int Cid { get; set; }
 
         [ForeignKey("Cid")]
