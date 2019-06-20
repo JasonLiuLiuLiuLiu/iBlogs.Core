@@ -38,13 +38,7 @@ namespace iBlogs.Site.Web.Filter
                 return;
             }
 
-            var result = new ViewResult
-            {
-                StatusCode = 500,
-                ViewName = "CustomError",
-                ViewData = new ViewDataDictionary(_modelMetadataProvider, context.ModelState) { { "Exception", context.Exception } }
-            };
-            context.Result = result;
+            context.Result =new StatusCodeResult(500);
         }
     }
 }
