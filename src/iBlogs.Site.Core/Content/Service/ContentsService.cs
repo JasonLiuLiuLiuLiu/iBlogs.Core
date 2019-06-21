@@ -45,7 +45,15 @@ namespace iBlogs.Site.Core.Content.Service
          */
         public ContentResponse GetContents(string id)
         {
-            var contents = _repository.GetAll().AsNoTracking().FirstOrDefault(c => c.Slug == id) ?? _repository.FirstOrDefault(int.Parse(id));
+            Contents contents = null;
+            if (int.TryParse(id, out var cid))
+                contents = _repository.FirstOrDefault(cid);
+            else
+                contents = _repository.GetAll().FirstOrDefault(u => u.Slug == id);
+
+            if(contents==null)
+                throw new Exception("没有找到该文章!");
+
             if (contents.FmtType.IsNullOrWhiteSpace())
             {
                 contents.FmtType = "markdown";
