@@ -146,7 +146,7 @@ namespace iBlogs.Site.Core.Content.DTO
         public string ShowTags(string split)
         {
 
-            if (stringKit.isNotBlank(Tags))
+            if (!string.IsNullOrWhiteSpace(Tags))
             {
                 string[] arr = Tags.Split(",");
                 StringBuilder sbuf = new StringBuilder();
@@ -197,7 +197,7 @@ namespace iBlogs.Site.Core.Content.DTO
 
         public string Intro(string value)
         {
-            if (stringKit.isBlank(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
                 return null;
             }
@@ -247,7 +247,7 @@ namespace iBlogs.Site.Core.Content.DTO
 
         public string Article(string value)
         {
-            if (stringKit.isNotBlank(value))
+            if (!string.IsNullOrWhiteSpace(value))
             {
                 value = value.Replace("<!--more-->", "\r\n");
                 return Markdown.ToHtml(value);
@@ -263,7 +263,7 @@ namespace iBlogs.Site.Core.Content.DTO
         public string ShowThumb()
         {
 
-            if (stringKit.isNotBlank(ThumbImg))
+            if (!string.IsNullOrWhiteSpace(ThumbImg))
             {
                 string newFileName = BlogsUtils.GetFileName(ThumbImg);
                 string thumbnailImgUrl = (ThumbImg).Replace(newFileName, "thumbnail_" + newFileName);
@@ -271,7 +271,7 @@ namespace iBlogs.Site.Core.Content.DTO
             }
             string content = Article(Content);
             string img = BlogsUtils.ShowThumb(content);
-            if (stringKit.isNotBlank(img))
+            if (!string.IsNullOrWhiteSpace(img))
             {
                 return img;
             }
