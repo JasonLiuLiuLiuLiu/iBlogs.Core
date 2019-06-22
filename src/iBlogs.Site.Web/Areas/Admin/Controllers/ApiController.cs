@@ -93,7 +93,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             contents.Hits = 0;
             //将评论数设初始化为0
             contents.CommentsNum = 0;
-            if (stringKit.isBlank(contents.Categories))
+            if (StringKit.IsBlank(contents.Categories))
             {
                 contents.Categories = "默认分类";
             }

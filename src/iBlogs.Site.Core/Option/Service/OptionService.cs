@@ -20,6 +20,7 @@ namespace iBlogs.Site.Core.Option.Service
             {
                 ConfigData.Set(keyValuePair.Key, keyValuePair.Value);
             }
+
         }
 
         public void Set(ConfigKey key, string value, string description = null)
