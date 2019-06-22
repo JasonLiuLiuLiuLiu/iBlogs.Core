@@ -23,7 +23,7 @@
 
                                 <select v-model="search.status" class="form-control">
                                     <option value="" selected>发布状态</option>
-                                    <option value="publish">已发布</option>
+                                    <option value="Publish">已发布</option>
                                     <option value="draft">草稿</option>
                                 </select>
                                 <button type="button" class="btn btn-success waves-effect waves-light m-l-10"
@@ -54,8 +54,8 @@
                                         <td>{{ item.hits }}</td>
                                         <td>{{ item.categories }}</td>
                                         <td>
-                                            <span v-show="item.status == 'publish'" class="label label-success">已发布</span>
-                                            <span v-show="item.status == 'draft'" class="label label-default">草稿</span>
+                                            <span v-show="item.status == 'Publish'" class="label label-success">已发布</span>
+                                            <span v-show="item.status == 'Draft'" class="label label-default">草稿</span>
                                         </td>
                                         <td>
                                             <a :href="'/admin/article/edit/' + item.id"
@@ -66,9 +66,9 @@
                                                class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
                                                 <i class="fa fa-trash-o"></i> <span>删除</span>
                                             </a>
-                                            <a v-show="item.status == 'publish'"
+                                            <a v-show="item.status == 'Publish'"
                                                class="btn btn-warning btn-sm waves-effect waves-light m-b-5"
-                                               :href="'${site_url()}' + item.url"
+                                               :href="'../article/' + item.slug"
                                                target="_blank">
                                                 <i class="fa fa-rocket"></i> <span>预览</span>
                                             </a>
@@ -166,7 +166,7 @@
                         title: '确定删除该文章吗?',
                         then: function () {
                             tale.post({
-                                url: '/admin/api/article/delete/' + cid,
+                                url: '/admin/api/article/Delete/' + cid,
                                 success: function (result) {
                                     if (result && result.success) {
                                         tale.alertOk('文章删除成功');

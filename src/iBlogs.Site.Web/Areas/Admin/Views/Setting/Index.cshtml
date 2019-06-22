@@ -1,7 +1,7 @@
 ﻿@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
 
-<link href="@ViewService.cdnURL()/plugins/toggles/toggles.css" rel="stylesheet">
+<link href="@ViewService.CdnURL()/plugins/toggles/toggles.css" rel="stylesheet">
 <div id="app" class="row" v-cloak>
     <loading :active.sync="isLoading" :can-cancel="true"></loading>
     <div class="col-lg-12">
@@ -21,26 +21,26 @@
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">网站地址</label>
                                         <div class="col-md-9">
-                                            <input type="text" v-model="options.site_url" class="form-control" placeholder="网站地址" required aria-required="true" />
+                                            <input type="text" v-model="options.SiteUrl" class="form-control" placeholder="网站地址" required aria-required="true" />
                                             <span class="help-block"><small>请和你当前访问的域名保持一致，否则会出现渲染错误。</small></span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">站点标题</label>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" v-model="options.site_title" placeholder="站点子标题" required aria-required="true" />
+                                            <input type="text" class="form-control" v-model="options.SiteTitle" placeholder="站点子标题" required aria-required="true" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">站点子标题</label>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" v-model="options.site_subtitle" placeholder="站点子标题" required aria-required="true" />
+                                            <input type="text" class="form-control" v-model="options.SiteSubtitle" placeholder="站点子标题" required aria-required="true" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">站点描述</label>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" v-model="options.site_description" placeholder="站点描述" required aria-required="true" />
+                                            <input type="text" class="form-control" v-model="options.SiteDescription" placeholder="站点描述" required aria-required="true" />
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -71,7 +71,7 @@
                                     <div class="form-group">
                                         <label class="col-md-3 control-label">CND地址</label>
                                         <div class="col-md-9">
-                                            <input type="text" class="form-control" name="cdnURL" placeholder="CDN地址" />
+                                            <input type="text" class="form-control" name="CdnURL" placeholder="CDN地址" />
                                             <span class="help-block"><small>该地址用于加载博客后台静态资源，不清楚请勿设置。开启公共CDN选项时此配置无效</small></span>
                                         </div>
                                     </div>
@@ -127,7 +127,7 @@
 </div>
 @section scripts
 {
-    <script src="@ViewService.cdnURL()/plugins/jquery-toggles/2.0.4/toggles.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/jquery-toggles/2.0.4/toggles.min.js"></script>
     <script>
 
         var tale = new $.tale();

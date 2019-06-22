@@ -154,7 +154,7 @@
                         title: '确定删除该项吗?',
                         then: function () {
                             tale.post({
-                                url: '/admin/api/category/delete/' + id,
+                                url: '/admin/api/category/Delete/' + id,
                                 success: function (result) {
                                     if (result && result.success) {
                                         tale.alertOk('删除成功');

@@ -11,12 +11,12 @@ using SixLabors.ImageSharp.Processing;
 
 namespace iBlogs.Site.Core.Common
 {
-    public class IBlogsUtils
+    public class BlogsUtils
     {
         /**
         * 提取html中的文字
         */
-        public static string htmlToText(string html)
+        public static string HtmlToText(string html)
         {
             string htmlTagPattern = "<.*?>";
             var regexCss = new Regex("(\\<script(.+?)\\</script\\>)|(\\<style(.+?)\\</style\\>)", RegexOptions.Singleline | RegexOptions.IgnoreCase);
@@ -28,7 +28,7 @@ namespace iBlogs.Site.Core.Common
             return html;
         }
 
-        public static string getFileName(string path)
+        public static string GetFileName(string path)
         {
             return Path.GetFileName(path);
         }
@@ -38,25 +38,25 @@ namespace iBlogs.Site.Core.Common
         *
         * @return
         */
-        public static string show_thumb(string content)
+        public static string ShowThumb(string content)
         {
             content = Markdown.ToHtml(content);
             if (content.Contains("<img"))
             {
                 string img = "";
-                string regEx_img = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
-                var regex = new Regex(regEx_img, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-                var m_image = regex.Match(content);
-                if (m_image.Success)
+                string regExImg = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
+                var regex = new Regex(regExImg, RegexOptions.Singleline | RegexOptions.IgnoreCase);
+                var mImage = regex.Match(content);
+                if (mImage.Success)
                 {
-                    return img + "," + m_image.Value;
+                    return img + "," + mImage.Value;
 
                 }
             }
             return "";
         }
 
-        public static string buildURL(String url)
+        public static string BuildUrl(String url)
         {
             if (url.EndsWith("/"))
             {
@@ -76,9 +76,9 @@ namespace iBlogs.Site.Core.Common
         * @param salt 盐
         * @return 16进制加盐密文
         */
-        public static string md5(string data, string salt)
+        public static string Md5(string data, string salt)
         {
-            return md5(Encoding.ASCII.GetBytes((data + salt)));
+            return Md5(Encoding.ASCII.GetBytes((data + salt)));
         }
 
         /**
@@ -87,27 +87,27 @@ namespace iBlogs.Site.Core.Common
          * @param data 明文字节数组
          * @return 16进制密文
          */
-        public static string md5(byte[] input)
+        public static string Md5(byte[] input)
         {
             using (SHA256 sha256Hash = SHA256.Create())
             {
                 var data = sha256Hash.ComputeHash(input);
-                // Create a new Stringbuilder to collect the bytes
+                // Create a new StringBuilder to collect the bytes
                 // and create a string.
                 var sBuilder = new StringBuilder();
 
                 // Loop through each byte of the hashed data 
                 // and format each one as a hexadecimal string.
-                for (int i = 0; i < data.Length; i++)
+                foreach (var t in data)
                 {
-                    sBuilder.Append(data[i].ToString("x2"));
+                    sBuilder.Append(t.ToString("x2"));
                 }
                 // Return the hexadecimal string.
                 return sBuilder.ToString();
             }
         }
 
-        public static String getFileKey(String name, string rootPath)
+        public static String GetFileKey(String name, string rootPath)
         {
             String prefix = "/upload/" + DateTime.Now.ToString("yyyy/MM");
             String dir = rootPath + prefix;
@@ -121,7 +121,7 @@ namespace iBlogs.Site.Core.Common
         /**
         * 判断文件是否是图片类型
         */
-        public static bool isImage(string imageFile)
+        public static bool IsImage(string imageFile)
         {
             if (!File.Exists(imageFile))
             {
@@ -139,7 +139,7 @@ namespace iBlogs.Site.Core.Common
         * @param h
         * @throws IOException
         */
-        public static void cutCenterImage(string src, string dist, int w, int h)
+        public static void CutCenterImage(string src, string dist, int w, int h)
         {
             // Image.Load(string path) is a shortcut for our default type. 
             // Other pixel formats use Image.Load<TPixel>(string path))

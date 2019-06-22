@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.User
@@ -45,7 +44,9 @@ namespace iBlogs.Site.Core.User
          * 用户注册时的GMT unix时间戳
          */
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; } 
+        public DateTime Created { get; set; }
+
+        public bool Deleted { get; set; }
 
         /**
          * 最后活动时间
@@ -64,12 +65,12 @@ namespace iBlogs.Site.Core.User
 
         public void PwdMd5()
         {
-            Password = IBlogsUtils.md5(Username, Password);
+            Password = BlogsUtils.Md5(Username, Password);
         }
 
         public static string PwdMd5(string userName, string password)
         {
-            return IBlogsUtils.md5(userName, password);
+            return BlogsUtils.Md5(userName, password);
         }
     }
 }

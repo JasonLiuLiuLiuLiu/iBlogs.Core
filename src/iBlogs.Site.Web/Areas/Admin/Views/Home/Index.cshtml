@@ -72,7 +72,7 @@
                         title: '确定删除该评论吗?',
                         then: function () {
                             tale.post({
-                                url: '/admin/api/comment/delete/' + coid,
+                                url: '/admin/api/comment/Delete/' + coid,
                                 success: function (result) {
                                     if (result && result.success) {
                                         tale.alertOk('评论删除成功');
@@ -164,28 +164,28 @@
                             </div>
                             <div class="panel-body">
                                 <div v-if="comments.length == 0" class="alert alert-warning">
-                                    还没有收到留言.
+                                    还没有待审核的留言.
                                 </div>
 
                                 <div v-if="comments.length > 0" class="inbox-widget nicescroll mx-box" tabindex="5000" style="overflow: hidden; outline: none;">
                                     <div class="inbox-item" v-for="item in comments">
                                         <div class="inbox-item-img">
                                             <a :href="item.url" target="_blank">
-                                                <img :src="item.mail | gravatar" class="img-circle" :alt="item.author">
+                                                <img :src="item.mailPic | Gravatar" class="img-circle" :alt="item.author">
                                             </a>
                                         </div>
                                         <p class="inbox-item-author">
                                             <a :href="item.url" target="_blank">{{item.author}}</a>
                                         </p>
                                         <p class="inbox-item-text">
-                                            <a :href="'${site_url('/article/')}' + item.cid + '#comments'" target="_blank">
-                                                ${article("{{item.content}}")}
+                                            <a :href="'../article/' + item.cid + '#comments'" target="_blank">
+                                                {{item.content}}
                                             </a>
                                         </p>
                                         <p class="inbox-item-date">{{item.created | formatUnix('MM月DD日 HH:mm')}}</p>
-                                        <p v-if="item.status == 'no_audit'" class="pull-right">
-                                            <button class="btn btn-sm btn-success" click="audit(item.coid, 'approved')">通过</button>
-                                            <button class="btn btn-sm btn-danger" click="deleteCommentDto(item.coid)">删除</button>
+                                        <p v-if="item.status == 'Pending'" class="pull-right">
+                                            <button class="btn btn-sm btn-success" v-on:click="audit(item.id, 'approved')">通过</button>
+                                            <button class="btn btn-sm btn-danger" v-on:click="deleteComment(item.id)">删除</button>
                                         </p>
                                     </div>
                                 </div>

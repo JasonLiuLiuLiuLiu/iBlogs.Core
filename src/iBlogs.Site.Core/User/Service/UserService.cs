@@ -18,7 +18,7 @@ namespace iBlogs.Site.Core.User.Service
             _repository = repository;
         }
 
-        public CurrentUser CurrentUsers { get; set; }=new CurrentUser();
+        public CurrentUser CurrentUsers { get; set; }
 
         public bool InsertUser(Users user)
         {

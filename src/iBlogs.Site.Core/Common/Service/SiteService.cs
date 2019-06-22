@@ -9,7 +9,7 @@ using iBlogs.Site.Core.Meta.Service;
 
 namespace iBlogs.Site.Core.Common.Service
 {
-    public class SiteService : ISiteService
+    public class SiteService : ISiteServiceRe
     {
         private readonly IMetasService _metasService;
 
@@ -34,7 +34,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param type 最新,随机
          * @param limit 获取条数
          */
-        public List<Contents> getContens(string type, int limit)
+        public List<Contents> getContens(ContentType type, int limit)
         {
 
             return null;
@@ -66,9 +66,9 @@ namespace iBlogs.Site.Core.Common.Service
         /**
          * 获取分类/标签列表
          */
-        public List<Metas> getMetas(string type, int limit)
+        public List<Metas> getMetas(MetaType type, int limit)
         {
-            return _metasService.getMetas(type, limit);
+            return _metasService.GetMetas(type, limit);
         }
 
         /**
@@ -77,7 +77,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @param type 上一篇:prev | 下一篇:next
          * @param created 当前文章创建时间
          */
-        public Contents getNhContent(string type, long created)
+        public Contents getNhContent(ContentType type, long created)
         {
             return null;
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AutoMapper;
 
 namespace iBlogs.Site.Core.Common.Response
 {

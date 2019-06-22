@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
 
 namespace iBlogs.Site.Core.Migrations
 {
-    public partial class init : Migration
+    public partial class InitDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,12 +16,14 @@ namespace iBlogs.Site.Core.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Slug = table.Column<string>(nullable: true),
-                    Type = table.Column<string>(nullable: true),
+                    Type = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Sort = table.Column<int>(nullable: false),
                     Parent = table.Column<int>(nullable: false),
                     Count = table.Column<int>(nullable: false),
-                    Timestamp = table.Column<DateTime>(rowVersion: true, nullable: true)
+                    Created = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,7 +38,10 @@ namespace iBlogs.Site.Core.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
                     Value = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true)
+                    Description = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,6 +61,7 @@ namespace iBlogs.Site.Core.Migrations
                     ScreenName = table.Column<string>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Deleted = table.Column<bool>(nullable: false),
                     Activated = table.Column<DateTime>(nullable: false),
                     Logged = table.Column<DateTime>(nullable: false),
                     GroupName = table.Column<string>(nullable: true)
@@ -72,10 +78,12 @@ namespace iBlogs.Site.Core.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     AuthorId = table.Column<int>(nullable: false),
-                    Created = table.Column<long>(nullable: false),
                     FName = table.Column<string>(nullable: true),
                     FType = table.Column<string>(nullable: true),
-                    FKey = table.Column<string>(nullable: true)
+                    FKey = table.Column<string>(nullable: true),
+                    Created = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,12 +108,12 @@ namespace iBlogs.Site.Core.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
                     Content = table.Column<string>(nullable: true),
                     Hits = table.Column<int>(nullable: false),
-                    Type = table.Column<string>(nullable: true),
+                    Type = table.Column<int>(nullable: false),
                     FmtType = table.Column<string>(nullable: true),
                     ThumbImg = table.Column<string>(nullable: true),
                     Tags = table.Column<string>(nullable: true),
                     Categories = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false),
                     CommentsNum = table.Column<int>(nullable: false),
                     AllowComment = table.Column<bool>(nullable: false),
                     AllowPing = table.Column<bool>(nullable: false),
@@ -113,7 +121,8 @@ namespace iBlogs.Site.Core.Migrations
                     Url = table.Column<string>(nullable: true),
                     AuthorId = table.Column<int>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -135,6 +144,7 @@ namespace iBlogs.Site.Core.Migrations
                     AuthorId = table.Column<int>(nullable: true),
                     Created = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Deleted = table.Column<bool>(nullable: false),
                     Action = table.Column<string>(nullable: true),
                     Data = table.Column<string>(nullable: true),
                     Ip = table.Column<string>(nullable: true)
@@ -154,10 +164,12 @@ namespace iBlogs.Site.Core.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false),
-                    AuthorId = table.Column<int>(nullable: true),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    IsAuthor = table.Column<bool>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Deleted = table.Column<bool>(nullable: false),
                     Cid = table.Column<int>(nullable: false),
                     Author = table.Column<string>(nullable: true),
                     OwnerId = table.Column<int>(nullable: false),
@@ -167,21 +179,15 @@ namespace iBlogs.Site.Core.Migrations
                     Agent = table.Column<string>(nullable: true),
                     Content = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
-                    Status = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false),
                     Parent = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_Users_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Comments_Contents_Id",
-                        column: x => x.Id,
+                        name: "FK_Comments_Contents_Cid",
+                        column: x => x.Cid,
                         principalTable: "Contents",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -194,7 +200,10 @@ namespace iBlogs.Site.Core.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Cid = table.Column<int>(nullable: false),
-                    Mid = table.Column<int>(nullable: false)
+                    Mid = table.Column<int>(nullable: false),
+                    Created = table.Column<DateTime>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -219,9 +228,9 @@ namespace iBlogs.Site.Core.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_AuthorId",
+                name: "IX_Comments_Cid",
                 table: "Comments",
-                column: "AuthorId");
+                column: "Cid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Contents_AuthorId",

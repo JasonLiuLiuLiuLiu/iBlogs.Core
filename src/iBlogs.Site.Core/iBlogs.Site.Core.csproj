@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Common\Attribute\**" />
+    <EmbeddedResource Remove="Common\Attribute\**" />
+    <None Remove="Common\Attribute\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.1.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.0" />
     <PackageReference Include="Markdig" Version="0.17.0" />
@@ -39,10 +45,6 @@
     <Reference Include="Microsoft.Extensions.Options">
       <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.options\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Common\Attribute\" />
   </ItemGroup>
 
 </Project>

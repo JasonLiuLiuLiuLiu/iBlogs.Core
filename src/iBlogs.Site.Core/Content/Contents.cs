@@ -20,12 +20,12 @@ namespace iBlogs.Site.Core.Content
 
         public string Content { get; set; }
         public int Hits { get; set; }
-        public string Type { get; set; }
+        public ContentType Type { get; set; }
         public string FmtType { get; set; }
         public string ThumbImg { get; set; }
         public string Tags { get; set; }
         public string Categories { get; set; }
-        public string Status { get; set; }
+        public ContentStatus Status { get; set; }
         public int CommentsNum { get; set; }
         public bool AllowComment { get; set; } = true;
         public bool AllowPing { get; set; } = true;
@@ -38,5 +38,7 @@ namespace iBlogs.Site.Core.Content
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
+
+        public bool Deleted { get; set; }
     }
 }

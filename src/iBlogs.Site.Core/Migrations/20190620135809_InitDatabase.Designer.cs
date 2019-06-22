@@ -9,8 +9,8 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 namespace iBlogs.Site.Core.Migrations
 {
     [DbContext(typeof(iBlogsContext))]
-    [Migration("20190527145430_init")]
-    partial class init
+    [Migration("20190620135809_InitDatabase")]
+    partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,7 +26,10 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<int>("AuthorId");
 
-                    b.Property<long>("Created");
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
 
                     b.Property<string>("FKey");
 
@@ -43,13 +46,12 @@ namespace iBlogs.Site.Core.Migrations
 
             modelBuilder.Entity("iBlogs.Site.Core.Comment.Comments", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Agent");
 
                     b.Property<string>("Author");
-
-                    b.Property<int?>("AuthorId");
 
                     b.Property<int>("Cid");
 
@@ -58,7 +60,11 @@ namespace iBlogs.Site.Core.Migrations
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("Deleted");
+
                     b.Property<string>("Ip");
+
+                    b.Property<bool>("IsAuthor");
 
                     b.Property<string>("Mail");
 
@@ -66,7 +72,7 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<int>("Parent");
 
-                    b.Property<string>("Status");
+                    b.Property<int>("Status");
 
                     b.Property<string>("Type");
 
@@ -74,7 +80,7 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("Cid");
 
                     b.ToTable("Comments");
                 });
@@ -101,6 +107,8 @@ namespace iBlogs.Site.Core.Migrations
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("Deleted");
+
                     b.Property<string>("FmtType");
 
                     b.Property<int>("Hits");
@@ -110,7 +118,7 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<string>("Slug");
 
-                    b.Property<string>("Status");
+                    b.Property<int>("Status");
 
                     b.Property<string>("Tags");
 
@@ -118,7 +126,7 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<string>("Title");
 
-                    b.Property<string>("Type");
+                    b.Property<int>("Type");
 
                     b.Property<string>("Url");
 
@@ -143,6 +151,8 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<string>("Data");
 
+                    b.Property<bool>("Deleted");
+
                     b.Property<string>("Ip");
 
                     b.HasKey("Id");
@@ -159,6 +169,11 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<int>("Count");
 
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
+
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
@@ -169,11 +184,7 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<int>("Sort");
 
-                    b.Property<DateTime?>("Timestamp")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
-                    b.Property<string>("Type");
+                    b.Property<int>("Type");
 
                     b.HasKey("Id");
 
@@ -184,6 +195,11 @@ namespace iBlogs.Site.Core.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
 
                     b.Property<string>("Description");
 
@@ -202,6 +218,11 @@ namespace iBlogs.Site.Core.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("Cid");
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
 
                     b.Property<int>("Mid");
 
@@ -223,6 +244,8 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
 
                     b.Property<string>("Email");
 
@@ -253,13 +276,9 @@ namespace iBlogs.Site.Core.Migrations
 
             modelBuilder.Entity("iBlogs.Site.Core.Comment.Comments", b =>
                 {
-                    b.HasOne("iBlogs.Site.Core.User.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
                     b.HasOne("iBlogs.Site.Core.Content.Contents", "Article")
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("Cid")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

@@ -5,18 +5,18 @@ namespace iBlogs.Site.Web.Attribute
 {
     public class ViewLayoutAttribute : ResultFilterAttribute
     {
-        private string layout;
+        private readonly string _layout;
 
         public ViewLayoutAttribute(string layout)
         {
-            this.layout = layout;
+            _layout = layout;
         }
 
         public override void OnResultExecuting(ResultExecutingContext context)
         {
             if (context.Result is ViewResult viewResult)
             {
-                viewResult.ViewData["Layout"] = layout;
+                viewResult.ViewData["Layout"] = _layout;
             }
         }
     }

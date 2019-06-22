@@ -1,5 +1,4 @@
-﻿using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.Common.Extensions;
+﻿using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +28,7 @@ namespace iBlogs.Site.Web.Middleware
 
         private bool Installed()
         {
-            return _configuration[ConfigKey.DbInstalled].ToBool();
+            return _configuration["DbInstalled"].ToBool();
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿@using iBlogs.Site.Core.Common.Service
 @inject IViewService ViewService
 
-<link href="@ViewService.cdnURL()/plugins/tagsinput/jquery.tagsinput.css" rel="stylesheet">
-<link href="@ViewService.cdnURL()/plugins/toggles/toggles.css" rel="stylesheet">
-<link href="@ViewService.cdnURL()/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet">
-<link href="@ViewService.cdnURL()/plugins/mditor/css/mditor.min.css" rel="stylesheet" />
-<link href="@ViewService.cdnURL()/plugins/summernote/0.8.2/summernote.css" rel="stylesheet">
-<link href="@ViewService.cdnURL()/plugins/dropzone/4.3.0/min/dropzone.min.css" rel="stylesheet">
+<link href="@ViewService.CdnURL()/plugins/tagsinput/jquery.tagsinput.css" rel="stylesheet">
+<link href="@ViewService.CdnURL()/plugins/toggles/toggles.css" rel="stylesheet">
+<link href="@ViewService.CdnURL()/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="@ViewService.CdnURL()/plugins/mditor/css/mditor.min.css" rel="stylesheet" />
+<link href="@ViewService.CdnURL()/plugins/summernote/0.8.2/summernote.css" rel="stylesheet">
+<link href="@ViewService.CdnURL()/plugins/dropzone/4.3.0/min/dropzone.min.css" rel="stylesheet">
 <style rel="stylesheet">
     #tags_tagsinput {
         background-color: #fafafa;
@@ -87,7 +87,7 @@
                 <h3 class="panel-title">编辑文章</h3>
             </div>
             <div class="panel-body">
-                <input type="hidden" id="attach_url" value="@ViewService.attachURL()" />
+                <input type="hidden" id="attach_url" value="@ViewService.AttachURL()" />
 
                 <form id="articleForm">
                     <input type="hidden" v-model="article.cid" />
@@ -181,7 +181,7 @@
                     <div class="form-group col-md-6">
                         <div class="text-right">
                             <a class="btn btn-default waves-effect waves-light" href="/admin/article">返回列表</a>
-                            <button type="button" class="btn btn-primary waves-effect waves-light" v-on:click="publish('publish')">
+                            <button type="button" class="btn btn-primary waves-effect waves-light" v-on:click="publish('Publish')">
                                 发布文章
                             </button>
                             <button type="button" class="btn btn-warning waves-effect waves-light" v-on:click="publish('draft')">
@@ -196,17 +196,17 @@
 </div>
 @section scripts
 {
-    <script src="@ViewService.cdnURL()/plugins/tagsinput/jquery.tagsinput.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/datetimepicker/bootstrap-datetimepicker.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/jquery-multi-select/jquery.quicksearch.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/mditor/js/mditor.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/wysihtml5/0.3.0/wysihtml5.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/summernote/0.8.2/summernote.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/summernote/0.8.2/lang/summernote-zh-CN.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/vue-select/vue-select.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/jquery-toggles/2.0.4/toggles.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/dropzone/4.3.0/min/dropzone.min.js"></script>
-    <script src="@ViewService.cdnURL()/plugins/to-markdown/3.1.0/to-markdown.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/jquery-multi-select/jquery.quicksearch.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/mditor/js/mditor.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/wysihtml5/0.3.0/wysihtml5.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/summernote/0.8.2/summernote.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/summernote/0.8.2/lang/summernote-zh-CN.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/vue-select/vue-select.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/jquery-toggles/2.0.4/toggles.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/dropzone/4.3.0/min/dropzone.min.js"></script>
+    <script src="@ViewService.CdnURL()/plugins/to-markdown/3.1.0/to-markdown.min.js"></script>
     <script src="/static/admin/js/edit_article.js" asp-append-version="true"></script>
 }

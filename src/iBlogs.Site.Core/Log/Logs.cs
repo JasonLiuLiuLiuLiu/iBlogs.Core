@@ -19,6 +19,8 @@ namespace iBlogs.Site.Core.Log
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
+        public bool Deleted { get; set; }
+
         public string Action { get; set; }
         public string Data { get; set; }
         public string Ip { get; set; }

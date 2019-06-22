@@ -1,5 +1,7 @@
-﻿using iBlogs.Site.Core.EntityFrameworkCore;
+﻿using System;
+using iBlogs.Site.Core.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace iBlogs.Site.Core.Meta
 {
@@ -10,13 +12,15 @@ namespace iBlogs.Site.Core.Meta
 
         public string Name { get; set; }
         public string Slug { get; set; }
-        public string Type { get; set; }
+        public MetaType Type { get; set; }
         public string Description { get; set; }
         public int Sort { get; set; }
         public int Parent { get; set; }
         public int Count { get; set; }
 
-        [Timestamp]
-        public byte[] Timestamp { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public DateTime Created { get; set; }
+
+        public bool Deleted { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using AutoMapper;
 using iBlogs.Site.Core.Common.AutoMapper;
 using iBlogs.Site.Core.Common.CodeDi;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.Option.Service;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace iBlogs.Site.Core.Common.Extensions

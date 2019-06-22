@@ -1,6 +1,5 @@
 ﻿using iBlogs.Site.Core.Content;
 using iBlogs.Site.Core.EntityFrameworkCore;
-using iBlogs.Site.Core.User;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,17 +11,16 @@ namespace iBlogs.Site.Core.Comment
         [Key]
         public int Id { get; set; }
 
-        public int? AuthorId { get; set; }
-
-        [ForeignKey("AuthorId")]
-        public Users User { get; set; }
+        public bool IsAuthor { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
+        public bool Deleted { get; set; }
+
         public int Cid { get; set; }
 
-        [ForeignKey("Id")]
+        [ForeignKey("Cid")]
         public Contents Article { get; set; }
 
         public string Author { get; set; }
@@ -33,7 +31,7 @@ namespace iBlogs.Site.Core.Comment
         public string Agent { get; set; }
         public string Content { get; set; }
         public string Type { get; set; }
-        public string Status { get; set; }
+        public CommentStatus Status { get; set; }
         public int Parent { get; set; }
     }
 }
