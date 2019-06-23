@@ -5,7 +5,9 @@
 
 trigger:
 - master
-- Developmentpool:
+- Development
+
+pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
