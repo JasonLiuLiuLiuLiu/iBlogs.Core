@@ -14,7 +14,7 @@ variables:
   buildConfiguration: 'Release'
   dockerId: liuzhenyulive
   imageName: iblogs
-  pwd: $(dockerPwd)
+  pswd: $(dockerPwd)
 
 steps:
 - task: DockerInstaller@0
