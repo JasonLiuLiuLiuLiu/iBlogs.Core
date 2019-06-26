@@ -15,7 +15,8 @@ namespace iBlogs.Site.Core.Common.Extensions
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddCoreDi(options =>
             {
-                options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*", "ef*", "*AutoMapper*" };
+                options.AssemblyNames = new[] {"*iBlogs.Site*"};
+                //options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*", "ef*", "*AutoMapper*", "*Markdig*", "*Newtonsoft*", "*SixLabors*", "*System*" };
                 options.IgnoreInterface = new[] { "*IEntityBase*" };
             });
             services.AddAutoMapper(cfg =>
