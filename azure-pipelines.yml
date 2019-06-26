@@ -12,8 +12,15 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  dockerId: liuzhenyulive
+  imageName: iblogs
+  pswd: $(dockerPwd)
 
 steps:
+- task: DockerInstaller@0
+  inputs:
+    dockerVersion: '17.09.0-ce'
+
 - script: dotnet restore
   displayName: 'dotnet restore'
 
@@ -37,3 +44,9 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'publish artifacts'
+
+- script: |
+    docker build -t $(dockerId)/$(imageName) -f ./src/iBlogs.Site.Web/Dockerfile .
+    docker login -u $(dockerId) -p $(pswd)
+    docker push $(dockerId)/$(imageName)
+  displayName: 'docker build and push $(buildConfiguration)'
