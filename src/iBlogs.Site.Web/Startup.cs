@@ -29,7 +29,6 @@ namespace iBlogs.Site.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            Console.WriteLine(Configuration.GetConnectionString("iBlogs"));
             services.AddDbContextPool<iBlogsContext>(options =>
                 {
                     options.UseMySql(Configuration.GetConnectionString("iBlogs"));
@@ -55,6 +54,7 @@ namespace iBlogs.Site.Web
             services.AddMvc(option =>
             {
                 option.Filters.Add<LoginFilter>();
+                option.Filters.Add<ExceptionFilter>();
             }).AddJsonOptions(options =>
             {
                 options.SerializerSettings.ContractResolver = new BlogsContractResolver();
