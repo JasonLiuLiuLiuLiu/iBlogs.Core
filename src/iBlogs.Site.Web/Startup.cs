@@ -22,6 +22,7 @@ namespace iBlogs.Site.Web
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            configuration.ConfigAppSettingFromCmd();
         }
 
         public IConfiguration Configuration { get; }

@@ -17,6 +17,7 @@
     },
     "iBlogs.Site.Web": {
       "commandName": "Project",
+      "commandLineArgs": "DbServer=localhost DbName=iblogs DbUID=root DbPWD=123456",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
