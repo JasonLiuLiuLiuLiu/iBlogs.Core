@@ -11,19 +11,19 @@ namespace iBlogs.Site.Web.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
-        private readonly IInstallService _installService;
+        private IInstallService _installService;
         private HttpContext _httpContext;
 
-        public InstallMiddleware(RequestDelegate next, IConfiguration configuration, IInstallService installService)
+        public InstallMiddleware(RequestDelegate next, IConfiguration configuration)
         {
             _next = next;
             _configuration = configuration;
-            _installService = installService;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IInstallService installService)
         {
             _httpContext = context;
+            _installService = installService;
             if (!await Installed())
                 context.Request.Path = "/install";
             await _next.Invoke(context);
