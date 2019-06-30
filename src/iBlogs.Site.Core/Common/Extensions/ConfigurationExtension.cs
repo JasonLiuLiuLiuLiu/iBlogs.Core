@@ -15,7 +15,6 @@ namespace iBlogs.Site.Core.Common.Extensions
                 return configuration;
 
             var connectString = $"Server={configuration[DbService]};Database={configuration[DbName]};uid={configuration[DbUID]};pwd={configuration[DbPWD]}";
-            Console.WriteLine(connectString);
             ConfigDataHelper.UpdateConnectionString("iBlogs", connectString);
             ConfigDataHelper.UpdateDbInstallStatus(true);
             Console.WriteLine("Set connection string from command line.");
