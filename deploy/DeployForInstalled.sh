@@ -1,3 +1,4 @@
+echo $DB_PWD
 docker pull $DOCKERID/$IMAGENAME:$BUILD_BUILDNUMBER
 docker stop $IMAGENAME
 docker rm $IMAGENAME
