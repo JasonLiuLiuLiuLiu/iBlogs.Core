@@ -9,6 +9,7 @@ namespace iBlogs.Site.Core.Common.Extensions
         private static readonly string DbName = "DbName";
         private static readonly string DbUID = "DbUID";
         private static readonly string DbPWD = "DbPWD";
+        private static readonly string BuildNumber = "BuildNumber";
         public static IConfiguration ConfigAppSettingFromCmd(this IConfiguration configuration)
         {
             if (configuration[DbService] == null || configuration[DbName] == null || configuration[DbUID] == null || configuration[DbPWD] == null)
@@ -18,6 +19,9 @@ namespace iBlogs.Site.Core.Common.Extensions
             ConfigDataHelper.UpdateConnectionString("iBlogs", connectString);
             ConfigDataHelper.UpdateDbInstallStatus(true);
             Console.WriteLine("Set connection string from command line.");
+
+            if (configuration[BuildNumber] != null)
+                ConfigDataHelper.UpdateBuildNumber(configuration[BuildNumber]);
 
             return configuration;
         }

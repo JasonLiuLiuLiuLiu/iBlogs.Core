@@ -16,6 +16,13 @@ namespace iBlogs.Site.Core.Common
             File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }
 
+        public static void UpdateBuildNumber(string buildNumber)
+        {
+            var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));
+            jObject["BuildNumber"] = buildNumber;
+            File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
+        }
+
         public static void UpdateConnectionString(string connectionName, string value)
         {
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));

@@ -4,6 +4,7 @@ using iBlogs.Site.Core.User.DTO;
 using iBlogs.Site.Core.User.Service;
 using System.Text;
 using iBlogs.Site.Core.Option;
+using Microsoft.Extensions.Configuration;
 
 namespace iBlogs.Site.Core.Common.Service
 {
@@ -11,11 +12,13 @@ namespace iBlogs.Site.Core.Common.Service
     {
         private readonly IOptionService _optionService;
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
-        public ViewService(IOptionService optionService, IUserService userService)
+        public ViewService(IOptionService optionService, IUserService userService, IConfiguration configuration)
         {
             _optionService = optionService;
             _userService = userService;
+            _configuration = configuration;
         }
 
         public CurrentUser User => _userService.CurrentUsers;
@@ -210,6 +213,11 @@ namespace iBlogs.Site.Core.Common.Service
         public string CdnURL()
         {
             return _optionService.Get(Option.ConfigKey.CdnUrl, "/static/admin");
+        }
+
+        public string BuildNumber()
+        {
+            return _configuration["BuildNumber"] ?? "20190701.01";
         }
     }
 }
