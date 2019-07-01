@@ -1,4 +1,4 @@
-docker pull $(dockerId)/$(imageName):$(Build.BuildNumber)
-docker stop $(imageName)
-docker rm $(imageName)
-docker run -d -p 80:80 --restart=always --name $(imageName) $(dockerId)/$(imageName):$(Build.BuildNumber) DbServer=$(DbServer) DbName=$(DbName) DbUID=$(DbUID) DbPWD=$(DbPWD) BuildNumber=$(Build.BuildNumber)
+docker pull $DOCKERID/$IMAGENAME:$BUILD_BUILDNUMBER
+docker stop $IMAGENAME
+docker rm $IMAGENAME
+docker run -d -p 80:80 --restart=always --name $IMAGENAME $DOCKERID/$IMAGENAME:$BUILD_BUILDNUMBER DbServer=$DBSERVER DbName=$DBNAME DbUID=$DBUID DbPWD=$DBPWD BuildNumber=$BUILD_BUILDNUMBER
