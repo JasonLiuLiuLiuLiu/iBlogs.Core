@@ -1,7 +1,4 @@
- #!/bin/bash 
- for i; do 
-    echo $i 
- done
+echo $DBPWD
 docker pull $DOCKERID/$IMAGENAME:$BUILD_BUILDNUMBER
 docker stop $IMAGENAME
 docker rm $IMAGENAME
