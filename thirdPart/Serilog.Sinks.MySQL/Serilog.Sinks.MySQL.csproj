@@ -16,7 +16,7 @@
         <Version>4.5.0</Version>
         <SignAssembly>True</SignAssembly>
         <AssemblyOriginatorKeyFile>Serilog.snk</AssemblyOriginatorKeyFile>
-        <TargetFrameworks>netstandard1.6;net452;netstandard2;netcoreapp2.1</TargetFrameworks>
+        <TargetFrameworks>netstandard2;netcoreapp2.1</TargetFrameworks>
     </PropertyGroup>
     <PropertyGroup>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
