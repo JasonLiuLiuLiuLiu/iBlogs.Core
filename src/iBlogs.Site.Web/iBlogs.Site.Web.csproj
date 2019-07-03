@@ -8,9 +8,6 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Hangfire" Version="1.7.2" />
-    <PackageReference Include="Hangfire.MemoryStorage" Version="1.6.0" />
-    <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.2.4">
@@ -19,10 +16,13 @@
     </PackageReference>
     <PackageReference Include="Microsoft.SyndicationFeed.ReaderWriter" Version="1.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <ProjectReference Include="..\..\thirdPart\Serilog.Sinks.MySQL\Serilog.Sinks.MySQL.csproj" />
     <ProjectReference Include="..\iBlogs.Site.Core\iBlogs.Site.Core.csproj" />
   </ItemGroup>
 

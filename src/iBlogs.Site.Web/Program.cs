@@ -1,7 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using iBlogs.Site.Core.Common;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Serilog;
+using Serilog.Events;
 
 namespace iBlogs.Site.Web
 {
@@ -9,7 +13,33 @@ namespace iBlogs.Site.Web
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var logConfig = new LoggerConfiguration()
+#if DEBUG
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+#else
+                .MinimumLevel.Warning()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+#endif
+                .Enrich.FromLogContext();
+
+            logConfig = ConfigDataHelper.TryGetConnectionString("iBlogs", out var connectionString) ? logConfig.WriteTo.MySQL(connectionString) : logConfig.WriteTo.Console();
+
+            Log.Logger = logConfig.CreateLogger();
+
+            try
+            {
+                Log.Information("Starting web host");
+                CreateWebHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
@@ -22,6 +52,7 @@ namespace iBlogs.Site.Web
                         .AddEnvironmentVariables()
                         .AddCommandLine(args);
                 })
-                .UseStartup<Startup>();
+                .UseStartup<Startup>()
+                .UseSerilog();
     }
 }
