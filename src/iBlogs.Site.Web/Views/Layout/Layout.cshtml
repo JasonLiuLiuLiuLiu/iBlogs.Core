@@ -26,11 +26,11 @@
     <link href="@ViewService.ThemeUrl("/static/css/style.min.css")" rel="stylesheet">
     @if (ViewService.AllowCloudCdn() == "true")
     {
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     }
     else
     {
-    <script src="/static/admin/plugins/jquery/3.2.1/jquery.min.js"></script>
+        <script src="/static/admin/plugins/jquery/3.2.1/jquery.min.js"></script>
     }
 
     <script src="@ViewService.ThemeUrl("/static/js/highlight.min.js")"></script>
@@ -109,9 +109,14 @@
                         <div class="info-text">
                             <p>Always coding,Always writing!</p>
                             <p>
-                                Powered by <a href="https://github.com/liuzhenyulive/iblogs" target="_blank">iBlogs</a>
+                                Azure Pipeline Build <a href="https://dev.azure.com/ZhenyuDevOps/iBlogs/_build/latest?definitionId=1&branchName=master" target="_blank">@ViewService.BuildNumber()</a>
                             </p>
-                            <p>&copy; @DateTime.Now.Year <a href="https://github.com/liuzhenyulive" target="_blank">Liu, zhenyu</a></p>
+                            <p>
+                                <a href="http://iblogs.site">iblogs.site</a> | <a href="http://www.beian.gov.cn">赣ICP备18014060号-2</a>
+                            </p>
+                            <p>
+                                Powered by  <a href="https://github.com/liuzhenyulive/iblogs" target="_blank">iBlogs</a> &copy; @DateTime.Now.Year <a href="https://github.com/liuzhenyulive" target="_blank">Liu, zhenyu</a>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -127,8 +132,9 @@
                         <div style="float:right;width:35%;">
                             <img height="100%" width="100%" src="https://raw.githubusercontent.com/liuzhenyulive/iBlogs/Development/coderayu.png">
                         </div>
-                        <div style="margin-right:35%;padding-right:5px;">
-                            <p style="margin: 0 0">码农阿宇,已对接此博客系统,自动推送iBlogs最新文章,功能更新通知,老司机开车福利等,来不及解释了,快上车!</p>
+                        <div style="margin-right:35%;padding-right:5px;" class="info-text">
+                            <p style="margin: 0 0">码农阿宇,已对接此博客系统的公众号,深度技术,实用干货,扫码发车.</p>
+                            <p style="margin: 0 0">Scan code to start.</p>
                         </div>
                     </div>
                 </div>
@@ -145,7 +151,7 @@
                         <div style="float:right;width:35%;">
                             <img height="100%" width="100%" src="https://raw.githubusercontent.com/liuzhenyulive/iBlogs/Development/liuzhenyu.png">
                         </div>
-                        <div style="margin-right:35%;padding-right:5px;">
+                        <div style="margin-right:35%;padding-right:5px;" class="info-text">
                             <p style="margin: 0 0">刘振宇,常年活动在杭州周边,如果你需要我,欢迎扫面右边微信二维码与我联系.</p>
                             <a style="margin: 0 0" href="mailto:liuzhenyulive@live.com?subject=Mail from iBlogs">liuzhenyulive@live.com</a>
                         </div>

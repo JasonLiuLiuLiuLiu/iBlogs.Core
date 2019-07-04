@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using System.Text;
 using iBlogs.Site.Core.Option.Service;
+using Serilog;
 
 namespace iBlogs.Site.Web
 {
@@ -54,6 +55,7 @@ namespace iBlogs.Site.Web
             services.AddMvc(option =>
             {
                 option.Filters.Add<LoginFilter>();
+                option.Filters.Add<ExceptionFilter>();
             }).AddJsonOptions(options =>
             {
                 options.SerializerSettings.ContractResolver = new BlogsContractResolver();
@@ -61,10 +63,25 @@ namespace iBlogs.Site.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptionService option)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptionService option, IApplicationLifetime appLifetime)
         {
             if (Configuration["DbInstalled"].ToBool())
                 option.Load();
+
+            appLifetime.ApplicationStarted.Register(() =>
+            {
+                Console.WriteLine("iBlogs started.");
+            });
+
+            appLifetime.ApplicationStopping.Register(() =>
+            {
+                Console.WriteLine("iBlogs is stopping,If you run this application at docker, please add \"--restart = always\" to the run command...");
+            });
+
+            appLifetime.ApplicationStopped.Register(() =>
+            {
+                Console.WriteLine("iBlogs stopped.");
+            });
 
             app.UseMiddleware<JwtInHeaderMiddleware>();
 

@@ -20,5 +20,6 @@ namespace iBlogs.Site.Core.Common.Service
         string Gravatar(string email);
         string AttachURL();
         string CdnURL();
+        string BuildNumber();
     }
 }

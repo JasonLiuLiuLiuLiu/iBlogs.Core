@@ -8,10 +8,12 @@ using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.User;
 using iBlogs.Site.Core.User.Service;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using iBlogs.Site.Core.Content.DTO;
 using iBlogs.Site.Core.Meta;
 using iBlogs.Site.Core.Option;
+using Microsoft.AspNetCore.Hosting;
 using ConfigKey = iBlogs.Site.Core.Option.ConfigKey;
 
 namespace iBlogs.Site.Core.Install.Service
@@ -26,8 +28,9 @@ namespace iBlogs.Site.Core.Install.Service
         private readonly IMetasService _metasService;
         private InstallParam _param;
         private Users _users;
+        private readonly IApplicationLifetime _applicationLifetime;
 
-        public InstallService(IOptionService optionService, IUserService userService, iBlogsContext blogsContext, ITransactionProvider transactionProvider, IContentsService contentsService, IMetasService metasService)
+        public InstallService(IOptionService optionService, IUserService userService, iBlogsContext blogsContext, ITransactionProvider transactionProvider, IContentsService contentsService, IMetasService metasService, IApplicationLifetime applicationLifetime)
         {
             _optionService = optionService;
             _userService = userService;
@@ -35,26 +38,40 @@ namespace iBlogs.Site.Core.Install.Service
             _transactionProvider = transactionProvider;
             _contentsService = contentsService;
             _metasService = metasService;
+            _applicationLifetime = applicationLifetime;
         }
 
-        public async Task<bool> InitializeDb(InstallParam param)
+        public void WriteInstallInfo(InstallParam param)
         {
-            _param = param;
+            var connectString = $"Server={param.DbUrl};Database={param.DbName};uid={param.DbUserName};pwd={param.DbUserPwd}";
+            ConfigDataHelper.UpdateConnectionString("iBlogs", connectString);
+            ConfigDataHelper.SaveInstallParam(param);
+            Task.Run(() =>
+            {
+                Thread.Sleep(1000);
+                _applicationLifetime.StopApplication();
+            });
+        }
+
+        public async Task<bool> InitializeDb()
+        {
+
             try
             {
-                var connectString = $"Server={param.DbUrl};Database={param.DbName};uid={param.DbUserName};pwd={param.DbUserPwd}";
-                ConfigDataHelper.UpdateConnectionString("iBlogs", connectString);
+                _param = ConfigDataHelper.ReadInstallParam();
                 await _blogsContext.Database.EnsureCreatedAsync();
                 Seed();
                 ConfigDataHelper.UpdateDbInstallStatus(true);
+                ConfigDataHelper.DeleteInstallParamFile();
+                _optionService.Load();
+                return true;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                throw;
             }
-            _optionService.Load();
-            return true;
+
+            return false;
         }
 
         private void Seed()
@@ -94,7 +111,7 @@ namespace iBlogs.Site.Core.Install.Service
 
         private bool InitContent()
         {
-            var about = _contentsService.Publish(new ContentInput
+            _contentsService.Publish(new ContentInput
             {
                 Title = "关于",
                 Slug = "about",
@@ -129,7 +146,7 @@ namespace iBlogs.Site.Core.Install.Service
                 AllowFeed = true
             });
 
-            var linkContent = _contentsService.Publish(new ContentInput
+            _contentsService.Publish(new ContentInput
             {
                 Title = "友情链接",
                 Slug = "links",

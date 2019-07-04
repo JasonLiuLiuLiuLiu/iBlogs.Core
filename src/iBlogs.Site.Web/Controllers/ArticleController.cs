@@ -33,7 +33,7 @@ namespace iBlogs.Site.Web.Controllers
             var content = _contentsService.GetContents(url);
             var pre = _contentsService.GetPre(content.Id);
             var next = _contentsService.GetNext(content.Id);
-            var commentPage = new CommentPageParam { Page = cp == 0 ? 1 : cp, Cid = content.Id };
+            var commentPage = new CommentPageParam { Page = cp == 0 ? 1 : cp, Cid = content.Id,Status = CommentStatus.Approved};
             var pageComments = _commentsService.GetComments(commentPage);
             CurrentUser currentUser = null;
             if (HttpContext.User.Claims.Any())

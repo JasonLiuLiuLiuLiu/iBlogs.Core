@@ -1,8 +1,8 @@
 ﻿using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Install.Service;
 
 namespace iBlogs.Site.Web.Middleware
 {
@@ -10,7 +10,8 @@ namespace iBlogs.Site.Web.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly IConfiguration _configuration;
-        private iBlogsContext _blogsContext;
+        private IInstallService _installService;
+        private HttpContext _httpContext;
 
         public InstallMiddleware(RequestDelegate next, IConfiguration configuration)
         {
@@ -18,17 +19,22 @@ namespace iBlogs.Site.Web.Middleware
             _configuration = configuration;
         }
 
-        public async Task Invoke(HttpContext context, iBlogsContext blogsContext)
+        public async Task Invoke(HttpContext context, IInstallService installService)
         {
-            _blogsContext = blogsContext;
-            if (!Installed())
+            _httpContext = context;
+            _installService = installService;
+            if (!await Installed())
                 context.Request.Path = "/install";
             await _next.Invoke(context);
         }
 
-        private bool Installed()
+        private async Task<bool> Installed()
         {
-            return _configuration["DbInstalled"].ToBool();
+            if (_configuration["DbInstalled"].ToBool())
+                return true;
+            if (_httpContext.Request.Path.ToString().ToLower().Contains("install"))
+                return true;
+            return await _installService.InitializeDb();
         }
     }
 }

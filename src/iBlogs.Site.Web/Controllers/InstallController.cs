@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.Common.Extensions;
+﻿using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.Install.DTO;
 using iBlogs.Site.Core.Install.Service;
@@ -32,15 +30,13 @@ namespace iBlogs.Site.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ApiResponse<int>> Index(InstallParam param)
+        public ApiResponse<int> Index(InstallParam param)
         {
             var installed = _configuration["DbInstalled"].ToBool();
             if (!param.AdminPwd.IsNullOrWhiteSpace() && !installed)
             {
-                if (await _installService.InitializeDb(param))
-                {
-                    return ApiResponse<int>.Ok();
-                }
+                _installService.WriteInstallInfo(param);
+                return ApiResponse<int>.Ok();
             }
             return ApiResponse<int>.Fail("安装失败");
         }

@@ -34,6 +34,7 @@
         Github,
         WeiBo,
         Twitter,
-        ZhiHu
+        ZhiHu,
+        GithubWebHookSecret
     }
 }
