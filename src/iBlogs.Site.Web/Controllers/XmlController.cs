@@ -26,7 +26,7 @@ namespace iBlogs.Site.Web.Controllers
             _optionService = optionService;
         }
 
-        [Route("/robots.txt")]
+        [HttpGet("/robots.txt")]
         public string RobotsTxt()
         {
             string host = Request.Scheme + "://" + Request.Host;
@@ -38,7 +38,7 @@ namespace iBlogs.Site.Web.Controllers
             return sb.ToString();
         }
 
-        [Route("/sitemap.xml")]
+        [HttpGet("/sitemap.xml")]
         public async Task SitemapXml()
         {
             string host = Request.Scheme + "://" + Request.Host;
@@ -66,7 +66,7 @@ namespace iBlogs.Site.Web.Controllers
             }
         }
 
-        [Route("/rsd.xml")]
+        [HttpGet("/rsd.xml")]
         public void RsdXml()
         {
             string host = Request.Scheme + "://" + Request.Host;
@@ -100,8 +100,8 @@ namespace iBlogs.Site.Web.Controllers
             }
         }
 
-        [Route("feed")]
-        [Route("/feed/{type}")]
+        [HttpGet("feed")]
+        [HttpGet("/feed/{type}")]
         public async Task Rss(string type)
         {
             if (string.IsNullOrEmpty(type))

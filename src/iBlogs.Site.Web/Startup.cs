@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Web.Converter;
@@ -15,6 +17,7 @@ using System.Net;
 using System.Text;
 using iBlogs.Site.Core.Option.Service;
 using Serilog;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace iBlogs.Site.Web
 {
@@ -52,6 +55,20 @@ namespace iBlogs.Site.Web
                     };
                 });
             services.AddIBlogs();
+
+            //注册Swagger生成器，定义一个和多个Swagger 文档
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "iBlogs API", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+            });
+
             services.AddMvc(option =>
             {
                 option.Filters.Add<LoginFilter>();
@@ -119,6 +136,14 @@ namespace iBlogs.Site.Web
             app.UseCookiePolicy();
 
             app.UseMiddleware<InstallMiddleware>();
+
+            //启用中间件服务生成Swagger作为JSON终结点
+            app.UseSwagger();
+            //启用中间件服务对swagger-ui，指定Swagger JSON终结点
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "iBlogs API V1");
+            });
 
             app.UseMvc(routes =>
             {

@@ -26,7 +26,8 @@ namespace iBlogs.Site.Web
 #endif
                 .Enrich.FromLogContext();
 
-            logConfig = ConfigDataHelper.TryGetConnectionString("iBlogs", out var connectionString) ? logConfig.WriteTo.MySQL(connectionString) : logConfig.WriteTo.Console();
+            logConfig = ConfigDataHelper.TryGetConnectionString("iBlogs", out var connectionString) ?
+                logConfig.WriteTo.MySQL(connectionString) : logConfig.WriteTo.Console();
 
             Log.Logger = logConfig.CreateLogger();
 
