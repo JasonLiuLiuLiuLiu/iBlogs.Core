@@ -11,9 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iBlogs.Site.Web", "src\iBlo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iBlogs.Site.Core", "src\iBlogs.Site.Core\iBlogs.Site.Core.csproj", "{ED24C20A-27FE-45B5-BBDA-26BD70B7874B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "thirdPart", "thirdPart", "{10D2C3F6-5234-4F38-B364-833149163538}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.MySQL", "thirdPart\Serilog.Sinks.MySQL\Serilog.Sinks.MySQL.csproj", "{2A39A58A-5481-42EF-BF2D-902C25B10A9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.MySQL", "src\Serilog.Sinks.MySQL\Serilog.Sinks.MySQL.csproj", "{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +27,10 @@ Global
 		{ED24C20A-27FE-45B5-BBDA-26BD70B7874B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED24C20A-27FE-45B5-BBDA-26BD70B7874B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED24C20A-27FE-45B5-BBDA-26BD70B7874B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A39A58A-5481-42EF-BF2D-902C25B10A9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A39A58A-5481-42EF-BF2D-902C25B10A9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A39A58A-5481-42EF-BF2D-902C25B10A9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A39A58A-5481-42EF-BF2D-902C25B10A9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,7 +38,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A84D77A3-D6B7-4FA2-A3AE-C04330133B41} = {6AC670D6-C103-46AD-ADA2-43C87468706A}
 		{ED24C20A-27FE-45B5-BBDA-26BD70B7874B} = {6AC670D6-C103-46AD-ADA2-43C87468706A}
-		{2A39A58A-5481-42EF-BF2D-902C25B10A9C} = {10D2C3F6-5234-4F38-B364-833149163538}
+		{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58} = {6AC670D6-C103-46AD-ADA2-43C87468706A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A447472-C366-405E-80DF-37FFC2B0E4B3}

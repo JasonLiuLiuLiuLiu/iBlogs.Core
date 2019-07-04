@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using iBlogs.Site.Core.Common;
+using iBlogs.Site.Core.Common.Extensions;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,13 +14,15 @@ namespace iBlogs.Site.Web
     {
         public static void Main(string[] args)
         {
+            args.SetConfigInfo();
+
             var logConfig = new LoggerConfiguration()
 #if DEBUG
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
 #else
-                .MinimumLevel.Warning()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Information()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
 #endif
                 .Enrich.FromLogContext();
 
