@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
@@ -23,6 +22,7 @@ namespace iBlogs.Site.Web
 {
     public class Startup
     {
+      
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -54,7 +54,7 @@ namespace iBlogs.Site.Web
                         ValidateLifetime = true,
                     };
                 });
-            services.AddIBlogs();
+            services.AddIBlogs(Configuration);
 
             //注册Swagger生成器，定义一个和多个Swagger 文档
             services.AddSwaggerGen(c =>

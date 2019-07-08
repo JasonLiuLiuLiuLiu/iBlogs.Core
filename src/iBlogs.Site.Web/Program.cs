@@ -22,7 +22,7 @@ namespace iBlogs.Site.Web
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
 #else
                 .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
 #endif
                 .Enrich.FromLogContext();
 
