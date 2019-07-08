@@ -20,6 +20,7 @@ namespace iBlogs.Site.Web
 {
     public class Startup
     {
+      
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -51,7 +52,7 @@ namespace iBlogs.Site.Web
                         ValidateLifetime = true,
                     };
                 });
-            services.AddIBlogs();
+            services.AddIBlogs(Configuration);
             services.AddMvc(option =>
             {
                 option.Filters.Add<LoginFilter>();

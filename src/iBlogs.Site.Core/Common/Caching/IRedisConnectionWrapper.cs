@@ -1,4 +1,5 @@
-﻿using StackExchange.Redis;
+﻿using System.Threading.Tasks;
+using StackExchange.Redis;
 
 namespace iBlogs.Site.Core.Common.Caching
 {
@@ -7,6 +8,7 @@ namespace iBlogs.Site.Core.Common.Caching
     /// </summary>
     public interface IRedisConnectionWrapper
     {
+        Task<bool> CheckConnection(int timeOut = 10000);
         /// <summary>
         /// 获取指定数据库
         /// </summary>

@@ -1,4 +1,7 @@
-﻿using StackExchange.Redis;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using StackExchange.Redis;
 
 namespace iBlogs.Site.Core.Common.Caching
 {
@@ -16,6 +19,26 @@ namespace iBlogs.Site.Core.Common.Caching
         public RedisConnectionWrapper(RedisConnectionOption option)
         {
             _option = option;
+        }
+
+        public async Task<bool> CheckConnection(int timeOut = 10000)
+        {
+            var cts = new CancellationTokenSource();
+            var token = cts.Token;
+            cts.CancelAfter(timeOut);
+
+            try
+            {
+                return await Task.Run(() =>
+                      {
+                          GetConnection();
+                          return _connection.IsConnected;
+                      }, token);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /// <summary>
