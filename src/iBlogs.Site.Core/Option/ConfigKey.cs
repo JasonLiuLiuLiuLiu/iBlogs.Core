@@ -37,4 +37,15 @@
         ZhiHu,
         GithubWebHookSecret
     }
+
+
+    public static class ConfigKeyExtension
+    {
+        private const string KeyPre = "IBLOGS_OPTION_KEY_PRE";
+
+        public static string ToCacheKey(this ConfigKey config)
+        {
+            return KeyPre + config;
+        }
+    }
 }
