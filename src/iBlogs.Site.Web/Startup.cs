@@ -55,7 +55,6 @@ namespace iBlogs.Site.Web
                         ValidateLifetime = true,
                     };
                 });
-            services.AddIBlogs(Configuration);
 
             //注册Swagger生成器，定义一个和多个Swagger 文档
             services.AddSwaggerGen(c =>
@@ -70,6 +69,8 @@ namespace iBlogs.Site.Web
                 });
             });
 
+            services.AddIBlogs(Configuration);
+
             services.AddMvc(option =>
             {
                 option.Filters.Add<LoginFilter>();
@@ -78,6 +79,8 @@ namespace iBlogs.Site.Web
             {
                 options.SerializerSettings.ContractResolver = new BlogsContractResolver();
             });
+
+            ServiceFactory.Services = services;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,8 +88,6 @@ namespace iBlogs.Site.Web
         {
             if (Configuration["DbInstalled"].ToBool())
                 option.Load();
-
-            StaticServiceProvider.Init(serviceProvider);
 
             appLifetime.ApplicationStarted.Register(() =>
             {

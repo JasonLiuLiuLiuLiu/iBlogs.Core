@@ -15,7 +15,7 @@ namespace iBlogs.Site.Core.User.Service
 
         static LoginToken()
         {
-            CacheManager = StaticServiceProvider.GetService<ICacheManager>();
+            CacheManager = ServiceFactory.GetService<ICacheManager>();
         }
 
         private static string GetCacheKey(int uid)
