@@ -57,7 +57,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                 new Claim(ClaimTypes.Token,token), 
             };
 
-            LoginStaticToken.SaveToken(user.Id,token);
+            LoginToken.SaveToken(user.Id,token);
 
             var days = _configuration["Auth:JwtExpireDays"];
             var key = _configuration["Auth:JwtKey"];

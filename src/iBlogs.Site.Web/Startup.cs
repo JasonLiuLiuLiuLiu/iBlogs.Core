@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Net;
 using System.Text;
+using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Option.Service;
 using Serilog;
 using Swashbuckle.AspNetCore.Swagger;
@@ -22,7 +23,7 @@ namespace iBlogs.Site.Web
 {
     public class Startup
     {
-      
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -80,10 +81,12 @@ namespace iBlogs.Site.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptionService option, IApplicationLifetime appLifetime)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptionService option, IApplicationLifetime appLifetime, IServiceProvider serviceProvider)
         {
             if (Configuration["DbInstalled"].ToBool())
                 option.Load();
+
+            StaticServiceProvider.Init(serviceProvider);
 
             appLifetime.ApplicationStarted.Register(() =>
             {

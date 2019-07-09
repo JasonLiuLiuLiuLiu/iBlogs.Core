@@ -62,7 +62,7 @@ namespace iBlogs.Site.Core.User.Service
                 throw new Exception("输入密码有误");
             user.Password = param.Password;
             user.PwdMd5();
-            LoginStaticToken.RemoveToken(user.Id);
+            LoginToken.RemoveToken(user.Id);
             _repository.SaveChanges();
         }
 

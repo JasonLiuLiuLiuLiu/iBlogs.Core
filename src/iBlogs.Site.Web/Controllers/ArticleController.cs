@@ -40,7 +40,7 @@ namespace iBlogs.Site.Web.Controllers
             {
                 var uid = int.Parse(HttpContext.User.FindFirst(ClaimTypes.Uid)?.Value);
                 var token = HttpContext.User.FindFirst(ClaimTypes.Token)?.Value;
-                if (LoginStaticToken.CheckToken(uid, token))
+                if (LoginToken.CheckToken(uid, token))
                 {
 
                     var user = _userService.FindUserById(uid);

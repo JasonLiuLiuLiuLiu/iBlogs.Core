@@ -25,7 +25,7 @@ namespace iBlogs.Site.Web.Filter
             {
                 var uid = int.Parse(context.HttpContext.User.FindFirst(ClaimTypes.Uid)?.Value);
                 var token = context.HttpContext.User.FindFirst(ClaimTypes.Token)?.Value;
-                if (LoginStaticToken.CheckToken(uid, token))
+                if (LoginToken.CheckToken(uid, token))
                 {
                     if (_userService.CurrentUsers == null)
                     {
