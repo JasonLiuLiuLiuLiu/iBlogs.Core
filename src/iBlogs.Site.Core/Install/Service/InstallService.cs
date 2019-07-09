@@ -106,6 +106,14 @@ namespace iBlogs.Site.Core.Install.Service
             var siteUrl = BlogsUtils.BuildUrl(_param.SiteUrl);
             _optionService.Set(ConfigKey.SiteTitle, _param.SiteTitle);
             _optionService.Set(ConfigKey.SiteUrl, siteUrl);
+            _optionService.Set(ConfigKey.MaxPage, 100.ToString());
+            _optionService.Set(ConfigKey.MaxTextCount, 200000.ToString());
+            _optionService.Set(ConfigKey.MaxTitleCount, 200.ToString());
+            _optionService.Set(ConfigKey.MaxIntroCount, 500.ToString());
+            _optionService.Set(ConfigKey.MaxFileSize, 204800.ToString());
+            _optionService.Set(ConfigKey.StaticUrl, "/static");
+            _optionService.Set(ConfigKey.TemplesPath, "/templates/");
+            _optionService.Set(ConfigKey.ThemePath, "themes/default");
             return true;
         }
 
