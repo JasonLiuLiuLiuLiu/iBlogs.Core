@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace iBlogs.Site.Core.Common.Extensions
 {
@@ -10,44 +11,78 @@ namespace iBlogs.Site.Core.Common.Extensions
         private static readonly string DbPWD = "DbPWD";
         private static readonly string BuildNumber = "BuildNumber";
         private static readonly string RedisConStr = "RedisConStr";
+       private static readonly Dictionary<string, string> Data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         public static string[] SetConfigInfo(this string[] args)
         {
             if (args == null || args.Length == 0)
                 return args;
 
-            if(args.Arg(RedisConStr)!=null)
-                ConfigDataHelper.UpdateRedisConStr(args.Arg(RedisConStr));
+            Load(args);
 
-            if (args.Arg(DbService) == null || args.Arg(DbName) == null || args.Arg(DbUID) == null || args.Arg(DbPWD) == null)
+            if (Data.ContainsKey(RedisConStr))
+                ConfigDataHelper.UpdateRedisConStr(Data[RedisConStr]);
+
+            if (!Data.ContainsKey(DbService)  || !Data.ContainsKey(DbName)  || !Data.ContainsKey(DbUID)  || !Data.ContainsKey(DbPWD) )
                 return args;
 
-            var connectString = $"Server={args.Arg(DbService)};Database={args.Arg(DbName)};uid={args.Arg(DbUID)};pwd={args.Arg(DbPWD)}";
+            var connectString = $"Server={Data[DbService]};Database={Data[DbName]};uid={Data[DbUID]};pwd={Data[DbPWD]}";
             ConfigDataHelper.UpdateConnectionString("iBlogs", connectString);
             ConfigDataHelper.UpdateDbInstallStatus(true);
             Console.WriteLine("Set connection string from command line.");
 
-            if (args.Arg(BuildNumber) != null)
-                ConfigDataHelper.UpdateBuildNumber(args.Arg(BuildNumber));
+            if (Data.ContainsKey(BuildNumber))
+                ConfigDataHelper.UpdateBuildNumber(Data[BuildNumber]);
 
             return args;
         }
 
-        private static string Arg(this string[] args, string name)
-        {
-            if (args == null || args.Length == 0)
-                return null;
-
-            foreach (var arg in args)
+        private static void Load(IEnumerable<string> args)
+        { 
+            using (IEnumerator<string> enumerator = args.GetEnumerator())
             {
-                var argSplit = arg.Split('=');
-                if (argSplit.Length != 2)
-                    continue;
-                if (argSplit[0].Equals(name, StringComparison.CurrentCultureIgnoreCase))
-                    return argSplit[1];
+                while (enumerator.MoveNext())
+                {
+                    string key1 = enumerator.Current??"";
+                    int startIndex = 0;
+                    if (key1.StartsWith("--"))
+                        startIndex = 2;
+                    else if (key1.StartsWith("-"))
+                        startIndex = 1;
+                    else if (key1.StartsWith("/"))
+                    {
+                        key1 = $"--{(object) key1.Substring(1)}";
+                        startIndex = 2;
+                    }
+                    int length = key1.IndexOf('=');
+                    string index;
+                    string str;
+                    if (length < 0)
+                    {
+                        if (startIndex != 0)
+                        {
+                            if (startIndex != 1)
+                                index = key1.Substring(startIndex);
+                            else
+                                continue;
+                            if (enumerator.MoveNext())
+                                str = enumerator.Current;
+                            else
+                                continue;
+                        }
+                        else
+                            continue;
+                    }
+                    else
+                    {
+                        if (startIndex == 1)
+                            throw new FormatException($"传入参数格式有误,key:{key1}");
+                        index = key1.Substring(startIndex, length - startIndex);
+                        str = key1.Substring(length + 1);
+                    }
+                    Data[index] = str;
+                }
             }
-
-            return null;
         }
     }
 }
