@@ -9,10 +9,16 @@ namespace iBlogs.Site.Core.Common.Extensions
         private static readonly string DbUID = "DbUID";
         private static readonly string DbPWD = "DbPWD";
         private static readonly string BuildNumber = "BuildNumber";
+        private static readonly string RedisConStr = "RedisConStr";
+
         public static string[] SetConfigInfo(this string[] args)
         {
             if (args == null || args.Length == 0)
                 return args;
+
+            if(args.Arg(RedisConStr)!=null)
+                ConfigDataHelper.UpdateRedisConStr(args.Arg(RedisConStr));
+
             if (args.Arg(DbService) == null || args.Arg(DbName) == null || args.Arg(DbUID) == null || args.Arg(DbPWD) == null)
                 return args;
 

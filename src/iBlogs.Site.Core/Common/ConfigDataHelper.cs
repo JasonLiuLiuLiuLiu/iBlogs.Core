@@ -26,6 +26,14 @@ namespace iBlogs.Site.Core.Common
             File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }
 
+        public static void UpdateRedisConStr(string redisConStr)
+        {
+            var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));
+            jObject["RedisConnectionString"] = redisConStr;
+            File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
+        }
+
+
         public static void UpdateConnectionString(string connectionName, string value)
         {
             var jObject = JsonConvert.DeserializeObject<JObject>(File.ReadAllText("appsettings.json"));
