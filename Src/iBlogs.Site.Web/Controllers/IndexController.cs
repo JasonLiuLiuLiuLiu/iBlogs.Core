@@ -1,8 +1,8 @@
-﻿using iBlogs.Site.Core.Common.Request;
-using iBlogs.Site.Core.Content.DTO;
-using iBlogs.Site.Core.Content.Service;
-using iBlogs.Site.Core.Meta;
-using iBlogs.Site.Core.Meta.Service;
+﻿using iBlogs.Site.Core.Blog.Content.DTO;
+using iBlogs.Site.Core.Blog.Content.Service;
+using iBlogs.Site.Core.Blog.Meta;
+using iBlogs.Site.Core.Blog.Meta.Service;
+using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Web.Attribute;
 using iBlogs.Site.Web.Models;
 using Microsoft.AspNetCore.Mvc;

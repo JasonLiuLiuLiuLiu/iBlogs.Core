@@ -1,7 +1,7 @@
-﻿using iBlogs.Site.Core.Comment.DTO;
+﻿using iBlogs.Site.Core.Blog.Comment.DTO;
+using iBlogs.Site.Core.Blog.Content.DTO;
 using iBlogs.Site.Core.Common.Response;
-using iBlogs.Site.Core.Content.DTO;
-using iBlogs.Site.Core.User.DTO;
+using iBlogs.Site.Core.Security.DTO;
 
 namespace iBlogs.Site.Web.Models
 {

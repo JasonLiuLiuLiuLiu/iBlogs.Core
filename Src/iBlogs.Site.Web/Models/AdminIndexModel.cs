@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using iBlogs.Site.Core.Comment.DTO;
-using iBlogs.Site.Core.Content;
-using iBlogs.Site.Core.Content.DTO;
+using iBlogs.Site.Core.Blog.Comment.DTO;
+using iBlogs.Site.Core.Blog.Content.DTO;
 
 namespace iBlogs.Site.Web.Models
 {

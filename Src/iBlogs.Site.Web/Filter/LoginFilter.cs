@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.User.DTO;
-using iBlogs.Site.Core.User.Service;
+using iBlogs.Site.Core.Security.DTO;
+using iBlogs.Site.Core.Security.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;

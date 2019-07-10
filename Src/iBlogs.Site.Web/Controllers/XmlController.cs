@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using iBlogs.Site.Core.Content.Service;
+using iBlogs.Site.Core.Blog.Content.Service;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using Microsoft.AspNetCore.Mvc;

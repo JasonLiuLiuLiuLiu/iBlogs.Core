@@ -1,5 +1,5 @@
 ﻿using iBlogs.Site.Core.Option;
-using iBlogs.Site.Core.User.DTO;
+using iBlogs.Site.Core.Security.DTO;
 
 namespace iBlogs.Site.Core.Common.Service
 {

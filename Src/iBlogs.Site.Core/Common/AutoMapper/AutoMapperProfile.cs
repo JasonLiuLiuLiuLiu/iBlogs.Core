@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using iBlogs.Site.Core.Comment;
-using iBlogs.Site.Core.Comment.DTO;
-using iBlogs.Site.Core.Content;
-using iBlogs.Site.Core.Content.DTO;
+using iBlogs.Site.Core.Blog.Comment;
+using iBlogs.Site.Core.Blog.Comment.DTO;
+using iBlogs.Site.Core.Blog.Content;
+using iBlogs.Site.Core.Blog.Content.DTO;
 
 namespace iBlogs.Site.Core.Common.AutoMapper
 {

@@ -1,5 +1,5 @@
-﻿using iBlogs.Site.Core.Meta;
-using iBlogs.Site.Core.Meta.Service;
+﻿using iBlogs.Site.Core.Blog.Meta;
+using iBlogs.Site.Core.Blog.Meta.Service;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using Microsoft.AspNetCore.Mvc;

@@ -1,9 +1,9 @@
 ﻿using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Option.Service;
-using iBlogs.Site.Core.User.DTO;
-using iBlogs.Site.Core.User.Service;
 using System.Text;
 using iBlogs.Site.Core.Option;
+using iBlogs.Site.Core.Security.DTO;
+using iBlogs.Site.Core.Security.Service;
 using Microsoft.Extensions.Configuration;
 
 namespace iBlogs.Site.Core.Common.Service

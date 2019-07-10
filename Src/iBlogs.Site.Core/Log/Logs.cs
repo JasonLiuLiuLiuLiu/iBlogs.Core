@@ -1,8 +1,8 @@
 ﻿using iBlogs.Site.Core.EntityFrameworkCore;
-using iBlogs.Site.Core.User;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using iBlogs.Site.Core.Security;
 
 namespace iBlogs.Site.Core.Log
 {

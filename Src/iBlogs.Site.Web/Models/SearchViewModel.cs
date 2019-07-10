@@ -1,5 +1,5 @@
-﻿using iBlogs.Site.Core.Common.Response;
-using iBlogs.Site.Core.Content.DTO;
+﻿using iBlogs.Site.Core.Blog.Content.DTO;
+using iBlogs.Site.Core.Common.Response;
 
 namespace iBlogs.Site.Web.Models
 {

@@ -1,7 +1,7 @@
-﻿using iBlogs.Site.Core.Attach.Service;
-using iBlogs.Site.Core.Comment.Service;
-using iBlogs.Site.Core.Content.DTO;
-using iBlogs.Site.Core.Content.Service;
+﻿using iBlogs.Site.Core.Blog.Attach.Service;
+using iBlogs.Site.Core.Blog.Comment.Service;
+using iBlogs.Site.Core.Blog.Content.DTO;
+using iBlogs.Site.Core.Blog.Content.Service;
 using iBlogs.Site.Web.Attribute;
 using iBlogs.Site.Web.Models;
 using Microsoft.AspNetCore.Authorization;
