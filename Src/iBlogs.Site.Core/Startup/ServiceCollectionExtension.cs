@@ -64,6 +64,18 @@ namespace iBlogs.Site.Core.Startup
                 services.AddSingleton<ICacheManager, MemoryCacheManager>();
             }
 
+            services.AddCap(x =>
+            {
+                x.UseEntityFramework<iBlogsContext>();
+                x.UseRabbitMQ(option =>
+                {
+                    option.HostName = configuration["RabbitMqHost"] ?? "localhost";
+                    option.Password = configuration["RabbitMqPWD"] ?? "guest";
+                    option.UserName = configuration["RabbitMqUID"] ?? "guest";
+                });
+                x.UseDashboard();
+            });
+
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddCoreDi(options =>
             {

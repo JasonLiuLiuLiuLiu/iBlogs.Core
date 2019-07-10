@@ -3,9 +3,11 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Git;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
@@ -15,10 +17,13 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
     {
         private const string Sha1Prefix = "sha1=";
         private readonly IOptionService _optionService;
+        private readonly ILogger<GithubController> _logger;
+        private readonly IGitEventBus _gitEventBus;
 
-        public GithubController(IOptionService optionService)
+        public GithubController(IOptionService optionService, ILogger<GithubController> logger)
         {
             _optionService = optionService;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -27,28 +32,24 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             Request.Headers.TryGetValue("X-Hub-Signature", out StringValues signature);
             Request.Headers.TryGetValue("X-GitHub-Delivery", out StringValues delivery);
 
-            Print(eventName);
-            Print(signature);
-            Print(delivery);
+            _logger.LogInformation($"event name:{eventName}");
+            _logger.LogInformation($"signature:{signature}");
+            _logger.LogInformation($"delivery:{delivery}");
 
             using (var reader = new StreamReader(Request.Body))
             {
                 var txt = await reader.ReadToEndAsync();
 
-                Print(txt);
+                _logger.LogInformation($"message:{txt}");
 
                 if (IsGithubPushAllowed(txt, eventName, signature))
                 {
+                    _gitEventBus.Publish(txt);
                     return Ok();
                 }
             }
 
             return Unauthorized();
-        }
-
-        private void Print(string msg)
-        {
-            Console.WriteLine(msg);
         }
 
         private bool IsGithubPushAllowed(string payload, string eventName, string signatureWithPrefix)
@@ -69,7 +70,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             if (signatureWithPrefix.StartsWith(Sha1Prefix, StringComparison.OrdinalIgnoreCase))
             {
                 var signature = signatureWithPrefix.Substring(Sha1Prefix.Length);
-                var secret = Encoding.ASCII.GetBytes(_optionService.Get(ConfigKey.GithubWebHookSecret,"iblogs"));
+                var secret = Encoding.ASCII.GetBytes(_optionService.Get(ConfigKey.GithubWebHookSecret, "iblogs"));
                 var payloadBytes = Encoding.ASCII.GetBytes(payload);
 
                 using (var hmSha1 = new HMACSHA1(secret))
@@ -88,7 +89,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             return false;
         }
 
-        public static string ToHexString(byte[] bytes)
+        private static string ToHexString(byte[] bytes)
         {
             var builder = new StringBuilder(bytes.Length * 2);
             foreach (byte b in bytes)
