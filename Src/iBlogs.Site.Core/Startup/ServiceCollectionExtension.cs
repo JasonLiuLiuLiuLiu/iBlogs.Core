@@ -1,20 +1,51 @@
-﻿using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
+using System.Text;
 using AutoMapper;
+using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.AutoMapper;
 using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.CodeDi;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using SLog=Serilog.Log;
 
-namespace iBlogs.Site.Core.Common.Extensions
+namespace iBlogs.Site.Core.Startup
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddIBlogs(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddIBlogs(this IServiceCollection services)
         {
+            ServiceFactory.Services = services;
+            var configuration = ServiceFactory.GetService<IConfiguration>();
+
+            services.AddDbContextPool<iBlogsContext>(options =>
+            {
+                options.UseMySql(configuration.GetConnectionString("iBlogs"));
+            });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    var issuer = configuration["Auth:JwtIssuer"];
+                    var key = configuration["Auth:JwtKey"];
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = issuer,
+                        ValidAudience = issuer,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                        ValidateIssuer = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
+                    };
+                });
+
             var redisConnectionOption = new RedisConnectionOption()
             {
                 ConnectionString = configuration["RedisConnectionString"]
@@ -37,7 +68,6 @@ namespace iBlogs.Site.Core.Common.Extensions
             services.AddCoreDi(options =>
             {
                 options.AssemblyNames = new[] { "*iBlogs.Site*" };
-                //options.IgnoreAssemblies = new[] { "*Z.Dapper.Plus*", "*Dapper*", "*Hangfire*", "*Microsoft*", "ef*", "*AutoMapper*", "*Markdig*", "*Newtonsoft*", "*SixLabors*", "*System*" };
                 options.IgnoreInterface = new[] { "*IEntityBase*", "*Caching*" };
             });
             services.AddAutoMapper(cfg =>
@@ -46,6 +76,9 @@ namespace iBlogs.Site.Core.Common.Extensions
                 cfg.AddProfile<AutoMapperProfile>();
             },
                 Assembly.GetAssembly(typeof(ServiceCollection)));
+
+            services.AddTransient<IStartupFilter, iBlogsStartupFilter>();
+
             return services;
         }
     }

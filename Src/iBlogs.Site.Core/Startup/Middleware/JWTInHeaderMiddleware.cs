@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace iBlogs.Site.Web.Middleware
+namespace iBlogs.Site.Core.Startup.Middleware
 {
     public class JwtInHeaderMiddleware
     {

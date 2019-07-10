@@ -1,10 +1,10 @@
-﻿using iBlogs.Site.Core.Common.Extensions;
+﻿using System.Threading.Tasks;
+using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.Install.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
-using iBlogs.Site.Core.Install.Service;
 
-namespace iBlogs.Site.Web.Middleware
+namespace iBlogs.Site.Core.Startup.Middleware
 {
     public class InstallMiddleware
     {

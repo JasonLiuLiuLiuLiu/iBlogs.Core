@@ -1,75 +1,21 @@
 ﻿using System;
-using System.Linq;
-using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Web.Converter;
 using iBlogs.Site.Web.Filter;
-using iBlogs.Site.Web.Middleware;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using System.Net;
-using System.Text;
-using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Option.Service;
-using Serilog;
-using Swashbuckle.AspNetCore.Swagger;
+using iBlogs.Site.Core.Startup;
 
 namespace iBlogs.Site.Web
 {
     public class Startup
     {
-
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<iBlogsContext>(options =>
-                {
-                    options.UseMySql(Configuration.GetConnectionString("iBlogs"));
-                });
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    var issuer = Configuration["Auth:JwtIssuer"];
-                    var key = Configuration["Auth:JwtKey"];
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidIssuer = issuer,
-                        ValidAudience = issuer,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
-                        ValidateIssuer = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidateLifetime = true,
-                    };
-                });
-
-            //注册Swagger生成器，定义一个和多个Swagger 文档
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "iBlogs API", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = "header",
-                    Type = "apiKey"
-                });
-            });
-
-            services.AddIBlogs(Configuration);
+            services.AddIBlogs();
 
             services.AddMvc(option =>
             {
@@ -79,33 +25,11 @@ namespace iBlogs.Site.Web
             {
                 options.SerializerSettings.ContractResolver = new BlogsContractResolver();
             });
-
-            ServiceFactory.Services = services;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptionService option, IApplicationLifetime appLifetime, IServiceProvider serviceProvider)
         {
-            if (Configuration["DbInstalled"].ToBool())
-                option.Load();
-
-            appLifetime.ApplicationStarted.Register(() =>
-            {
-                Console.WriteLine("iBlogs started.");
-            });
-
-            appLifetime.ApplicationStopping.Register(() =>
-            {
-                Console.WriteLine("iBlogs is stopping,If you run this application at docker, please add \"--restart = always\" to the run command...");
-            });
-
-            appLifetime.ApplicationStopped.Register(() =>
-            {
-                Console.WriteLine("iBlogs stopped.");
-            });
-
-            app.UseMiddleware<JwtInHeaderMiddleware>();
-
             app.UseStatusCodePages(async context =>
             {
                 var response = context.HttpContext.Response;
@@ -138,16 +62,6 @@ namespace iBlogs.Site.Web
             app.UseAuthentication();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
-            app.UseMiddleware<InstallMiddleware>();
-
-            //启用中间件服务生成Swagger作为JSON终结点
-            app.UseSwagger();
-            //启用中间件服务对swagger-ui，指定Swagger JSON终结点
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "iBlogs API V1");
-            });
 
             app.UseMvc(routes =>
             {
