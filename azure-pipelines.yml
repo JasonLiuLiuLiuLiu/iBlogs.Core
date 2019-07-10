@@ -41,8 +41,8 @@ steps:
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration)'
     
-- script: cp ./deploy/* $(Build.ArtifactStagingDirectory)
-  displayName: 'copy deploy script to artifact staging directory'
+- script: cp ./Deploy/* $(Build.ArtifactStagingDirectory)
+  displayName: 'copy Deploy script to artifact staging directory'
 
 
 - task: PublishBuildArtifacts@1
