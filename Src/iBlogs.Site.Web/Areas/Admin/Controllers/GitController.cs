@@ -20,10 +20,11 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         private readonly ILogger<GitController> _logger;
         private readonly IGitEventBus _gitEventBus;
 
-        public GitController(IOptionService optionService, ILogger<GitController> logger)
+        public GitController(IOptionService optionService, ILogger<GitController> logger, IGitEventBus gitEventBus)
         {
             _optionService = optionService;
             _logger = logger;
+            _gitEventBus = gitEventBus;
         }
 
         public async Task<IActionResult> Index()
