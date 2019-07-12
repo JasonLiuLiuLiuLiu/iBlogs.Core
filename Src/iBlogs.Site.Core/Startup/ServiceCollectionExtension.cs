@@ -66,6 +66,13 @@ namespace iBlogs.Site.Core.Startup
                 services.AddSingleton<ICacheManager, MemoryCacheManager>();
             }
 
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddCoreDi(options =>
+            {
+                options.AssemblyNames = new[] { "*iBlogs.Site*" };
+                options.IgnoreInterface = new[] { "*IEntityBase*", "*Caching*" };
+            });
+
             services.AddCap(x =>
             {
                 x.UseEntityFramework<iBlogsContext>();
@@ -74,19 +81,14 @@ namespace iBlogs.Site.Core.Startup
                     option.HostName = configuration["RabbitMqHost"] ?? "localhost";
                     option.Password = configuration["RabbitMqPWD"] ?? "guest";
                     option.UserName = configuration["RabbitMqUID"] ?? "guest";
+                    option.Port = 5672;
                 });
                 x.UseDashboard(option =>
                 {
                     option.Authorization=new List<IDashboardAuthorizationFilter>();
                 });
             });
-
-            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-            services.AddCoreDi(options =>
-            {
-                options.AssemblyNames = new[] { "*iBlogs.Site*" };
-                options.IgnoreInterface = new[] { "*IEntityBase*", "*Caching*" };
-            });
+            
             services.AddAutoMapper(cfg =>
             {
                 cfg.ValidateInlineMaps = false;
