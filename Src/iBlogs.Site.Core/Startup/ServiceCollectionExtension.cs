@@ -1,6 +1,8 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using AutoMapper;
+using DotNetCore.CAP.Dashboard;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.AutoMapper;
 using iBlogs.Site.Core.Common.Caching;
@@ -73,7 +75,10 @@ namespace iBlogs.Site.Core.Startup
                     option.Password = configuration["RabbitMqPWD"] ?? "guest";
                     option.UserName = configuration["RabbitMqUID"] ?? "guest";
                 });
-                x.UseDashboard();
+                x.UseDashboard(option =>
+                {
+                    option.Authorization=new List<IDashboardAuthorizationFilter>();
+                });
             });
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
