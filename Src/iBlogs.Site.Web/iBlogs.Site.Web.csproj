@@ -23,7 +23,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\thirdPart\Serilog.Sinks.MySQL\Serilog.Sinks.MySQL.csproj" />
+    <ProjectReference Include="..\..\ThirdPart\Serilog.Sinks.MySQL\Serilog.Sinks.MySQL.csproj" />
     <ProjectReference Include="..\iBlogs.Site.Core\iBlogs.Site.Core.csproj" />
   </ItemGroup>
 
