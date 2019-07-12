@@ -11,7 +11,10 @@ namespace iBlogs.Site.Core.Common.Extensions
         private static readonly string DbPWD = "DbPWD";
         private static readonly string BuildNumber = "BuildNumber";
         private static readonly string RedisConStr = "RedisConStr";
-       private static readonly Dictionary<string, string> Data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private static readonly string RabbitMqHost = "RabbitMqHost";
+        private static readonly string RabbitMqPWD = "RabbitMqPWD";
+        private static readonly string RabbitMqUID = "RabbitMqUID";
+        private static readonly Dictionary<string, string> Data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         public static string[] SetConfigInfo(this string[] args)
         {
@@ -20,10 +23,19 @@ namespace iBlogs.Site.Core.Common.Extensions
 
             Load(args);
 
+            if (Data.ContainsKey(RabbitMqHost))
+                ConfigDataHelper.UpdateAppsettings(RabbitMqHost, Data[RabbitMqHost]);
+
+            if (Data.ContainsKey(RabbitMqPWD))
+                ConfigDataHelper.UpdateAppsettings(RabbitMqPWD, Data[RabbitMqPWD]);
+
+            if (Data.ContainsKey(RabbitMqUID))
+                ConfigDataHelper.UpdateAppsettings(RabbitMqUID, Data[RabbitMqUID]);
+
             if (Data.ContainsKey(RedisConStr))
                 ConfigDataHelper.UpdateRedisConStr(Data[RedisConStr]);
 
-            if (!Data.ContainsKey(DbService)  || !Data.ContainsKey(DbName)  || !Data.ContainsKey(DbUID)  || !Data.ContainsKey(DbPWD) )
+            if (!Data.ContainsKey(DbService) || !Data.ContainsKey(DbName) || !Data.ContainsKey(DbUID) || !Data.ContainsKey(DbPWD))
                 return args;
 
             var connectString = $"Server={Data[DbService]};Database={Data[DbName]};uid={Data[DbUID]};pwd={Data[DbPWD]}";
@@ -38,12 +50,12 @@ namespace iBlogs.Site.Core.Common.Extensions
         }
 
         private static void Load(IEnumerable<string> args)
-        { 
+        {
             using (IEnumerator<string> enumerator = args.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
-                    string key1 = enumerator.Current??"";
+                    string key1 = enumerator.Current ?? "";
                     int startIndex = 0;
                     if (key1.StartsWith("--"))
                         startIndex = 2;
@@ -51,7 +63,7 @@ namespace iBlogs.Site.Core.Common.Extensions
                         startIndex = 1;
                     else if (key1.StartsWith("/"))
                     {
-                        key1 = $"--{(object) key1.Substring(1)}";
+                        key1 = $"--{(object)key1.Substring(1)}";
                         startIndex = 2;
                     }
                     int length = key1.IndexOf('=');
