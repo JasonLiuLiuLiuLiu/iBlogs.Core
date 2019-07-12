@@ -13,14 +13,14 @@ using Microsoft.Extensions.Primitives;
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class GithubController : ControllerBase
+    public class GitController : ControllerBase
     {
         private const string Sha1Prefix = "sha1=";
         private readonly IOptionService _optionService;
-        private readonly ILogger<GithubController> _logger;
+        private readonly ILogger<GitController> _logger;
         private readonly IGitEventBus _gitEventBus;
 
-        public GithubController(IOptionService optionService, ILogger<GithubController> logger)
+        public GitController(IOptionService optionService, ILogger<GitController> logger)
         {
             _optionService = optionService;
             _logger = logger;
