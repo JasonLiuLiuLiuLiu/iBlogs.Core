@@ -35,7 +35,10 @@
         WeiBo,
         Twitter,
         ZhiHu,
-        GithubWebHookSecret
+        GitWebHookSecret,
+        GitProjectCloneUrl,
+        GitUerName,
+        GitPassword
     }
 
 

@@ -12,12 +12,14 @@ namespace iBlogs.Site.Core.Git
         private readonly ICapPublisher _capPublisher;
         private readonly ITransactionProvider _transactionProvider;
         private readonly ILogger<GitEventBus> _logger;
+        private readonly IGitFileService _gitFileService;
 
-        public GitEventBus(ICapPublisher capPublisher, ITransactionProvider transactionProvider, ILogger<GitEventBus> logger)
+        public GitEventBus(ICapPublisher capPublisher, ITransactionProvider transactionProvider, ILogger<GitEventBus> logger, IGitFileService gitFileService)
         {
             _capPublisher = capPublisher;
             _transactionProvider = transactionProvider;
             _logger = logger;
+            _gitFileService = gitFileService;
         }
 
         public bool Publish(string message)
@@ -31,9 +33,10 @@ namespace iBlogs.Site.Core.Git
         }
 
         [CapSubscribe("iBlogs.Site.Core.GitEventBus")]
-        public void Receive(string message)
+        public void Receive(GitRequest gitMessage)
         {
-            _logger.LogInformation($"receive:{message}");
+            _logger.LogInformation($"receive:{gitMessage.after}");
+            _gitFileService.CloneOrPull();
         }
     }
 }

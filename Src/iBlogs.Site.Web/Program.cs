@@ -25,9 +25,13 @@ namespace iBlogs.Site.Web
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
 #endif
                 .Enrich.FromLogContext();
-
-            logConfig = ConfigDataHelper.TryGetConnectionString("iBlogs", out var connectionString) ?
+#if DEBUG
+            logConfig = logConfig.WriteTo.Console();
+#else
+             logConfig = ConfigDataHelper.TryGetConnectionString("iBlogs", out var connectionString) ?
                 logConfig.WriteTo.MySQL(connectionString) : logConfig.WriteTo.Console();
+#endif
+
 
             Log.Logger = logConfig.CreateLogger();
 

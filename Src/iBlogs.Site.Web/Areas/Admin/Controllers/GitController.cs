@@ -71,7 +71,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             if (signatureWithPrefix.StartsWith(Sha1Prefix, StringComparison.OrdinalIgnoreCase))
             {
                 var signature = signatureWithPrefix.Substring(Sha1Prefix.Length);
-                var secret = Encoding.ASCII.GetBytes(_optionService.Get(ConfigKey.GithubWebHookSecret, "iblogs"));
+                var secret = Encoding.ASCII.GetBytes(_optionService.Get(ConfigKey.GitWebHookSecret, "iblogs"));
                 var payloadBytes = Encoding.ASCII.GetBytes(payload);
 
                 using (var hmSha1 = new HMACSHA1(secret))

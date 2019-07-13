@@ -3,6 +3,6 @@
     public interface IGitEventBus
     {
         bool Publish(string message);
-        void Receive(string message);
+        void Receive(GitRequest gitMessage);
     }
 }
