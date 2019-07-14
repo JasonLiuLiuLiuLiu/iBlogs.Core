@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace iBlogs.Site.Core.Migrations
 {
-    public partial class init : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -136,31 +136,6 @@ namespace iBlogs.Site.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Logs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AuthorId = table.Column<int>(nullable: true),
-                    Created = table.Column<DateTime>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Deleted = table.Column<bool>(nullable: false),
-                    Action = table.Column<string>(nullable: true),
-                    Data = table.Column<string>(nullable: true),
-                    Ip = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Logs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Logs_Users_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new
                 {
@@ -238,11 +213,6 @@ namespace iBlogs.Site.Core.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Logs_AuthorId",
-                table: "Logs",
-                column: "AuthorId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Relationships_Cid",
                 table: "Relationships",
                 column: "Cid");
@@ -260,9 +230,6 @@ namespace iBlogs.Site.Core.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comments");
-
-            migrationBuilder.DropTable(
-                name: "Logs");
 
             migrationBuilder.DropTable(
                 name: "Options");

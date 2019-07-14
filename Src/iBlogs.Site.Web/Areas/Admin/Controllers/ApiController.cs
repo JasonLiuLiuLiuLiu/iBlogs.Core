@@ -53,12 +53,6 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             _commentsService = commentsService;
         }
 
-        [AdminApiRoute("logs")]
-        public ApiResponse<List<Logs>> SysLogs(PageParam pageParam)
-        {
-            return ApiResponse<List<Logs>>.Ok(new List<Logs>());
-        }
-
         // @SysLog("删除页面")
         // @PostRoute("page/Delete/:cid")
         [AdminApiRoute("page/Delete/{cid}")]

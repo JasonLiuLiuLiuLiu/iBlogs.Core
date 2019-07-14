@@ -9,8 +9,8 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 namespace iBlogs.Site.Core.Migrations
 {
     [DbContext(typeof(iBlogsContext))]
-    [Migration("20190714080804_init")]
-    partial class init
+    [Migration("20190714113533_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -189,31 +189,6 @@ namespace iBlogs.Site.Core.Migrations
                     b.ToTable("Relationships");
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.Log.Logs", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Action");
-
-                    b.Property<int?>("AuthorId");
-
-                    b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Data");
-
-                    b.Property<bool>("Deleted");
-
-                    b.Property<string>("Ip");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.ToTable("Logs");
-                });
-
             modelBuilder.Entity("iBlogs.Site.Core.Option.Options", b =>
                 {
                     b.Property<int>("Id")
@@ -301,13 +276,6 @@ namespace iBlogs.Site.Core.Migrations
                         .WithMany()
                         .HasForeignKey("Mid")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("iBlogs.Site.Core.Log.Logs", b =>
-                {
-                    b.HasOne("iBlogs.Site.Core.Security.Users", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
                 });
 #pragma warning restore 612, 618
         }

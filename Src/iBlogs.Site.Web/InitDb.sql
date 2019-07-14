@@ -80,18 +80,6 @@ CREATE TABLE `Contents` (
     CONSTRAINT `FK_Contents_Users_AuthorId` FOREIGN KEY (`AuthorId`) REFERENCES `Users` (`Id`) ON DELETE CASCADE
 );
 
-CREATE TABLE `Logs` (
-    `Id` int NOT NULL AUTO_INCREMENT,
-    `AuthorId` int NULL,
-    `Created` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-    `Deleted` bit NOT NULL,
-    `Action` longtext NULL,
-    `Data` longtext NULL,
-    `Ip` longtext NULL,
-    CONSTRAINT `PK_Logs` PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_Logs_Users_AuthorId` FOREIGN KEY (`AuthorId`) REFERENCES `Users` (`Id`) ON DELETE RESTRICT
-);
-
 CREATE TABLE `Comments` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `IsAuthor` bit NOT NULL,
@@ -129,12 +117,10 @@ CREATE INDEX `IX_Comments_Cid` ON `Comments` (`Cid`);
 
 CREATE INDEX `IX_Contents_AuthorId` ON `Contents` (`AuthorId`);
 
-CREATE INDEX `IX_Logs_AuthorId` ON `Logs` (`AuthorId`);
-
 CREATE INDEX `IX_Relationships_Cid` ON `Relationships` (`Cid`);
 
 CREATE INDEX `IX_Relationships_Mid` ON `Relationships` (`Mid`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20190714080804_init', '2.2.4-servicing-10062');
+VALUES ('20190714113533_Init', '2.2.4-servicing-10062');
 

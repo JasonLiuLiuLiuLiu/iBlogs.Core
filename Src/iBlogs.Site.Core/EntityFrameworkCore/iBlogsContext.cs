@@ -19,7 +19,6 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Comments> Comments { get; set; }
         public DbSet<Contents> Contents { get; set; }
-        public DbSet<Logs> Logs { get; set; }
         public DbSet<Metas> Metas { get; set; }
         public DbSet<Options> Options { get; set; }
         public DbSet<Relationships> Relationships { get; set; }
