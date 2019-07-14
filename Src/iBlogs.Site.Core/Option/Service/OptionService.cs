@@ -4,6 +4,7 @@ using System.Linq;
 using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.Option.DTO;
 
 namespace iBlogs.Site.Core.Option.Service
 {
@@ -23,15 +24,26 @@ namespace iBlogs.Site.Core.Option.Service
         {
             ConfigData.Init(this);
 
-            foreach (var keyValuePair in GetAll())
+            foreach (var keyValuePair in GetAllAsKeyValue())
             {
                 _cacheManager.Set(keyValuePair.Key.ToCacheKey(), keyValuePair.Value, _defaultCacheTime);
             }
         }
 
-        public IDictionary<ConfigKey, string> GetAll()
+        public IDictionary<ConfigKey, string> GetAllAsKeyValue()
         {
             return _repository.GetAll().ToDictionary(o => (ConfigKey)Enum.Parse(typeof(ConfigKey), o.Name), o => o.Value);
+        }
+
+        public List<OptionParam> GetAll()
+        {
+            return _repository.GetAll().Select(u => new OptionParam
+            {
+                Id = u.Id,
+                Key = u.Name,
+                Value = u.Value,
+                Description = u.Description
+            }).ToList();
         }
 
         public void Set(ConfigKey key, string value, string description = null)

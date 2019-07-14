@@ -52,7 +52,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             _optionService = optionService;
             _commentsService = commentsService;
         }
-        
+
         [AdminApiRoute("logs")]
         public ApiResponse<List<Logs>> SysLogs(PageParam pageParam)
         {
@@ -244,7 +244,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
         // @GetRoute("options")
         [AdminApiRoute("options")]
-        public ApiResponse<IDictionary<ConfigKey, string>> Options()
+        public ApiResponse<IDictionary<ConfigKey, string>> OptionsKeyValue()
         {
             return ApiResponse<IDictionary<ConfigKey, string>>.Ok(ConfigData.GetAll());
         }
@@ -257,6 +257,21 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             {
                 _optionService.Set(keyValuePair.Key, keyValuePair.Value);
             }
+            return ApiResponse.Ok();
+        }
+
+        [AdminApiRoute("options/GetAll")]
+        public ApiResponse<List<OptionParam>> Options()
+        {
+            return ApiResponse<List<OptionParam>>.Ok(_optionService.GetAll());
+        }
+
+        [AdminApiRoute("options/update")]
+        public ApiResponse OptionUpdate(OptionParam option)
+        {
+            if (option == null || !Enum.TryParse(option.Key, out ConfigKey key) || key == ConfigKey.Default)
+                return ApiResponse.Fail("请求数据有误");
+            _optionService.Set(key, option.Value, option.Description);
             return ApiResponse.Ok();
         }
 

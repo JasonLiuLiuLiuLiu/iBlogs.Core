@@ -25,7 +25,7 @@ namespace iBlogs.Site.Core.Option
         {
             if (_optionService == null)
                 throw new Exception("ConfigData使用前未进行初始化");
-            return _optionService.GetAll();
+            return _optionService.GetAllAsKeyValue();
         }
     }
 }
