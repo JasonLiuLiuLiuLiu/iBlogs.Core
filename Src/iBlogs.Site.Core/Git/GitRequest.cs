@@ -4,7 +4,7 @@ using System.Text;
 
 namespace iBlogs.Site.Core.Git
 {
-
+    [Serializable]
     public class GitRequest
     {
         public string _ref { get; set; }
@@ -21,7 +21,7 @@ namespace iBlogs.Site.Core.Git
         public Pusher pusher { get; set; }
         public Sender sender { get; set; }
     }
-
+    [Serializable]
     public class Head_Commit
     {
         public string id { get; set; }
@@ -36,21 +36,21 @@ namespace iBlogs.Site.Core.Git
         public object[] removed { get; set; }
         public string[] modified { get; set; }
     }
-
+    [Serializable]
     public class Author
     {
         public string name { get; set; }
         public string email { get; set; }
         public string username { get; set; }
     }
-
+    [Serializable]
     public class Committer
     {
         public string name { get; set; }
         public string email { get; set; }
         public string username { get; set; }
     }
-
+    [Serializable]
     public class Repository
     {
         public int id { get; set; }
@@ -129,7 +129,7 @@ namespace iBlogs.Site.Core.Git
         public int stargazers { get; set; }
         public string master_branch { get; set; }
     }
-
+    [Serializable]
     public class Owner
     {
         public string name { get; set; }
@@ -153,13 +153,13 @@ namespace iBlogs.Site.Core.Git
         public string type { get; set; }
         public bool site_admin { get; set; }
     }
-
+    [Serializable]
     public class Pusher
     {
         public string name { get; set; }
         public string email { get; set; }
     }
-
+    [Serializable]
     public class Sender
     {
         public string login { get; set; }
@@ -181,7 +181,7 @@ namespace iBlogs.Site.Core.Git
         public string type { get; set; }
         public bool site_admin { get; set; }
     }
-
+    [Serializable]
     public class Commit
     {
         public string id { get; set; }
@@ -192,18 +192,18 @@ namespace iBlogs.Site.Core.Git
         public string url { get; set; }
         public Author1 author { get; set; }
         public Committer1 committer { get; set; }
-        public object[] added { get; set; }
-        public object[] removed { get; set; }
+        public string[] added { get; set; }
+        public string[] removed { get; set; }
         public string[] modified { get; set; }
     }
-
+    [Serializable]
     public class Author1
     {
         public string name { get; set; }
         public string email { get; set; }
         public string username { get; set; }
     }
-
+    [Serializable]
     public class Committer1
     {
         public string name { get; set; }

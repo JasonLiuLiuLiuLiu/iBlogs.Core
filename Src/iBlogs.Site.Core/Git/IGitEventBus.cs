@@ -1,8 +1,10 @@
-﻿namespace iBlogs.Site.Core.Git
+﻿using System.Threading.Tasks;
+
+namespace iBlogs.Site.Core.Git
 {
     public interface IGitEventBus
     {
         bool Publish(string message);
-        void Receive(GitRequest gitMessage);
+        Task Receive(string message);
     }
 }

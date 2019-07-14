@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using DotNetCore.CAP;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace iBlogs.Site.Core.Git
 {
@@ -33,10 +37,29 @@ namespace iBlogs.Site.Core.Git
         }
 
         [CapSubscribe("iBlogs.Site.Core.GitEventBus")]
-        public void Receive(GitRequest gitMessage)
+        public async Task Receive(string message)
         {
-            _logger.LogInformation($"receive:{gitMessage.after}");
-            _gitFileService.CloneOrPull();
+            _logger.LogInformation($"receive:{message}");
+            try
+            {
+                var gitRequest = JsonConvert.DeserializeObject<GitRequest>(message);
+                if (gitRequest?.commits == null)
+                    return;
+                var needHandleFile = new List<string>();
+
+                needHandleFile.AddRange(gitRequest.commits.SelectMany(u => u.added));
+                needHandleFile.AddRange(gitRequest.commits.SelectMany(u => u.modified));
+
+                if (!needHandleFile.Any())
+                    return;
+                _gitFileService.CloneOrPull();
+                await _gitFileService.Handle(needHandleFile);
+            }
+            catch
+            {
+                _logger.LogInformation($"This message can't handle...");
+            }
+
         }
     }
 }
