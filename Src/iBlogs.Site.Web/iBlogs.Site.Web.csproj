@@ -28,6 +28,13 @@
   </ItemGroup>
 
 
+  <ItemGroup>
+    <None Update="InitDb.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="y" /></VisualStudio></ProjectExtensions>
 
 </Project>

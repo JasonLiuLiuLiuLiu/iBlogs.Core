@@ -3,6 +3,7 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Install.DTO;
 using iBlogs.Site.Core.Option.Service;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using iBlogs.Site.Core.Blog.Content;
@@ -14,6 +15,7 @@ using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Security;
 using iBlogs.Site.Core.Security.Service;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using ConfigKey = iBlogs.Site.Core.Option.ConfigKey;
 
 namespace iBlogs.Site.Core.Install.Service
@@ -59,7 +61,7 @@ namespace iBlogs.Site.Core.Install.Service
             try
             {
                 _param = ConfigDataHelper.ReadInstallParam();
-                await _blogsContext.Database.EnsureCreatedAsync();
+                await InitDbFromScript();
                 Seed();
                 ConfigDataHelper.UpdateDbInstallStatus(true);
                 ConfigDataHelper.DeleteInstallParamFile();
@@ -72,6 +74,20 @@ namespace iBlogs.Site.Core.Install.Service
             }
 
             return false;
+        }
+
+        private async Task InitDbFromScript()
+        {
+            try
+            {
+                var sqlScript = File.ReadAllText("InitDb.sql");
+                await _blogsContext.Database.ExecuteSqlCommandAsync(sqlScript);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         private void Seed()
@@ -101,8 +117,8 @@ namespace iBlogs.Site.Core.Install.Service
         {
             _optionService.Set(ConfigKey.AllowInstall, "false", "是否允许重新安装博客");
             _optionService.Set(ConfigKey.AllowCommentAudit, "true", "评论需要审核");
-            _optionService.Set(ConfigKey.SiteKeywords, "博客系统,asp.net core,iBlogs");
-            _optionService.Set(ConfigKey.SiteDescription, "博客系统,asp.net core,iBlogs");
+            _optionService.Set(ConfigKey.Keywords, "博客系统,asp.net core,iBlogs");
+            _optionService.Set(ConfigKey.Description, "博客系统,asp.net core,iBlogs");
             var siteUrl = BlogsUtils.BuildUrl(_param.SiteUrl);
             _optionService.Set(ConfigKey.SiteTitle, _param.SiteTitle);
             _optionService.Set(ConfigKey.SiteUrl, siteUrl);

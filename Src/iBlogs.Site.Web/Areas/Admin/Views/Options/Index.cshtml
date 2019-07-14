@@ -10,26 +10,26 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered">
                             <thead>
-                            <tr>
-                                <th>编号</th>
-                                <th style="text-align:center;" width="10%">Key</th>
-                                <th style="text-align:center;" width="30%">Value</th>
-                                <th style="text-align:center;" width="30%">描述</th>
-                                <th style="text-align:center;">操作</th>
-                            </tr>
+                                <tr>
+                                    <th>编号</th>
+                                    <th style="text-align:center;" width="10%">Key</th>
+                                    <th style="text-align:center;" width="30%">Value</th>
+                                    <th style="text-align:center;" width="30%">描述</th>
+                                    <th style="text-align:center;">操作</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="item in options">
-                                <td style="text-align:center;">{{ item.id }}</td>
-                                <td style="text-align:center;">{{ item.key }}</td>
-                                <td style="text-align:center;">{{ item.value }}</td>
-                                <td style="text-align:center;">{{ item.description }}</td>
-                                <td style="text-align:center;">
-                                    <button class="btn btn-success" data-toggle="modal" data-target="#myModal" v-on:click="optionEdit(item.id,item.key,item.value,item.description)">
-                                        <i class="fa fa-edit"></i> <span>编辑</span>
-                                    </button>
-                                </td>
-                            </tr>
+                                <tr v-for="item in options">
+                                    <td style="text-align:center;">{{ item.id }}</td>
+                                    <td style="text-align:center;">{{ item.key }}</td>
+                                    <td style="text-align:center;">{{ item.value }}</td>
+                                    <td style="text-align:center;">{{ item.description }}</td>
+                                    <td style="text-align:center;">
+                                        <button class="btn btn-success" data-toggle="modal" data-target="#myModal" v-on:click="optionEdit(item.id,item.key,item.value,item.description)">
+                                            <i class="fa fa-edit"></i> <span>编辑</span>
+                                        </button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -69,27 +69,31 @@
                 options: {},
                 isLoading: true
             },
-            beforeCreate: function() {
+            beforeCreate: function () {
                 vueLoding = this.$loading.show();
             },
-            mounted: function() {
+            mounted: function () {
                 this.load();
             },
             methods: {
-                load: function() {
+                load: function () {
                     var $vm = this;
                     tale.get({
                         url: '/admin/api/options/GetAll',
-                        success: function(data) {
+                        success: function (data) {
                             $vm.options = data.payload;
                         },
-                        error: function(error) {
+                        error: function (error) {
                             console.log(error);
                             alert(result.msg || '数据加载失败');
                         }
                     });
                 },
-                optionEdit: function(id, key, value, description) {
+                optionEdit: function (id, key, value, description) {
+                    if (value == null)
+                        value = '';
+                    if (description == null)
+                        description = '';
                     var modalBody = $('<div id="modalContent"></div>');
                     var modalForm = $('<form role="form" id="modalForm"></form>');
                     var formGroup = $('<div class="form-group"></div>');
@@ -111,7 +115,7 @@
                     var $vm = this;
                     var form = $("#modalForm");
                     $.ajax({
-                        url : '/admin/api/options/update',
+                        url: '/admin/api/options/update',
                         data: form.serialize(),
                         type: 'POST',
                         success: function (data) {
@@ -123,7 +127,7 @@
                                 tale.alertError(result.msg || '保存失败');
                             }
                         },
-                        error: function(error) {
+                        error: function (error) {
                             console.log(error);
                             alert(error.msg || '数据加载失败');
                         }
@@ -133,7 +137,7 @@
         });
 
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             vm.isLoading = false;
             vueLoding.hide();
         });

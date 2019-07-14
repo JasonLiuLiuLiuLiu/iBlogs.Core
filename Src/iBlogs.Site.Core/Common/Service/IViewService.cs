@@ -15,7 +15,6 @@ namespace iBlogs.Site.Core.Common.Service
         string SiteSubtitle();
         string AllowCloudCdn();
         string SiteOption(ConfigKey key, string defaultValue);
-        string SiteDescription();
         string ThemeUrl(string sub);
         string Gravatar(string email);
         string AttachURL();

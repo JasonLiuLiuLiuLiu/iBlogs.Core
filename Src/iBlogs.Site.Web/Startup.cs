@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Startup;
+using iBlogs.Site.Core.Startup.Middleware;
 
 namespace iBlogs.Site.Web
 {
@@ -62,6 +63,8 @@ namespace iBlogs.Site.Web
             app.UseAuthentication();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseMiddleware<InstallMiddleware>();
 
             app.UseMvc(routes =>
             {

@@ -37,8 +37,6 @@ namespace iBlogs.Site.Core.Startup
 
                 app.UseMiddleware<JwtInHeaderMiddleware>();
 
-                app.UseMiddleware<InstallMiddleware>();
-
                 next(app);
             };
         }

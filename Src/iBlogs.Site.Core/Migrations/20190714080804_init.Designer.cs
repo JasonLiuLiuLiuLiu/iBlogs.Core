@@ -9,8 +9,8 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 namespace iBlogs.Site.Core.Migrations
 {
     [DbContext(typeof(iBlogsContext))]
-    [Migration("20190620135809_InitDatabase")]
-    partial class InitDatabase
+    [Migration("20190714080804_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,7 +19,7 @@ namespace iBlogs.Site.Core.Migrations
                 .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("iBlogs.Site.Core.Attach.Attachment", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Attach.Attachment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -44,7 +44,7 @@ namespace iBlogs.Site.Core.Migrations
                     b.ToTable("Attachments");
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.Comment.Comments", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Comment.Comments", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -85,7 +85,7 @@ namespace iBlogs.Site.Core.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.Content.Contents", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Content.Contents", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -137,32 +137,7 @@ namespace iBlogs.Site.Core.Migrations
                     b.ToTable("Contents");
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.Log.Logs", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Action");
-
-                    b.Property<int?>("AuthorId");
-
-                    b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Data");
-
-                    b.Property<bool>("Deleted");
-
-                    b.Property<string>("Ip");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.ToTable("Logs");
-                });
-
-            modelBuilder.Entity("iBlogs.Site.Core.Meta.Metas", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Meta.Metas", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -191,28 +166,7 @@ namespace iBlogs.Site.Core.Migrations
                     b.ToTable("Metas");
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.Option.Options", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Created")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<bool>("Deleted");
-
-                    b.Property<string>("Description");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Options");
-                });
-
-            modelBuilder.Entity("iBlogs.Site.Core.Relationship.Relationships", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Relationship.Relationships", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -235,7 +189,53 @@ namespace iBlogs.Site.Core.Migrations
                     b.ToTable("Relationships");
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.User.Users", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Log.Logs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Action");
+
+                    b.Property<int?>("AuthorId");
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Data");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<string>("Ip");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("Logs");
+                });
+
+            modelBuilder.Entity("iBlogs.Site.Core.Option.Options", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Options");
+                });
+
+            modelBuilder.Entity("iBlogs.Site.Core.Security.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -266,48 +266,48 @@ namespace iBlogs.Site.Core.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.Attach.Attachment", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Attach.Attachment", b =>
                 {
-                    b.HasOne("iBlogs.Site.Core.User.Users", "Author")
+                    b.HasOne("iBlogs.Site.Core.Security.Users", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.Comment.Comments", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Comment.Comments", b =>
                 {
-                    b.HasOne("iBlogs.Site.Core.Content.Contents", "Article")
+                    b.HasOne("iBlogs.Site.Core.Blog.Content.Contents", "Article")
                         .WithMany()
                         .HasForeignKey("Cid")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.Content.Contents", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Content.Contents", b =>
                 {
-                    b.HasOne("iBlogs.Site.Core.User.Users", "Author")
+                    b.HasOne("iBlogs.Site.Core.Security.Users", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Relationship.Relationships", b =>
+                {
+                    b.HasOne("iBlogs.Site.Core.Blog.Content.Contents", "Content")
+                        .WithMany()
+                        .HasForeignKey("Cid")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("iBlogs.Site.Core.Blog.Meta.Metas", "Meta")
+                        .WithMany()
+                        .HasForeignKey("Mid")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("iBlogs.Site.Core.Log.Logs", b =>
                 {
-                    b.HasOne("iBlogs.Site.Core.User.Users", "Author")
+                    b.HasOne("iBlogs.Site.Core.Security.Users", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
-                });
-
-            modelBuilder.Entity("iBlogs.Site.Core.Relationship.Relationships", b =>
-                {
-                    b.HasOne("iBlogs.Site.Core.Content.Contents", "Content")
-                        .WithMany()
-                        .HasForeignKey("Cid")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("iBlogs.Site.Core.Meta.Metas", "Meta")
-                        .WithMany()
-                        .HasForeignKey("Mid")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

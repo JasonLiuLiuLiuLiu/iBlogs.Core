@@ -31,12 +31,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string MetaKeywords()
         {
-            var value = _optionService.Get(Option.ConfigKey.Keywords);
-            if (null != value)
-            {
-                return value;
-            }
-            return _optionService.Get(Option.ConfigKey.SiteKeywords);
+            return _optionService.Get(Option.ConfigKey.Keywords);
         }
 
         /**
@@ -47,12 +42,7 @@ namespace iBlogs.Site.Core.Common.Service
 
         public string MetaDescription()
         {
-            var value = _optionService.Get(Option.ConfigKey.Description);
-            if (null != value)
-            {
-                return value;
-            }
-            return _optionService.Get(Option.ConfigKey.SiteDescription);
+            return _optionService.Get(Option.ConfigKey.Description);
         }
 
 
@@ -154,10 +144,7 @@ namespace iBlogs.Site.Core.Common.Service
          * @return
          */
 
-        public string SiteDescription()
-        {
-            return SiteOption(Option.ConfigKey.SiteDescription);
-        }
+
 
         /**
          * 返回主题下的文件路径
