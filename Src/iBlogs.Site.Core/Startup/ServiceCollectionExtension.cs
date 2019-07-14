@@ -7,6 +7,7 @@ using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.AutoMapper;
 using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.CodeDi;
+using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
@@ -14,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using SLog=Serilog.Log;
+using SLog = Serilog.Log;
 
 namespace iBlogs.Site.Core.Startup
 {
@@ -73,22 +74,23 @@ namespace iBlogs.Site.Core.Startup
                 options.IgnoreInterface = new[] { "*IEntityBase*", "*Caching*" };
             });
 
-            services.AddCap(x =>
-            {
-                x.UseEntityFramework<iBlogsContext>();
-                x.UseRabbitMQ(option =>
+            if (configuration["DbInstalled"].ToBool())
+                services.AddCap(x =>
                 {
-                    option.HostName = configuration["RabbitMqHost"] ?? "localhost";
-                    option.Password = configuration["RabbitMqPWD"] ?? "guest";
-                    option.UserName = configuration["RabbitMqUID"] ?? "guest";
-                    option.Port = 5672;
+                    x.UseEntityFramework<iBlogsContext>();
+                    x.UseRabbitMQ(option =>
+                    {
+                        option.HostName = configuration["RabbitMqHost"] ?? "localhost";
+                        option.Password = configuration["RabbitMqPWD"] ?? "guest";
+                        option.UserName = configuration["RabbitMqUID"] ?? "guest";
+                        option.Port = 5672;
+                    });
+                    x.UseDashboard(option =>
+                    {
+                        option.Authorization = new List<IDashboardAuthorizationFilter>();
+                    });
                 });
-                x.UseDashboard(option =>
-                {
-                    option.Authorization=new List<IDashboardAuthorizationFilter>();
-                });
-            });
-            
+
             services.AddAutoMapper(cfg =>
             {
                 cfg.ValidateInlineMaps = false;
