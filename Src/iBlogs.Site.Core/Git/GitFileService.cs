@@ -134,7 +134,7 @@ namespace iBlogs.Site.Core.Git
                             Password = _optionService.Get(ConfigKey.GitPassword)
                         }
                 };
-                repo.Network.Push(repo.Branches["Master"], options);
+                repo.Network.Push(repo.Branches["master"], options);
             }
 
             return true;

@@ -55,9 +55,10 @@ namespace iBlogs.Site.Core.Git
                 _gitFileService.CloneOrPull();
                 await _gitFileService.Handle(needHandleFile);
             }
-            catch
+            catch(Exception ex)
             {
-                _logger.LogInformation($"This message can't handle...");
+                _logger.LogInformation(ex.ToString());
+                throw;
             }
 
         }
