@@ -50,7 +50,7 @@ namespace iBlogs.Site.Core.Option.Service
                 Key = u.Name,
                 Value = u.Value,
                 Description = u.Description
-            }).ToList();
+            }).OrderBy(u=>u.Key).ToList();
         }
 
         public void Set(ConfigKey key, string value, string description = null)
