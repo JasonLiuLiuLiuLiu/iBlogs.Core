@@ -17,7 +17,7 @@ namespace iBlogs.Site.Core.Git
                 fileText = await reader.ReadToEndAsync();
             }
             fileText += DateTime.Now.ToString(CultureInfo.InvariantCulture);
-            byte[] encodedText = Encoding.Unicode.GetBytes(fileText);
+            byte[] encodedText = Encoding.UTF8.GetBytes(fileText);
 
             using (FileStream sourceStream = new FileStream(filePath,FileMode.Create, FileAccess.Write, FileShare.None,bufferSize: 4096, useAsync: true))
             {

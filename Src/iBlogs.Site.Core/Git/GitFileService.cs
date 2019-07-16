@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using LibGit2Sharp;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace iBlogs.Site.Core.Git
@@ -17,12 +18,14 @@ namespace iBlogs.Site.Core.Git
         private readonly IOptionService _optionService;
         private readonly IGitBlogService _gitBlogService;
         private readonly ILogger<GitFileService> _logger;
+        private readonly IHostingEnvironment _environment;
         private const string RepoPath = "Repo";
-        public GitFileService(IOptionService optionService, IGitBlogService gitBlogService, ILogger<GitFileService> logger)
+        public GitFileService(IOptionService optionService, IGitBlogService gitBlogService, ILogger<GitFileService> logger, IHostingEnvironment environment)
         {
             _optionService = optionService;
             _gitBlogService = gitBlogService;
             _logger = logger;
+            _environment = environment;
         }
 
         public bool CloneOrPull()
@@ -95,7 +98,7 @@ namespace iBlogs.Site.Core.Git
             var changed = false;
             foreach (var file in files)
             {
-                var filePath = RepoPath + '\\' + file;
+                var filePath = Path.Combine(_environment.ContentRootPath,RepoPath, file);
                 if (!File.Exists(filePath))
                 {
                     _logger.LogError($"文件{file}不存在");
