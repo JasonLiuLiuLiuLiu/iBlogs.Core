@@ -122,7 +122,7 @@ namespace iBlogs.Site.Core.Git
                 Commands.Stage(repo, "*");
 
                 // Create the committer's signature and commit
-                var author = new Signature(_optionService.Get(ConfigKey.Author, "iBlogs"), _optionService.Get(ConfigKey.GitUerName, "admin@iblogs.site"), DateTime.Now);
+                var author = new Signature(_optionService.Get(ConfigKey.GitCommitter, "iBlogs"), _optionService.Get(ConfigKey.GitUerName, "admin@iblogs.site"), DateTime.Now);
                 var committer = author;
 
                 // Commit to the repository

@@ -66,7 +66,9 @@
         [ConfigKey("Git用户名")]
         GitUerName,
         [ConfigKey("Git密码")]
-        GitPassword
+        GitPassword,
+        [ConfigKey("Git提交者名称,该用户提交后Git钩子通知本系统不再重复处理","iBlogs")]
+        GitCommitter
     }
 
 
