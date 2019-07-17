@@ -11,7 +11,7 @@ namespace iBlogs.Site.Core.Git
 {
     public class GitBlogService : IGitBlogService
     {
-        private static string template = "<===============================================================\r\nTitle:\r\nTag:\r\nCategory:\r\n===============================================================\r\nLastUpdateTime:\r\nBlogId:\r\n===============================================================>\r\n";
+        private static string headerFormat = "<!--该标签内信息由iBlogs自动生成,请按要求修改--\r\nTitle:{0}\r\nTag:{1}\r\nCategory:{2}\r\nBlogsId:{3}\r\nLastUpdate:{4}\r\n-- https://github.com/liuzhenyulive/iBlogs -->";
 
         public async Task<bool> Handle(string filePath)
         {
@@ -21,7 +21,9 @@ namespace iBlogs.Site.Core.Git
             var firstLine = Array.IndexOf(lines, lines.FirstOrDefault(u => u.StartsWith("<") && u.EndsWith("=")));
             var lastLine = Array.IndexOf(lines, lines.LastOrDefault(u => u.StartsWith("=") && u.EndsWith(">")));
             if (firstLine >= lastLine)
-                fileText = template + fileText;
+                fileText =headerFormat + fileText;
+
+            var header = string.Format(headerFormat);
 
             byte[] encodedText = Encoding.UTF8.GetBytes(fileText);
 
