@@ -13,7 +13,7 @@ namespace iBlogs.Site.Core.Git
 {
     public class GitBlogService : IGitBlogService
     {
-        private const string headerFormat = "\r\n<!--This tag was auto generate by iBlogs--\r\nTitle       : {0}\r\nTags        : {1}\r\nCategories  : {2}\r\nBlogId      : {3}\r\nStatus      : {4}\r\nLastUpdate  : {5}\r\nMessage     : {6}\r\n-- https://github.com/liuzhenyulive/iBlogs -->\r\n";
+        private const string headerFormat = "<!--This tag was auto generate by iBlogs--\r\nTitle       : {0}\r\nTags        : {1}\r\nCategories  : {2}\r\nBlogId      : {3}\r\nStatus      : {4}\r\nLastUpdate  : {5}\r\nMessage     : {6}\r\n-- https://github.com/liuzhenyulive/iBlogs -->";
         private const string headerPre = "<!--";
         private const string headerEnd = "-->";
         private readonly ILogger<GitBlogService> _logger;
@@ -27,19 +27,21 @@ namespace iBlogs.Site.Core.Git
         public async Task<bool> Handle(string filePath)
         {
             string fileText = File.ReadAllText(filePath, Encoding.UTF8);
-            if (TryGetHeaderContext(fileText, out MarkDownHeaderContext headerContext))
+            var headerContext = new MarkDownHeaderContext
             {
-                headerContext.Title = headerContext.Title ?? Path.GetFileNameWithoutExtension(filePath);
+                Title = Path.GetFileNameWithoutExtension(filePath)
+            };
+            if (TryGetHeaderContext(fileText, headerContext))
+            {
+                UpdateBlog(fileText, headerContext);
+               
             }
             else
             {
-                headerContext.Title = headerContext.Title ?? Path.GetFileNameWithoutExtension(filePath);
-                fileText = string.Format(headerFormat, headerContext.Title, headerContext.Tags,
-                               headerContext.Categories, headerContext.BlogId, headerContext.Status, headerContext.LastUpdate,
-                               headerContext.Message) + fileText;
+                InsertBlog(fileText, headerContext);
             }
 
-            var encodedText = Encoding.UTF8.GetBytes(fileText);
+            var encodedText = Encoding.UTF8.GetBytes(UpdateHeader(fileText,headerContext));
 
             using (var sourceStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
             {
@@ -48,9 +50,11 @@ namespace iBlogs.Site.Core.Git
             return true;
         }
 
-        private bool TryGetHeaderContext(string content, out MarkDownHeaderContext context)
+        private bool TryGetHeaderContext(string content, MarkDownHeaderContext context)
         {
-            context = new MarkDownHeaderContext();
+            if (context == null)
+                context = new MarkDownHeaderContext();
+
             var headerPreIndex = content.IndexOf(headerPre, StringComparison.CurrentCultureIgnoreCase);
             var headerEndIndex = content.IndexOf(headerEnd, StringComparison.CurrentCultureIgnoreCase);
             if (headerPreIndex >= headerEndIndex)
@@ -72,6 +76,29 @@ namespace iBlogs.Site.Core.Git
             }
 
             return true;
+        }
+
+        private bool InsertBlog(string content, MarkDownHeaderContext context)
+        {
+            return true;
+        }
+
+        private bool UpdateBlog(string content, MarkDownHeaderContext context)
+        {
+            return true;
+        }
+
+        private string UpdateHeader(string content, MarkDownHeaderContext context)
+        {
+            var headerEndIndex = content.IndexOf(headerEnd, StringComparison.CurrentCultureIgnoreCase);
+            content = content.Substring(headerEndIndex, content.Length - headerEndIndex);
+            var contentBuilder=new StringBuilder();
+            contentBuilder.AppendLine();
+            contentBuilder.AppendFormat(headerFormat, context.Title, context.Tags, context.Categories, context.BlogId,
+                context.Status, context.LastUpdate, context.Message);
+            contentBuilder.AppendLine();
+            contentBuilder.AppendLine(content);
+            return content;
         }
     }
 }
