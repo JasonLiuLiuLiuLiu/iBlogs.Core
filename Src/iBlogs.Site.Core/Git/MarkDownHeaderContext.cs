@@ -10,7 +10,8 @@ namespace iBlogs.Site.Core.Git
         public string Tags { get; set; }
         public string Categories { get; set; }
         public int BlogId { get; set; }
-        public DateTime LastUpdate { get; set; }=DateTime.Now;
+        public int Status { get; set; }
+        public DateTime LastUpdate { get; set; } = DateTime.Now;
         public string Message { get; set; } = "以上标签内容请按要求修改";
     }
 }

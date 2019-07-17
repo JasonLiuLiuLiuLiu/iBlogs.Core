@@ -13,7 +13,7 @@ namespace iBlogs.Site.Core.Git
 {
     public class GitBlogService : IGitBlogService
     {
-        private const string headerFormat = "\r\n<!--This tag was auto generate by iBlogs--\r\nTitle       : {0}\r\nTags        : {1}\r\nCategories  : {2}\r\nBlogId      : {3}\r\nLastUpdate  : {4}\r\nMessage     : {5}\r\n-- https://github.com/liuzhenyulive/iBlogs -->\r\n";
+        private const string headerFormat = "\r\n<!--This tag was auto generate by iBlogs--\r\nTitle       : {0}\r\nTags        : {1}\r\nCategories  : {2}\r\nBlogId      : {3}\r\nStatus      : {4}\r\nLastUpdate  : {5}\r\nMessage     : {6}\r\n-- https://github.com/liuzhenyulive/iBlogs -->\r\n";
         private const string headerPre = "<!--";
         private const string headerEnd = "-->";
         private readonly ILogger<GitBlogService> _logger;
@@ -35,7 +35,7 @@ namespace iBlogs.Site.Core.Git
             {
                 headerContext.Title = headerContext.Title ?? Path.GetFileNameWithoutExtension(filePath);
                 fileText = string.Format(headerFormat, headerContext.Title, headerContext.Tags,
-                               headerContext.Categories, headerContext.BlogId, headerContext.LastUpdate,
+                               headerContext.Categories, headerContext.BlogId, headerContext.Status, headerContext.LastUpdate,
                                headerContext.Message) + fileText;
             }
 
