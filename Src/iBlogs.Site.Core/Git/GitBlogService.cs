@@ -96,10 +96,18 @@ namespace iBlogs.Site.Core.Git
                 Categories = context.Categories,
                 Content = contentText,
                 Status = Enum.IsDefined(typeof(ContentStatus), context.Status)
-                    ? (ContentStatus) context.Status
+                    ? (ContentStatus)context.Status
                     : ContentStatus.Draft
             };
-            context.BlogId = _contentsService.UpdateArticle(content);
+            try
+            {
+                context.BlogId = _contentsService.UpdateArticle(content);
+            }
+            catch (Exception e)
+            {
+                context.Message = e.Message;
+                return false;
+            }
             return true;
         }
 
@@ -117,7 +125,15 @@ namespace iBlogs.Site.Core.Git
                     ? (ContentStatus)context.Status
                     : ContentStatus.Draft
             };
-            context.BlogId = _contentsService.UpdateArticle(content);
+            try
+            {
+                context.BlogId = _contentsService.UpdateArticle(content);
+            }
+            catch (Exception e)
+            {
+                context.Message = e.Message;
+                return false;
+            }
             return true;
         }
 

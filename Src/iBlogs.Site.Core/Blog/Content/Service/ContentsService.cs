@@ -13,6 +13,7 @@ using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Security.Service;
+using LibGit2Sharp;
 using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Blog.Content.Service
@@ -75,7 +76,10 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             var tags = contents.Tags;
             var categories = contents.Categories;
 
-            var entity = new Contents();
+            var entity = contents.Id.HasValue ? _repository.FirstOrDefault(contents.Id.Value) : new Contents();
+            if (entity == null)
+                throw new NotFoundException($"输入Id({contents.Id})有误");
+
             _mapper.Map(contents, entity);
             if (entity.AuthorId == 0)
             {
@@ -101,7 +105,10 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             contents.Tags = contents.Tags ?? "";
             contents.Categories = contents.Categories ?? "";
 
-            var entity = new Contents();
+            var entity = contents.Id.HasValue ? _repository.FirstOrDefault(contents.Id.Value) : new Contents();
+            if(entity==null)
+                throw new NotFoundException($"输入Id({contents.Id})有误");
+
             _mapper.Map(contents, entity);
             entity.AuthorId = _userService.CurrentUsers?.Uid ?? 1;
 
