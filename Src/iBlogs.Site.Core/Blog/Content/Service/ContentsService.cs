@@ -79,7 +79,7 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             _mapper.Map(contents, entity);
             if (entity.AuthorId == 0)
             {
-                entity.AuthorId = _userService.CurrentUsers?.Uid ?? 0;
+                entity.AuthorId = _userService.CurrentUsers?.Uid ?? 1;
             }
 
             var cid = _repository.InsertOrUpdateAndGetId(entity);
@@ -95,7 +95,7 @@ namespace iBlogs.Site.Core.Blog.Content.Service
          *
          * @param contents 文章对象
          */
-        public void UpdateArticle(ContentInput contents)
+        public int UpdateArticle(ContentInput contents)
         {
             contents.Modified = DateTime.Now;
             contents.Tags = contents.Tags ?? "";
@@ -103,7 +103,7 @@ namespace iBlogs.Site.Core.Blog.Content.Service
 
             var entity = new Contents();
             _mapper.Map(contents, entity);
-            entity.AuthorId = _userService.CurrentUsers.Uid;
+            entity.AuthorId = _userService.CurrentUsers?.Uid ?? 1;
 
             var cid = _repository.InsertOrUpdateAndGetId(entity);
 
@@ -117,6 +117,8 @@ namespace iBlogs.Site.Core.Blog.Content.Service
 
             _metasService.SaveMetas(cid, tags, MetaType.Tag);
             _metasService.SaveMetas(cid, categories, MetaType.Category);
+
+            return cid;
         }
 
         /**

@@ -13,7 +13,7 @@ namespace iBlogs.Site.Core.Blog.Content.Service
 
         int Publish(ContentInput contents);
 
-        void UpdateArticle(ContentInput contents);
+        int UpdateArticle(ContentInput contents);
 
         void Delete(int cid);
 

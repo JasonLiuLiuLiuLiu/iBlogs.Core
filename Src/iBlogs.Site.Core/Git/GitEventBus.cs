@@ -7,6 +7,8 @@ using DotNetCore.CAP;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
+using iBlogs.Site.Core.Security.DTO;
+using iBlogs.Site.Core.Security.Service;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -20,14 +22,16 @@ namespace iBlogs.Site.Core.Git
         private readonly ILogger<GitEventBus> _logger;
         private readonly IGitFileService _gitFileService;
         private readonly IOptionService _optionService;
+        private readonly IUserService _userService;
 
-        public GitEventBus(ICapPublisher capPublisher, ITransactionProvider transactionProvider, ILogger<GitEventBus> logger, IGitFileService gitFileService, IOptionService optionService)
+        public GitEventBus(ICapPublisher capPublisher, ITransactionProvider transactionProvider, ILogger<GitEventBus> logger, IGitFileService gitFileService, IOptionService optionService, IUserService userService)
         {
             _capPublisher = capPublisher;
             _transactionProvider = transactionProvider;
             _logger = logger;
             _gitFileService = gitFileService;
             _optionService = optionService;
+            _userService = userService;
         }
 
         public bool Publish(string message)
@@ -46,6 +50,15 @@ namespace iBlogs.Site.Core.Git
             _logger.LogInformation($"receive:{message}");
             try
             {
+                var gitAuthor = _userService.FindUserById(int.Parse(_optionService.Get(ConfigKey.GitAuthorId, "1")));
+                _userService.CurrentUsers = new CurrentUser
+                {
+                    Uid = gitAuthor.Id,
+                    Email = gitAuthor.Email,
+                    HomeUrl = gitAuthor.HomeUrl,
+                    ScreenName = gitAuthor.ScreenName,
+                    Username = gitAuthor.Username
+                };
                 var gitRequest = JsonConvert.DeserializeObject<GitRequest>(message);
                 if (gitRequest?.commits == null)
                     return;
