@@ -73,7 +73,7 @@ namespace iBlogs.Site.Core.Git
                     }
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 Directory.Delete(RepoPath, true);
                 Directory.CreateDirectory(RepoPath);

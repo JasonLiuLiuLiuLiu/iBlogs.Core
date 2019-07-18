@@ -46,7 +46,7 @@ namespace iBlogs.Site.Core.Git
             using (var sourceStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 4096, useAsync: true))
             {
                 await sourceStream.WriteAsync(encodedText, 0, encodedText.Length);
-            };
+            }
             return true;
         }
 
@@ -91,14 +91,16 @@ namespace iBlogs.Site.Core.Git
         private string UpdateHeader(string content, MarkDownHeaderContext context)
         {
             var headerEndIndex = content.IndexOf(headerEnd, StringComparison.CurrentCultureIgnoreCase);
+            headerEndIndex = headerEndIndex == -1 ? 0 : headerEndIndex+headerPre.Length;
             content = content.Substring(headerEndIndex, content.Length - headerEndIndex);
             var contentBuilder=new StringBuilder();
             contentBuilder.AppendLine();
             contentBuilder.AppendFormat(headerFormat, context.Title, context.Tags, context.Categories, context.BlogId,
                 context.Status, context.LastUpdate, context.Message);
             contentBuilder.AppendLine();
+            contentBuilder.AppendLine();
             contentBuilder.AppendLine(content);
-            return content;
+            return contentBuilder.ToString();
         }
     }
 }
