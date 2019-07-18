@@ -91,8 +91,8 @@ namespace iBlogs.Site.Core.Git
         private string UpdateHeader(string content, MarkDownHeaderContext context)
         {
             var headerEndIndex = content.IndexOf(headerEnd, StringComparison.CurrentCultureIgnoreCase);
-            headerEndIndex = headerEndIndex == -1 ? 0 : headerEndIndex+headerPre.Length;
-            content = content.Substring(headerEndIndex, content.Length - headerEndIndex);
+            headerEndIndex = headerEndIndex == -1 ? 0 : headerEndIndex+headerPre.Length-1;
+            content = content.Substring(headerEndIndex, content.Length - headerEndIndex).TrimStart();
             var contentBuilder=new StringBuilder();
             contentBuilder.AppendLine();
             contentBuilder.AppendFormat(headerFormat, context.Title, context.Tags, context.Categories, context.BlogId,
