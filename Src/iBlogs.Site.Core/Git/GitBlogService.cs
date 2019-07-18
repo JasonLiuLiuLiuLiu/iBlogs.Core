@@ -16,9 +16,10 @@ namespace iBlogs.Site.Core.Git
 {
     public class GitBlogService : IGitBlogService
     {
-        private const string headerFormat = "<!--This tag was auto generate by iBlogs--\r\nTitle       : {0}\r\nTags        : {1}\r\nCategories  : {2}\r\nBlogId      : {3}\r\nStatus      : {4}\r\nLastUpdate  : {5}\r\nMessage     : {6}\r\n-- https://github.com/liuzhenyulive/iBlogs -->";
-        private const string headerPre = "<!--";
-        private const string headerEnd = "-->";
+        private const string HeaderFormat = "<!--This tag was auto generate by iBlogs--\r\nTitle       : {0}\r\nTags        : {1}\r\nCategories  : {2}\r\nBlogId      : {3}\r\nStatus      : {4}\r\nLastUpdate  : {5}\r\nMessage     : {6}\r\n-- https://github.com/liuzhenyulive/iBlogs -->";
+        private const string HeaderPre = "<!--";
+        private const string HeaderEnd = "-->";
+        private const string DefaultMessage = "请按要求修改以上标签";
         private readonly ILogger<GitBlogService> _logger;
         private readonly IContentsService _contentsService;
 
@@ -60,8 +61,8 @@ namespace iBlogs.Site.Core.Git
             if (context == null)
                 context = new MarkDownHeaderContext();
 
-            var headerPreIndex = content.IndexOf(headerPre, StringComparison.CurrentCultureIgnoreCase);
-            var headerEndIndex = content.IndexOf(headerEnd, StringComparison.CurrentCultureIgnoreCase);
+            var headerPreIndex = content.IndexOf(HeaderPre, StringComparison.CurrentCultureIgnoreCase);
+            var headerEndIndex = content.IndexOf(HeaderEnd, StringComparison.CurrentCultureIgnoreCase);
             if (headerPreIndex >= headerEndIndex)
                 return false;
             try
@@ -71,8 +72,10 @@ namespace iBlogs.Site.Core.Git
                 foreach (var property in context.GetType().GetProperties())
                 {
                     if (headerMap.ContainsKey(property.Name))
-                        property.SetValue(context, Convert.ChangeType(headerMap, property.PropertyType));
+                        property.SetValue(context, Convert.ChangeType(headerMap[property.Name], property.PropertyType));
                 }
+
+                context.Message = DefaultMessage;
             }
             catch (Exception e)
             {
@@ -122,7 +125,7 @@ namespace iBlogs.Site.Core.Git
         {
             var contentBuilder = new StringBuilder();
             contentBuilder.AppendLine();
-            contentBuilder.AppendFormat(headerFormat, context.Title, context.Tags, context.Categories, context.BlogId,
+            contentBuilder.AppendFormat(HeaderFormat, context.Title, context.Tags, context.Categories, context.BlogId,
                 context.Status, context.LastUpdate, context.Message);
             contentBuilder.AppendLine();
             contentBuilder.AppendLine();
@@ -132,8 +135,8 @@ namespace iBlogs.Site.Core.Git
 
         private string GetContentWithoutHeader(string content)
         {
-            var headerEndIndex = content.IndexOf(headerEnd, StringComparison.CurrentCultureIgnoreCase);
-            headerEndIndex = headerEndIndex == -1 ? 0 : headerEndIndex + headerPre.Length - 1;
+            var headerEndIndex = content.IndexOf(HeaderEnd, StringComparison.CurrentCultureIgnoreCase);
+            headerEndIndex = headerEndIndex == -1 ? 0 : headerEndIndex + HeaderPre.Length - 1;
             return content.Substring(headerEndIndex, content.Length - headerEndIndex).TrimStart();
         }
     }
