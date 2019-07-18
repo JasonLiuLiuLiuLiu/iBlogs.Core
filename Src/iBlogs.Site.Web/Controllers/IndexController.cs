@@ -1,4 +1,5 @@
-﻿using iBlogs.Site.Core.Blog.Content.DTO;
+﻿using iBlogs.Site.Core.Blog.Content;
+using iBlogs.Site.Core.Blog.Content.DTO;
 using iBlogs.Site.Core.Blog.Content.Service;
 using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Meta.Service;
@@ -25,7 +26,8 @@ namespace iBlogs.Site.Web.Controllers
         {
             var articleParam = new ArticleParam
             {
-                Page = index == 0 ? 1 : index
+                Page = index == 0 ? 1 : index,
+                Status = ContentStatus.Publish
             };
             return View(new IndexViewModel
             {
@@ -39,7 +41,7 @@ namespace iBlogs.Site.Web.Controllers
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
         public IActionResult Hot(int index)
         {
-            var articleParam = new ArticleParam { Page = index == 0 ? 1 : index, OrderBy = "Hits" };
+            var articleParam = new ArticleParam { Page = index == 0 ? 1 : index, OrderBy = "Hits", Status = ContentStatus.Publish };
             return View("Index", new IndexViewModel
             {
                 Contents = _contentsService.FindArticles(articleParam),
@@ -52,7 +54,7 @@ namespace iBlogs.Site.Web.Controllers
         [ViewLayout("~/Views/Layout/Layout.cshtml")]
         public IActionResult Random(int index)
         {
-            var articleParam = new ArticleParam { Page = index == 0 ? 1 : index, OrderBy = "Random" };
+            var articleParam = new ArticleParam { Page = index == 0 ? 1 : index, OrderBy = "Random", Status = ContentStatus.Publish };
             return View("Index", new IndexViewModel
             {
                 Contents = _contentsService.FindArticles(articleParam),
@@ -70,7 +72,7 @@ namespace iBlogs.Site.Web.Controllers
                 DisplayType = "标签",
                 DisplayMeta = tag,
                 OrderType = "tag",
-                Contents = _contentsService.FindContentByMeta(MetaType.Tag, tag, new ArticleParam { Page = index == 0 ? 1 : index })
+                Contents = _contentsService.FindContentByMeta(MetaType.Tag, tag, new ArticleParam { Page = index == 0 ? 1 : index, Status = ContentStatus.Publish })
             });
         }
 
@@ -86,7 +88,8 @@ namespace iBlogs.Site.Web.Controllers
                 OrderType = "category",
                 Contents = _contentsService.FindContentByMeta(MetaType.Category, category, new ArticleParam
                 {
-                    Page = index == 0 ? 1 : index
+                    Page = index == 0 ? 1 : index,
+                    Status = ContentStatus.Publish
                 })
             });
         }
