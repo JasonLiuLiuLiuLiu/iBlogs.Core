@@ -3,15 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6AC670D6-C103-46AD-ADA2-43C87468706A}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{6AC670D6-C103-46AD-ADA2-43C87468706A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{EA63676B-BEA6-4420-A4F0-87C8699EF80C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iBlogs.Site.Web", "Src\iBlogs.Site.Web\iBlogs.Site.Web.csproj", "{A84D77A3-D6B7-4FA2-A3AE-C04330133B41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iBlogs.Site.Web", "src\iBlogs.Site.Web\iBlogs.Site.Web.csproj", "{A84D77A3-D6B7-4FA2-A3AE-C04330133B41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iBlogs.Site.Core", "Src\iBlogs.Site.Core\iBlogs.Site.Core.csproj", "{ED24C20A-27FE-45B5-BBDA-26BD70B7874B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iBlogs.Site.Core", "src\iBlogs.Site.Core\iBlogs.Site.Core.csproj", "{ED24C20A-27FE-45B5-BBDA-26BD70B7874B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdPart", "ThirdPart", "{8759D077-3DD1-4DD0-BA3F-D0C1E7545961}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.MySQL", "src\Serilog.Sinks.MySQL\Serilog.Sinks.MySQL.csproj", "{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Serilog.Sinks.MySQL", "ThirdPart\Serilog.Sinks.MySQL\Serilog.Sinks.MySQL.csproj", "{614DF2BA-F81A-424E-A228-8C8320E8AD04}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A8296FA6-587D-4BD9-8546-773C920D126D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iBlogs.Site.Core.Test", "Test\iBlogs.Site.Core.Test\iBlogs.Site.Core.Test.csproj", "{6BE69B3C-EB4F-4886-A518-29422DFAE704}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +31,14 @@ Global
 		{ED24C20A-27FE-45B5-BBDA-26BD70B7874B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED24C20A-27FE-45B5-BBDA-26BD70B7874B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED24C20A-27FE-45B5-BBDA-26BD70B7874B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{614DF2BA-F81A-424E-A228-8C8320E8AD04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{614DF2BA-F81A-424E-A228-8C8320E8AD04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{614DF2BA-F81A-424E-A228-8C8320E8AD04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{614DF2BA-F81A-424E-A228-8C8320E8AD04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BE69B3C-EB4F-4886-A518-29422DFAE704}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BE69B3C-EB4F-4886-A518-29422DFAE704}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BE69B3C-EB4F-4886-A518-29422DFAE704}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BE69B3C-EB4F-4886-A518-29422DFAE704}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,7 +46,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A84D77A3-D6B7-4FA2-A3AE-C04330133B41} = {6AC670D6-C103-46AD-ADA2-43C87468706A}
 		{ED24C20A-27FE-45B5-BBDA-26BD70B7874B} = {6AC670D6-C103-46AD-ADA2-43C87468706A}
-		{45E874D8-F9B6-40E6-95C5-0ED3D55C5D58} = {6AC670D6-C103-46AD-ADA2-43C87468706A}
+		{614DF2BA-F81A-424E-A228-8C8320E8AD04} = {8759D077-3DD1-4DD0-BA3F-D0C1E7545961}
+		{6BE69B3C-EB4F-4886-A518-29422DFAE704} = {A8296FA6-587D-4BD9-8546-773C920D126D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A447472-C366-405E-80DF-37FFC2B0E4B3}
