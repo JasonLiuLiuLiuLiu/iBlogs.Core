@@ -21,10 +21,10 @@ using MySql.Data.MySqlClient;
 using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
-using Serilog.Sinks.Batch;
-using Serilog.Sinks.Extensions;
+using Serilog.Sinks.MySQL.Sinks.Batch;
+using Serilog.Sinks.MySQL.Sinks.Extensions;
 
-namespace Serilog.Sinks.MySQL
+namespace Serilog.Sinks.MySQL.Sinks.MySQL
 {
     internal class MySqlSink : BatchProvider, ILogEventSink
     {

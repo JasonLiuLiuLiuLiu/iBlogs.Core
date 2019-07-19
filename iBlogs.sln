@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A8296FA6-5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "iBlogs.Site.Core.Test", "Test\iBlogs.Site.Core.Test\iBlogs.Site.Core.Test.csproj", "{6BE69B3C-EB4F-4886-A518-29422DFAE704}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iBlogs.Site.MetaWeblog", "Src\iBlogs.Site.MetaWeblog\iBlogs.Site.MetaWeblog.csproj", "{EAC928F0-4373-4D0F-84CC-E97CEBC75D2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6BE69B3C-EB4F-4886-A518-29422DFAE704}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BE69B3C-EB4F-4886-A518-29422DFAE704}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BE69B3C-EB4F-4886-A518-29422DFAE704}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAC928F0-4373-4D0F-84CC-E97CEBC75D2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAC928F0-4373-4D0F-84CC-E97CEBC75D2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAC928F0-4373-4D0F-84CC-E97CEBC75D2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAC928F0-4373-4D0F-84CC-E97CEBC75D2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{ED24C20A-27FE-45B5-BBDA-26BD70B7874B} = {6AC670D6-C103-46AD-ADA2-43C87468706A}
 		{614DF2BA-F81A-424E-A228-8C8320E8AD04} = {8759D077-3DD1-4DD0-BA3F-D0C1E7545961}
 		{6BE69B3C-EB4F-4886-A518-29422DFAE704} = {A8296FA6-587D-4BD9-8546-773C920D126D}
+		{EAC928F0-4373-4D0F-84CC-E97CEBC75D2C} = {6AC670D6-C103-46AD-ADA2-43C87468706A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1A447472-C366-405E-80DF-37FFC2B0E4B3}

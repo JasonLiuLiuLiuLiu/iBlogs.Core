@@ -17,9 +17,9 @@ using Serilog.Configuration;
 using Serilog.Core;
 using Serilog.Debugging;
 using Serilog.Events;
-using Serilog.Sinks.MySQL;
+using Serilog.Sinks.MySQL.Sinks.MySQL;
 
-namespace Serilog
+namespace Serilog.Sinks.MySQL
 {
     /// <summary>
     ///     Adds the WriteTo.MySQL() extension method to <see cref="LoggerConfiguration" />.
