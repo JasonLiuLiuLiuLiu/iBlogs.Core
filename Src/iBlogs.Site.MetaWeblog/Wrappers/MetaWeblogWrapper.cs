@@ -13,20 +13,20 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
     /// </summary>
     public class MetaWeblogWrapper : BaseWrapper, IMetaWeblogWrapper
     {
-        protected IMetaWeblogXmlRpc _wrapper;
+        protected IMetaWeblogXmlRpc Wrapper;
 
         public MetaWeblogWrapper(string url, string username, string password)
             : this(url, username, password, 0)
         {
-            _wrapper = (IMetaWeblogXmlRpc)XmlRpcProxyGen.Create(typeof(IMetaWeblogXmlRpc));
-            _wrapper.Url = Url;
+            Wrapper = (IMetaWeblogXmlRpc)XmlRpcProxyGen.Create(typeof(IMetaWeblogXmlRpc));
+            Wrapper.Url = Url;
         }
 
         public MetaWeblogWrapper(string url, string username, string password, int blogID)
             : base(url, username, password, blogID)
         {
-            _wrapper = (IMetaWeblogXmlRpc)XmlRpcProxyGen.Create(typeof(IMetaWeblogXmlRpc));
-            _wrapper.Url = Url;
+            Wrapper = (IMetaWeblogXmlRpc)XmlRpcProxyGen.Create(typeof(IMetaWeblogXmlRpc));
+            Wrapper.Url = Url;
         }
 
 
@@ -39,17 +39,17 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         public virtual int NewPost(Post post, bool publish)
         {
             var content = Map.From.Post(post);
-            return Convert.ToInt32(_wrapper.NewPost(this.BlogID, Username, Password, content, publish));
+            return Convert.ToInt32(Wrapper.NewPost(this.BlogID, Username, Password, content, publish));
         }
 
         public virtual Post GetPost(int postID)
         {
-            return Map.To.Post(_wrapper.GetPost(postID, Username, Password));
+            return Map.To.Post(Wrapper.GetPost(postID, Username, Password));
         }
 
         public virtual XmlRpcPost GetPostRaw(int postID)
         {
-            return _wrapper.GetPost(postID, Username, Password);
+            return Wrapper.GetPost(postID, Username, Password);
         }
 
         /// <summary> 
@@ -57,7 +57,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// </summary> 
         public virtual IEnumerable<Category> GetCategories()
         {
-            var result = _wrapper.GetCategories(this.BlogID, Username, Password);
+            var result = Wrapper.GetCategories(this.BlogID, Username, Password);
 
             foreach (var r in result)
                 yield return Map.To.Category(r);
@@ -70,7 +70,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public virtual IEnumerable<Post> GetRecentPosts(int numberOfPosts)
         {
-            var result = _wrapper.GetRecentPosts(this.BlogID, Username, Password, numberOfPosts);
+            var result = Wrapper.GetRecentPosts(this.BlogID, Username, Password, numberOfPosts);
 
             foreach (var r in result)
                 yield return Map.To.Post(r);
@@ -83,7 +83,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns>Always returns true.</returns>
         public virtual bool DeletePost(int postid)
         {
-            return _wrapper.DeletePost("", Convert.ToString(postid), Username, Password, false);
+            return Wrapper.DeletePost("", Convert.ToString(postid), Username, Password, false);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// </summary>
         public virtual UserInfo GetUserInfo()
         {
-            var result = _wrapper.GetUserInfo("", Username, Password);
+            var result = Wrapper.GetUserInfo("", Username, Password);
             return Map.To.UserInfo(result);
         }
 
@@ -101,7 +101,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public override IEnumerable<UserBlog> GetUserBlogs()
         {
-            var result = _wrapper.GetUserBlogs(Username, Password);
+            var result = Wrapper.GetUserBlogs(Username, Password);
             foreach (var r in result)
                 yield return Map.To.UserBlog(r);
         }
@@ -114,14 +114,14 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         public virtual MediaObjectInfo NewMediaObject(MediaObject mediaObject)
         {
             var xmlRpcMediaObject = Map.From.MediaObject(mediaObject);
-            var result = _wrapper.NewMediaObject(this.BlogID, Username, Password, xmlRpcMediaObject);
+            var result = Wrapper.NewMediaObject(this.BlogID, Username, Password, xmlRpcMediaObject);
 
             return Map.To.MediaObjectInfo(result);
         }
 
         public override void Dispose()
         {
-            _wrapper = null;
+            Wrapper = null;
         }
     }
 }
