@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Src\iBlogs.Site.Core\iBlogs.Site.Core.csproj" />
+    <ProjectReference Include="..\..\Src\iBlogs.Site.MetaWeblog\iBlogs.Site.MetaWeblog.csproj" />
   </ItemGroup>
 
 </Project>

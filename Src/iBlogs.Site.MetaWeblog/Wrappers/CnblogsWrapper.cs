@@ -1,8 +1,7 @@
 ﻿using CookComputing.XmlRpc;
 using iBlogs.Site.MetaWeblog.Classes;
 using iBlogs.Site.MetaWeblog.CnBlogs;
-using iBlogs.Site.MetaWeblog.CnBlogs.XmlRpcStructs;
-using Post = iBlogs.Site.MetaWeblog.Classes.Post;
+using iBlogs.Site.MetaWeblog.Helpers;
 
 namespace iBlogs.Site.MetaWeblog.Wrappers
 {
@@ -19,48 +18,46 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
             Wrapper.Url = url;
         }
 
+        public bool DeletePost(string appKey, string postId, string username, string password, bool publish)
+        {
+            return Wrapper.DeletePost(appKey, postId, username, password, publish);
+        }
 
-        public bool DeletePost(string appKey, string postid, string username, string password, bool publish)
+        public BlogInfo[] GetUsersBlogs()
+        {
+            var xmlRpcArray = Wrapper.GetUsersBlogs("appKey", Username, Password);
+            if (xmlRpcArray == null)
+                return null;
+
+            var resultArray = new BlogInfo[xmlRpcArray.Length];
+            for (int i = 0; i < xmlRpcArray.Length; i++)
+            {
+                resultArray[i] = Mapper.From.BlogInfo(xmlRpcArray[i]);
+            }
+            return resultArray;
+        }
+
+        public int EditPost(string postId, string username, string password, Post post, bool publish)
         {
             throw new System.NotImplementedException();
         }
 
-        public Post[] GetUsersBlogs(string appKey, string username, string password)
+        public WpCategory GetCategories(string blogId, string username, string password)
         {
             throw new System.NotImplementedException();
         }
 
-        public int EditPost(string postid, string username, string password, Post post, bool publish)
+        public Post GetPost(string postId, string username, string password)
         {
             throw new System.NotImplementedException();
         }
 
-        public Category[] GetCategories(string blogid, string username, string password)
+        public Post[] GetRecentPosts(string blogId, string username, string password, int numberOfPosts)
         {
             throw new System.NotImplementedException();
         }
 
-        public Post GetPost(string postid, string username, string password)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Post[] GetRecentPosts(string blogid, string username, string password, int numberOfPosts)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public string NewMediaObject(string blogid, string username, string password, File file)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public string NewPost(string blogid, string username, string password, Post post, bool publish)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public int NewCategory(string blog_id, string username, string password, Category category)
+        public string NewPost(string blogId, string username, string password, Post post, bool publish)
         {
             throw new System.NotImplementedException();
         }

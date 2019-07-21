@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using iBlogs.Site.MetaWeblog.Classes;
 
 namespace iBlogs.Site.MetaWeblog.Wrappers
 {
@@ -33,19 +30,9 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
             Password = password;
 
             BlogID = blogID;
-
-            if (BlogID == 0)
-            {
-                try { BlogID = GetUserBlogs().First().BlogID; }
-                catch { BlogID = 1; }
-            }
         }
 
-        /// <summary>
-        /// Gets the blogs for the user.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IEnumerable<UserBlog> GetUserBlogs();
+       
 
         /// <summary>
         /// Gets or sets the blog ID.
