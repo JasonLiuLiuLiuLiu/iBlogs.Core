@@ -53,6 +53,18 @@ namespace iBlogs.Site.MetaWeblog.Helpers
                     Slug = wpCategory.slug
                 };
             }
+
+            internal static CategoryInfo CategoryInfo(XmlRpcCategoryInfo categoryInfo)
+            {
+                return new CategoryInfo
+                {
+                    CategoryId = categoryInfo.categoryid,
+                    Description = categoryInfo.description,
+                    HtmlUrl = categoryInfo.htmlUrl,
+                    RssUrl = categoryInfo.rssUrl,
+                    Title = categoryInfo.title
+                };
+            }
         }
 
         internal class To
@@ -77,6 +89,17 @@ namespace iBlogs.Site.MetaWeblog.Helpers
                     mt_excerpt = post.MtExcerpt,
                     mt_keywords = post.MtKeywords,
                     wp_slug = post.WpSlug
+                };
+            }
+
+            internal static XmlRpcWpCategory WpCategory(WpCategory wpCategory)
+            {
+                return new XmlRpcWpCategory
+                {
+                    description = wpCategory.Description,
+                    name = wpCategory.Name,
+                    parent_id = wpCategory.ParentId,
+                    slug = wpCategory.Slug
                 };
             }
         }

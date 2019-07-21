@@ -43,7 +43,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
             return resultArray;
         }
 
-        public Post[] GetRecentPosts(int numberOfPosts = Int32.MaxValue)
+        public Post[] GetRecentPosts(int numberOfPosts)
         {
             var xmlRpcArray = Wrapper.GetRecentPosts(BlogID.ToString(), Username, Password, numberOfPosts);
             if (xmlRpcArray == null)
@@ -71,14 +71,27 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
             return Wrapper.EditPost(postId, Username, Password, Mapper.To.Post(post), publish);
         }
 
-        public WpCategory GetCategories(string blogId)
+        public CategoryInfo[] GetCategories()
         {
-            throw new System.NotImplementedException();
+            var xmlRpcArray = Wrapper.GetCategories(BlogID.ToString(), Username, Password);
+            if (xmlRpcArray == null)
+                return null;
+            var resultArray=new CategoryInfo[xmlRpcArray.Length];
+            for (int i = 0; i < xmlRpcArray.Length; i++)
+            {
+                resultArray[i] = Mapper.From.CategoryInfo(xmlRpcArray[i]);
+            }
+            return resultArray;
         }
 
         public string NewPost(Post post, bool publish)
         {
             return Wrapper.NewPost(BlogID.ToString(), Username, Password, Mapper.To.Post(post), publish);
+        }
+
+        public int NewCategory(WpCategory category)
+        {
+            return Wrapper.NewCategory(BlogID.ToString(), Username, Password, Mapper.To.WpCategory(category));
         }
     }
 }

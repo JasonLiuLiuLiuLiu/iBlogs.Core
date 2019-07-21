@@ -9,7 +9,8 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         bool DeletePost(string postId, bool publish);
         Post GetPost(string postId);
         int EditPost(string postId, Post post, bool publish);
-        WpCategory GetCategories(string blogId);
+        CategoryInfo[] GetCategories();
         string NewPost(Post post, bool publish);
+        int NewCategory(WpCategory category);
     }
 }

@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace iBlogs.Site.MetaWeblog.Test
 {
-    [Ignore("Test")]
+    [Ignore("Ignore a test")]
     [TestFixture]
     public class CnBlogsTest
     {
@@ -13,12 +13,19 @@ namespace iBlogs.Site.MetaWeblog.Test
         {
             clinet=new CnBlogsLoginInfo().GetCnBlogsClient();
         }
-
+        
         [Test]
         public void GetAllBlogInfo()
         {
            var result=clinet.GetUsersBlogs();
            Assert.NotNull(result);
+        }
+        
+        [Test]
+        public void GetPosts()
+        {
+            var result = clinet.GetRecentPosts(int.MaxValue);
+            Assert.NotNull(result);
         }
     }
 }
