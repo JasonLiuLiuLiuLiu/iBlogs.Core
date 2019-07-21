@@ -42,11 +42,43 @@ namespace iBlogs.Site.MetaWeblog.Helpers
                     Url = blogInfo.url
                 };
             }
+
+            internal static WpCategory WpCategory(XmlRpcWpCategory wpCategory)
+            {
+                return new WpCategory
+                {
+                    Description = wpCategory.description,
+                    Name = wpCategory.name,
+                    ParentId = wpCategory.parent_id,
+                    Slug = wpCategory.slug
+                };
+            }
         }
 
         internal class To
         {
-
+            internal static XmlRpcPost Post(Post post)
+            {
+                return new XmlRpcPost
+                {
+                    categories = post.Categories,
+                    dateCreated = post.DateCreated,
+                    description = post.Description,
+                    XML_RPC_ENCLOSURE  = new XmlRpcEnclosure()
+                    {
+                        length = post.Enclosure.Length,
+                        type = post.Enclosure.Type,
+                        url = post.Enclosure.Url
+                    },
+                    link = post.Link,
+                    mt_allow_comments = post.MtAllowComments,
+                    mt_allow_pings = post.MtAllowPings,
+                    mt_convert_breaks = post.MtConvertBreaks,
+                    mt_excerpt = post.MtExcerpt,
+                    mt_keywords = post.MtKeywords,
+                    wp_slug = post.WpSlug
+                };
+            }
         }
     }
 }

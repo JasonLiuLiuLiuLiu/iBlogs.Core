@@ -1,4 +1,6 @@
-﻿using CookComputing.XmlRpc;
+﻿using System;
+using System.Linq;
+using CookComputing.XmlRpc;
 using iBlogs.Site.MetaWeblog.Classes;
 using iBlogs.Site.MetaWeblog.CnBlogs;
 using iBlogs.Site.MetaWeblog.Helpers;
@@ -8,24 +10,28 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
     public class CnBlogsWrapper : MetaWeblogWrapper, ICnBlogsWrapper
     {
         protected new ICnBlogsXmlRpc Wrapper;
+
+        private string _appKey = "appKey";
+
         public CnBlogsWrapper(string url, string username, string password) : this(url, username, password, 0)
         {
+            BlogID = int.Parse(GetUsersBlogs().FirstOrDefault()?.BlogId ?? throw new InvalidOperationException());
         }
 
         public CnBlogsWrapper(string url, string username, string password, int blogID) : base(url, username, password, blogID)
         {
-            Wrapper = (ICnBlogsXmlRpc)XmlRpcProxyGen.Create(typeof(ICnBlogsXmlRpc));
-            Wrapper.Url = url;
+            Init();
         }
 
-        public bool DeletePost(string appKey, string postId, string username, string password, bool publish)
+        private void Init()
         {
-            return Wrapper.DeletePost(appKey, postId, username, password, publish);
+            Wrapper = (ICnBlogsXmlRpc)XmlRpcProxyGen.Create(typeof(ICnBlogsXmlRpc));
+            Wrapper.Url = Url;
         }
 
         public BlogInfo[] GetUsersBlogs()
         {
-            var xmlRpcArray = Wrapper.GetUsersBlogs("appKey", Username, Password);
+            var xmlRpcArray = Wrapper.GetUsersBlogs(_appKey, Username, Password);
             if (xmlRpcArray == null)
                 return null;
 
@@ -37,29 +43,42 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
             return resultArray;
         }
 
-        public int EditPost(string postId, string username, string password, Post post, bool publish)
+        public Post[] GetRecentPosts(int numberOfPosts = Int32.MaxValue)
+        {
+            var xmlRpcArray = Wrapper.GetRecentPosts(BlogID.ToString(), Username, Password, numberOfPosts);
+            if (xmlRpcArray == null)
+                return null;
+            var resultArray = new Post[xmlRpcArray.Length];
+            for (int i = 0; i < xmlRpcArray.Length; i++)
+            {
+                resultArray[i] = Mapper.From.Post(xmlRpcArray[i]);
+            }
+            return resultArray;
+        }
+
+        public bool DeletePost(string postId, bool publish)
+        {
+            return Wrapper.DeletePost(_appKey, postId, Username, Password, publish);
+        }
+
+        public Post GetPost(string postId)
+        {
+            return Mapper.From.Post(Wrapper.GetPost(postId, Username, Password));
+        }
+
+        public int EditPost(string postId, Post post, bool publish)
+        {
+            return Wrapper.EditPost(postId, Username, Password, Mapper.To.Post(post), publish);
+        }
+
+        public WpCategory GetCategories(string blogId)
         {
             throw new System.NotImplementedException();
         }
 
-        public WpCategory GetCategories(string blogId, string username, string password)
+        public string NewPost(Post post, bool publish)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public Post GetPost(string postId, string username, string password)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Post[] GetRecentPosts(string blogId, string username, string password, int numberOfPosts)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public string NewPost(string blogId, string username, string password, Post post, bool publish)
-        {
-            throw new System.NotImplementedException();
+            return Wrapper.NewPost(BlogID.ToString(), Username, Password, Mapper.To.Post(post), publish);
         }
     }
 }
