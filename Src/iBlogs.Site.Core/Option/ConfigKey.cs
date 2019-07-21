@@ -70,7 +70,13 @@
         [ConfigKey("Git提交者名称,该用户提交后Git钩子通知本系统不再重复处理","iBlogs")]
         GitCommitter,
         [ConfigKey("Git文章提交以该用户为作者","1")]
-        GitAuthorId
+        GitAuthorId,
+        [ConfigKey("是否同步到博客园","false")]
+        SyncToCnBlogs,
+        [ConfigKey("博客园用户名")]
+        CnBlogsUserName,
+        [ConfigKey("博客园密码")]
+        CnBlogsPassword
     }
 
 
