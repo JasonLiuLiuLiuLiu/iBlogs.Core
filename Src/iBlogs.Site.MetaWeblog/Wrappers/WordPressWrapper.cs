@@ -14,7 +14,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
     /// </summary>
     public class WordPressWrapper : MetaWeblogWrapper, IWordPressWrapper
     {
-        protected new IWordPressXmlRpc WRAPPER;
+        protected new IWordPressXmlRpc Wrapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WordPressWrapper"/> class.
@@ -25,8 +25,8 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         public WordPressWrapper(string url, string username, string password)
             : this(url, username, password, 0)
         {
-            WRAPPER = (IWordPressXmlRpc)XmlRpcProxyGen.Create(typeof(IWordPressXmlRpc));
-            WRAPPER.Url = url;
+            Wrapper = (IWordPressXmlRpc)XmlRpcProxyGen.Create(typeof(IWordPressXmlRpc));
+            Wrapper.Url = url;
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         public WordPressWrapper(string url, string username, string password, int blogId)
             : base(url, username, password, blogId)
         {
-            WRAPPER = (IWordPressXmlRpc)XmlRpcProxyGen.Create(typeof(IWordPressXmlRpc));
-            WRAPPER.Url = url;
+            Wrapper = (IWordPressXmlRpc)XmlRpcProxyGen.Create(typeof(IWordPressXmlRpc));
+            Wrapper.Url = url;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public override IEnumerable<UserBlog> GetUserBlogs()
         {
-            var xmlRpcResult = WRAPPER.GetUserBlogs(Username, Password);
+            var xmlRpcResult = Wrapper.GetUserBlogs(Username, Password);
 
             List<UserBlog> result = new List<UserBlog>();
 
@@ -65,7 +65,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public IEnumerable<Tag> GetTags()
         {
-            var xmlRpcResult = WRAPPER.GetTags(BlogID, Username, Password);
+            var xmlRpcResult = Wrapper.GetTags(BlogID, Username, Password);
 
             List<Tag> result = new List<Tag>();
 
@@ -82,7 +82,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public CommentCount GetCommentCount(string post_id)
         {
-            var result = WRAPPER.GetCommentCount(BlogID, Username, Password, post_id);
+            var result = Wrapper.GetCommentCount(BlogID, Username, Password, post_id);
             return Map.To.CommentCount(result);
         }
 
@@ -92,7 +92,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public IEnumerable<string> GetPostStatusList()
         {
-            return WRAPPER.GetPostStatusList(BlogID, Username, Password);
+            return Wrapper.GetPostStatusList(BlogID, Username, Password);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public IEnumerable<string> GetPageStatusList()
         {
-            return WRAPPER.GetPageStatusList(BlogID, Username, Password);
+            return Wrapper.GetPageStatusList(BlogID, Username, Password);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public IEnumerable<PageTemplate> GetPageTemplates()
         {
-            var result = WRAPPER.GetPageTemplates(BlogID, Username, Password);
+            var result = Wrapper.GetPageTemplates(BlogID, Username, Password);
             foreach (var r in result)
                 yield return Map.To.PageTemplate(r);
         }
@@ -124,7 +124,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public IEnumerable<Option> GetOptions(string[] options)
         {
-            var xmlRpcResult = WRAPPER.GetOptions(BlogID, Username, Password, options);
+            var xmlRpcResult = Wrapper.GetOptions(BlogID, Username, Password, options);
 
             var result = new List<Option>();
 
@@ -140,7 +140,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public IEnumerable<Option> SetOptions()
         {
-            var xmlRpcResult = WRAPPER.SetOptions(BlogID, Username, Password);
+            var xmlRpcResult = Wrapper.SetOptions(BlogID, Username, Password);
 
             var result = new List<Option>();
 
@@ -161,7 +161,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
             try
             {
                 var comment = GetComment(comment_id); ;
-                return WRAPPER.DeleteComment(BlogID, Username, Password, comment_id);
+                return Wrapper.DeleteComment(BlogID, Username, Password, comment_id);
             }
             catch
             {
@@ -187,7 +187,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
                 status = EnumsHelper.GetCommentStatusName(status)
             };
 
-            return WRAPPER.EditComment(BlogID, Username, Password, xmlRpcComment);
+            return Wrapper.EditComment(BlogID, Username, Password, xmlRpcComment);
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
                 author_email = author_email
             };
 
-            var result = WRAPPER.NewComment(BlogID, Username, Password, Convert.ToString(postid), xmlRpcComment);
+            var result = Wrapper.NewComment(BlogID, Username, Password, Convert.ToString(postid), xmlRpcComment);
             return Convert.ToString(result);
         }
 
@@ -218,7 +218,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public IEnumerable<string> GetCommentStatusList(string post_id)
         {
-            var result = WRAPPER.GetCommentStatusList(BlogID, Username, Password, post_id);
+            var result = Wrapper.GetCommentStatusList(BlogID, Username, Password, post_id);
 
             return result.Keys.Cast<string>().ToArray();
         }
@@ -230,7 +230,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public Page GetPage(string pageid)
         {
-            var page = WRAPPER.GetPage(BlogID, pageid, Username, Password);
+            var page = Wrapper.GetPage(BlogID, pageid, Username, Password);
             return Map.To.Page(page);
         }
 
@@ -240,7 +240,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public IEnumerable<Page> GetPages()
         {
-            var xmlRpcResult = WRAPPER.GetPages(BlogID, Username, Password);
+            var xmlRpcResult = Wrapper.GetPages(BlogID, Username, Password);
 
             var result = new List<Page>();
 
@@ -258,7 +258,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         {
             var result = new List<PageMin>();
 
-            var xmlRpcResult = WRAPPER.GetPageList(BlogID, Username, Password);
+            var xmlRpcResult = Wrapper.GetPageList(BlogID, Username, Password);
 
             foreach (var x in xmlRpcResult)
                 result.Add(Map.To.PageMin(x));
@@ -274,7 +274,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         public string NewPage(Page page, bool publish)
         {
             var content = Map.From.Page(page);
-            return WRAPPER.NewPage(BlogID, Username, Password, content, publish);
+            return Wrapper.NewPage(BlogID, Username, Password, content, publish);
         }
 
         /// <summary>
@@ -284,7 +284,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public bool DeletePage(string pageID)
         {
-            return WRAPPER.DeletePage(BlogID, Username, Password, pageID);
+            return Wrapper.DeletePage(BlogID, Username, Password, pageID);
         }
 
         /// <summary>
@@ -294,12 +294,12 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         public bool EditPage(int pageID, Page editedPage, bool publish)
         {
             var content = Map.From.Page(editedPage);
-            return WRAPPER.EditPage(BlogID, pageID, Username, Password, content, publish);
+            return Wrapper.EditPage(BlogID, pageID, Username, Password, content, publish);
         }
 
         public virtual bool EditPost(int postID, Post content, bool publish)
         {
-            return WRAPPER.EditPost(postID, Username, Password, Map.From.Post(content), publish);
+            return Wrapper.EditPost(postID, Username, Password, Map.From.Post(content), publish);
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         public IEnumerable<Author> GetAuthors()
         {
             var result = new List<Author>();
-            var xmlRpcResult = WRAPPER.GetAuthors(BlogID, Username, Password);
+            var xmlRpcResult = Wrapper.GetAuthors(BlogID, Username, Password);
 
             foreach (var x in xmlRpcResult)
                 result.Add(Map.To.Author(x));
@@ -325,7 +325,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         {
             var result = new List<Category>();
 
-            var xmlRpcResult = WRAPPER.GetCategories(BlogID, Username, Password);
+            var xmlRpcResult = Wrapper.GetCategories(BlogID, Username, Password);
 
             foreach (var r in xmlRpcResult)
                 result.Add(Map.To.Category(r));
@@ -347,7 +347,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
                     parent_id = parentCategoryID.Value,
                     slug = slug
                 };
-            return WRAPPER.NewCategory(BlogID, Username, Password, x);
+            return Wrapper.NewCategory(BlogID, Username, Password, x);
         }
 
         /// <summary>
@@ -357,7 +357,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public bool DeleteCategory(int categoryID)
         {
-            return WRAPPER.DeleteCategory(BlogID, Username, Password, Convert.ToString(categoryID));
+            return Wrapper.DeleteCategory(BlogID, Username, Password, Convert.ToString(categoryID));
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         {
             var result = new List<CategoryMin>();
 
-            var xmlRpcResult = WRAPPER.SuggestCategories(BlogID, Username, Password, startsWith, max_results);
+            var xmlRpcResult = Wrapper.SuggestCategories(BlogID, Username, Password, startsWith, max_results);
 
             foreach (var r in xmlRpcResult)
                 result.Add(Map.To.CategoryMin(r));
@@ -386,7 +386,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         public File UploadFile(Data data)
         {
             var xmlRpcData = Map.From.Data(data);
-            var result = WRAPPER.UploadFile(BlogID, Username, Password, xmlRpcData);
+            var result = Wrapper.UploadFile(BlogID, Username, Password, xmlRpcData);
 
             return Map.To.File(result);
         }
@@ -416,7 +416,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// <returns></returns>
         public Comment GetComment(string comment_id)
         {
-            var result = WRAPPER.GetComment(BlogID, Username, Password, comment_id);
+            var result = Wrapper.GetComment(BlogID, Username, Password, comment_id);
             return Map.To.Comment(result);
         }
 
@@ -443,7 +443,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
 
             var result = new List<Comment>();
 
-            var xmlRpcResult = WRAPPER.GetComments(BlogID, Username, Password, filter);
+            var xmlRpcResult = Wrapper.GetComments(BlogID, Username, Password, filter);
 
             foreach (var r in xmlRpcResult)
                 result.Add(Map.To.Comment(r));
@@ -456,7 +456,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
         /// </summary>
         public override void Dispose()
         {
-            WRAPPER = null;
+            Wrapper = null;
         }
 
         
