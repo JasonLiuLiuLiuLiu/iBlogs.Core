@@ -80,6 +80,20 @@ CREATE TABLE `Contents` (
     CONSTRAINT `FK_Contents_Users_AuthorId` FOREIGN KEY (`AuthorId`) REFERENCES `Users` (`Id`) ON DELETE CASCADE
 );
 
+CREATE TABLE `BlogAsyncRelationships` (
+    `Id` int NOT NULL AUTO_INCREMENT,
+    `Created` datetime(6) NOT NULL,
+    `Deleted` bit NOT NULL,
+    `ContentId` int NOT NULL,
+    `Target` int NOT NULL,
+    `TargetPostId` longtext NULL,
+    `SyncData` datetime(6) NOT NULL,
+    `Message` longtext NULL,
+    `ExtensionProperty` longtext NULL,
+    CONSTRAINT `PK_BlogAsyncRelationships` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_BlogAsyncRelationships_Contents_ContentId` FOREIGN KEY (`ContentId`) REFERENCES `Contents` (`Id`) ON DELETE CASCADE
+);
+
 CREATE TABLE `Comments` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `IsAuthor` bit NOT NULL,
@@ -113,6 +127,8 @@ CREATE TABLE `Relationships` (
 
 CREATE INDEX `IX_Attachments_AuthorId` ON `Attachments` (`AuthorId`);
 
+CREATE INDEX `IX_BlogAsyncRelationships_ContentId` ON `BlogAsyncRelationships` (`ContentId`);
+
 CREATE INDEX `IX_Comments_Cid` ON `Comments` (`Cid`);
 
 CREATE INDEX `IX_Contents_AuthorId` ON `Contents` (`AuthorId`);
@@ -122,5 +138,5 @@ CREATE INDEX `IX_Relationships_Cid` ON `Relationships` (`Cid`);
 CREATE INDEX `IX_Relationships_Mid` ON `Relationships` (`Mid`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20190714113533_Init', '2.2.4-servicing-10062');
+VALUES ('20190723125835_Init', '2.2.4-servicing-10062');
 

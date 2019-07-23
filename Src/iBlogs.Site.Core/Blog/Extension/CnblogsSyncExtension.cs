@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace iBlogs.Site.Core.Blog.Extension
+namespace iBlogs.Site.Core.Blog.Extension.CnBlogs
 {
     public class CnBlogsSyncExtension : IBlogsSyncExtension
     {
@@ -28,7 +26,7 @@ namespace iBlogs.Site.Core.Blog.Extension
 
         public async Task InitializeAsync()
         {
-            //TODO 数据库初始化
+             await Task.CompletedTask;
         }
 
         private async Task Add(BlogAsyncContext context)

@@ -135,6 +135,34 @@ namespace iBlogs.Site.Core.Migrations
                     b.ToTable("Contents");
                 });
 
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Extension.BlogAsyncRelationship", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("ContentId");
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<string>("ExtensionProperty");
+
+                    b.Property<string>("Message");
+
+                    b.Property<DateTime>("SyncData");
+
+                    b.Property<int>("Target");
+
+                    b.Property<string>("TargetPostId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContentId");
+
+                    b.ToTable("BlogAsyncRelationships");
+                });
+
             modelBuilder.Entity("iBlogs.Site.Core.Blog.Meta.Metas", b =>
                 {
                     b.Property<int>("Id")
@@ -260,6 +288,14 @@ namespace iBlogs.Site.Core.Migrations
                     b.HasOne("iBlogs.Site.Core.Security.Users", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Extension.BlogAsyncRelationship", b =>
+                {
+                    b.HasOne("iBlogs.Site.Core.Blog.Content.Contents", "Content")
+                        .WithMany()
+                        .HasForeignKey("ContentId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
