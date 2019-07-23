@@ -73,6 +73,8 @@
         GitAuthorId,
         [ConfigKey("是否同步到博客园","false")]
         SyncToCnBlogs,
+        [ConfigKey("博客园同步开关","false")]
+        CnBlogsSyncSwitch,
         [ConfigKey("博客园用户名")]
         CnBlogsUserName,
         [ConfigKey("博客园密码")]
