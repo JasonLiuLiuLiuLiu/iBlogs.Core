@@ -6,6 +6,7 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace iBlogs.Site.Core.Blog.Extension.CnBlogs
 {
@@ -13,17 +14,29 @@ namespace iBlogs.Site.Core.Blog.Extension.CnBlogs
     {
         private readonly IOptionService _optionService;
         private readonly IRepository<BlogAsyncRelationship> _repository;
+        private readonly ILogger<CnBlogsSyncExtension> _logger;
 
-        public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogAsyncRelationship> repository)
+        public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogAsyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger)
         {
             _optionService = optionService;
             _repository = repository;
+            _logger = logger;
         }
 
         public async Task Sync(BlogAsyncContext context)
         {
             if (!_optionService.Get(ConfigKey.CnBlogsSyncSwitch, "false").ToBool())
                 return;
+
+            if (!_optionService.Get(ConfigKey.CnBlogsUserName).IsNullOrWhiteSpace() ||
+                !_optionService.Get(ConfigKey.CnBlogsPassword).IsNullOrWhiteSpace())
+            {
+                var errorMessage = "同步数据到博客园前请先设置博客园用户名和密码";
+                _logger.LogError(errorMessage);
+                context.Success = false;
+                context.Message = errorMessage;
+                return;
+            }
 
             switch (context.Method)
             {
