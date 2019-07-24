@@ -25,7 +25,7 @@ namespace iBlogs.Site.Core.Startup
                 var blogSyncExtenstion = ServiceFactory.GetService<IEnumerable<IBlogsSyncExtension>>();
                 foreach (var extension in blogSyncExtenstion)
                 {
-                    await extension.InitializeAsync();
+                    await extension.InitializeSync();
                 }
 
                 if (configuration["DbInstalled"].ToBool())

@@ -80,7 +80,7 @@ CREATE TABLE `Contents` (
     CONSTRAINT `FK_Contents_Users_AuthorId` FOREIGN KEY (`AuthorId`) REFERENCES `Users` (`Id`) ON DELETE CASCADE
 );
 
-CREATE TABLE `BlogAsyncRelationships` (
+CREATE TABLE `BlogSyncRelationships` (
     `Id` int NOT NULL AUTO_INCREMENT,
     `Created` datetime(6) NOT NULL,
     `Deleted` bit NOT NULL,
@@ -90,8 +90,8 @@ CREATE TABLE `BlogAsyncRelationships` (
     `SyncData` datetime(6) NOT NULL,
     `Message` longtext NULL,
     `ExtensionProperty` longtext NULL,
-    CONSTRAINT `PK_BlogAsyncRelationships` PRIMARY KEY (`Id`),
-    CONSTRAINT `FK_BlogAsyncRelationships_Contents_ContentId` FOREIGN KEY (`ContentId`) REFERENCES `Contents` (`Id`) ON DELETE CASCADE
+    CONSTRAINT `PK_BlogSyncRelationships` PRIMARY KEY (`Id`),
+    CONSTRAINT `FK_BlogSyncRelationships_Contents_ContentId` FOREIGN KEY (`ContentId`) REFERENCES `Contents` (`Id`) ON DELETE CASCADE
 );
 
 CREATE TABLE `Comments` (

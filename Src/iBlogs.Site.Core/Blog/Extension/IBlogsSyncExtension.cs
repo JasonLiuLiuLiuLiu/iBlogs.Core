@@ -4,7 +4,7 @@ namespace iBlogs.Site.Core.Blog.Extension
 {
     public interface IBlogsSyncExtension
     {
-         Task Sync(BlogAsyncContext context);
-         Task InitializeAsync();
+         Task Sync(BlogSyncContext context);
+         Task InitializeSync();
     }
 }

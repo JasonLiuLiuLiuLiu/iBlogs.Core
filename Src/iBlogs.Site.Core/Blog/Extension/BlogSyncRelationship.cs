@@ -6,7 +6,7 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Blog.Extension
 {
-   public class BlogAsyncRelationship:IEntityBase
+   public class BlogSyncRelationship:IEntityBase
     {
         [Key]
         public int Id { get; set; }
@@ -17,7 +17,7 @@ namespace iBlogs.Site.Core.Blog.Extension
         [ForeignKey("ContentId")]
         public Contents Content { get; set; }
 
-        public AsyncTarget Target { get; set; }
+        public BlogSyncTarget Target { get; set; }
 
         public string TargetPostId { get; set; }
         public DateTime SyncData { get; set; }

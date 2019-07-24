@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
-using iBlogs.Site.Core.Blog.Content;
-using iBlogs.Site.Core.Security;
+﻿using iBlogs.Site.Core.Blog.Content;
 
 namespace iBlogs.Site.Core.Blog.Extension
 {
-    public class BlogAsyncContext
+    public class BlogSyncContext
     {
         public bool Success { get; set; }
         public string Message { get; set; }
         public BlogSyncMethod Method { get; set; }
         public PostSyncDto Post { get; set; }
+        public BlogSyncTarget Target { get; set; }
     }
 
     public enum BlogSyncMethod

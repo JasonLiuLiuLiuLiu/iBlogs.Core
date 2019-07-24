@@ -137,7 +137,7 @@ namespace iBlogs.Site.Core.Migrations
                     b.ToTable("Contents");
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.Blog.Extension.BlogAsyncRelationship", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Extension.BlogSyncRelationship", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -293,7 +293,7 @@ namespace iBlogs.Site.Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("iBlogs.Site.Core.Blog.Extension.BlogAsyncRelationship", b =>
+            modelBuilder.Entity("iBlogs.Site.Core.Blog.Extension.BlogSyncRelationship", b =>
                 {
                     b.HasOne("iBlogs.Site.Core.Blog.Content.Contents", "Content")
                         .WithMany()

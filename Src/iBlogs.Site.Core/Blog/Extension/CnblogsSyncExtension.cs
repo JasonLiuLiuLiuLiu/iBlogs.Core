@@ -13,23 +13,23 @@ namespace iBlogs.Site.Core.Blog.Extension.CnBlogs
     public class CnBlogsSyncExtension : IBlogsSyncExtension
     {
         private readonly IOptionService _optionService;
-        private readonly IRepository<BlogAsyncRelationship> _repository;
+        private readonly IRepository<BlogSyncRelationship> _repository;
         private readonly ILogger<CnBlogsSyncExtension> _logger;
 
-        public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogAsyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger)
+        public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogSyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger)
         {
             _optionService = optionService;
             _repository = repository;
             _logger = logger;
         }
 
-        public async Task Sync(BlogAsyncContext context)
+        public async Task Sync(BlogSyncContext context)
         {
             if (!_optionService.Get(ConfigKey.CnBlogsSyncSwitch, "false").ToBool())
                 return;
-
-            if (!_optionService.Get(ConfigKey.CnBlogsUserName).IsNullOrWhiteSpace() ||
-                !_optionService.Get(ConfigKey.CnBlogsPassword).IsNullOrWhiteSpace())
+            var userName = _optionService.Get(ConfigKey.CnBlogsUserName);
+            var passWord = _optionService.Get(ConfigKey.CnBlogsPassword);
+            if (userName.IsNullOrWhiteSpace() ||passWord.IsNullOrWhiteSpace())
             {
                 var errorMessage = "同步数据到博客园前请先设置博客园用户名和密码";
                 _logger.LogError(errorMessage);
@@ -51,14 +51,14 @@ namespace iBlogs.Site.Core.Blog.Extension.CnBlogs
             }
         }
 
-        public async Task InitializeAsync()
+        public async Task InitializeSync()
         {
             await Task.CompletedTask;
         }
 
-        private async Task AddOrUpdate(BlogAsyncContext context)
+        private async Task AddOrUpdate(BlogSyncContext context)
         {
-            var relationship = await _repository.GetAll().Where(u => u.Target == AsyncTarget.CnBlogs)
+            var relationship = await _repository.GetAll().Where(u => u.Target == BlogSyncTarget.CnBlogs)
                   .FirstOrDefaultAsync(u => u.ContentId == context.Post.Id);
             if (relationship == null)
             {
@@ -70,17 +70,17 @@ namespace iBlogs.Site.Core.Blog.Extension.CnBlogs
             }
         }
 
-        private async Task Add(BlogAsyncContext context)
+        private async Task Add(BlogSyncContext context)
         {
             throw new NotImplementedException();
         }
 
-        private async Task Update(BlogAsyncContext context, BlogAsyncRelationship relationship)
+        private async Task Update(BlogSyncContext context, BlogSyncRelationship relationship)
         {
             throw new NotImplementedException();
         }
 
-        private async Task Delete(BlogAsyncContext context)
+        private async Task Delete(BlogSyncContext context)
         {
             throw new NotImplementedException();
         }

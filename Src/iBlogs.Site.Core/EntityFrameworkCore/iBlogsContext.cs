@@ -25,6 +25,6 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         public DbSet<Options> Options { get; set; }
         public DbSet<Relationships> Relationships { get; set; }
         public DbSet<Users> Users { get; set; }
-        public DbSet<BlogAsyncRelationship> BlogAsyncRelationships { get; set; }
+        public DbSet<BlogSyncRelationship> BlogAsyncRelationships { get; set; }
     }
 }
