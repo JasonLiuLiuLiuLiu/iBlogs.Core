@@ -9,6 +9,7 @@ using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.CodeDi;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.MetaWeblog.Wrappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

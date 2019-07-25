@@ -78,7 +78,9 @@
         [ConfigKey("博客园用户名")]
         CnBlogsUserName,
         [ConfigKey("博客园密码")]
-        CnBlogsPassword
+        CnBlogsPassword,
+        [ConfigKey("博客园同步地址", "https://www.cnblogs.com/coderayu/services/metaweblog.aspx")]
+        CnBlogsUrl
     }
 
 

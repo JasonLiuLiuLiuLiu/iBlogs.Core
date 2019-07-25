@@ -29,10 +29,21 @@ namespace iBlogs.Site.MetaWeblog.Test
             Assert.NotNull(result);
         }
         [Test]
-        public void GetCategories()
+        public void GetAndAddCategories()
         {
             var result = _client.GetCategories();
             Assert.NotNull(result);
+
+            if (result.Any(u => u.Title == "Test Category")) 
+                return;
+
+            var addResult = _client.NewCategory(new WpCategory
+            {
+                Description = "Test Category",
+                Name = "Test Category"
+            });
+            Assert.True(addResult>0);
+
         }
 
         [Test]
