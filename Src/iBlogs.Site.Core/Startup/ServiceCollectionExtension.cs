@@ -70,7 +70,7 @@ namespace iBlogs.Site.Core.Startup
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddCoreDi(options =>
             {
-                options.AssemblyNames = new[] { "*iBlogs.Site*" };
+                options.AssemblyNames = new[] { "*iBlogs.Site.Core*" };
                 options.IgnoreInterface = new[] { "*IEntityBase*", "*Caching*" };
             });
 
