@@ -7,9 +7,10 @@ namespace iBlogs.Site.MetaWeblog.Test
 {
     public class CnBlogsLoginInfo
     {
-        public string XmlRpcUrl = "https://www.cnblogs.com/coderayu/services/metaweblog.aspx";
-        public string Username = "Your UserName";
-        public string Password = "Your Password";
+
+        public string Username = "iblogs.site";
+        public string XmlRpcUrl = "https://www.cnblogs.com/iblogssite/services/metaweblog.aspx";
+        public string Password = "123asd!@#";
 
         public ICnBlogsWrapper GetCnBlogsClient()
         {

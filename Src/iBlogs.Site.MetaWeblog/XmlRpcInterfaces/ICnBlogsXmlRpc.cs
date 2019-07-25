@@ -39,7 +39,7 @@ namespace iBlogs.Site.MetaWeblog.CnBlogs
         /// <param name="publish"></param>
         /// <returns></returns>
         [XmlRpcMethod("metaWeblog.editPost")]
-        int EditPost(string postid, string username, string password, XmlRpcPost xmlRpcPost, bool publish);
+        object EditPost(string postid, string username, string password, XmlRpcPost xmlRpcPost, bool publish);
         /// <summary>
         /// Retrieves a list of valid categories for a xmlRpcPost using the metaWeblog API. Returns the metaWeblog categories struct collection.
         /// </summary>

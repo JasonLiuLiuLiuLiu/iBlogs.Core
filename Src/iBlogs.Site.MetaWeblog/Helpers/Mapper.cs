@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using iBlogs.Site.MetaWeblog.Classes;
+﻿using iBlogs.Site.MetaWeblog.Classes;
 using iBlogs.Site.MetaWeblog.CnBlogs.XmlRpcStructs;
 
 namespace iBlogs.Site.MetaWeblog.Helpers
@@ -14,6 +11,7 @@ namespace iBlogs.Site.MetaWeblog.Helpers
             {
                 return new Post
                 {
+                    Title = xmlRpcPost.title,
                     Categories = xmlRpcPost.categories,
                     DateCreated = xmlRpcPost.dateCreated,
                     Description = xmlRpcPost.description,
@@ -73,6 +71,7 @@ namespace iBlogs.Site.MetaWeblog.Helpers
             {
                 return new XmlRpcPost
                 {
+                    title = post.Title,
                     categories = post.Categories,
                     dateCreated = post.DateCreated,
                     description = post.Description,

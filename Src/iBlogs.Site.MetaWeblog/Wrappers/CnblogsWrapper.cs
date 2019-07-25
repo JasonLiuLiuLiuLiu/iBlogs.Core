@@ -66,7 +66,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
             return Mapper.From.Post(Wrapper.GetPost(postId, Username, Password));
         }
 
-        public int EditPost(string postId, Post post, bool publish)
+        public object EditPost(string postId, Post post, bool publish)
         {
             return Wrapper.EditPost(postId, Username, Password, Mapper.To.Post(post), publish);
         }
