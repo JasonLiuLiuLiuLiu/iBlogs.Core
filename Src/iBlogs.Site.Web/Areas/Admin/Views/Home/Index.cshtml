@@ -29,7 +29,7 @@
                             limit: 8
                         },
                         success: function (data) {
-                            $vm.logPage = data.payload
+                            $vm.logPage = data.payload;
                         },
                         error: function (error) {
                             console.log(error);
@@ -200,15 +200,15 @@
                             <div class="panel-body">
                                 <ul class="list-group">
                                     <li class="list-group-item" v-for="item in logPage.rows">
-                                        <span>{{item.created | formatUnix}} &nbsp;&nbsp;<kbd>{{item.action}}</kbd></span>
+                                        <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br /><kbd>{{item.message}}</kbd></span>
                                     </li>
                                 </ul>
                                 <ul class="pager">
                                     <li v-if="logPage.hasPrevPage">
-                                        <a click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                        <a v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
                                     </li>
                                     <li v-if="logPage.hasNextPage">
-                                        <a click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                        <a v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
                                     </li>
                                 </ul>
                             </div>
