@@ -5,6 +5,7 @@ using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option.DTO;
+using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Option.Service
 {
@@ -34,7 +35,7 @@ namespace iBlogs.Site.Core.Option.Service
 
         public IDictionary<ConfigKey, string> GetAllAsKeyValue()
         {
-            return _repository.GetAll().ToDictionary(o => (ConfigKey)Enum.Parse(typeof(ConfigKey), o.Name), o =>
+            return _repository.GetAll().AsNoTracking().ToDictionary(o => (ConfigKey)Enum.Parse(typeof(ConfigKey), o.Name), o =>
             {
                 if (o.Value != null)
                     return o.Value;
