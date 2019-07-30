@@ -187,7 +187,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         [AdminApiRoute("comments")]
-        public ApiResponse<Page<CommentResponse>> CommentList(CommentPageParam commentParam)
+        public ApiResponse<Page<CommentResponse>> CommentList([FromQuery]CommentPageParam commentParam)
         {
             if (commentParam == null)
                 commentParam = new CommentPageParam();
@@ -212,10 +212,18 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         // @SysLog("回复评论")
-        // @PostRoute("comment/reply")
-        public ApiResponse ReplyComment(Comments comments)
+        [AdminApiRoute("comment/reply")]
+        public ApiResponse ReplyComment([FromBody]CommentRequest input)
         {
-            throw new NotImplementedException();
+            var comment = new Comments
+            {
+                Parent = input.Coid ?? 0,
+                Content = input.Content,
+                Ip = HttpContext.Connection.RemoteIpAddress.ToString(),
+                Agent = Request.Headers["User-Agent"].ToString()
+            };
+            _commentsService.Reply(comment);
+            return ApiResponse.Ok();
         }
 
         [AdminApiRoute("attaches")]

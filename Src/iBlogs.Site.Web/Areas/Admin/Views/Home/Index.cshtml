@@ -26,10 +26,14 @@
                         url: '/admin/api/logs',
                         data: {
                             page: page,
-                            limit: 8
+                            limit: 6
                         },
                         success: function (data) {
-                            $vm.logPage = data.payload;
+                            if (!data.payload) {
+                                $vm.logPage = [];
+                            } else {
+                                $vm.logPage = data.payload;
+                            }
                         },
                         error: function (error) {
                             console.log(error);
@@ -38,6 +42,10 @@
                     });
                     tale.get({
                         url: '/admin/api/comments',
+                        data: {
+                            page: page,
+                            limit: 6
+                        },
                         success: function (data) {
                             if (!data.payload.rows) {
                                 $vm.comments = [];
