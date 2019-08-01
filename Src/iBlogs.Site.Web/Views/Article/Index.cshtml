@@ -203,7 +203,7 @@
                     success: function (result) {
                         $('#comment-form input[name=coid]').val('');
                         if (result && result.success) {
-                            alert('评论成功');
+                            alert('评论成功,管理员审核通过后显示');
                             window.location.reload();
                         } else {
                             if (result.msg) {

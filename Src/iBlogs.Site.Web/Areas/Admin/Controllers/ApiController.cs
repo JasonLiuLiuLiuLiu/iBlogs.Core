@@ -2,7 +2,6 @@
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
-using iBlogs.Site.Core.Log;
 using iBlogs.Site.Core.Option.DTO;
 using iBlogs.Site.Core.Option.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -24,6 +23,8 @@ using iBlogs.Site.Core.Blog.Content.Service;
 using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Meta.DTO;
 using iBlogs.Site.Core.Blog.Meta.Service;
+using iBlogs.Site.Core.Log.Dto;
+using iBlogs.Site.Core.Log.Service;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Security.Service;
 using ConfigKey = iBlogs.Site.Core.Option.ConfigKey;
@@ -51,6 +52,14 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             _attachService = attachService;
             _optionService = optionService;
             _commentsService = commentsService;
+        }
+
+        [AdminApiRoute("logs")]
+        public ApiResponse<Page<LogResponse>> GetPageLogs([FromServices] ILogService logService, [FromQuery]PageParam pageParam)
+        {
+            if (pageParam == null)
+                pageParam = new PageParam();
+            return ApiResponse<Page<LogResponse>>.Ok(logService.GetPage(pageParam));
         }
 
         // @SysLog("删除页面")
@@ -178,7 +187,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         [AdminApiRoute("comments")]
-        public ApiResponse<Page<CommentResponse>> CommentList(CommentPageParam commentParam)
+        public ApiResponse<Page<CommentResponse>> CommentList([FromQuery]CommentPageParam commentParam)
         {
             if (commentParam == null)
                 commentParam = new CommentPageParam();
@@ -203,10 +212,18 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         }
 
         // @SysLog("回复评论")
-        // @PostRoute("comment/reply")
-        public ApiResponse ReplyComment(Comments comments)
+        [AdminApiRoute("comment/reply")]
+        public ApiResponse ReplyComment([FromBody]CommentRequest input)
         {
-            throw new NotImplementedException();
+            var comment = new Comments
+            {
+                Parent = input.Coid ?? 0,
+                Content = input.Content,
+                Ip = HttpContext.Connection.RemoteIpAddress.ToString(),
+                Agent = Request.Headers["User-Agent"].ToString()
+            };
+            _commentsService.Reply(comment);
+            return ApiResponse.Ok();
         }
 
         [AdminApiRoute("attaches")]

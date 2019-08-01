@@ -136,6 +136,32 @@ namespace iBlogs.Site.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BlogAsyncRelationships",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Created = table.Column<DateTime>(nullable: false),
+                    Deleted = table.Column<bool>(nullable: false),
+                    ContentId = table.Column<int>(nullable: false),
+                    Target = table.Column<int>(nullable: false),
+                    TargetPostId = table.Column<string>(nullable: true),
+                    SyncData = table.Column<DateTime>(nullable: false),
+                    Message = table.Column<string>(nullable: true),
+                    ExtensionProperty = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlogAsyncRelationships", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BlogAsyncRelationships_Contents_ContentId",
+                        column: x => x.ContentId,
+                        principalTable: "Contents",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new
                 {
@@ -203,6 +229,11 @@ namespace iBlogs.Site.Core.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BlogAsyncRelationships_ContentId",
+                table: "BlogAsyncRelationships",
+                column: "ContentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Comments_Cid",
                 table: "Comments",
                 column: "Cid");
@@ -227,6 +258,9 @@ namespace iBlogs.Site.Core.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Attachments");
+
+            migrationBuilder.DropTable(
+                name: "BlogAsyncRelationships");
 
             migrationBuilder.DropTable(
                 name: "Comments");

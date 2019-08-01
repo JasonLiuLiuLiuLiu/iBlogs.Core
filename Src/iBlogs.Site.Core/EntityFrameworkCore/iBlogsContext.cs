@@ -1,9 +1,9 @@
 ﻿using iBlogs.Site.Core.Blog.Attach;
 using iBlogs.Site.Core.Blog.Comment;
 using iBlogs.Site.Core.Blog.Content;
+using iBlogs.Site.Core.Blog.Extension;
 using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Relationship;
-using iBlogs.Site.Core.Log;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Security;
 using Microsoft.EntityFrameworkCore;
@@ -23,5 +23,6 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         public DbSet<Options> Options { get; set; }
         public DbSet<Relationships> Relationships { get; set; }
         public DbSet<Users> Users { get; set; }
+        public DbSet<BlogSyncRelationship> BlogAsyncRelationships { get; set; }
     }
 }

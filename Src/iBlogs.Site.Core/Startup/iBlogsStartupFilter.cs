@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using iBlogs.Site.Core.Blog.Extension;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Option.Service;
@@ -16,11 +17,16 @@ namespace iBlogs.Site.Core.Startup
     {
         public Action<IApplicationBuilder> Configure(Action<IApplicationBuilder> next)
         {
-            return app =>
+            return async app =>
             {
                 var configuration = ServiceFactory.GetService<IConfiguration>();
                 var option = ServiceFactory.GetService<IOptionService>();
                 var appLifetime = ServiceFactory.GetService<IApplicationLifetime>();
+                var blogSyncExtenstion = ServiceFactory.GetService<IEnumerable<IBlogsSyncExtension>>();
+                foreach (var extension in blogSyncExtenstion)
+                {
+                    await extension.InitializeSync();
+                }
 
                 if (configuration["DbInstalled"].ToBool())
                     option.Load();

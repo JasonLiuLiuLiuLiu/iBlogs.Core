@@ -33,6 +33,10 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
     <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\iBlogs.Site.MetaWeblog\iBlogs.Site.MetaWeblog.csproj" />
+  </ItemGroup>
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>

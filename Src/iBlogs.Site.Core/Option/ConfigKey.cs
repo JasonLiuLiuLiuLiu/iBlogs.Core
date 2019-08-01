@@ -42,6 +42,8 @@
         LoginErrorCount,
         [ConfigKey("每页显示的最大数量","100")]
         MaxPage,
+        [ConfigKey("每页显示的内容的大小", "20")]
+        PageSize,
         [ConfigKey("文章的最大字数", "2147483647")]
         MaxTextCount,
         [ConfigKey("标题最大字数","200")]
@@ -50,7 +52,7 @@
         MaxIntroCount,
         [ConfigKey("上传文件大小限制")]
         MaxFileSize,
-        [ConfigKey("限制ip列表(,)分隔,未生效")]
+        [ConfigKey("限制ip列表(,)分隔,该功能未生效")]
         BlockIpList,
         [ConfigKey("静态文件地址")]
         StaticUrl,
@@ -70,7 +72,17 @@
         [ConfigKey("Git提交者名称,该用户提交后Git钩子通知本系统不再重复处理","iBlogs")]
         GitCommitter,
         [ConfigKey("Git文章提交以该用户为作者","1")]
-        GitAuthorId
+        GitAuthorId,
+        [ConfigKey("是否同步到博客园","false")]
+        SyncToCnBlogs,
+        [ConfigKey("博客园同步开关","false")]
+        CnBlogsSyncSwitch,
+        [ConfigKey("博客园用户名")]
+        CnBlogsUserName,
+        [ConfigKey("博客园密码")]
+        CnBlogsPassword,
+        [ConfigKey("博客园同步地址", "https://www.cnblogs.com/coderayu/services/metaweblog.aspx")]
+        CnBlogsUrl,
     }
 
 

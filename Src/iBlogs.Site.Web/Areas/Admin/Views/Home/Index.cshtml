@@ -26,10 +26,14 @@
                         url: '/admin/api/logs',
                         data: {
                             page: page,
-                            limit: 8
+                            limit: 6
                         },
                         success: function (data) {
-                            $vm.logPage = data.payload
+                            if (!data.payload) {
+                                $vm.logPage = [];
+                            } else {
+                                $vm.logPage = data.payload;
+                            }
                         },
                         error: function (error) {
                             console.log(error);
@@ -38,6 +42,10 @@
                     });
                     tale.get({
                         url: '/admin/api/comments',
+                        data: {
+                            page: page,
+                            limit: 6
+                        },
                         success: function (data) {
                             if (!data.payload.rows) {
                                 $vm.comments = [];
@@ -200,15 +208,15 @@
                             <div class="panel-body">
                                 <ul class="list-group">
                                     <li class="list-group-item" v-for="item in logPage.rows">
-                                        <span>{{item.created | formatUnix}} &nbsp;&nbsp;<kbd>{{item.action}}</kbd></span>
+                                        <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
                                     </li>
                                 </ul>
                                 <ul class="pager">
                                     <li v-if="logPage.hasPrevPage">
-                                        <a click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                        <a  class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
                                     </li>
                                     <li v-if="logPage.hasNextPage">
-                                        <a click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                        <a  class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
                                     </li>
                                 </ul>
                             </div>

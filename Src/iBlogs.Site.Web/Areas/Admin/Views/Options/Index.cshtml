@@ -11,16 +11,14 @@
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>编号</th>
                                     <th style="text-align:center;" width="10%">Key</th>
                                     <th style="text-align:center;" width="30%">Value</th>
-                                    <th style="text-align:center;" width="30%">描述</th>
+                                    <th style="text-align:center;" width="40%">描述</th>
                                     <th style="text-align:center;">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="item in options">
-                                    <td style="text-align:center;">{{ item.id }}</td>
                                     <td style="text-align:center;">{{ item.key }}</td>
                                     <td style="text-align:center;">{{ item.value }}</td>
                                     <td style="text-align:center;">{{ item.description }}</td>

@@ -11,7 +11,6 @@ using iBlogs.Site.Core.Blog.Content.DTO;
 using iBlogs.Site.Core.Blog.Content.Service;
 using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Meta.Service;
-using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Security;
 using iBlogs.Site.Core.Security.Service;
 using Microsoft.AspNetCore.Hosting;
