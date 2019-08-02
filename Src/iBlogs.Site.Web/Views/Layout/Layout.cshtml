@@ -209,5 +209,18 @@
             gtag('config', '@ViewService.SiteOption(ConfigKey.GoogleAnalyticId)');
         </script>
     }
+    @if (!ViewService.SiteOption(ConfigKey.BaiDuTongJiId).IsNullOrWhiteSpace())
+    {
+        <script>
+            var _hmt = _hmt || [];
+            (function() {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?@ViewService.SiteOption(ConfigKey.BaiDuTongJiId)";
+                var s = document.getElementsByTagName("script")[0]; 
+                s.parentNode.insertBefore(hm, s);
+            })();
+        </script>
+
+    }
 </body>
 </html>

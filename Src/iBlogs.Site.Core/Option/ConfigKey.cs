@@ -84,7 +84,9 @@
         [ConfigKey("博客园同步地址", "https://www.cnblogs.com/coderayu/services/metaweblog.aspx")]
         CnBlogsUrl,
         [ConfigKey("谷歌站点统计跟踪Id,https://analytics.google.com")]
-        GoogleAnalyticId
+        GoogleAnalyticId,
+        [ConfigKey("百度统计Id,https://tongji.baidu.com")]
+        BaiDuTongJiId
     }
 
 
