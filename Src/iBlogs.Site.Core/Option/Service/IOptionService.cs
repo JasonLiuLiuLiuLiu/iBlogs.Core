@@ -10,5 +10,6 @@ namespace iBlogs.Site.Core.Option.Service
         void Set(ConfigKey key, string value, string description = null);
         string Get(ConfigKey key, string defaultValue = null);
         List<OptionParam> GetAll();
+        List<OptionParam> GetEditable();
     }
 }

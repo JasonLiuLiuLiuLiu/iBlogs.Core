@@ -54,6 +54,17 @@ namespace iBlogs.Site.Core.Option.Service
             }).OrderBy(u=>u.Key).ToList();
         }
 
+        public List<OptionParam> GetEditable()
+        {
+            return _repository.GetAll().Where(u=>u.Editable).Select(u => new OptionParam
+            {
+                Id = u.Id,
+                Key = u.Name,
+                Value = u.Value,
+                Description = u.Description
+            }).OrderBy(u => u.Key).ToList();
+        }
+
         public void Set(ConfigKey key, string value, string description = null)
         {
             var entity = _repository.GetAll().FirstOrDefault(o => o.Name == key.ToString());
@@ -98,7 +109,7 @@ namespace iBlogs.Site.Core.Option.Service
                 var update = false;
                 if (exist == null)
                 {
-                    _repository.Insert(new Options { Name = attribute.Key.ToString(), Value = attribute.Value, Description = attribute.Description });
+                    _repository.Insert(new Options { Name = attribute.Key, Value = attribute.Value, Description = attribute.Description,Editable = attribute.Editable});
                     continue;
                 }
 
@@ -116,6 +127,12 @@ namespace iBlogs.Site.Core.Option.Service
                     update = true;
                 }
 
+                if (exist.Editable != attribute.Editable)
+                {
+                    exist.Editable = attribute.Editable;
+                    update = true;
+                }
+
                 if (update)
                 {
                     var entity = _repository.GetAll().FirstOrDefault(o => o.Name == exist.Key.ToString());
@@ -124,6 +141,7 @@ namespace iBlogs.Site.Core.Option.Service
                         entity.Value = exist.Value;
                         if (!exist.Description.IsNullOrWhiteSpace())
                             entity.Description = exist.Description;
+                        entity.Editable = exist.Editable;
                         _repository.Update(entity);
                     }
                 }

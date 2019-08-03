@@ -277,6 +277,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             return ApiResponse<List<OptionParam>>.Ok(_optionService.GetAll());
         }
 
+        [AdminApiRoute("options/editable")]
+        public ApiResponse<List<OptionParam>> OptionsEditable()
+        {
+            return ApiResponse<List<OptionParam>>.Ok(_optionService.GetEditable());
+        }
+
         [AdminApiRoute("options/update")]
         public ApiResponse OptionUpdate(OptionParam option)
         {
