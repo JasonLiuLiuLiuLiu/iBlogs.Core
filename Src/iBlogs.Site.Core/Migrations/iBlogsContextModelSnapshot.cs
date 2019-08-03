@@ -160,7 +160,7 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.HasIndex("ContentId");
 
-                    b.ToTable("BlogAsyncRelationships");
+                    b.ToTable("BlogSyncRelationships");
                 });
 
             modelBuilder.Entity("iBlogs.Site.Core.Blog.Meta.Metas", b =>
@@ -226,6 +226,8 @@ namespace iBlogs.Site.Core.Migrations
                     b.Property<bool>("Deleted");
 
                     b.Property<string>("Description");
+
+                    b.Property<bool>("Editable");
 
                     b.Property<string>("Name");
 
