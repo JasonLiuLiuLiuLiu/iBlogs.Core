@@ -6,17 +6,18 @@
             el: '#app',
             data: {
                 logPage: {},
-                comments: [],
+                options: {},
                 isLoading: true
             },
             beforeCreate: function () {
                 vueLoding = this.$loading.show();
             },
             mounted: function () {
-                this.load(1);
+                this.load();
+                this.loadLog(1);
             },
             methods: {
-                load: function (page) {
+                loadLog: function (page) {
                     var $vm = this;
                     tale.get({
                         url: '/admin/api/logs',
@@ -34,6 +35,40 @@
                         error: function (error) {
                             console.log(error);
                             alert(error || '数据加载失败');
+                        }
+                    });
+                },
+                load: function () {
+                    var $vm = this;
+                    tale.get({
+                        url: '/admin/api/options',
+                        success: function (data) {
+                            $vm.options = data.payload;
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            alert(error || '数据加载失败');
+                        }
+                    });
+                },
+                saveSetting: function() {
+                    var $vm = this;
+                    tale.postWithForm({
+                        url: '/admin/api/options/save',
+                        data: {
+                            siteUrl:$vm.options.siteUrl,
+                            siteTitle:$vm.options.siteTitle,
+                            siteSubtitle:$vm.options.siteSubtitle,
+                            description:$vm.options.description,
+                            keywords:$vm.options.keywords
+                        },
+                        success: function(result) {
+                            if (result && result.success) {
+                                tale.alertOk('设置保存成功');
+                                $vm.load();
+                            } else {
+                                tale.alertError(result.msg || '保存失败');
+                            }
                         }
                     });
                 }
@@ -63,7 +98,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mini-stat clearfix bx-shadow bg-info">
-                                <a href="/admin/article" class="text-white">
+                                <a href="#" class="text-white">
                                     <span class="mini-stat-icon"><i class="fa fa-bell-o" aria-hidden="true"></i></span>
                                 </a>
                                 <div class="mini-stat-info text-right">
@@ -73,7 +108,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="mini-stat clearfix bg-purple bx-shadow">
-                                <a href="/admin/comments" class="text-white">
+                                <a href="#" class="text-white">
                                     <span class="mini-stat-icon"><i class="fa fa-check" aria-hidden="true"></i></span>
                                 </a>
                                 <div class="mini-stat-info text-right">
@@ -84,7 +119,7 @@
 
                         <div class="col-md-4">
                             <div class="mini-stat clearfix bg-success bx-shadow">
-                                <a href="/admin/attaches" class="text-white">
+                                <a href="#" class="text-white">
                                     <span class="mini-stat-icon"><i class="fa fa-times" aria-hidden="true"></i></span>
                                 </a>
                                 <div class="mini-stat-info text-right">
@@ -95,29 +130,55 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">系统日志</h4>
+                                    <h4 class="panel-title">同步信息配置</h4>
                                 </div>
                                 <div class="panel-body">
-                                    <ul class="list-group">
-                                        <li class="list-group-item" v-for="item in logPage.rows">
-                                            <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
-                                        </li>
-                                    </ul>
-                                    <ul class="pager">
-                                        <li v-if="logPage.hasPrevPage">
-                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
-                                        </li>
-                                        <li v-if="logPage.hasNextPage">
-                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
-                                        </li>
-                                    </ul>
+                                    <form class="form-horizontal" role="form" id="global-form">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">网站地址</label>
+                                            <div class="col-md-9">
+                                                <input type="text" v-model="options.siteUrl" class="form-control" placeholder="网站地址" required aria-required="true" />
+                                                <span class="help-block"><small>请和你当前访问的域名保持一致，否则会出现渲染错误。</small></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">站点标题</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" v-model="options.siteTitle" placeholder="站点子标题" required aria-required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">站点子标题</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" v-model="options.siteSubtitle" placeholder="站点子标题" required aria-required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">站点描述</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" v-model="options.description" placeholder="站点描述" required aria-required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">站点关键词</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" v-model="options.keywords" placeholder="站点关键词" required aria-required="true" />
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix pull-right">
+                                            <button type="button" class="btn btn-inverse waves-effect waves-light" v-on:click="saveSetting">
+                                                保存设置
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">系统日志</h4>
@@ -130,32 +191,10 @@
                                     </ul>
                                     <ul class="pager">
                                         <li v-if="logPage.hasPrevPage">
-                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                            <a class="btn" v-on:click="loadLog(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
                                         </li>
                                         <li v-if="logPage.hasNextPage">
-                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">系统日志</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <ul class="list-group">
-                                        <li class="list-group-item" v-for="item in logPage.rows">
-                                            <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
-                                        </li>
-                                    </ul>
-                                    <ul class="pager">
-                                        <li v-if="logPage.hasPrevPage">
-                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
-                                        </li>
-                                        <li v-if="logPage.hasNextPage">
-                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                            <a class="btn" v-on:click="loadLog(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -209,29 +248,55 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">系统日志</h4>
+                                    <h4 class="panel-title">同步信息配置</h4>
                                 </div>
                                 <div class="panel-body">
-                                    <ul class="list-group">
-                                        <li class="list-group-item" v-for="item in logPage.rows">
-                                            <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
-                                        </li>
-                                    </ul>
-                                    <ul class="pager">
-                                        <li v-if="logPage.hasPrevPage">
-                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
-                                        </li>
-                                        <li v-if="logPage.hasNextPage">
-                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
-                                        </li>
-                                    </ul>
+                                    <form class="form-horizontal" role="form" id="global-form">
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">网站地址</label>
+                                            <div class="col-md-9">
+                                                <input type="text" v-model="options.siteUrl" class="form-control" placeholder="网站地址" required aria-required="true" />
+                                                <span class="help-block"><small>请和你当前访问的域名保持一致，否则会出现渲染错误。</small></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">站点标题</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" v-model="options.siteTitle" placeholder="站点子标题" required aria-required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">站点子标题</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" v-model="options.siteSubtitle" placeholder="站点子标题" required aria-required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">站点描述</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" v-model="options.description" placeholder="站点描述" required aria-required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">站点关键词</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" v-model="options.keywords" placeholder="站点关键词" required aria-required="true" />
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix pull-right">
+                                            <button type="button" class="btn btn-inverse waves-effect waves-light" v-on:click="saveSetting">
+                                                保存设置
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <h4 class="panel-title">系统日志</h4>
@@ -244,32 +309,10 @@
                                     </ul>
                                     <ul class="pager">
                                         <li v-if="logPage.hasPrevPage">
-                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                            <a class="btn" v-on:click="loadLog(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
                                         </li>
                                         <li v-if="logPage.hasNextPage">
-                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title">系统日志</h4>
-                                </div>
-                                <div class="panel-body">
-                                    <ul class="list-group">
-                                        <li class="list-group-item" v-for="item in logPage.rows">
-                                            <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
-                                        </li>
-                                    </ul>
-                                    <ul class="pager">
-                                        <li v-if="logPage.hasPrevPage">
-                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
-                                        </li>
-                                        <li v-if="logPage.hasNextPage">
-                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                            <a class="btn" v-on:click="loadLog(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
                                         </li>
                                     </ul>
                                 </div>
