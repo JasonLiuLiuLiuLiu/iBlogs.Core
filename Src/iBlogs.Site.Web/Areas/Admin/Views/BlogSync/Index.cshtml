@@ -1,19 +1,288 @@
-﻿
+﻿@section scripts
+{
+    <script>
+        var tale = new $.tale();
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                logPage: {},
+                comments: [],
+                isLoading: true
+            },
+            beforeCreate: function () {
+                vueLoding = this.$loading.show();
+            },
+            mounted: function () {
+                this.load(1);
+            },
+            methods: {
+                load: function (page) {
+                    var $vm = this;
+                    tale.get({
+                        url: '/admin/api/logs',
+                        data: {
+                            page: page,
+                            limit: 6
+                        },
+                        success: function (data) {
+                            if (!data.payload) {
+                                $vm.logPage = [];
+                            } else {
+                                $vm.logPage = data.payload;
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            alert(error || '数据加载失败');
+                        }
+                    });
+                }
+            }
+        });
+
+        $(document).ready(function () {
+            vm.isLoading = false;
+            vueLoding.hide();
+        });
+    </script>
+}
+
 <ul id="myTab" class="nav nav-tabs">
     <li class="active"><a href="#github" data-toggle="tab">Github</a></li>
     <li><a href="#CnBlogs" data-toggle="tab">博客园</a></li>
+    <li><a href="#CAP" data-toggle="tab">CAP</a></li>
 </ul>
-<div id="myTabContent" class="tab-content">
-    <div class="tab-pane fade in active" id="github">
-        <p>
-            iOS 是一个由苹果公司开发和发布的手机操作系统。最初是于 2007 年首次发布 iPhone、iPod Touch 和 Apple
-            TV。iOS 派生自 OS X，它们共享 Darwin 基础。OS X 操作系统是用在苹果电脑上，iOS 是苹果的移动版本。
-        </p>
+<div id="app" class="tab-content" style="margin: 0;padding: 0;">
+    <div id="github" class="row tab-pane fade in active" v-cloak>
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Github仪表盘</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mini-stat clearfix bx-shadow bg-info">
+                                <a href="/admin/article" class="text-white">
+                                    <span class="mini-stat-icon"><i class="fa fa-bell-o" aria-hidden="true"></i></span>
+                                </a>
+                                <div class="mini-stat-info text-right">
+                                    接收到了<span class="counter">3</span>条通知
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mini-stat clearfix bg-purple bx-shadow">
+                                <a href="/admin/comments" class="text-white">
+                                    <span class="mini-stat-icon"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                </a>
+                                <div class="mini-stat-info text-right">
+                                    成功处理了<span class="counter">3</span>篇文章
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mini-stat clearfix bg-success bx-shadow">
+                                <a href="/admin/attaches" class="text-white">
+                                    <span class="mini-stat-icon"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                </a>
+                                <div class="mini-stat-info text-right">
+                                    处理失败<span class="counter">3</span>篇文章
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">系统日志</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="item in logPage.rows">
+                                            <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
+                                        </li>
+                                    </ul>
+                                    <ul class="pager">
+                                        <li v-if="logPage.hasPrevPage">
+                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                        </li>
+                                        <li v-if="logPage.hasNextPage">
+                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">系统日志</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="item in logPage.rows">
+                                            <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
+                                        </li>
+                                    </ul>
+                                    <ul class="pager">
+                                        <li v-if="logPage.hasPrevPage">
+                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                        </li>
+                                        <li v-if="logPage.hasNextPage">
+                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">系统日志</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="item in logPage.rows">
+                                            <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
+                                        </li>
+                                    </ul>
+                                    <ul class="pager">
+                                        <li v-if="logPage.hasPrevPage">
+                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                        </li>
+                                        <li v-if="logPage.hasNextPage">
+                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="tab-pane fade" id="CnBlogs">
-        <p>
-            iOS 是一个由苹果公司开发和发布的手机操作系统。最初是于 2007 年首次发布 iPhone、iPod Touch 和 Apple
-            TV。iOS 派生自 OS X，它们共享 Darwin 基础。OS X 操作系统是用在苹果电脑上，iOS 是苹果的移动版本。
-        </p>
+    <div class="row tab-pane fade in" id="CnBlogs">
+        <div class="col-lg-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">博客园仪表盘</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mini-stat clearfix bx-shadow bg-info">
+                                <a href="/admin/article" class="text-white">
+                                    <span class="mini-stat-icon"><i class="fa fa-bell-o" aria-hidden="true"></i></span>
+                                </a>
+                                <div class="mini-stat-info text-right">
+                                    接收到了<span class="counter">3</span>条通知
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mini-stat clearfix bg-purple bx-shadow">
+                                <a href="/admin/comments" class="text-white">
+                                    <span class="mini-stat-icon"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                </a>
+                                <div class="mini-stat-info text-right">
+                                    成功处理了<span class="counter">3</span>篇文章
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="mini-stat clearfix bg-success bx-shadow">
+                                <a href="/admin/attaches" class="text-white">
+                                    <span class="mini-stat-icon"><i class="fa fa-times" aria-hidden="true"></i></span>
+                                </a>
+                                <div class="mini-stat-info text-right">
+                                    处理失败<span class="counter">3</span>篇文章
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">系统日志</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="item in logPage.rows">
+                                            <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
+                                        </li>
+                                    </ul>
+                                    <ul class="pager">
+                                        <li v-if="logPage.hasPrevPage">
+                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                        </li>
+                                        <li v-if="logPage.hasNextPage">
+                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">系统日志</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="item in logPage.rows">
+                                            <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
+                                        </li>
+                                    </ul>
+                                    <ul class="pager">
+                                        <li v-if="logPage.hasPrevPage">
+                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                        </li>
+                                        <li v-if="logPage.hasNextPage">
+                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title">系统日志</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item" v-for="item in logPage.rows">
+                                            <span>{{item.timestamp | formatUnix}} &nbsp;&nbsp;Level:{{item.level}}<br />{{item.message}}</span>
+                                        </li>
+                                    </ul>
+                                    <ul class="pager">
+                                        <li v-if="logPage.hasPrevPage">
+                                            <a class="btn" v-on:click="load(logPage.prevPage)"> <i class="fa fa-angle-double-left"></i> 上一页</a>
+                                        </li>
+                                        <li v-if="logPage.hasNextPage">
+                                            <a class="btn" v-on:click="load(logPage.nextPage)">下一页 <i class="fa fa-angle-double-right"></i> </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+    <iframe class="row tab-pane fade in" id="CAP" src="/cap" style="width: 100%;height:740px" frameborder="0"></iframe>
 </div>
+
+
+
