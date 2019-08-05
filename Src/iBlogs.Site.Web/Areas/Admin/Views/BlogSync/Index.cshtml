@@ -83,16 +83,16 @@
 }
 
 <ul id="myTab" class="nav nav-tabs">
-    <li class="active"><a href="#github" data-toggle="tab">Github</a></li>
+    <li class="active"><a href="#git" data-toggle="tab">Git</a></li>
     <li><a href="#CnBlogs" data-toggle="tab">博客园</a></li>
     <li><a href="#CAP" data-toggle="tab">CAP</a></li>
 </ul>
 <div id="app" class="tab-content" style="margin: 0;padding: 0;">
-    <div id="github" class="row tab-pane fade in active" v-cloak>
+    <div id="git" class="row tab-pane fade in active" v-cloak>
         <div class="col-lg-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Github仪表盘</h3>
+                    <h3 class="panel-title">Git同步仪表盘</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -133,39 +133,45 @@
                         <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">同步信息配置</h4>
+                                    <h4 class="panel-title">同步配置</h4>
                                 </div>
                                 <div class="panel-body">
-                                    <form class="form-horizontal" role="form" id="global-form">
+                                    <form class="form-horizontal" role="form">
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">网站地址</label>
+                                            <label class="col-md-3 control-label">Git仓库地址</label>
                                             <div class="col-md-9">
-                                                <input type="text" v-model="options.siteUrl" class="form-control" placeholder="网站地址" required aria-required="true" />
-                                                <span class="help-block"><small>请和你当前访问的域名保持一致，否则会出现渲染错误。</small></span>
+                                                <input type="text" v-model="options.GitProjectCloneUrl" class="form-control" placeholder="Git仓库地址" required aria-required="true" />
+                                                <span class="help-block"><small>设置该地址后请配置该仓库的Web hooks指向https://域名/admin/git</small></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">站点标题</label>
+                                            <label class="col-md-3 control-label">Git钩子暗号</label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" v-model="options.siteTitle" placeholder="站点子标题" required aria-required="true" />
+                                                <input type="text" class="form-control" v-model="options.GitWebHookSecret" placeholder="Git Web hooks Secret" required aria-required="true" />
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">站点子标题</label>
+                                            <label class="col-md-3 control-label">Git用户名</label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" v-model="options.siteSubtitle" placeholder="站点子标题" required aria-required="true" />
+                                                <input type="text" class="form-control" v-model="options.GitUerName" placeholder="Git用户名" required aria-required="true" />
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">站点描述</label>
+                                            <label class="col-md-3 control-label">Git密码</label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" v-model="options.description" placeholder="站点描述" required aria-required="true" />
+                                                <input type="text" class="form-control" v-model="options.GitPassword" placeholder="Git密码" required aria-required="true" />
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">站点关键词</label>
+                                            <label class="col-md-3 control-label">Git提交者名称</label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" v-model="options.keywords" placeholder="站点关键词" required aria-required="true" />
+                                                <input type="text" class="form-control" v-model="options.GitCommitter" placeholder="该用户提交后Git钩子通知本系统不再重复处理" required aria-required="true" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label">Git作者Id</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" v-model="options.GitAuthorId" placeholder="该用户Id是本系统的用户Id,默认为1" required aria-required="true" />
                                             </div>
                                         </div>
 
@@ -181,7 +187,7 @@
                         <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">系统日志</h4>
+                                    <h4 class="panel-title">同步记录</h4>
                                 </div>
                                 <div class="panel-body">
                                     <ul class="list-group">
@@ -210,7 +216,7 @@
         <div class="col-lg-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">博客园仪表盘</h3>
+                    <h3 class="panel-title">博客园同步仪表盘</h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -299,7 +305,7 @@
                         <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">系统日志</h4>
+                                    <h4 class="panel-title">同步记录</h4>
                                 </div>
                                 <div class="panel-body">
                                     <ul class="list-group">
