@@ -20,6 +20,8 @@ using iBlogs.Site.Core.Blog.Comment.Service;
 using iBlogs.Site.Core.Blog.Content;
 using iBlogs.Site.Core.Blog.Content.DTO;
 using iBlogs.Site.Core.Blog.Content.Service;
+using iBlogs.Site.Core.Blog.Extension;
+using iBlogs.Site.Core.Blog.Extension.Dto;
 using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Meta.DTO;
 using iBlogs.Site.Core.Blog.Meta.Service;
@@ -132,6 +134,13 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             articleParam.Page--;
             var articles = _contentsService.FindArticles(articleParam);
             return ApiResponse<Page<ContentResponse>>.Ok(articles);
+        }
+
+        [AdminApiRoute("article/sync")]
+        public ApiResponse ArticleSync([FromServices]IBlogSyncService syncService, [FromBody]BlogSyncRequest request)
+        {
+            syncService.Publish(request);
+            return ApiResponse.Ok();
         }
 
         [AdminApiRoute("pages")]

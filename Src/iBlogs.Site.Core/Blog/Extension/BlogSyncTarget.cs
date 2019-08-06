@@ -3,6 +3,8 @@
     public enum BlogSyncTarget
     {
         All,
-        CnBlogs
+        CnBlogs,
+        CSDN,
+        WeChart
     }
 }

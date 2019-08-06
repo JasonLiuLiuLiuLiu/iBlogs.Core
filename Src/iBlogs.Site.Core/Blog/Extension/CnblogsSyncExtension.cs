@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace iBlogs.Site.Core.Blog.Extension
 {
-    public class CnBlogsSyncExtension : IBlogsSyncExtension
+    public class CnBlogsSyncExtension : IBlogsSyncExtension,ICapSubscribe
     {
         private readonly IOptionService _optionService;
         private readonly IRepository<BlogSyncRelationship> _repository;
@@ -29,6 +30,8 @@ namespace iBlogs.Site.Core.Blog.Extension
             _categoryInfos = new Lazy<List<CategoryInfo>>(() => _cnBlogsWrapper.GetCategories().ToList());
         }
 
+        [CapSubscribe("iBlogs.Site.Core.Blog.Sync.CnBlogs")]
+        [CapSubscribe("iBlogs.Site.Core.Blog.Sync.All")]
         public async Task Sync(BlogSyncContext context)
         {
             if (context.Target != BlogSyncTarget.All || context.Target != BlogSyncTarget.CnBlogs)

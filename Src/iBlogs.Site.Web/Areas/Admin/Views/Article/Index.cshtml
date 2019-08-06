@@ -187,22 +187,34 @@
                 sync: function (cid) {
                     bootbox.prompt({
                         title: "This is a prompt with a set of checkbox inputs!",
-                        value: ['1', '3'],
                         inputType: 'checkbox',
                         inputOptions: [{
-                                text: 'Choice One',
-                                value: '1',
+                                text: '博客园',
+                                value: 'CnBlogs'
                             },
                             {
-                                text: 'Choice Two',
-                                value: '2',
+                                text: 'CSDN',
+                                value: 'CSDN'
                             },
                             {
-                                text: 'Choice Three',
-                                value: '3',
+                                text: '微信公众号',
+                                value: 'WeChart'
                             }],
                         callback: function (result) {
-                            console.log(result);
+                            tale.post({
+                                url: '/admin/api/article/sync',
+                                data: {
+                                    cid: cid,
+                                    targets:result
+                                },
+                                success: function (result) {
+                                    if (result && result.success) {
+                                        tale.alertOk('同步请求发送成功');
+                                    } else {
+                                        tale.alertError(result.msg || '同步请求发送失败');
+                                    }
+                                }
+                            });
                         }
                     });
                 }
