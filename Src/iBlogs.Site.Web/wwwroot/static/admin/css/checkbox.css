@@ -1,0 +1,123 @@
+﻿.checkbox {
+    padding-left: 20px
+}
+
+    .checkbox label {
+        display: inline-block;
+        padding-left: 5px;
+        position: relative
+    }
+
+        .checkbox label::before {
+            -o-transition: .3s ease-in-out;
+            -webkit-transition: .3s ease-in-out;
+            background-color: #fff;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            content: "";
+            display: inline-block;
+            height: 17px;
+            left: 0;
+            margin-left: -20px;
+            position: absolute;
+            transition: .3s ease-in-out;
+            width: 17px;
+            outline: none !important
+        }
+
+        .checkbox label::after {
+            color: #555;
+            display: inline-block;
+            font-size: 11px;
+            height: 16px;
+            left: 0;
+            margin-left: -20px;
+            padding-left: 3px;
+            padding-top: 1px;
+            position: absolute;
+            top: 0;
+            width: 16px
+        }
+
+    .checkbox input[type="checkbox"] {
+        cursor: pointer;
+        opacity: 0;
+        z-index: 1;
+        outline: none !important
+    }
+
+        .checkbox input[type="checkbox"]:disabled + label {
+            opacity: .65
+        }
+
+        .checkbox input[type="checkbox"]:focus + label::before {
+            outline-offset: -2px;
+            outline: none
+        }
+
+        .checkbox input[type="checkbox"]:checked + label::after {
+            content: "\f00c";
+            font-family: 'FontAwesome'
+        }
+
+        .checkbox input[type="checkbox"]:disabled + label::before {
+            background-color: #eee;
+            cursor: not-allowed
+        }
+
+    .checkbox.checkbox-circle label::before {
+        border-radius: 50%
+    }
+
+    .checkbox.checkbox-inline {
+        margin-top: 0
+    }
+
+    .checkbox.checkbox-single label {
+        height: 17px
+    }
+
+.checkbox-primary input[type="checkbox"]:checked + label::before {
+    background-color: #6e8cd7;
+    border-color: #6e8cd7
+}
+
+.checkbox-primary input[type="checkbox"]:checked + label::after {
+    color: #fff
+}
+
+.checkbox-danger input[type="checkbox"]:checked + label::before {
+    background-color: #ef5350;
+    border-color: #ef5350
+}
+
+.checkbox-danger input[type="checkbox"]:checked + label::after {
+    color: #fff
+}
+
+.checkbox-info input[type="checkbox"]:checked + label::before {
+    background-color: #29b6f6;
+    border-color: #29b6f6
+}
+
+.checkbox-info input[type="checkbox"]:checked + label::after {
+    color: #fff
+}
+
+.checkbox-warning input[type="checkbox"]:checked + label::before {
+    background-color: #ffd740;
+    border-color: #ffd740
+}
+
+.checkbox-warning input[type="checkbox"]:checked + label::after {
+    color: #fff
+}
+
+.checkbox-success input[type="checkbox"]:checked + label::before {
+    background-color: #33b86c;
+    border-color: #33b86c
+}
+
+.checkbox-success input[type="checkbox"]:checked + label::after {
+    color: #fff
+}
