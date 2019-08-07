@@ -51,18 +51,24 @@
                         }
                     });
                 },
-                saveSetting: function() {
+                saveGitSetting: function () {
+                    var $vm = this;
+                    var data = {
+                        gitProjectCloneUrl:$vm.options.gitProjectCloneUrl,
+                        gitWebHookSecret:$vm.options.gitWebHookSecret,
+                        gitUerName:$vm.options.gitUerName,
+                        gitPassword:$vm.options.gitPassword,
+                        gitCommitter:$vm.options.gitCommitter,
+                        gitAuthorId:$vm.options.gitAuthorId
+                    };
+                    $vm.saveSetting(data);
+                },
+                saveSetting: function (data) {
                     var $vm = this;
                     tale.postWithForm({
                         url: '/admin/api/options/save',
-                        data: {
-                            siteUrl:$vm.options.siteUrl,
-                            siteTitle:$vm.options.siteTitle,
-                            siteSubtitle:$vm.options.siteSubtitle,
-                            description:$vm.options.description,
-                            keywords:$vm.options.keywords
-                        },
-                        success: function(result) {
+                        data: data,
+                        success: function (result) {
                             if (result && result.success) {
                                 tale.alertOk('设置保存成功');
                                 $vm.load();
@@ -140,43 +146,43 @@
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Git仓库地址</label>
                                             <div class="col-md-9">
-                                                <input type="text" v-model="options.GitProjectCloneUrl" class="form-control" placeholder="Git仓库地址" required aria-required="true" />
+                                                <input type="text" v-model="options.gitProjectCloneUrl" class="form-control" placeholder="Git仓库地址" required aria-required="true" />
                                                 <span class="help-block"><small>设置该地址后请配置该仓库的Web hooks指向https://域名/admin/git</small></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Git钩子暗号</label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" v-model="options.GitWebHookSecret" placeholder="Git Web hooks Secret" required aria-required="true" />
+                                                <input type="text" class="form-control" v-model="options.gitWebHookSecret" placeholder="Git Web hooks Secret" required aria-required="true" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Git用户名</label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" v-model="options.GitUerName" placeholder="Git用户名" required aria-required="true" />
+                                                <input type="text" class="form-control" v-model="options.gitUerName" placeholder="Git用户名" required aria-required="true" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Git密码</label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" v-model="options.GitPassword" placeholder="Git密码" required aria-required="true" />
+                                                <input type="text" class="form-control" v-model="options.gitPassword" placeholder="Git密码" required aria-required="true" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Git提交者名称</label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" v-model="options.GitCommitter" placeholder="该用户提交后Git钩子通知本系统不再重复处理" required aria-required="true" />
+                                                <input type="text" class="form-control" v-model="options.gitCommitter" placeholder="该用户提交后Git钩子通知本系统不再重复处理" required aria-required="true" />
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Git作者Id</label>
                                             <div class="col-md-9">
-                                                <input type="text" class="form-control" v-model="options.GitAuthorId" placeholder="该用户Id是本系统的用户Id,默认为1" required aria-required="true" />
+                                                <input type="text" class="form-control" v-model="options.gitAuthorId" placeholder="该用户Id是本系统的用户Id,默认为1" required aria-required="true" />
                                             </div>
                                         </div>
 
                                         <div class="clearfix pull-right">
-                                            <button type="button" class="btn btn-inverse waves-effect waves-light" v-on:click="saveSetting">
+                                            <button type="button" class="btn btn-inverse waves-effect waves-light" v-on:click="saveGitSetting">
                                                 保存设置
                                             </button>
                                         </div>
