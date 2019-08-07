@@ -73,8 +73,6 @@
         GitCommitter,
         [ConfigKey("Git文章提交以该用户为作者","1")]
         GitAuthorId,
-        [ConfigKey("是否同步到博客园","false")]
-        SyncToCnBlogs,
         [ConfigKey("博客园同步开关","false")]
         CnBlogsSyncSwitch,
         [ConfigKey("博客园用户名")]
