@@ -34,7 +34,7 @@ namespace iBlogs.Site.Core.Blog.Extension
         [CapSubscribe("iBlogs.Site.Core.Blog.Sync.All")]
         public async Task Sync(BlogSyncContext context)
         {
-            if (context.Target != BlogSyncTarget.All || context.Target != BlogSyncTarget.CnBlogs)
+            if (context.Target != BlogSyncTarget.All && context.Target != BlogSyncTarget.CnBlogs)
                 return;
 
             if (!_optionService.Get(ConfigKey.CnBlogsSyncSwitch, "false").ToBool())
