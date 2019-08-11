@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using iBlogs.Site.Core.Blog.Extension.Dto;
 
 namespace iBlogs.Site.Core.Blog.Extension
 {
@@ -6,5 +7,6 @@ namespace iBlogs.Site.Core.Blog.Extension
     {
          Task Sync(BlogSyncContext context);
          Task InitializeSync();
+         BlogExtensionDashboardResponse GetDashBoardData();
     }
 }

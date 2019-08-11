@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotNetCore.CAP;
+using iBlogs.Site.Core.Blog.Extension.Dto;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option;
@@ -14,13 +15,13 @@ using Microsoft.Extensions.Logging;
 
 namespace iBlogs.Site.Core.Blog.Extension
 {
-    public class CnBlogsSyncExtension : IBlogsSyncExtension,ICapSubscribe
+    public class CnBlogsSyncExtension : IBlogsSyncExtension, ICapSubscribe
     {
         private readonly IOptionService _optionService;
         private readonly IRepository<BlogSyncRelationship> _repository;
         private readonly ILogger<CnBlogsSyncExtension> _logger;
         private ICnBlogsWrapper _cnBlogsWrapper;
-        private Lazy<List<CategoryInfo>> _categoryInfos;
+        private readonly Lazy<List<CategoryInfo>> _categoryInfos;
 
         public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogSyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger)
         {
@@ -72,6 +73,28 @@ namespace iBlogs.Site.Core.Blog.Extension
         public async Task InitializeSync()
         {
             await Task.CompletedTask;
+        }
+
+        public BlogExtensionDashboardResponse GetDashBoardData()
+        {
+            var allResponse = _repository.GetAllIncluding(u => u.Content).Where(u => u.Target == BlogSyncTarget.CnBlogs)
+                .Select(r => new BlogExtensionContentResponse
+                {
+                    ContentId = r.ContentId,
+                    ContentTitle = r.Content.Title,
+                    ExtensionProperty = r.ExtensionProperty,
+                    Message = r.Message,
+                    Id = r.Id,
+                    SyncData = r.SyncData,
+                    Target = r.Target,
+                    TargetPostId = r.TargetPostId,
+                    Successful = r.Successful
+                });
+            return new BlogExtensionDashboardResponse
+            {
+                Successful = allResponse.Where(u => u.Successful).ToArray(),
+                Failed = allResponse.Where(u => !u.Successful).ToArray()
+            };
         }
 
         private async Task AddOrUpdate(BlogSyncContext context)
