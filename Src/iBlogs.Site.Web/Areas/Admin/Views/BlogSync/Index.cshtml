@@ -9,15 +9,15 @@
                 options: {},
                 isLoading: true
             },
-            beforeCreate: function () {
+            beforeCreate: function() {
                 vueLoding = this.$loading.show();
             },
-            mounted: function () {
+            mounted: function() {
                 this.load();
                 this.loadLog(1);
             },
             methods: {
-                loadLog: function (page) {
+                loadLog: function(page) {
                     var $vm = this;
                     tale.get({
                         url: '/admin/api/logs',
@@ -25,43 +25,64 @@
                             page: page,
                             limit: 6
                         },
-                        success: function (data) {
+                        success: function(data) {
                             if (!data.payload) {
                                 $vm.logPage = [];
                             } else {
                                 $vm.logPage = data.payload;
                             }
                         },
-                        error: function (error) {
+                        error: function(error) {
                             console.log(error);
                             alert(error || '数据加载失败');
                         }
                     });
                 },
-                load: function () {
+                load: function() {
                     var $vm = this;
                     tale.get({
                         url: '/admin/api/options',
-                        success: function (data) {
+                        success: function(data) {
                             $vm.options = data.payload;
                         },
-                        error: function (error) {
+                        error: function(error) {
                             console.log(error);
                             alert(error || '数据加载失败');
                         }
                     });
                 },
-                saveCnBlogsSetting: function () {
+                downloadFromCnBlogs: function() {
+                    tale.alertConfirm({
+                        title: '确定从博客园拉取所有文章吗?',
+                        then: function() {
+                            tale.post({
+                                url: '/admin/api/article/sync',
+                                data: {
+                                    targets: ['CnBlogs'],
+                                    method:'download'
+                                },
+                                success: function(result) {
+                                    if (result && result.success) {
+                                        tale.alertOk('同步请求已发送');
+                                    } else {
+                                        tale.alertError(result.msg || '请求发送失败');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                },
+                saveCnBlogsSetting: function() {
                     var $vm = this;
                     var data = {
-                        CnBlogsSyncSwitch:$vm.options.cnBlogsSyncSwitch,
+                        CnBlogsSyncSwitch: $vm.options.cnBlogsSyncSwitch,
                         CnBlogsUserName: $vm.options.cnBlogsUserName,
                         CnBlogsPassword: $vm.options.cnBlogsPassword,
                         CnBlogsUrl: $vm.options.cnBlogsUrl
                     };
                     $vm.saveSetting(data);
                 },
-                saveGitSetting: function () {
+                saveGitSetting: function() {
                     var $vm = this;
                     var data = {
                         gitProjectCloneUrl: $vm.options.gitProjectCloneUrl,
@@ -73,12 +94,12 @@
                     };
                     $vm.saveSetting(data);
                 },
-                saveSetting: function (data) {
+                saveSetting: function(data) {
                     var $vm = this;
                     tale.postWithForm({
                         url: '/admin/api/options/save',
                         data: data,
-                        success: function (result) {
+                        success: function(result) {
                             if (result && result.success) {
                                 tale.alertOk('设置保存成功');
                                 $vm.load();
@@ -91,7 +112,7 @@
             }
         });
 
-        $(document).ready(function () {
+        $(document).ready(function() {
             vm.isLoading = false;
             vueLoding.hide();
         });
@@ -238,21 +259,21 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mini-stat clearfix bx-shadow bg-info">
-                                <a href="/admin/article" class="text-white">
-                                    <span class="mini-stat-icon"><i class="fa fa-bell-o" aria-hidden="true"></i></span>
+                                <a v-on:click="downloadFromCnBlogs()" class="text-white">
+                                    <span class="mini-stat-icon"><i class="fa fa-cloud-download" aria-hidden="true"></i></span>
                                 </a>
                                 <div class="mini-stat-info text-right">
-                                    接收到了<span class="counter">3</span>条通知
+                                    从博客园拉取了<span class="counter">3</span>篇文章
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mini-stat clearfix bg-purple bx-shadow">
                                 <a href="/admin/comments" class="text-white">
-                                    <span class="mini-stat-icon"><i class="fa fa-check" aria-hidden="true"></i></span>
+                                    <span class="mini-stat-icon"><i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
                                 </a>
                                 <div class="mini-stat-info text-right">
-                                    成功处理了<span class="counter">3</span>篇文章
+                                    向博客园提交了<span class="counter">3</span>篇文章
                                 </div>
                             </div>
                         </div>

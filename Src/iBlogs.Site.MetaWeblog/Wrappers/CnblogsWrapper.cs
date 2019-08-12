@@ -18,7 +18,7 @@ namespace iBlogs.Site.MetaWeblog.Wrappers
             BlogID = int.Parse(GetUsersBlogs().FirstOrDefault()?.BlogId ?? throw new InvalidOperationException());
         }
 
-        public CnBlogsWrapper(string url, string username, string password, int blogID) : base(url, username, password, blogID)
+        public CnBlogsWrapper(string url, string username, string password, int blogId) : base(url, username, password, blogId)
         {
             Init();
         }

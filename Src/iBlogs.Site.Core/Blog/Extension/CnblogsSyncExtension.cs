@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotNetCore.CAP;
+using iBlogs.Site.Core.Blog.Content.DTO;
+using iBlogs.Site.Core.Blog.Content.Service;
 using iBlogs.Site.Core.Blog.Extension.Dto;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
@@ -20,14 +22,16 @@ namespace iBlogs.Site.Core.Blog.Extension
         private readonly IOptionService _optionService;
         private readonly IRepository<BlogSyncRelationship> _repository;
         private readonly ILogger<CnBlogsSyncExtension> _logger;
+        private readonly IContentsService _contentsService;
         private ICnBlogsWrapper _cnBlogsWrapper;
         private readonly Lazy<List<CategoryInfo>> _categoryInfos;
 
-        public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogSyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger)
+        public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogSyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger, IContentsService contentsService)
         {
             _optionService = optionService;
             _repository = repository;
             _logger = logger;
+            _contentsService = contentsService;
             _categoryInfos = new Lazy<List<CategoryInfo>>(() => _cnBlogsWrapper.GetCategories().ToList());
         }
 
@@ -63,12 +67,13 @@ namespace iBlogs.Site.Core.Blog.Extension
                 case BlogSyncMethod.Delete:
                     await Delete(context);
                     break;
+                case BlogSyncMethod.Download:
+                    await SyncToLocal();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-
 
         public async Task InitializeSync()
         {
@@ -152,6 +157,50 @@ namespace iBlogs.Site.Core.Blog.Extension
             _cnBlogsWrapper.DeletePost(relationship.TargetPostId, false);
             context.Success = true;
 
+        }
+
+        private async Task SyncToLocal()
+        {
+            try
+            {
+                var allPostInfo = _cnBlogsWrapper.GetRecentPosts(Int32.MaxValue);
+                foreach (var post in allPostInfo)
+                {
+                    var relationship = await _repository.GetAll().FirstOrDefaultAsync(u => u.TargetPostId == post.PostId.ToString());
+                    var input = new ContentInput()
+                    {
+                        AllowComment = true,
+                        AllowFeed = true,
+                        AllowPing = true,
+                        Categories = string.Join(",", post.Categories),
+                        Content = post.Description,
+                        Title = post.Title,
+                        Tags = post.MtKeywords
+                    };
+                    if (relationship != null)
+                    {
+                        input.Id = relationship.ContentId;
+                    }
+                    else
+                    {
+                        relationship = new BlogSyncRelationship
+                        {
+                            Target = BlogSyncTarget.CnBlogs,
+                            TargetPostId = post.PostId.ToString()
+                        };
+                    }
+
+                    relationship.ContentId = _contentsService.UpdateArticle(input);
+                    await _repository.UpdateAsync(relationship);
+                    _repository.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+               _logger.LogError(e,e.Message);
+                throw;
+            }
+           
         }
 
         private string[] GetCategories(PostSyncDto post)

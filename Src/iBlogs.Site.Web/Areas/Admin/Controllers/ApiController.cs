@@ -139,8 +139,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         [AdminApiRoute("article/sync")]
         public ApiResponse ArticleSync([FromServices]IBlogSyncService syncService, [FromBody]BlogSyncRequest request)
         {
-            syncService.Publish(request);
-            return ApiResponse.Ok();
+            return syncService.Sync(request);
         }
 
         [AdminApiRoute("pages")]

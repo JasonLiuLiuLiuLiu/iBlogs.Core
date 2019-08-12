@@ -14,6 +14,8 @@ namespace iBlogs.Site.Core.Blog.Extension
     public enum BlogSyncMethod
     {
         AddOrUpdate,
+        Download,
+        Publish,
         Delete
     }
 
