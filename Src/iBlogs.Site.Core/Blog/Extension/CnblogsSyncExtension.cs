@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DotNetCore.CAP;
+using iBlogs.Site.Core.Blog.Content;
 using iBlogs.Site.Core.Blog.Content.DTO;
 using iBlogs.Site.Core.Blog.Content.Service;
 using iBlogs.Site.Core.Blog.Extension.Dto;
@@ -25,13 +26,15 @@ namespace iBlogs.Site.Core.Blog.Extension
         private readonly IContentsService _contentsService;
         private ICnBlogsWrapper _cnBlogsWrapper;
         private readonly Lazy<List<CategoryInfo>> _categoryInfos;
+        private readonly ITransactionProvider _transactionProvider;
 
-        public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogSyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger, IContentsService contentsService)
+        public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogSyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger, IContentsService contentsService, ITransactionProvider transactionProvider)
         {
             _optionService = optionService;
             _repository = repository;
             _logger = logger;
             _contentsService = contentsService;
+            _transactionProvider = transactionProvider;
             _categoryInfos = new Lazy<List<CategoryInfo>>(() => _cnBlogsWrapper.GetCategories().ToList());
         }
 
@@ -58,6 +61,7 @@ namespace iBlogs.Site.Core.Blog.Extension
             }
 
             _cnBlogsWrapper = new CnBlogsWrapper(url, userName, passWord);
+
 
             switch (context.Method)
             {
@@ -161,45 +165,52 @@ namespace iBlogs.Site.Core.Blog.Extension
 
         private async Task SyncToLocal()
         {
-            try
+            using (var tar=_transactionProvider.CreateTransaction())
             {
-                var allPostInfo = _cnBlogsWrapper.GetRecentPosts(Int32.MaxValue);
-                foreach (var post in allPostInfo)
+                try
                 {
-                    var relationship = await _repository.GetAll().FirstOrDefaultAsync(u => u.TargetPostId == post.PostId.ToString());
-                    var input = new ContentInput()
+                    var allPostInfo = _cnBlogsWrapper.GetRecentPosts(Int32.MaxValue);
+                    foreach (var post in allPostInfo)
                     {
-                        AllowComment = true,
-                        AllowFeed = true,
-                        AllowPing = true,
-                        Categories = string.Join(",", post.Categories),
-                        Content = post.Description,
-                        Title = post.Title,
-                        Tags = post.MtKeywords
-                    };
-                    if (relationship != null)
-                    {
-                        input.Id = relationship.ContentId;
-                    }
-                    else
-                    {
-                        relationship = new BlogSyncRelationship
+                        var relationship = await _repository.GetAll().FirstOrDefaultAsync(u => u.TargetPostId == post.PostId.ToString());
+                        var input = new ContentInput()
                         {
-                            Target = BlogSyncTarget.CnBlogs,
-                            TargetPostId = post.PostId.ToString()
+                            AllowComment = true,
+                            AllowFeed = true,
+                            AllowPing = true,
+                            Categories = post.Categories!=null?string.Join(",", post.Categories):null,
+                            Content = post.Description,
+                            Title = post.Title,
+                            Tags = post.MtKeywords,
+                            Status = ContentStatus.Publish
                         };
-                    }
+                        if (relationship != null)
+                        {
+                            input.Id = relationship.ContentId;
+                        }
+                        else
+                        {
+                            relationship = new BlogSyncRelationship
+                            {
+                                Target = BlogSyncTarget.CnBlogs,
+                                TargetPostId = post.PostId.ToString()
+                            };
+                        }
 
-                    relationship.ContentId = _contentsService.UpdateArticle(input);
-                    await _repository.UpdateAsync(relationship);
-                    _repository.SaveChanges();
+                        relationship.ContentId = _contentsService.UpdateArticle(input);
+                        await _repository.InsertOrUpdateAsync(relationship);
+                        _repository.SaveChanges();
+                    }
+                    tar.Commit();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, e.Message);
+                    tar.Rollback();
+                    throw;
                 }
             }
-            catch (Exception e)
-            {
-               _logger.LogError(e,e.Message);
-                throw;
-            }
+            
            
         }
 

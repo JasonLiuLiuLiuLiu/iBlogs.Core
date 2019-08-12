@@ -146,3 +146,5 @@ ALTER TABLE `BlogSyncRelationships` ADD `Successful` bit NOT NULL DEFAULT FALSE;
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
 VALUES ('20190812152146_update-blogsyncrelationship', '2.2.4-servicing-10062');
 
+
+
