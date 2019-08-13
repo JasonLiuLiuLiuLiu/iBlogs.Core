@@ -1959,6 +1959,11 @@ button, input, select, textarea {
         margin-bottom: 12px
     }
 
+    .footer-meta .meta-copyright .upyun-logo img {
+        height: 32px;
+        margin-bottom: 12px
+    }
+
     .footer-meta .meta-copyright .info-text p {
         font-size: 13px;
         line-height: 20px;
