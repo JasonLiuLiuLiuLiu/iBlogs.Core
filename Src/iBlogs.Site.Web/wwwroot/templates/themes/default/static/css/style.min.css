@@ -1479,7 +1479,8 @@ button, input, select, textarea {
 }
 
 .directory-content {
-    position: relative;
+    position: absolute;
+    right: 300px;
     z-index: 0;
     max-width: 720px;
     margin-right: auto !important;
