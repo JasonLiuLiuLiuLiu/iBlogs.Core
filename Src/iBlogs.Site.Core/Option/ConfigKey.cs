@@ -84,7 +84,16 @@
         [ConfigKey("谷歌站点统计跟踪Id,https://analytics.google.com", true)]
         GoogleAnalyticId,
         [ConfigKey("百度统计Id,https://tongji.baidu.com", true)]
-        BaiDuTongJiId
+        BaiDuTongJiId,
+        [ConfigKey("站点安装时间,用于首页显示网站运行时间",true)]
+        SiteInstallTime,
+        [ConfigKey("文章数目")]
+        ContentCount,
+        [ConfigKey("评论数目")]
+        CommentCount,
+        [ConfigKey("最后活动时间")]
+        LastActiveTime
+
     }
 
 

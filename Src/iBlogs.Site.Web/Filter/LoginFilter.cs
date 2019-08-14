@@ -1,5 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using iBlogs.Site.Core.Common;
+using iBlogs.Site.Core.Option;
+using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Security.DTO;
 using iBlogs.Site.Core.Security.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +16,12 @@ namespace iBlogs.Site.Web.Filter
     public class LoginFilter : IAuthorizationFilter
     {
         private readonly IUserService _userService;
+        private readonly IOptionService _optionService;
 
-        public LoginFilter(IUserService userService)
+        public LoginFilter(IUserService userService, IOptionService optionService)
         {
             _userService = userService;
+            _optionService = optionService;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -23,7 +30,7 @@ namespace iBlogs.Site.Web.Filter
                 return;
             if (context.HttpContext.User.Claims.Any())
             {
-                var uid = int.Parse(context.HttpContext.User.FindFirst(ClaimTypes.Uid)?.Value);
+                var uid = int.Parse(context.HttpContext.User.FindFirst(ClaimTypes.Uid)?.Value ?? throw new InvalidOperationException());
                 var token = context.HttpContext.User.FindFirst(ClaimTypes.Token)?.Value;
                 if (LoginToken.CheckToken(uid, token))
                 {
@@ -38,6 +45,9 @@ namespace iBlogs.Site.Web.Filter
                             ScreenName = user.ScreenName,
                             HomeUrl = user.HomeUrl
                         };
+
+                        _optionService.Set(ConfigKey.LastActiveTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
+
                         return;
                     }
                 }

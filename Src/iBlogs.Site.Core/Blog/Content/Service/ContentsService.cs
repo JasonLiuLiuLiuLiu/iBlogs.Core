@@ -12,6 +12,8 @@ using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.Option;
+using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Security.Service;
 using LibGit2Sharp;
 using Microsoft.EntityFrameworkCore;
@@ -26,8 +28,9 @@ namespace iBlogs.Site.Core.Blog.Content.Service
         private readonly IRelationshipService _relationshipService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
+        private readonly IOptionService _optionService;
 
-        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper, IUserService userService, IRepository<Relationships> relRepository)
+        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper, IUserService userService, IRepository<Relationships> relRepository, IOptionService optionService)
         {
             _metasService = metasService;
             _repository = repository;
@@ -35,6 +38,7 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             _mapper = mapper;
             _userService = userService;
             _relRepository = relRepository;
+            _optionService = optionService;
         }
 
         /**
@@ -91,6 +95,8 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             _metasService.SaveMetas(cid, tags, MetaType.Tag);
             _metasService.SaveMetas(cid, categories, MetaType.Category);
 
+            _optionService.Set(ConfigKey.ContentCount, _repository.GetAll().Where(u => u.Status == ContentStatus.Publish).Select(u => u.Id).Count().ToString());
+
             return cid;
         }
 
@@ -125,6 +131,8 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             _metasService.SaveMetas(cid, tags, MetaType.Tag);
             _metasService.SaveMetas(cid, categories, MetaType.Category);
 
+            _optionService.Set(ConfigKey.ContentCount, _repository.GetAll().Where(u=>u.Status==ContentStatus.Publish).Select(u => u.Id).Count().ToString());
+
             return cid;
         }
 
@@ -136,6 +144,7 @@ namespace iBlogs.Site.Core.Blog.Content.Service
         public void Delete(int cid)
         {
             _repository.Delete(cid);
+            _optionService.Set(ConfigKey.ContentCount, _repository.GetAll().Where(u => u.Status == ContentStatus.Publish).Select(u => u.Id).Count().ToString());
             _repository.SaveChanges();
         }
 

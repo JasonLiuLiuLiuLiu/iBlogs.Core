@@ -7,6 +7,7 @@ using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option;
+using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Security.Service;
 using LibGit2Sharp;
 
@@ -19,13 +20,15 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
         private readonly IContentsService _contentsService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
+        private readonly IOptionService _optionService;
 
-        public CommentsService(IRepository<Comments> repository, IMapper mapper, IContentsService contentsService, IUserService userService)
+        public CommentsService(IRepository<Comments> repository, IMapper mapper, IContentsService contentsService, IUserService userService, IOptionService optionService)
         {
             _repository = repository;
             _mapper = mapper;
             _contentsService = contentsService;
             _userService = userService;
+            _optionService = optionService;
         }
 
         public int GetTotalCount()
@@ -45,6 +48,10 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             _repository.InsertOrUpdate(comments);
             _repository.SaveChanges();
             _contentsService.UpdateCommentCount(comments.Cid, 1);
+
+
+            _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
+
         }
 
         public void Reply(Comments comments)
@@ -65,6 +72,8 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             _repository.InsertOrUpdate(comments);
             _repository.SaveChanges();
             _contentsService.UpdateCommentCount(comments.Cid, 1);
+
+            _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u=>u.Status==CommentStatus.Approved).Select(u => u.Id).Count().ToString());
 
         }
 
@@ -90,6 +99,9 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
                 throw new Exception("没找到该评论!");
             comment.Status = param.Status;
             _repository.Update(comment);
+
+            _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
+
             _repository.SaveChanges();
         }
 
