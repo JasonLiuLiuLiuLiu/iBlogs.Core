@@ -124,7 +124,7 @@
                 success: function (result) {
                     if (result && result.success) {
                         setCookie('Authorization', result.payload, 10);
-                        window.location.href = '/admin';
+                        window.location.href = '/admin?v='+new Date().getTime();
                     } else {
                         tale.alertError(result.msg || '登录失败');
                     }
