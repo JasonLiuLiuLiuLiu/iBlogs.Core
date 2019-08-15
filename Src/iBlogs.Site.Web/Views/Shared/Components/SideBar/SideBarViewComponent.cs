@@ -34,6 +34,7 @@ namespace iBlogs.Site.Web.Views.Shared.Components.SideBar
                 CommentCount = _optionService.Get(ConfigKey.CommentCount,"0"),
                 RunTime = DateTime.Parse(_optionService.Get(ConfigKey.SiteInstallTime,DateTime.Now.ToString(CultureInfo.InvariantCulture))).DateDiffToNow(),
                 LastActiveTime = DateTime.Parse(_optionService.Get(ConfigKey.LastActiveTime, DateTime.Now.ToString(CultureInfo.InvariantCulture))).DateDiffToNow(),
+                Announcement = _optionService.Get(ConfigKey.Announcement)
             });
         }
     }

@@ -10,5 +10,6 @@ namespace iBlogs.Site.Web.Views.Shared.Components.SideBar
         public string CommentCount { get; set; }
         public string RunTime { get; set; }
         public string LastActiveTime { get; set; }
+        public string Announcement { get; set; }
     }
 }

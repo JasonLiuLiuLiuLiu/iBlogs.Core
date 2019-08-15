@@ -92,7 +92,13 @@
         [ConfigKey("评论数目")]
         CommentCount,
         [ConfigKey("最后活动时间")]
-        LastActiveTime
+        LastActiveTime,
+        [ConfigKey("通知公告,支持HTML","请在后台管理系统中配置您的公告信息",true)]
+        Announcement,
+        [ConfigKey("页脚信息1,支持HTML", "请在后台管理系统中配置您的页脚信息1",true)]
+        FootContent1,
+        [ConfigKey("页脚信息2,支持HTML", "请后台管理系统中配置您的页脚信息2", true)]
+        FootContent2
 
     }
 
