@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using iBlogs.Site.MetaWeblog.Wrappers;
+﻿using iBlogs.Site.MetaWeblog.Wrappers;
 
 namespace iBlogs.Site.MetaWeblog.Test
 {
