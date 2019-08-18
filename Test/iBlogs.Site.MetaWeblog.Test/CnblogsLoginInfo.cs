@@ -6,7 +6,7 @@ namespace iBlogs.Site.MetaWeblog.Test
     {
 
         public string Username = "iblogs.site";
-        public string XmlRpcUrl = "https://www.cnblogs.com/iblogssite/services/metaweblog.aspx";
+        public string XmlRpcUrl = "https://rpc.cnblogs.com/metaweblog/iblogssite";
         public string Password = "123asd!@#";
 
         public ICnBlogsWrapper GetCnBlogsClient()

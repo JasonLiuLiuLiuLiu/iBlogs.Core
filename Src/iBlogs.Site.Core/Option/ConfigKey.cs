@@ -79,7 +79,7 @@
         CnBlogsUserName,
         [ConfigKey("博客园密码")]
         CnBlogsPassword,
-        [ConfigKey("博客园同步地址", "https://www.cnblogs.com/coderayu/services/metaweblog.aspx")]
+        [ConfigKey("博客园同步地址", "https://rpc.cnblogs.com/metaweblog/{YourBlogName}")]
         CnBlogsUrl,
         [ConfigKey("谷歌站点统计跟踪Id,https://analytics.google.com", true)]
         GoogleAnalyticId,

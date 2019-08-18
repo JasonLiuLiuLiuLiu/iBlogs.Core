@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace iBlogs.Site.MetaWeblog.Test
 {
-    [Ignore("CnBlogs Api Failed")]
+    //[Ignore("CnBlogs Api Failed")]
     [TestFixture]
     public class CnBlogsTest
     {
