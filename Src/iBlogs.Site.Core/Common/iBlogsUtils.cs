@@ -43,15 +43,7 @@ namespace iBlogs.Site.Core.Common
             content = Markdown.ToHtml(content);
             if (content.Contains("<img"))
             {
-                string img = "";
-                string regExImg = "<img.*src\\s*=\\s*(.*?)[^>]*?>";
-                var regex = new Regex(regExImg, RegexOptions.Singleline | RegexOptions.IgnoreCase);
-                var mImage = regex.Match(content);
-                if (mImage.Success)
-                {
-                    return img + "," + mImage.Value;
-
-                }
+                return Regex.Match(content, "<img.+?src=[\"'](.+?)[\"'].+?>", RegexOptions.IgnoreCase).Groups[1].Value;
             }
             return "";
         }

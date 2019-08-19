@@ -22,5 +22,7 @@ namespace iBlogs.Site.Core.Option.DTO
          * 配置描述
          */
         public string Description { get; set; }
+
+        public bool Editable { get; set; }
     }
 }

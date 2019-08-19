@@ -1479,7 +1479,8 @@ button, input, select, textarea {
 }
 
 .directory-content {
-    position: relative;
+    position: absolute;
+    right: 300px;
     z-index: 0;
     max-width: 720px;
     margin-right: auto !important;
@@ -1955,6 +1956,11 @@ button, input, select, textarea {
     }
 
     .footer-meta .meta-copyright .info-logo img {
+        height: 32px;
+        margin-bottom: 12px
+    }
+
+    .footer-meta .meta-copyright .upyun-logo img {
         height: 32px;
         margin-bottom: 12px
     }

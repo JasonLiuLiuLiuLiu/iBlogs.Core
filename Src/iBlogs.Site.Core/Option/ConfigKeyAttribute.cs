@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using iBlogs.Site.Core.Option.DTO;
 
 namespace iBlogs.Site.Core.Option
@@ -11,16 +9,30 @@ namespace iBlogs.Site.Core.Option
     {
         public string Description { get; set; }
         public string DefaultValue { get; set; }
+        public bool Editable { get; set; }
 
-        public ConfigKeyAttribute(string description, string defaultValue = null)
+        public ConfigKeyAttribute(string description) : this(description, false)
+        {
+        }
+
+        public ConfigKeyAttribute(string description, bool editable) : this(description, null, editable)
+        {
+        }
+
+        public ConfigKeyAttribute(string description, string defaultValue) : this(description, defaultValue, false)
+        {
+        }
+
+        public ConfigKeyAttribute(string description, string defaultValue, bool editable)
         {
             DefaultValue = defaultValue;
             Description = description;
+            Editable = editable;
         }
 
         public static OptionParam[] GetConfigKeyAttribute()
         {
-            var fields = typeof(ConfigKey).GetFields().Where(u=>u.FieldType.BaseType==typeof(Enum)).ToArray();
+            var fields = typeof(ConfigKey).GetFields().Where(u => u.FieldType.BaseType == typeof(Enum)).ToArray();
             var result = new OptionParam[fields.Length];
             for (int i = 0; i < fields.Length; i++)
             {
@@ -38,7 +50,8 @@ namespace iBlogs.Site.Core.Option
                     {
                         Key = fields[i].Name,
                         Value = attribute.DefaultValue,
-                        Description = attribute.Description
+                        Description = attribute.Description,
+                        Editable = attribute.Editable
                     };
                 }
             }

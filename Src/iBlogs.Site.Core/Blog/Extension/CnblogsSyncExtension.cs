@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
+using iBlogs.Site.Core.Blog.Content;
+using iBlogs.Site.Core.Blog.Content.DTO;
+using iBlogs.Site.Core.Blog.Content.Service;
+using iBlogs.Site.Core.Blog.Extension.Dto;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option;
@@ -13,25 +18,31 @@ using Microsoft.Extensions.Logging;
 
 namespace iBlogs.Site.Core.Blog.Extension
 {
-    public class CnBlogsSyncExtension : IBlogsSyncExtension
+    public class CnBlogsSyncExtension : IBlogsSyncExtension, ICapSubscribe
     {
         private readonly IOptionService _optionService;
         private readonly IRepository<BlogSyncRelationship> _repository;
         private readonly ILogger<CnBlogsSyncExtension> _logger;
+        private readonly IContentsService _contentsService;
         private ICnBlogsWrapper _cnBlogsWrapper;
-        private Lazy<List<CategoryInfo>> _categoryInfos;
+        private readonly Lazy<List<CategoryInfo>> _categoryInfos;
+        private readonly ITransactionProvider _transactionProvider;
 
-        public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogSyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger)
+        public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogSyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger, IContentsService contentsService, ITransactionProvider transactionProvider)
         {
             _optionService = optionService;
             _repository = repository;
             _logger = logger;
+            _contentsService = contentsService;
+            _transactionProvider = transactionProvider;
             _categoryInfos = new Lazy<List<CategoryInfo>>(() => _cnBlogsWrapper.GetCategories().ToList());
         }
 
+        [CapSubscribe("iBlogs.Site.Core.Blog.Sync.CnBlogs")]
+        [CapSubscribe("iBlogs.Site.Core.Blog.Sync.All")]
         public async Task Sync(BlogSyncContext context)
         {
-            if (context.Target != BlogSyncTarget.All || context.Target != BlogSyncTarget.CnBlogs)
+            if (context.Target != BlogSyncTarget.All && context.Target != BlogSyncTarget.CnBlogs)
                 return;
 
             if (!_optionService.Get(ConfigKey.CnBlogsSyncSwitch, "false").ToBool())
@@ -51,6 +62,7 @@ namespace iBlogs.Site.Core.Blog.Extension
 
             _cnBlogsWrapper = new CnBlogsWrapper(url, userName, passWord);
 
+
             switch (context.Method)
             {
                 case BlogSyncMethod.AddOrUpdate:
@@ -59,16 +71,39 @@ namespace iBlogs.Site.Core.Blog.Extension
                 case BlogSyncMethod.Delete:
                     await Delete(context);
                     break;
+                case BlogSyncMethod.Download:
+                    await SyncToLocal();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-
-
         public async Task InitializeSync()
         {
             await Task.CompletedTask;
+        }
+
+        public BlogExtensionDashboardResponse GetDashBoardData()
+        {
+            var allResponse = _repository.GetAllIncluding(u => u.Content).Where(u => u.Target == BlogSyncTarget.CnBlogs)
+                .Select(r => new BlogExtensionContentResponse
+                {
+                    ContentId = r.ContentId,
+                    ContentTitle = r.Content.Title,
+                    ExtensionProperty = r.ExtensionProperty,
+                    Message = r.Message,
+                    Id = r.Id,
+                    SyncData = r.SyncData,
+                    Target = r.Target,
+                    TargetPostId = r.TargetPostId,
+                    Successful = r.Successful
+                });
+            return new BlogExtensionDashboardResponse
+            {
+                Successful = allResponse.Where(u => u.Successful).ToArray(),
+                Failed = allResponse.Where(u => !u.Successful).ToArray()
+            };
         }
 
         private async Task AddOrUpdate(BlogSyncContext context)
@@ -126,6 +161,57 @@ namespace iBlogs.Site.Core.Blog.Extension
             _cnBlogsWrapper.DeletePost(relationship.TargetPostId, false);
             context.Success = true;
 
+        }
+
+        private async Task SyncToLocal()
+        {
+            using (var tar=_transactionProvider.CreateTransaction())
+            {
+                try
+                {
+                    var allPostInfo = _cnBlogsWrapper.GetRecentPosts(Int32.MaxValue);
+                    foreach (var post in allPostInfo)
+                    {
+                        var relationship = await _repository.GetAll().FirstOrDefaultAsync(u => u.TargetPostId == post.PostId.ToString());
+                        var input = new ContentInput()
+                        {
+                            AllowComment = true,
+                            AllowFeed = true,
+                            AllowPing = true,
+                            Categories = post.Categories!=null?string.Join(",", post.Categories):null,
+                            Content = post.Description,
+                            Title = post.Title,
+                            Tags = post.MtKeywords,
+                            Status = ContentStatus.Publish
+                        };
+                        if (relationship != null)
+                        {
+                            input.Id = relationship.ContentId;
+                        }
+                        else
+                        {
+                            relationship = new BlogSyncRelationship
+                            {
+                                Target = BlogSyncTarget.CnBlogs,
+                                TargetPostId = post.PostId.ToString()
+                            };
+                        }
+
+                        relationship.ContentId = _contentsService.UpdateArticle(input);
+                        await _repository.InsertOrUpdateAsync(relationship);
+                        _repository.SaveChanges();
+                    }
+                    tar.Commit();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, e.Message);
+                    tar.Rollback();
+                    throw;
+                }
+            }
+            
+           
         }
 
         private string[] GetCategories(PostSyncDto post)

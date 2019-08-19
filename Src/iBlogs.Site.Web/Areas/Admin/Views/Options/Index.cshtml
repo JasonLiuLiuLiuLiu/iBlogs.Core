@@ -77,7 +77,7 @@
                 load: function () {
                     var $vm = this;
                     tale.get({
-                        url: '/admin/api/options/GetAll',
+                        url: '/admin/api/options/editable',
                         success: function (data) {
                             $vm.options = data.payload;
                         },

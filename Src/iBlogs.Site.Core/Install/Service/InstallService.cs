@@ -3,6 +3,7 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Install.DTO;
 using iBlogs.Site.Core.Option.Service;
 using System;
+using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,6 +65,8 @@ namespace iBlogs.Site.Core.Install.Service
                 Seed();
                 ConfigDataHelper.UpdateDbInstallStatus(true);
                 ConfigDataHelper.DeleteInstallParamFile();
+                _optionService.Set(ConfigKey.SiteInstallTime,DateTime.Now.ToString(CultureInfo.InvariantCulture));
+                _optionService.Set(ConfigKey.LastActiveTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 _optionService.Load();
                 return true;
             }

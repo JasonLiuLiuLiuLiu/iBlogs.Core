@@ -22,6 +22,7 @@ namespace iBlogs.Site.Core.Blog.Extension
         public string TargetPostId { get; set; }
         public DateTime SyncData { get; set; }
         public string Message { get; set; }
+        public bool Successful { get; set; }
         public string ExtensionProperty { get; set; }
     }
 

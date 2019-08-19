@@ -27,7 +27,15 @@ namespace iBlogs.Site.MetaWeblog.Helpers
                     MtConvertBreaks = xmlRpcPost.mt_convert_breaks,
                     MtExcerpt = xmlRpcPost.mt_excerpt,
                     MtKeywords = xmlRpcPost.mt_keywords,
-                    WpSlug = xmlRpcPost.wp_slug
+                    WpSlug = xmlRpcPost.wp_slug,
+                    Permalink = xmlRpcPost.permalink,
+                    MtTextMore = xmlRpcPost.mt_text_more,
+                    PostId = xmlRpcPost.postid,
+                    Source = new Source
+                    {
+                        Name = xmlRpcPost.XML_RPC_SOURCE.name,
+                        Url = xmlRpcPost.XML_RPC_SOURCE.url
+                    }
                 };
             }
 

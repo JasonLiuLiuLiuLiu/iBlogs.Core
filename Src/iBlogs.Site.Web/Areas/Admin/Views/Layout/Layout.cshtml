@@ -125,6 +125,12 @@
                                 <i class="fa fa-file-text" aria-hidden="true"></i><span> 页面管理 </span>
                             </a>
                         </li>
+                        
+                        <li @((string) ViewData["title"] == "BlogSync" ? "active" : "")>
+                            <a href="/admin/blogsync" class="waves-effect @((string) ViewData["title"]=="BlogSync"?"active":"")">
+                                <i class="fa fa-refresh" aria-hidden="true"></i><span> 博客同步 </span>
+                            </a>
+                        </li>
 
                         <li @((string) ViewData["title"] == "attaches" ? "active" : "")>
                             <a href="/admin/attaches" class="waves-effect @((string) ViewData["title"]=="attaches"?"active":"")">

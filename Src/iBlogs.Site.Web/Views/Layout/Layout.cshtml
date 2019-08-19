@@ -26,11 +26,11 @@
     <link href="@ViewService.ThemeUrl("/static/css/style.min.css")" rel="stylesheet">
     @if (ViewService.AllowCloudCdn() == "true")
     {
-        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     }
     else
     {
-        <script src="/static/admin/plugins/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/static/admin/plugins/jquery/3.2.1/jquery.min.js"></script>
     }
 
     <script src="@ViewService.ThemeUrl("/static/js/highlight.min.js")"></script>
@@ -75,12 +75,12 @@
                 <div class="social-list">
                     @if (!ViewService.SiteOption(ConfigKey.WeiBo).IsNullOrWhiteSpace())
                     {
-                        <a class="social weibo" target="_blank" href="http://weibo.com/@ViewService.SiteOption(ConfigKey.WeiBo)">微博</a>
+                    <a class="social weibo" target="_blank" href="http://weibo.com/@ViewService.SiteOption(ConfigKey.WeiBo)">微博</a>
                     }
 
                     @if (!ViewService.SiteOption(ConfigKey.ZhiHu).IsNullOrWhiteSpace())
                     {
-                        <a class="social zhihu" target="_blank" href="https://www.zhihu.com/people/@ViewService.SiteOption(ConfigKey.ZhiHu)">知乎</a>
+                    <a class="social zhihu" target="_blank" href="https://www.zhihu.com/people/@ViewService.SiteOption(ConfigKey.ZhiHu)">知乎</a>
                     }
 
                     <a class="social rss" target="_blank" href="/feed">RSS</a>
@@ -88,13 +88,13 @@
 
                     @if (!ViewService.SiteOption(ConfigKey.Github).IsNullOrWhiteSpace())
                     {
-                        <a class="social github" target="_blank"
-                           href="https://github.com/@ViewService.SiteOption(ConfigKey.Github)">Github</a>
+                    <a class="social github" target="_blank"
+                       href="https://github.com/@ViewService.SiteOption(ConfigKey.Github)">Github</a>
                     }
 
                     @if (!ViewService.SiteOption(ConfigKey.Twitter).IsNullOrWhiteSpace())
                     {
-                        <a class="social twitter" target="_blank" href="https://twitter.com/@ViewService.SiteOption(ConfigKey.Twitter)">Twitter</a>
+                    <a class="social twitter" target="_blank" href="https://twitter.com/@ViewService.SiteOption(ConfigKey.Twitter)">Twitter</a>
                     }
                 </div>
             </div>
@@ -103,8 +103,11 @@
             <div class="footer-container">
                 <div class="meta-item meta-copyright">
                     <div class="meta-copyright-info">
-                        <a href="@ViewService.SiteUrl()" class="info-logo">
+                        <a href="https://github.com/liuzhenyulive/iblogs" class="info-logo">
                             <img src="/templates/themes/default/static/img/logo.png" alt="@ViewService.SiteOption(ConfigKey.SiteTitle)">
+                        </a>
+                        <a href="https://www.upyun.com/?utm_source=lianmeng&utm_medium=referral" target="_blank" class="upyun-logo">
+                            <img src="/templates/themes/default/static/img/upyun_logo5.png" alt="本站由又拍云加速">
                         </a>
                         <div class="info-text">
                             <p>Always coding,Always writing!</p>
@@ -122,40 +125,11 @@
                 </div>
 
                 <div class="meta-item meta-posts">
-                    <h3 class="meta-title">
-                        <svg viewBox="0 0 54.971 54.971" width="10" height="10">
-                            <g><path d="M51.173,3.801c-5.068-5.068-13.315-5.066-18.384,0l-9.192,9.192c-0.781,0.781-0.781,2.047,0,2.828c0.781,0.781,2.047,0.781,2.828,0l9.192-9.192c1.691-1.69,3.951-2.622,6.363-2.622c2.413,0,4.673,0.932,6.364,2.623s2.623,3.951,2.623,6.364c0,2.412-0.932,4.672-2.623,6.363L36.325,31.379c-3.51,3.508-9.219,3.508-12.729,0c-0.781-0.781-2.047-0.781-2.828,0s-0.781,2.048,0,2.828c2.534,2.534,5.863,3.801,9.192,3.801s6.658-1.267,9.192-3.801l12.021-12.021c2.447-2.446,3.795-5.711,3.795-9.192C54.968,9.512,53.62,6.248,51.173,3.801z" /><path d="M27.132,40.57l-7.778,7.778c-1.691,1.691-3.951,2.623-6.364,2.623c-2.412,0-4.673-0.932-6.364-2.623c-3.509-3.509-3.509-9.219,0-12.728L17.94,24.306c1.691-1.69,3.951-2.622,6.364-2.622c2.412,0,4.672,0.932,6.363,2.622c0.781,0.781,2.047,0.781,2.828,0s0.781-2.047,0-2.828c-5.067-5.067-13.314-5.068-18.384,0L3.797,32.793c-2.446,2.446-3.794,5.711-3.794,9.192c0,3.48,1.348,6.745,3.795,9.191c2.446,2.447,5.711,3.795,9.191,3.795c3.481,0,6.746-1.348,9.192-3.795l7.778-7.778c0.781-0.781,0.781-2.047,0-2.828S27.913,39.789,27.132,40.57z" /></g>
-                        </svg>
-                        &nbsp 关注博主
-                    </h3>
-                    <div style="margin: 0 0">
-                        <div style="float:right;width:35%;">
-                            <img height="100%" width="100%" src="https://raw.githubusercontent.com/liuzhenyulive/iBlogs/Development/Pic/coderayu.png">
-                        </div>
-                        <div style="margin-right:35%;padding-right:5px;" class="info-text">
-                            <p style="margin: 0 0">码农阿宇,已对接此博客系统的公众号,深度技术,实用干货,扫码发车.</p>
-                            <p style="margin: 0 0">Scan code to start.</p>
-                        </div>
-                    </div>
+                    @Html.Raw(ViewService.SiteOption(ConfigKey.FootContent1))
                 </div>
 
                 <div class="meta-item meta-comments">
-                    <h3 class="meta-title">
-                        <svg viewBox="0 0 51.997 51.997" width="10" height="10">
-                            <g><path d="M51.911,16.242C51.152,7.888,45.239,1.827,37.839,1.827c-4.93,0-9.444,2.653-11.984,6.905c-2.517-4.307-6.846-6.906-11.697-6.906c-7.399,0-13.313,6.061-14.071,14.415c-0.06,0.369-0.306,2.311,0.442,5.478c1.078,4.568,3.568,8.723,7.199,12.013l18.115,16.439l18.426-16.438c3.631-3.291,6.121-7.445,7.199-12.014C52.216,18.553,51.97,16.611,51.911,16.242z M49.521,21.261c-0.984,4.172-3.265,7.973-6.59,10.985L25.855,47.481L9.072,32.25c-3.331-3.018-5.611-6.818-6.596-10.99c-0.708-2.997-0.417-4.69-0.416-4.701l0.015-0.101C2.725,9.139,7.806,3.826,14.158,3.826c4.687,0,8.813,2.88,10.771,7.515l0.921,2.183l0.921-2.183c1.927-4.564,6.271-7.514,11.069-7.514c6.351,0,11.433,5.313,12.096,12.727C49.938,16.57,50.229,18.264,49.521,21.261z" /></g>
-                        </svg>
-                        联系博主
-                    </h3>
-
-                    <div style="margin: 0 0">
-                        <div style="float:right;width:35%;">
-                            <img height="100%" width="100%" src="https://raw.githubusercontent.com/liuzhenyulive/iBlogs/Development/Pic/liuzhenyu.png">
-                        </div>
-                        <div style="margin-right:35%;padding-right:5px;" class="info-text">
-                            <p style="margin: 0 0">刘振宇,常年活动在杭州周边,如果你需要我,欢迎扫面右边微信二维码与我联系.</p>
-                            <a style="margin: 0 0" href="mailto:liuzhenyulive@live.com?subject=Mail from iBlogs">liuzhenyulive@live.com</a>
-                        </div>
-                    </div>
+                    @Html.Raw(ViewService.SiteOption(ConfigKey.FootContent2))
                 </div>
             </div>
         </div>
@@ -197,5 +171,30 @@
         });
         InstantClick.init('mousedown');
     </script>
+    @if (!ViewService.SiteOption(ConfigKey.GoogleAnalyticId).IsNullOrWhiteSpace())
+    {
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145058275-1"></script>
+    <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+
+            gtag('config', '@ViewService.SiteOption(ConfigKey.GoogleAnalyticId)');
+    </script>
+    }
+    @if (!ViewService.SiteOption(ConfigKey.BaiDuTongJiId).IsNullOrWhiteSpace())
+    {
+    <script>
+            var _hmt = _hmt || [];
+            (function() {
+                var hm = document.createElement("script");
+                hm.src = "https://hm.baidu.com/hm.js?@ViewService.SiteOption(ConfigKey.BaiDuTongJiId)";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+    </script>
+
+    }
 </body>
 </html>

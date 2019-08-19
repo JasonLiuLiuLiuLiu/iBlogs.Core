@@ -66,6 +66,10 @@
                                                class="btn btn-danger btn-sm waves-effect waves-light m-b-5">
                                                 <i class="fa fa-trash-o"></i> <span>删除</span>
                                             </a>
+                                            <a v-on:click="sync(item.id)" href="javascript:void(0)"
+                                               class="btn btn-info btn-sm waves-effect waves-light m-b-5">
+                                                <i class="fa fa-refresh"></i> <span>同步</span>
+                                            </a>
                                             <a v-show="item.status == 'Publish'"
                                                class="btn btn-warning btn-sm waves-effect waves-light m-b-5"
                                                :href="'../article/' + item.slug"
@@ -107,6 +111,7 @@
 
 @section scripts
 {
+    <script src="~/lib/bootbox/bootbox.all.min.js"></script>
     <script>
         var tale = new $.tale();
         var vm = new Vue({
@@ -173,6 +178,40 @@
                                         $vm.load(1);
                                     } else {
                                         tale.alertError(result.msg || '文章删除失败');
+                                    }
+                                }
+                            });
+                        }
+                    });
+                },
+                sync: function (cid) {
+                    bootbox.prompt({
+                        title: "This is a prompt with a set of checkbox inputs!",
+                        inputType: 'checkbox',
+                        inputOptions: [{
+                                text: '博客园',
+                                value: 'CnBlogs'
+                            },
+                            {
+                                text: 'CSDN',
+                                value: 'CSDN'
+                            },
+                            {
+                                text: '微信公众号',
+                                value: 'WeChart'
+                            }],
+                        callback: function (result) {
+                            tale.post({
+                                url: '/admin/api/article/sync',
+                                data: {
+                                    cid: cid,
+                                    targets:result
+                                },
+                                success: function (result) {
+                                    if (result && result.success) {
+                                        tale.alertOk('同步请求发送成功');
+                                    } else {
+                                        tale.alertError(result.msg || '同步请求发送失败');
                                     }
                                 }
                             });

@@ -23,6 +23,7 @@ CREATE TABLE `Options` (
     `Name` longtext NULL,
     `Value` longtext NULL,
     `Description` longtext NULL,
+    `Editable` bit NOT NULL,
     `Created` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     `Deleted` bit NOT NULL,
     CONSTRAINT `PK_Options` PRIMARY KEY (`Id`)
@@ -127,7 +128,7 @@ CREATE TABLE `Relationships` (
 
 CREATE INDEX `IX_Attachments_AuthorId` ON `Attachments` (`AuthorId`);
 
-CREATE INDEX `IX_BlogAsyncRelationships_ContentId` ON `BlogAsyncRelationships` (`ContentId`);
+CREATE INDEX `IX_BlogSyncRelationships_ContentId` ON `BlogSyncRelationships` (`ContentId`);
 
 CREATE INDEX `IX_Comments_Cid` ON `Comments` (`Cid`);
 
@@ -138,5 +139,12 @@ CREATE INDEX `IX_Relationships_Cid` ON `Relationships` (`Cid`);
 CREATE INDEX `IX_Relationships_Mid` ON `Relationships` (`Mid`);
 
 INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
-VALUES ('20190723125835_Init', '2.2.4-servicing-10062');
+VALUES ('20190803040633_init', '2.2.4-servicing-10062');
+
+ALTER TABLE `BlogSyncRelationships` ADD `Successful` bit NOT NULL DEFAULT FALSE;
+
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20190812152146_update-blogsyncrelationship', '2.2.4-servicing-10062');
+
+
 

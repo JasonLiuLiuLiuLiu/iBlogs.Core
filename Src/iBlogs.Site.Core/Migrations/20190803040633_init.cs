@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace iBlogs.Site.Core.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,6 +39,7 @@ namespace iBlogs.Site.Core.Migrations
                     Name = table.Column<string>(nullable: true),
                     Value = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
+                    Editable = table.Column<bool>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Deleted = table.Column<bool>(nullable: false)
@@ -136,7 +137,7 @@ namespace iBlogs.Site.Core.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BlogAsyncRelationships",
+                name: "BlogSyncRelationships",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -152,9 +153,9 @@ namespace iBlogs.Site.Core.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BlogAsyncRelationships", x => x.Id);
+                    table.PrimaryKey("PK_BlogSyncRelationships", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BlogAsyncRelationships_Contents_ContentId",
+                        name: "FK_BlogSyncRelationships_Contents_ContentId",
                         column: x => x.ContentId,
                         principalTable: "Contents",
                         principalColumn: "Id",
@@ -229,8 +230,8 @@ namespace iBlogs.Site.Core.Migrations
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BlogAsyncRelationships_ContentId",
-                table: "BlogAsyncRelationships",
+                name: "IX_BlogSyncRelationships_ContentId",
+                table: "BlogSyncRelationships",
                 column: "ContentId");
 
             migrationBuilder.CreateIndex(
@@ -260,7 +261,7 @@ namespace iBlogs.Site.Core.Migrations
                 name: "Attachments");
 
             migrationBuilder.DropTable(
-                name: "BlogAsyncRelationships");
+                name: "BlogSyncRelationships");
 
             migrationBuilder.DropTable(
                 name: "Comments");

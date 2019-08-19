@@ -20,6 +20,8 @@ using iBlogs.Site.Core.Blog.Comment.Service;
 using iBlogs.Site.Core.Blog.Content;
 using iBlogs.Site.Core.Blog.Content.DTO;
 using iBlogs.Site.Core.Blog.Content.Service;
+using iBlogs.Site.Core.Blog.Extension;
+using iBlogs.Site.Core.Blog.Extension.Dto;
 using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Meta.DTO;
 using iBlogs.Site.Core.Blog.Meta.Service;
@@ -132,6 +134,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             articleParam.Page--;
             var articles = _contentsService.FindArticles(articleParam);
             return ApiResponse<Page<ContentResponse>>.Ok(articles);
+        }
+
+        [AdminApiRoute("article/sync")]
+        public ApiResponse ArticleSync([FromServices]IBlogSyncService syncService, [FromBody]BlogSyncRequest request)
+        {
+            return syncService.Sync(request);
         }
 
         [AdminApiRoute("pages")]
@@ -275,6 +283,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         public ApiResponse<List<OptionParam>> Options()
         {
             return ApiResponse<List<OptionParam>>.Ok(_optionService.GetAll());
+        }
+
+        [AdminApiRoute("options/editable")]
+        public ApiResponse<List<OptionParam>> OptionsEditable()
+        {
+            return ApiResponse<List<OptionParam>>.Ok(_optionService.GetEditable());
         }
 
         [AdminApiRoute("options/update")]

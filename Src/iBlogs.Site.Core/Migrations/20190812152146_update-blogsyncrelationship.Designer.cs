@@ -9,8 +9,8 @@ using iBlogs.Site.Core.EntityFrameworkCore;
 namespace iBlogs.Site.Core.Migrations
 {
     [DbContext(typeof(iBlogsContext))]
-    [Migration("20190723125835_Init")]
-    partial class Init
+    [Migration("20190812152146_update-blogsyncrelationship")]
+    partial class updateblogsyncrelationship
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -152,6 +152,8 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.Property<string>("Message");
 
+                    b.Property<bool>("Successful");
+
                     b.Property<DateTime>("SyncData");
 
                     b.Property<int>("Target");
@@ -162,7 +164,7 @@ namespace iBlogs.Site.Core.Migrations
 
                     b.HasIndex("ContentId");
 
-                    b.ToTable("BlogAsyncRelationships");
+                    b.ToTable("BlogSyncRelationships");
                 });
 
             modelBuilder.Entity("iBlogs.Site.Core.Blog.Meta.Metas", b =>
@@ -228,6 +230,8 @@ namespace iBlogs.Site.Core.Migrations
                     b.Property<bool>("Deleted");
 
                     b.Property<string>("Description");
+
+                    b.Property<bool>("Editable");
 
                     b.Property<string>("Name");
 
