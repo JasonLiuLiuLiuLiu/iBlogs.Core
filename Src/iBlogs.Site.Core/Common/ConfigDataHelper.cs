@@ -11,6 +11,9 @@ namespace iBlogs.Site.Core.Common
     public static class ConfigDataHelper
     {
         private const string InstallFile = "Install.json";
+        private const string RabbitMqHost = "RabbitMqHost";
+        private const string RabbitMqPwd = "RabbitMqPWD";
+        private const string RabbitMqUid = "RabbitMqUID";
 
         public static void UpdateDbInstallStatus(bool status)
         {
@@ -40,6 +43,25 @@ namespace iBlogs.Site.Core.Common
             File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }
 
+        public static void UpdateRedisConfig(string host, string pwd = null)
+        {
+            var redisStr = $"{host}:6379";
+            if (!string.IsNullOrEmpty(pwd))
+                redisStr += $",password={pwd}";
+            UpdateRedisConStr(redisStr);
+        }
+
+        public static void UpdateRabbitMqConfig(string host, string uid, string pwd)
+        {
+            if (!string.IsNullOrEmpty(host))
+                UpdateAppsettings(RabbitMqHost, host);
+
+            if (!string.IsNullOrEmpty(uid))
+                UpdateAppsettings(RabbitMqUid, uid);
+
+            if (!string.IsNullOrEmpty(pwd))
+                UpdateAppsettings(RabbitMqPwd, pwd);
+        }
 
         public static void UpdateConnectionString(string connectionName, string value)
         {
@@ -47,7 +69,6 @@ namespace iBlogs.Site.Core.Common
             jObject["ConnectionStrings"][connectionName] = value;
             File.WriteAllText("appsettings.json", JsonConvert.SerializeObject(jObject, Formatting.Indented));
         }
-
         public static void SaveInstallParam(InstallParam param)
         {
             if (param == null)

@@ -47,6 +47,8 @@ namespace iBlogs.Site.Core.Install.Service
         {
             var connectString = $"Server={param.DbUrl};Database={param.DbName};uid={param.DbUserName};pwd={param.DbUserPwd}";
             ConfigDataHelper.UpdateConnectionString("iBlogs", connectString);
+            ConfigDataHelper.UpdateRedisConfig(param.RedisHost, param.RedisPwd);
+            ConfigDataHelper.UpdateRabbitMqConfig(param.RabbitMqHost, param.RabbitMqUid, param.RabbitMqPwd);
             ConfigDataHelper.SaveInstallParam(param);
             Task.Run(() =>
             {
@@ -65,7 +67,7 @@ namespace iBlogs.Site.Core.Install.Service
                 Seed();
                 ConfigDataHelper.UpdateDbInstallStatus(true);
                 ConfigDataHelper.DeleteInstallParamFile();
-                _optionService.Set(ConfigKey.SiteInstallTime,DateTime.Now.ToString(CultureInfo.InvariantCulture));
+                _optionService.Set(ConfigKey.SiteInstallTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 _optionService.Set(ConfigKey.LastActiveTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 _optionService.Load();
                 return true;
