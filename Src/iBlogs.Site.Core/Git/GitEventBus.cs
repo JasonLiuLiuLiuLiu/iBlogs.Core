@@ -60,24 +60,27 @@ namespace iBlogs.Site.Core.Git
                     Username = gitAuthor.Username
                 };
                 var gitRequest = JsonConvert.DeserializeObject<GitRequest>(message);
-                if (gitRequest?.commits == null)
+                if (gitRequest?.Commits == null)
                     return;
                 var needHandleFile = new List<string>();
 
-                foreach (var commit in gitRequest.commits)
+                foreach (var commit in gitRequest.Commits)
                 {
-                    if (commit.committer.name == _optionService.Get(ConfigKey.GitCommitter, "iBlogs"))
+                    if (commit.Committer.Name == _optionService.Get(ConfigKey.GitCommitter, "iBlogs"))
                     {
-                        _logger.LogWarning($"commit:{commit.message},committer:{commit.committer.name} will skip");
+                        _logger.LogWarning($"commit:{commit.Message},committer:{commit.Committer.Name} will skip");
                         continue;
                     }
-                    needHandleFile.AddRange(commit.added);
-                    needHandleFile.AddRange(commit.modified);
+                    needHandleFile.AddRange(commit.Added);
+                    needHandleFile.AddRange(commit.Modified);
                 }
                 if (!needHandleFile.Any())
                     return;
-                _gitFileService.CloneOrPull();
-                await _gitFileService.Handle(needHandleFile.Distinct().ToList());
+
+                var branchName = gitRequest.Ref.Split('/').Last();
+
+                _gitFileService.CloneOrPull(branchName);
+                await _gitFileService.Handle(needHandleFile.Distinct().ToList(),branchName);
             }
             catch (Exception ex)
             {

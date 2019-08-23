@@ -50,11 +50,12 @@ namespace iBlogs.Site.Core.Git
                 }
                 else
                 {
-                   Pull();
+                    Pull();
                 }
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex,"Clone执行失败,将删除仓库重新拉取");
                 Directory.Delete(RepoPath, true);
                 Directory.CreateDirectory(RepoPath);
                 var co = new CloneOptions
@@ -67,11 +68,15 @@ namespace iBlogs.Site.Core.Git
                 };
                 LibGit2Sharp.Repository.Clone(_optionService.Get(ConfigKey.GitProjectCloneUrl), RepoPath, co);
             }
+            finally
+            {
+                CheckOutAndUpdate(branchName);
+            }
 
             return true;
         }
 
-        public async Task<bool> Handle(List<string> files)
+        public async Task<bool> Handle(List<string> files, string branchName)
         {
             if (files == null || !files.Any())
                 return false;
@@ -90,12 +95,12 @@ namespace iBlogs.Site.Core.Git
             }
 
             if (changed)
-                CommitAndPush();
+                CommitAndPush(branchName);
 
             return true;
         }
 
-        public bool CommitAndPush()
+        public bool CommitAndPush(string branchName)
         {
             using (var repo = new LibGit2Sharp.Repository(RepoPath))
             {
@@ -119,58 +124,32 @@ namespace iBlogs.Site.Core.Git
                             Password = _optionService.Get(ConfigKey.GitPassword)
                         }
                 };
-                repo.Network.Push(repo.Branches["master"], options);
+                repo.Network.Push(repo.Branches[branchName], options);
             }
 
             return true;
         }
 
-        private void CheckOut(string branchName)
+        private void CheckOutAndUpdate(string branchName)
         {
             if (string.IsNullOrEmpty(branchName))
                 branchName = "master";
-            // NOTE: This code is for demo purposes only.  It is a bad idea
-            // to create code that couples multiple functions/actions together
 
             using (var repo = new LibGit2Sharp.Repository(RepoPath))
             {
-                var branch = repo.Branches[branchName];
-
-                if (branch == null)
+                var trackingBranch = repo.Branches["remotes/origin/"+branchName];
+                if (trackingBranch!=null&&trackingBranch.IsRemote)
                 {
-                    // Repository returns null object when branch does not exist
-                    // so, create a new, LOCAL branch
-                    branch = repo.CreateBranch(branchName); // Or repo.Branches.Add("dev", "HEAD");
-
-                    // You will need more code _here_ if you want to synchronize/set 
-                    // an upstream branch...
-                }
-
-                // Now, checkout the branch
-                Branch currentBranch = Commands.Checkout(repo, branch);
-
-                // Do more stuff...
-
-                // Credential information to fetch
-                PullOptions options = new PullOptions
-                {
-                    FetchOptions = new FetchOptions
+                    var branch = repo.Branches[branchName];
+                    if (branch == null)
                     {
-                        CredentialsProvider = (url, usernameFromUrl, types) =>
-                            new UsernamePasswordCredentials()
-                            {
-                                Username = _optionService.Get(ConfigKey.GitUerName),
-                                Password = _optionService.Get(ConfigKey.GitPassword)
-                            }
+                        branch = repo.CreateBranch(branchName, trackingBranch.Tip);
                     }
-                };
 
-                // User information to create a merge commit
-                var signature = new Signature(
-                    new Identity("MERGE_USER_NAME", "MERGE_USER_EMAIL"), DateTimeOffset.Now);
+                    repo.Branches.Update(branch, b => b.TrackedBranch = trackingBranch.CanonicalName);
 
-                // Pull
-                Commands.Pull(repo, signature, options);
+                    Commands.Checkout(repo, branch, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
+                }
             }
         }
 
