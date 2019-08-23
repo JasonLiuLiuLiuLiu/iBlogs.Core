@@ -20,7 +20,9 @@ namespace iBlogs.Site.Core.Git
         private readonly ILogger<GitFileService> _logger;
         private readonly IHostingEnvironment _environment;
         private const string RepoPath = "Repo";
-        public GitFileService(IOptionService optionService, IGitBlogService gitBlogService, ILogger<GitFileService> logger, IHostingEnvironment environment)
+
+        public GitFileService(IOptionService optionService, IGitBlogService gitBlogService,
+            ILogger<GitFileService> logger, IHostingEnvironment environment)
         {
             _optionService = optionService;
             _gitBlogService = gitBlogService;
@@ -28,7 +30,7 @@ namespace iBlogs.Site.Core.Git
             _environment = environment;
         }
 
-        public bool CloneOrPull()
+        public bool CloneOrPull(string branchName)
         {
             if (!Directory.Exists(RepoPath))
                 Directory.CreateDirectory(RepoPath);
@@ -48,32 +50,10 @@ namespace iBlogs.Site.Core.Git
                 }
                 else
                 {
-                    using (var repo = new LibGit2Sharp.Repository(RepoPath))
-                    {
-                        // Credential information to fetch
-                        PullOptions options = new PullOptions
-                        {
-                            FetchOptions = new FetchOptions
-                            {
-                                CredentialsProvider = (url, usernameFromUrl, types) =>
-                                    new UsernamePasswordCredentials()
-                                    {
-                                        Username = _optionService.Get(ConfigKey.GitUerName),
-                                        Password = _optionService.Get(ConfigKey.GitPassword)
-                                    }
-                            }
-                        };
-
-                        // User information to create a merge commit
-                        var signature = new Signature(
-                            new Identity("MERGE_USER_NAME", "MERGE_USER_EMAIL"), DateTimeOffset.Now);
-
-                        // Pull
-                        Commands.Pull(repo, signature, options);
-                    }
+                   Pull();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Directory.Delete(RepoPath, true);
                 Directory.CreateDirectory(RepoPath);
@@ -98,7 +78,7 @@ namespace iBlogs.Site.Core.Git
             var changed = false;
             foreach (var file in files)
             {
-                var filePath = Path.Combine(_environment.ContentRootPath,RepoPath, file);
+                var filePath = Path.Combine(_environment.ContentRootPath, RepoPath, file);
                 if (!File.Exists(filePath))
                 {
                     _logger.LogError($"文件{file}不存在");
@@ -122,11 +102,13 @@ namespace iBlogs.Site.Core.Git
                 Commands.Stage(repo, "*");
 
                 // Create the committer's signature and commit
-                var author = new Signature(_optionService.Get(ConfigKey.GitCommitter, "iBlogs"), _optionService.Get(ConfigKey.GitUerName, "admin@iblogs.site"), DateTime.Now);
+                var author = new Signature(_optionService.Get(ConfigKey.GitCommitter, "iBlogs"),
+                    _optionService.Get(ConfigKey.GitUerName, "admin@iblogs.site"), DateTime.Now);
                 var committer = author;
 
                 // Commit to the repository
-                repo.Commit($"iBlogs handle at {DateTime.Now.ToString(CultureInfo.InvariantCulture)}", author, committer);
+                repo.Commit($"iBlogs handle at {DateTime.Now.ToString(CultureInfo.InvariantCulture)}", author,
+                    committer);
 
                 var options = new PushOptions
                 {
@@ -141,6 +123,82 @@ namespace iBlogs.Site.Core.Git
             }
 
             return true;
+        }
+
+        private void CheckOut(string branchName)
+        {
+            if (string.IsNullOrEmpty(branchName))
+                branchName = "master";
+            // NOTE: This code is for demo purposes only.  It is a bad idea
+            // to create code that couples multiple functions/actions together
+
+            using (var repo = new LibGit2Sharp.Repository(RepoPath))
+            {
+                var branch = repo.Branches[branchName];
+
+                if (branch == null)
+                {
+                    // Repository returns null object when branch does not exist
+                    // so, create a new, LOCAL branch
+                    branch = repo.CreateBranch(branchName); // Or repo.Branches.Add("dev", "HEAD");
+
+                    // You will need more code _here_ if you want to synchronize/set 
+                    // an upstream branch...
+                }
+
+                // Now, checkout the branch
+                Branch currentBranch = Commands.Checkout(repo, branch);
+
+                // Do more stuff...
+
+                // Credential information to fetch
+                PullOptions options = new PullOptions
+                {
+                    FetchOptions = new FetchOptions
+                    {
+                        CredentialsProvider = (url, usernameFromUrl, types) =>
+                            new UsernamePasswordCredentials()
+                            {
+                                Username = _optionService.Get(ConfigKey.GitUerName),
+                                Password = _optionService.Get(ConfigKey.GitPassword)
+                            }
+                    }
+                };
+
+                // User information to create a merge commit
+                var signature = new Signature(
+                    new Identity("MERGE_USER_NAME", "MERGE_USER_EMAIL"), DateTimeOffset.Now);
+
+                // Pull
+                Commands.Pull(repo, signature, options);
+            }
+        }
+
+        private void Pull()
+        {
+            using (var repo = new LibGit2Sharp.Repository(RepoPath))
+            {
+                // Credential information to fetch
+                PullOptions options = new PullOptions
+                {
+                    FetchOptions = new FetchOptions
+                    {
+                        CredentialsProvider = (url, usernameFromUrl, types) =>
+                            new UsernamePasswordCredentials()
+                            {
+                                Username = _optionService.Get(ConfigKey.GitUerName),
+                                Password = _optionService.Get(ConfigKey.GitPassword)
+                            }
+                    }
+                };
+
+                // User information to create a merge commit
+                var signature = new Signature(
+                    new Identity("MERGE_USER_NAME", "MERGE_USER_EMAIL"), DateTimeOffset.Now);
+
+                // Pull
+                Commands.Pull(repo, signature, options);
+            }
         }
     }
 }
