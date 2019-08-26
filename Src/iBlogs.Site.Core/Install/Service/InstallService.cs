@@ -180,7 +180,7 @@ namespace iBlogs.Site.Core.Install.Service
                 Slug = "links",
                 Created = DateTime.Now,
                 Modified = DateTime.Now,
-                Content = "## 友情链接\r\n\r\n- :lock: [王爵的技术博客]()\r\n- :lock: [cyang.tech]()\r\n- :lock: [Bakumon''s Blog]()\r\n\r\n## 链接须知\r\n\r\n> 请确定贵站可以稳定运营\r\n> 原创博客优先，技术类博客优先，设计、视觉类博客优先\r\n> 经常过来访问和评论，眼熟的\r\n\r\n备注：默认申请友情链接均为内页（当前页面）\r\n\r\n## 基本信息\r\n\r\n                网站名称：Tale博客\r\n                网站地址：https://tale.biezhi.me\r\n\r\n请在当页通过评论来申请友链，其他地方不予回复\r\n\r\n暂时先这样，同时欢迎互换友链，这个页面留言即可。 ^_^\r\n\r\n还有，我会不定时对无法访问的网址进行清理，请保证自己的链接长期有效。'",
+                Content = "## 友情链接\r\n\r\n- :lock: [码农阿宇(博客园)](https://www.cnblogs.com/coderayu)\r\n- :lock: [刘振宇(Github)](https://github.com/liuzhenyulive)\r\n- :lock: [iBlogs](https://iblogs.site)\r\n\r\n## 链接须知\r\n\r\n> 请确定贵站可以稳定运营\r\n> 原创博客优先，技术类博客优先，设计、视觉类博客优先\r\n> 经常过来访问和评论，眼熟的\r\n\r\n备注：默认申请友情链接均为内页（当前页面）\r\n\r\n## 基本信息\r\n\r\n                网站名称：iBlogs\r\n                网站地址：https://iblogs.site\r\n\r\n请在当页通过评论来申请友链，其他地方不予回复\r\n\r\n暂时先这样，同时欢迎互换友链，这个页面留言即可。 ^_^\r\n\r\n还有，我会不定时对无法访问的网址进行清理，请保证自己的链接长期有效。'",
                 AuthorId = _users.Id,
                 Type = ContentType.Page,
                 Status = ContentStatus.Publish,
