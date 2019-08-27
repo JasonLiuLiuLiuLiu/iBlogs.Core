@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using iBlogs.Site.Core.Git;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
@@ -45,7 +46,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
                 if (IsGithubPushAllowed(txt, eventName, signature))
                 {
-                    _gitEventBus.Publish(txt);
+                    _gitEventBus.Publish(HttpUtility.UrlDecode(txt));
                     return Ok();
                 }
             }
@@ -86,7 +87,6 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                     }
                 }
             }
-
             return false;
         }
 
