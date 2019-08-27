@@ -32,6 +32,9 @@ namespace iBlogs.Site.Core.Git
 
         public bool CloneOrPull(string branchName)
         {
+            if (string.IsNullOrEmpty(branchName))
+                branchName = "master";
+
             if (!Directory.Exists(RepoPath))
                 Directory.CreateDirectory(RepoPath);
             try
