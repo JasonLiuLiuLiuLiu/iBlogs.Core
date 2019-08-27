@@ -44,7 +44,8 @@ namespace iBlogs.Site.Core.Git
                         {
                             Username = _optionService.Get(ConfigKey.GitUerName),
                             Password = _optionService.Get(ConfigKey.GitPassword)
-                        }
+                        },
+                        BranchName=branchName
                     };
                     LibGit2Sharp.Repository.Clone(_optionService.Get(ConfigKey.GitProjectCloneUrl), RepoPath, co);
                 }
@@ -78,6 +79,9 @@ namespace iBlogs.Site.Core.Git
 
         public async Task<bool> Handle(List<string> files, string branchName)
         {
+            if (string.IsNullOrEmpty(branchName))
+                branchName = "master";
+
             if (files == null || !files.Any())
                 return false;
             var changed = false;
@@ -132,9 +136,6 @@ namespace iBlogs.Site.Core.Git
 
         private void CheckOutAndUpdate(string branchName)
         {
-            if (string.IsNullOrEmpty(branchName))
-                branchName = "master";
-
             using (var repo = new LibGit2Sharp.Repository(RepoPath))
             {
                 var trackingBranch = repo.Branches["remotes/origin/"+branchName];
