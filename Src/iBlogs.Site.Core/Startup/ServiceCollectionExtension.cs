@@ -9,6 +9,7 @@ using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.CodeDi;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.Startup.Middleware;
 using iBlogs.Site.MetaWeblog.Wrappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
@@ -88,7 +89,7 @@ namespace iBlogs.Site.Core.Startup
                     });
                     x.UseDashboard(option =>
                     {
-                        option.Authorization = new List<IDashboardAuthorizationFilter>();
+                        option.Authorization = new[]{new CapDashboardAuthorizationFilter()};
                     });
                 });
 
