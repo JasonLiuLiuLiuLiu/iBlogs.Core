@@ -33,6 +33,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
             Request.Headers.TryGetValue("X-GitHub-Event", out StringValues eventName);
             Request.Headers.TryGetValue("X-Hub-Signature", out StringValues signature);
             Request.Headers.TryGetValue("X-GitHub-Delivery", out StringValues delivery);
+            Request.Headers.TryGetValue("Content-Type", out StringValues contentType);
 
             _logger.LogInformation($"event name:{eventName}");
             _logger.LogInformation($"signature:{signature}");
@@ -46,7 +47,17 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
                 if (IsGithubPushAllowed(txt, eventName, signature))
                 {
-                    _gitEventBus.Publish(HttpUtility.UrlDecode(txt));
+                    if (contentType.ToString().Equals("application/x-www-form-urlencoded",
+                        StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        var context = HttpUtility.UrlDecode(txt);
+                        if (context?.IndexOf("Payload=", StringComparison.CurrentCultureIgnoreCase) == 0)
+                        {
+                            txt = context.Substring(8, context.Length-8);
+                        }
+                    }
+
+                    _gitEventBus.Publish(txt);
                     return Ok();
                 }
             }
