@@ -89,13 +89,13 @@ namespace iBlogs.Site.Core.Startup
                     });
                     x.UseDashboard(option =>
                     {
-                        option.Authorization = new[]{new CapDashboardAuthorizationFilter()};
+                        option.Authorization = new[] { new CapDashboardAuthorizationFilter() };
                     });
                 });
 
             services.AddAutoMapper(cfg =>
             {
-                cfg.ValidateInlineMaps = false;
+                //cfg.ValidateInlineMaps = false;
                 cfg.AddProfile<AutoMapperProfile>();
             },
                 Assembly.GetAssembly(typeof(ServiceCollection)));

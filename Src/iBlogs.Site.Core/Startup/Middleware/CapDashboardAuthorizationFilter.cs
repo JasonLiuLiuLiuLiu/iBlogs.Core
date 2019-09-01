@@ -1,4 +1,5 @@
-﻿using DotNetCore.CAP.Dashboard;
+﻿using System.Threading.Tasks;
+using DotNetCore.CAP.Dashboard;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
@@ -6,7 +7,7 @@ namespace iBlogs.Site.Core.Startup.Middleware
 {
     public class CapDashboardAuthorizationFilter : IDashboardAuthorizationFilter
     {
-        public bool Authorize(DashboardContext dashBoardContext)
+        public async Task<bool> AuthorizeAsync(DashboardContext dashBoardContext)
         {
             var context = ((CapDashboardContext)dashBoardContext).HttpContext;
 
@@ -19,9 +20,9 @@ namespace iBlogs.Site.Core.Startup.Middleware
 
             var schemes = (IAuthenticationSchemeProvider)context.RequestServices.GetService(typeof(IAuthenticationSchemeProvider));
 
-            var authenticateSchemeAsync = schemes.GetDefaultAuthenticateSchemeAsync().Result;
+            var authenticateSchemeAsync =await schemes.GetDefaultAuthenticateSchemeAsync();
             if (authenticateSchemeAsync == null) return true;
-            var authenticateResult = context.AuthenticateAsync(authenticateSchemeAsync.Name).Result;
+            var authenticateResult =await context.AuthenticateAsync(authenticateSchemeAsync.Name);
             return authenticateResult?.Principal != null;
         }
     }
