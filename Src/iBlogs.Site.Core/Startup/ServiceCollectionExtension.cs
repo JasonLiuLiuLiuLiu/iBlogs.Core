@@ -86,7 +86,9 @@ namespace iBlogs.Site.Core.Startup
                         option.Password = configuration["RabbitMqPWD"] ?? "guest";
                         option.UserName = configuration["RabbitMqUID"] ?? "guest";
                         option.Port = 5672;
+                        option.ExchangeName = "cap.router." + configuration["BuildNumber"];
                     });
+                    x.DefaultGroup = "cap.queue." + Assembly.GetEntryAssembly()?.GetName().Name.ToLower() + configuration["BuildNumber"];
                     x.UseDashboard(option =>
                     {
                         option.Authorization = new[] { new CapDashboardAuthorizationFilter() };
