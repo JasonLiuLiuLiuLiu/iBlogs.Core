@@ -5,6 +5,7 @@ using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 
 namespace iBlogs.Site.Core.MailKit
@@ -13,11 +14,13 @@ namespace iBlogs.Site.Core.MailKit
     {
         private readonly IOptionService _optionService;
         private readonly ICapPublisher _capPublisher;
+        private readonly ILogger<MailService> _logger;
 
-        public MailService(IOptionService optionService,  ICapPublisher capPublisher)
+        public MailService(IOptionService optionService,  ICapPublisher capPublisher, ILogger<MailService> logger)
         {
             _optionService = optionService;
             _capPublisher = capPublisher;
+            _logger = logger;
         }
 
         public void Publish(MailContext context)
@@ -39,48 +42,56 @@ namespace iBlogs.Site.Core.MailKit
         [CapSubscribe("iBlogs.Site.Core.Mail")]
         public void Send(MailContext context)
         {
-            if (!CheckOption(out string errorMessage))
+            try
             {
-                throw new Exception(errorMessage);
+                if (!CheckOption(out string errorMessage))
+                {
+                    throw new Exception(errorMessage);
+                }
+
+                var message = new MimeMessage();
+                var fromMail = _optionService.Get(ConfigKey.EmailFromAccount);
+                message.From.Add(new MailboxAddress(fromMail, fromMail));
+                message.To.AddRange(context.To.Select(t => new MailboxAddress(t, t)));
+
+                if (context.Cc != null)
+                {
+                    message.Cc.AddRange(context.Cc.Select(t => new MailboxAddress(t, t)));
+                }
+
+                if (context.Bcc != null)
+                {
+                    message.Bcc.AddRange(context.Bcc.Select(t => new MailboxAddress(t, t)));
+                }
+
+                message.Subject = context.Subject;
+
+                message.Body = new TextPart("plain")
+                {
+                    Text = context.Content
+                };
+
+                using (var client = new SmtpClient())
+                {
+                    // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
+                    // client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+
+                    client.Connect(_optionService.Get(ConfigKey.EmailSmtpHost), int.Parse(_optionService.Get(ConfigKey.EmailSmtpHostPort, "587")), false);
+
+                    var userName = _optionService.Get(ConfigKey.EmailUserName);
+                    var password = _optionService.Get(ConfigKey.EmailPassword);
+
+                    // Note: only needed if the SMTP server requires authentication
+                    client.Authenticate(userName, password);
+
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
             }
-
-            var message = new MimeMessage();
-            var fromMail = _optionService.Get(ConfigKey.EmailFromAccount);
-            message.From.Add(new MailboxAddress(fromMail,fromMail));
-            message.To.AddRange(context.To.Select(t=>new MailboxAddress(t,t)));
-
-            if (context.Cc != null)
+            catch (Exception e)
             {
-                message.Cc.AddRange(context.Cc.Select(t => new MailboxAddress(t, t)));
-            }
-
-            if (context.Bcc != null)
-            {
-                message.Bcc.AddRange(context.Bcc.Select(t => new MailboxAddress(t, t)));
-            }
-
-            message.Subject = context.Subject;
-
-            message.Body = new TextPart("plain")
-            {
-                Text = context.Content
-            };
-
-            using (var client = new SmtpClient())
-            {
-                // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
-                // client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-
-                client.Connect(_optionService.Get(ConfigKey.EmailSmtpHost), int.Parse(_optionService.Get(ConfigKey.EmailSmtpHostPort, "587")), false);
-
-                var userName = _optionService.Get(ConfigKey.EmailUserName);
-                var password = _optionService.Get(ConfigKey.EmailPassword);
-
-                // Note: only needed if the SMTP server requires authentication
-                client.Authenticate(userName, password);
-
-                client.Send(message);
-                client.Disconnect(true);
+                _logger.LogError(e,e.Message);
+                throw;
             }
         }
 
