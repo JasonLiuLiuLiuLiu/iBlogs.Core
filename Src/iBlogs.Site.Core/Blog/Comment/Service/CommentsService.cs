@@ -6,6 +6,7 @@ using iBlogs.Site.Core.Blog.Content.Service;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Response;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.MailKit;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Security.Service;
@@ -21,14 +22,16 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IOptionService _optionService;
+        private readonly IMailService _mailService;
 
-        public CommentsService(IRepository<Comments> repository, IMapper mapper, IContentsService contentsService, IUserService userService, IOptionService optionService)
+        public CommentsService(IRepository<Comments> repository, IMapper mapper, IContentsService contentsService, IUserService userService, IOptionService optionService, IMailService mailService)
         {
             _repository = repository;
             _mapper = mapper;
             _contentsService = contentsService;
             _userService = userService;
             _optionService = optionService;
+            _mailService = mailService;
         }
 
         public int GetTotalCount()
@@ -57,10 +60,10 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
         public void Reply(Comments comments)
         {
             var replyComment = _repository.FirstOrDefault(comments.Parent);
-            if(replyComment==null)
+            if (replyComment == null)
                 throw new NotFoundException("没有找到该评论");
 
-            if(_userService.CurrentUsers==null)
+            if (_userService.CurrentUsers == null)
                 throw new Exception("该接口仅提供给管理员调用,请登录");
 
             comments.Status = CommentStatus.Approved;
@@ -73,7 +76,7 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             _repository.SaveChanges();
             _contentsService.UpdateCommentCount(comments.Cid, 1);
 
-            _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u=>u.Status==CommentStatus.Approved).Select(u => u.Id).Count().ToString());
+            _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
 
         }
 
@@ -98,6 +101,16 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             if (comment == null)
                 throw new Exception("没找到该评论!");
             comment.Status = param.Status;
+
+            if (param.Status == CommentStatus.Approved)
+            {
+                _mailService.Publish(new MailContext
+                {
+                    To = new[] { comment.Mail },
+                    Content = $"您的评论已审核通过:{comment.Content}"
+                });
+            }
+
             _repository.Update(comment);
 
             _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());

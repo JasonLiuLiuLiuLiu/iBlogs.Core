@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="9.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="AutoMapper" Version="8.1.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.0" />
     <PackageReference Include="DotNetCore.CAP" Version="2.6.0" />
     <PackageReference Include="DotNetCore.CAP.MySql" Version="2.6.0" />
     <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="2.6.0" />
@@ -37,10 +37,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\iBlogs.Site.MetaWeblog\iBlogs.Site.MetaWeblog.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="MailKit\" />
   </ItemGroup>
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

@@ -95,7 +95,7 @@ namespace iBlogs.Site.Core.Startup
 
             services.AddAutoMapper(cfg =>
             {
-                //cfg.ValidateInlineMaps = false;
+                cfg.ValidateInlineMaps = false;
                 cfg.AddProfile<AutoMapperProfile>();
             },
                 Assembly.GetAssembly(typeof(ServiceCollection)));

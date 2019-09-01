@@ -98,7 +98,17 @@
         [ConfigKey("页脚信息1,支持HTML", "请在后台管理系统中配置您的页脚信息1",true)]
         FootContent1,
         [ConfigKey("页脚信息2,支持HTML", "请后台管理系统中配置您的页脚信息2", true)]
-        FootContent2
+        FootContent2,
+        [ConfigKey("邮件通知From邮箱地址",true)]
+        EmailFromAccount,
+        [ConfigKey("邮箱服务器用户名",true)]
+        EmailUserName,
+        [ConfigKey("邮箱服务器密码",true)]
+        EmailPassword,
+        [ConfigKey("邮件服务器地址",true)]
+        EmailSmtpHost,
+        [ConfigKey("邮件服务器端口", "587",true)]
+        EmailSmtpHostPort,
 
     }
 
