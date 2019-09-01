@@ -27,8 +27,9 @@ namespace iBlogs.Site.Core.MailKit
                 throw new Exception(errorMessage);
             }
 
-            if (context.Cc==null||context.Cc.Length==0)
+            if (context.To==null||context.To.Length==0)
             {
+                errorMessage = "通知人邮件地址不能为空";
                 throw new Exception(errorMessage);
             }
 
