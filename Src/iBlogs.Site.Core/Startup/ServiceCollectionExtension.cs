@@ -79,19 +79,14 @@ namespace iBlogs.Site.Core.Startup
             if (configuration["DbInstalled"].ToBool())
                 services.AddCap(x =>
                 {
-                    x.UseEntityFramework<iBlogsContext>(option =>
-                        {
-                            option.TableNamePrefix = "cap." + configuration["BuildNumber"];
-                        });
+                    x.UseEntityFramework<iBlogsContext>();
                     x.UseRabbitMQ(option =>
                     {
                         option.HostName = configuration["RabbitMqHost"] ?? "localhost";
                         option.Password = configuration["RabbitMqPWD"] ?? "guest";
                         option.UserName = configuration["RabbitMqUID"] ?? "guest";
                         option.Port = 5672;
-                        option.ExchangeName = "cap.router." + configuration["BuildNumber"];
                     });
-                    x.DefaultGroup = $"cap.queue.{ Assembly.GetEntryAssembly()?.GetName().Name.ToLower()}.{ configuration["BuildNumber"]}";
                     x.UseDashboard(option =>
                     {
                         option.Authorization = new[] { new CapDashboardAuthorizationFilter() };
