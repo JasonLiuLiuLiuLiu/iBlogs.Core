@@ -16,7 +16,7 @@ namespace iBlogs.Site.Core.MailKit
         private readonly ICapPublisher _capPublisher;
         private readonly ILogger<MailService> _logger;
 
-        public MailService(IOptionService optionService,  ICapPublisher capPublisher, ILogger<MailService> logger)
+        public MailService(IOptionService optionService, ICapPublisher capPublisher, ILogger<MailService> logger)
         {
             _optionService = optionService;
             _capPublisher = capPublisher;
@@ -30,7 +30,7 @@ namespace iBlogs.Site.Core.MailKit
                 throw new Exception(errorMessage);
             }
 
-            if (context.To==null||context.To.Length==0)
+            if (context.To == null || context.To.Length == 0)
             {
                 errorMessage = "通知人邮件地址不能为空";
                 throw new Exception(errorMessage);
@@ -75,8 +75,12 @@ namespace iBlogs.Site.Core.MailKit
                 {
                     // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
                     // client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                    var host = _optionService.Get(ConfigKey.EmailSmtpHost);
+                    var port = int.Parse(_optionService.Get(ConfigKey.EmailSmtpHostPort, "587"));
 
-                    client.Connect(_optionService.Get(ConfigKey.EmailSmtpHost), int.Parse(_optionService.Get(ConfigKey.EmailSmtpHostPort, "587")), false);
+                    _logger.LogInformation($"Mail connect info,host:{host},port:{port}");
+
+                    client.Connect(host, port, false);
 
                     var userName = _optionService.Get(ConfigKey.EmailUserName);
                     var password = _optionService.Get(ConfigKey.EmailPassword);
@@ -90,7 +94,7 @@ namespace iBlogs.Site.Core.MailKit
             }
             catch (Exception e)
             {
-                _logger.LogError(e,e.Message);
+                _logger.LogError(e, e.Message);
                 throw;
             }
         }
@@ -124,7 +128,7 @@ namespace iBlogs.Site.Core.MailKit
                 message += "请配置邮件服务器地址";
             }
 
-            return message =="";
+            return message == "";
         }
     }
 }
