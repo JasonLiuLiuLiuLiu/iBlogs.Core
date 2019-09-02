@@ -78,8 +78,6 @@ namespace iBlogs.Site.Core.MailKit
                     var host = _optionService.Get(ConfigKey.EmailSmtpHost);
                     var port = int.Parse(_optionService.Get(ConfigKey.EmailSmtpHostPort, "587"));
 
-                    _logger.LogInformation($"Mail connect info,host:{host},port:{port}");
-
                     client.Connect(host, port, false);
 
                     var userName = _optionService.Get(ConfigKey.EmailUserName);
