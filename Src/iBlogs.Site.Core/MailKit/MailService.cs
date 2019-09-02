@@ -40,7 +40,7 @@ namespace iBlogs.Site.Core.MailKit
         }
 
         [CapSubscribe("iBlogs.Site.Core.Mail")]
-        public void Send(MailContext context)
+        public void SendCapSubscription(MailContext context)
         {
             try
             {

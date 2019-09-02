@@ -109,7 +109,8 @@
         EmailSmtpHost,
         [ConfigKey("邮件服务器端口", "587",true)]
         EmailSmtpHostPort,
-
+        [ConfigKey("管理员邮箱")]
+        AdminEmail
     }
 
 

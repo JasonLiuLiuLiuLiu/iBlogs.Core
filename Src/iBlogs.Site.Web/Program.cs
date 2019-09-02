@@ -2,6 +2,7 @@
 using System.IO;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.Log.Service;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,11 +26,11 @@ namespace iBlogs.Site.Web
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
 #endif
                 .Enrich.FromLogContext();
-#if DEBUG
+#if !DEBUG
             logConfig = logConfig.WriteTo.Console();
 #else
              logConfig = ConfigDataHelper.TryGetConnectionString("iBlogs", out var connectionString) ?
-                logConfig.WriteTo.MySQL(connectionString) : logConfig.WriteTo.Console();
+                logConfig.WriteTo.MySQL(connectionString,errorLogEventCallBack:LogService.ErrorLogEventCallBack) : logConfig.WriteTo.Console();
 #endif
 
 

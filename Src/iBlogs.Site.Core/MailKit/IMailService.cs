@@ -3,6 +3,6 @@
     public interface IMailService
     {
         void Publish(MailContext context);
-        void Send(MailContext context);
+        void SendCapSubscription(MailContext context);
     }
 }

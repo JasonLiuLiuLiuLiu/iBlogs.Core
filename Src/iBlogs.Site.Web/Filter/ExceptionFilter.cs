@@ -20,7 +20,7 @@ namespace iBlogs.Site.Web.Filter
 
         public override void OnException(ExceptionContext context)
         {
-            if (!_hostingEnvironment.IsDevelopment())
+            if (_hostingEnvironment.IsDevelopment())
             {
                 return;
             }
