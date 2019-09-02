@@ -52,9 +52,13 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             _repository.SaveChanges();
             _contentsService.UpdateCommentCount(comments.Cid, 1);
 
-
             _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
-
+            _mailService.Publish(new MailContext
+            {
+                To = new[] { _optionService.Get(ConfigKey.AdminEmail) },
+                Subject = "您有新的待审批的留言",
+                Content = $"author:{comments.Author},content:{comments.Content}"
+            });
         }
 
         public void Reply(Comments comments)

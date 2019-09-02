@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
 using AutoMapper;
-using DotNetCore.CAP.Dashboard;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.AutoMapper;
 using iBlogs.Site.Core.Common.Caching;
@@ -10,7 +8,6 @@ using iBlogs.Site.Core.Common.CodeDi;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Startup.Middleware;
-using iBlogs.Site.MetaWeblog.Wrappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
