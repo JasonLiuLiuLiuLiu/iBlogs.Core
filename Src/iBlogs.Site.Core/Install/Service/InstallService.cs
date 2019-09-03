@@ -134,6 +134,7 @@ namespace iBlogs.Site.Core.Install.Service
             _optionService.Set(ConfigKey.StaticUrl, "/static");
             _optionService.Set(ConfigKey.TemplesPath, "/templates/");
             _optionService.Set(ConfigKey.ThemePath, "themes/default");
+            _optionService.Set(ConfigKey.AdminEmail,_param.AdminEmail);
             return true;
         }
 
