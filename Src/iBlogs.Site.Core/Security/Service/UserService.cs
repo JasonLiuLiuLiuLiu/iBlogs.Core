@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.Option;
+using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Security.DTO;
 
 namespace iBlogs.Site.Core.Security.Service
@@ -11,10 +13,12 @@ namespace iBlogs.Site.Core.Security.Service
     public class UserService : IUserService
     {
         private readonly IRepository<Users> _repository;
+        private readonly IOptionService _optionService;
 
-        public UserService( IRepository<Users> repository)
+        public UserService( IRepository<Users> repository, IOptionService optionService)
         {
             _repository = repository;
+            _optionService = optionService;
         }
 
         public CurrentUser CurrentUsers { get; set; }
@@ -50,6 +54,7 @@ namespace iBlogs.Site.Core.Security.Service
             var user = _repository.FirstOrDefault(CurrentUsers.Uid);
             user.ScreenName = param.ScreenName;
             user.Email = param.Email;
+            _optionService.Set(ConfigKey.AdminEmail,user.Email);
             _repository.SaveChanges();
         }
 

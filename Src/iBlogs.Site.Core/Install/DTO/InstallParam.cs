@@ -11,5 +11,10 @@
         public string DbName { get; set; }
         public string DbUserName { get; set; }
         public string DbUserPwd { get; set; }
+        public string RabbitMqHost { get; set; }
+        public string RabbitMqUid { get; set; }
+        public string RabbitMqPwd { get; set; }
+        public string RedisHost { get; set; }
+        public string RedisPwd { get; set; }
     }
 }

@@ -131,7 +131,6 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         public ApiResponse ArticleList(ArticleParam articleParam)
         {
             articleParam.Type = ContentType.Post;
-            articleParam.Page--;
             var articles = _contentsService.FindArticles(articleParam);
             return ApiResponse<Page<ContentResponse>>.Ok(articles);
         }

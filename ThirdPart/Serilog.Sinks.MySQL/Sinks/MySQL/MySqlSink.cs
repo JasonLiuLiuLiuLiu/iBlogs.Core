@@ -31,16 +31,19 @@ namespace Serilog.Sinks.MySQL
         private readonly string _connectionString;
         private readonly bool _storeTimestampInUtc;
         private readonly string _tableName;
+        private readonly Action<LogEvent> _errorLogCallBack;
 
         public MySqlSink(
             string connectionString,
             string tableName = "Logs",
             bool storeTimestampInUtc = false,
-            uint batchSize = 100) : base((int) batchSize)
+            uint batchSize = 100,
+            Action<LogEvent> errorLogCallBack = null) : base((int)batchSize)
         {
-            _connectionString    = connectionString;
-            _tableName           = tableName;
+            _connectionString = connectionString;
+            _tableName = tableName;
             _storeTimestampInUtc = storeTimestampInUtc;
+            _errorLogCallBack = errorLogCallBack;
 
             var sqlConnection = GetSqlConnection();
             CreateTable(sqlConnection);
@@ -53,13 +56,15 @@ namespace Serilog.Sinks.MySQL
 
         private MySqlConnection GetSqlConnection()
         {
-            try {
+            try
+            {
                 var conn = new MySqlConnection(_connectionString);
                 conn.Open();
 
                 return conn;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 SelfLog.WriteLine(ex.Message);
 
                 return null;
@@ -88,7 +93,8 @@ namespace Serilog.Sinks.MySQL
 
         private void CreateTable(MySqlConnection sqlConnection)
         {
-            try {
+            try
+            {
                 var tableCommandBuilder = new StringBuilder();
                 tableCommandBuilder.Append($"CREATE TABLE IF NOT EXISTS {_tableName} (");
                 tableCommandBuilder.Append("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,");
@@ -104,20 +110,25 @@ namespace Serilog.Sinks.MySQL
                 cmd.CommandText = tableCommandBuilder.ToString();
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 SelfLog.WriteLine(ex.Message);
             }
         }
 
         protected override async Task<bool> WriteLogEventAsync(ICollection<LogEvent> logEventsBatch)
         {
-            try {
-                using (var sqlCon = GetSqlConnection()) {
-                    using (var tr = await sqlCon.BeginTransactionAsync().ConfigureAwait(false)) {
+            try
+            {
+                using (var sqlCon = GetSqlConnection())
+                {
+                    using (var tr = await sqlCon.BeginTransactionAsync().ConfigureAwait(false))
+                    {
                         var insertCommand = GetInsertCommand(sqlCon);
                         insertCommand.Transaction = tr;
 
-                        foreach (var logEvent in logEventsBatch) {
+                        foreach (var logEvent in logEventsBatch)
+                        {
                             var logMessageString = new StringWriter(new StringBuilder());
                             logEvent.RenderMessage(logMessageString);
 
@@ -125,15 +136,20 @@ namespace Serilog.Sinks.MySQL
                                 ? logEvent.Timestamp.ToUniversalTime().ToString("yyyy-MM-dd HH:mm:ss.fffzzz")
                                 : logEvent.Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fffzzz");
 
-                            insertCommand.Parameters["@level"].Value     = logEvent.Level.ToString();
+                            insertCommand.Parameters["@level"].Value = logEvent.Level.ToString();
                             insertCommand.Parameters["@template"].Value = logEvent.MessageTemplate.ToString();
-                            insertCommand.Parameters["@msg"].Value      = logMessageString;
-                            insertCommand.Parameters["@ex"].Value       = logEvent.Exception?.ToString();
+                            insertCommand.Parameters["@msg"].Value = logMessageString;
+                            insertCommand.Parameters["@ex"].Value = logEvent.Exception?.ToString();
                             insertCommand.Parameters["@prop"].Value = logEvent.Properties.Count > 0
                                 ? logEvent.Properties.Json()
                                 : string.Empty;
 
                             await insertCommand.ExecuteNonQueryAsync().ConfigureAwait(false);
+
+                            if (logEvent.Level == LogEventLevel.Error&&_errorLogCallBack!=null)
+                            {
+                                await Task.Run(() => _errorLogCallBack.Invoke(logEvent));
+                            }
                         }
 
                         tr.Commit();
@@ -142,7 +158,8 @@ namespace Serilog.Sinks.MySQL
                     }
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 SelfLog.WriteLine(ex.Message);
 
                 return false;

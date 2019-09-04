@@ -84,19 +84,19 @@
 
                         <ul class="pagination m-b-5 pull-right">
                             <li v-if="articlePage.hasPrevPage">
-                                <a click="load(articlePage.prevPage)" aria-label="Previous">
+                                <a v-on:click="load(articlePage.prevPage)" aria-label="Previous">
                                     <i class="fa fa-angle-left"></i>&nbsp;上一页
                                 </a>
                             </li>
 
                             <li class="page-item" v-for="num in articlePage.navPageNums"
-                                :class="{ active: articlePage.pageNum == num }">
-                                <a click="load(num)">
+                                v-bind:class="{ active: articlePage.pageNum == num }">
+                                <a v-on:click="load(num)">
                                     {{ num }}
                                 </a>
                             </li>
                             <li v-if="articlePage.hasNextPage">
-                                <a type="button" class="page-link" click="load(articlePage.nextPage)">
+                                <a type="button" class="page-link" v-on:click="load(articlePage.nextPage)">
                                     下一页&nbsp;<i class="fa fa-angle-right"></i>
                                 </a>
                             </li>
