@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.Log.Service;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
