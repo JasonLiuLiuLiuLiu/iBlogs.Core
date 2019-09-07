@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Text;
 using AutoMapper;
 using iBlogs.Site.Core.Common;
@@ -14,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Savorboard.CAP.InMemoryMessageQueue;
 using SLog = Serilog.Log;
 
 namespace iBlogs.Site.Core.Startup
@@ -77,13 +79,24 @@ namespace iBlogs.Site.Core.Startup
                 services.AddCap(x =>
                 {
                     x.UseEntityFramework<iBlogsContext>();
-                    x.UseRabbitMQ(option =>
+                    if (configuration["RabbitMqHost"] == null || configuration["RabbitMqPWD"] == null ||
+                        configuration["RabbitMqUID"] == null)
                     {
-                        option.HostName = configuration["RabbitMqHost"] ?? "localhost";
-                        option.Password = configuration["RabbitMqPWD"] ?? "guest";
-                        option.UserName = configuration["RabbitMqUID"] ?? "guest";
-                        option.Port = 5672;
-                    });
+                        x.UseInMemoryMessageQueue();
+                        Console.WriteLine("CAP Use In Memory Message Queue");
+                    }
+                    else
+                    {
+                        x.UseRabbitMQ(option =>
+                        {
+                            option.HostName = configuration["RabbitMqHost"] ?? "localhost";
+                            option.Password = configuration["RabbitMqPWD"] ?? "guest";
+                            option.UserName = configuration["RabbitMqUID"] ?? "guest";
+                            option.Port = 5672;
+                        });
+                        Console.WriteLine("CAP Use RabbitMq");
+                    }
+                    
                     x.UseDashboard(option =>
                     {
                         option.Authorization = new[] { new CapDashboardAuthorizationFilter() };
