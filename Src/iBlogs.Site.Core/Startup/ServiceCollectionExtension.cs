@@ -82,7 +82,7 @@ namespace iBlogs.Site.Core.Startup
                     if (configuration["RabbitMqHost"] == null || configuration["RabbitMqPWD"] == null ||
                         configuration["RabbitMqUID"] == null)
                     {
-                        x.UseInMemoryMessageQueue();
+                        x.UseInMemoryMessageQueue(); 
                         Console.WriteLine("CAP Use In Memory Message Queue");
                     }
                     else

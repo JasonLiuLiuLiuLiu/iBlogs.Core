@@ -53,12 +53,8 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             _contentsService.UpdateCommentCount(comments.Cid, 1);
 
             _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
-            _mailService.Publish(new MailContext
-            {
-                To = new[] { _optionService.Get(ConfigKey.AdminEmail) },
-                Subject = "您有新的待审批的留言",
-                Content = $"author:{comments.Author},content:{comments.Content}"
-            });
+            AuditNotice(comments);
+            ReplyNotice(comments);
         }
 
         public void Reply(Comments comments)
@@ -83,7 +79,7 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
             _mailService.Publish(new MailContext
             {
-                To =new []{ replyComment.Mail },
+                To = new[] { replyComment.Mail },
                 Content = $"亲爱的{replyComment.Author},您的评论:{replyComment.Content},有了新的回复:{comments.Content}"
             });
         }
@@ -124,6 +120,8 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
                     Content = $"亲爱的{comment.Author},您的评论已审核通过:{comment.Content}"
                 });
             }
+
+            ReplyNotice(comment);
         }
 
         /**
@@ -146,6 +144,35 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             return _mapper.Map<Page<CommentResponse>>(_repository.Page(query, param));
         }
 
+        private void AuditNotice(Comments comments)
+        {
+            if (_optionService.Get(ConfigKey.AllowCommentAudit, "true").ToBool())
+            {
+                _mailService.Publish(new MailContext
+                {
+                    To = new[] { _optionService.Get(ConfigKey.AdminEmail) },
+                    Subject = "您有新的待审批的留言",
+                    Content = $"author:{comments.Author},content:{comments.Content}"
+                });
+            }
+        }
 
+        private void ReplyNotice(Comments comments)
+        {
+            if (comments.Parent == 0) return;
+
+            if(comments.Status==CommentStatus.Pending) return;
+
+            var parent = _repository.FirstOrDefault(comments.Parent);
+
+            if(parent==null) return;
+
+            _mailService.Publish(new MailContext
+            {
+                To = new[] { parent.Mail },
+                Subject = "您的评论有了新的回复",
+                Content = $"亲爱的{parent.Author},您的评论有了新的回复:author:{comments.Author},content:{comments.Content}"
+            });
+        }
     }
 }
