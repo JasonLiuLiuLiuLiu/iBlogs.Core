@@ -170,7 +170,7 @@ namespace iBlogs.Site.Core.Blog.Extension
                 try
                 {
                     var allPostInfo = _cnBlogsWrapper.GetRecentPosts(Int32.MaxValue);
-                    foreach (var post in allPostInfo.Reverse())
+                    foreach (var post in allPostInfo.OrderByDescending(u=>u.DateCreated))
                     {
                         var relationship = await _repository.GetAll().FirstOrDefaultAsync(u => u.TargetPostId == post.PostId.ToString());
                         var input = new ContentInput()
