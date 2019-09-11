@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using iBlogs.Site.Core.Blog.Content.DTO;
+using iBlogs.Site.Core.Blog.Extension;
 using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Meta.Service;
 using iBlogs.Site.Core.Blog.Relationship;
@@ -25,12 +26,13 @@ namespace iBlogs.Site.Core.Blog.Content.Service
         private readonly IMetasService _metasService;
         private readonly IRepository<Contents> _repository;
         private readonly IRepository<Relationships> _relRepository;
+        private readonly IRepository<BlogSyncRelationship> _syncRelationship;
         private readonly IRelationshipService _relationshipService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IOptionService _optionService;
 
-        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper, IUserService userService, IRepository<Relationships> relRepository, IOptionService optionService)
+        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper, IUserService userService, IRepository<Relationships> relRepository, IOptionService optionService, IRepository<BlogSyncRelationship> syncRelationship)
         {
             _metasService = metasService;
             _repository = repository;
@@ -39,6 +41,7 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             _userService = userService;
             _relRepository = relRepository;
             _optionService = optionService;
+            _syncRelationship = syncRelationship;
         }
 
         /**
@@ -145,6 +148,18 @@ namespace iBlogs.Site.Core.Blog.Content.Service
         {
             _repository.Delete(cid);
             _optionService.Set(ConfigKey.ContentCount, _repository.GetAll().Where(u => u.Status == ContentStatus.Publish).Select(u => u.Id).Count().ToString());
+            foreach (var relationship in _relRepository.GetAll().Where(u=>u.Cid==cid))
+            {
+                _metasService.Delete(relationship.Mid);
+                _relRepository.Delete(relationship);
+            }
+            _relRepository.SaveChanges();
+            _relationshipService.DeleteByContentId(cid);
+            foreach (var blogSyncRelationship in _syncRelationship.GetAll().Where(u=>u.ContentId==cid))
+            {
+                _syncRelationship.Delete(blogSyncRelationship);
+            }
+            _syncRelationship.SaveChanges();
             _repository.SaveChanges();
         }
 
