@@ -19,17 +19,19 @@ namespace iBlogs.Site.Web.Controllers
     {
         private readonly IContentsService _contentsService;
         private readonly IOptionService _optionService;
+        private readonly string _host;
 
         public XmlController(IContentsService contentsService, IOptionService optionService)
         {
             _contentsService = contentsService;
             _optionService = optionService;
+            _host = ConfigData.Get(ConfigKey.SiteUrl);
         }
 
         [HttpGet("/robots.txt")]
         public string RobotsTxt()
         {
-            string host = Request.Scheme + "://" + Request.Host;
+            string host = _host;
             var sb = new StringBuilder();
             sb.AppendLine("User-agent: *");
             sb.AppendLine("Disallow:");
@@ -41,7 +43,7 @@ namespace iBlogs.Site.Web.Controllers
         [HttpGet("/sitemap.xml")]
         public async Task SitemapXml()
         {
-            string host = Request.Scheme + "://" + Request.Host;
+            string host = _host;
 
             Response.ContentType = "application/xml";
 
@@ -69,7 +71,7 @@ namespace iBlogs.Site.Web.Controllers
         [HttpGet("/rsd.xml")]
         public void RsdXml()
         {
-            string host = Request.Scheme + "://" + Request.Host;
+            string host = _host;
 
             Response.ContentType = "application/xml";
             Response.Headers["cache-control"] = "no-cache, no-store, must-revalidate";
@@ -108,7 +110,7 @@ namespace iBlogs.Site.Web.Controllers
                 type = "rss";
 
             Response.ContentType = "application/xml";
-            string host = Request.Scheme + "://" + Request.Host;
+            string host = _host;
 
             using (XmlWriter xmlWriter = XmlWriter.Create(Response.Body, new XmlWriterSettings() { Async = true, Indent = true, Encoding = new UTF8Encoding(false) }))
             {
@@ -142,7 +144,7 @@ namespace iBlogs.Site.Web.Controllers
 
         private async Task<ISyndicationFeedWriter> GetWriter(string type, XmlWriter xmlWriter, DateTime updated)
         {
-            string host = Request.Scheme + "://" + Request.Host + "/";
+            string host = _host + "/";
 
             if (type.Equals("rss", StringComparison.OrdinalIgnoreCase))
             {
