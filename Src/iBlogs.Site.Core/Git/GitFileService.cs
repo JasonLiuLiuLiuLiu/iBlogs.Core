@@ -19,7 +19,7 @@ namespace iBlogs.Site.Core.Git
         private readonly IGitBlogService _gitBlogService;
         private readonly ILogger<GitFileService> _logger;
         private readonly IHostingEnvironment _environment;
-        private const string RepoPath = "Repo";
+        private static string _repoPath = "Repo";
 
         public GitFileService(IOptionService optionService, IGitBlogService gitBlogService,
             ILogger<GitFileService> logger, IHostingEnvironment environment)
@@ -35,11 +35,11 @@ namespace iBlogs.Site.Core.Git
             if (string.IsNullOrEmpty(branchName))
                 branchName = "master";
 
-            if (!Directory.Exists(RepoPath))
-                Directory.CreateDirectory(RepoPath);
+            if (!Directory.Exists(_repoPath))
+                Directory.CreateDirectory(_repoPath);
             try
             {
-                if (!Directory.EnumerateFileSystemEntries(RepoPath).Any())
+                if (!Directory.EnumerateFileSystemEntries(_repoPath).Any())
                 {
                     var co = new CloneOptions
                     {
@@ -50,7 +50,7 @@ namespace iBlogs.Site.Core.Git
                         },
                         BranchName=branchName
                     };
-                    LibGit2Sharp.Repository.Clone(_optionService.Get(ConfigKey.GitProjectCloneUrl), RepoPath, co);
+                    LibGit2Sharp.Repository.Clone(_optionService.Get(ConfigKey.GitProjectCloneUrl), _repoPath, co);
                 }
                 else
                 {
@@ -59,9 +59,9 @@ namespace iBlogs.Site.Core.Git
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex,"Clone执行失败,将删除仓库重新拉取");
-                Directory.Delete(RepoPath, true);
-                Directory.CreateDirectory(RepoPath);
+                _repoPath = $"Repo{Guid.NewGuid().ToString()}";
+                _logger.LogError(ex,$"Clone执行失败,讲从新的路径{_repoPath}下载");
+                Directory.CreateDirectory(_repoPath);
                 var co = new CloneOptions
                 {
                     CredentialsProvider = (url, user, cred) => new UsernamePasswordCredentials
@@ -70,7 +70,7 @@ namespace iBlogs.Site.Core.Git
                         Password = _optionService.Get(ConfigKey.GitPassword)
                     }
                 };
-                LibGit2Sharp.Repository.Clone(_optionService.Get(ConfigKey.GitProjectCloneUrl), RepoPath, co);
+                LibGit2Sharp.Repository.Clone(_optionService.Get(ConfigKey.GitProjectCloneUrl), _repoPath, co);
             }
             finally
             {
@@ -90,7 +90,7 @@ namespace iBlogs.Site.Core.Git
             var changed = false;
             foreach (var file in files)
             {
-                var filePath = Path.Combine(_environment.ContentRootPath, RepoPath, file);
+                var filePath = Path.Combine(_environment.ContentRootPath, _repoPath, file);
                 if (!File.Exists(filePath))
                 {
                     _logger.LogError($"文件{file}不存在");
@@ -109,7 +109,7 @@ namespace iBlogs.Site.Core.Git
 
         public bool CommitAndPush(string branchName)
         {
-            using (var repo = new LibGit2Sharp.Repository(RepoPath))
+            using (var repo = new LibGit2Sharp.Repository(_repoPath))
             {
                 Commands.Stage(repo, "*");
 
@@ -139,7 +139,7 @@ namespace iBlogs.Site.Core.Git
 
         private void CheckOutAndUpdate(string branchName)
         {
-            using (var repo = new LibGit2Sharp.Repository(RepoPath))
+            using (var repo = new LibGit2Sharp.Repository(_repoPath))
             {
                 var trackingBranch = repo.Branches["remotes/origin/"+branchName];
                 if (trackingBranch!=null&&trackingBranch.IsRemote)
@@ -159,7 +159,7 @@ namespace iBlogs.Site.Core.Git
 
         private void Pull()
         {
-            using (var repo = new LibGit2Sharp.Repository(RepoPath))
+            using (var repo = new LibGit2Sharp.Repository(_repoPath))
             {
                 // Credential information to fetch
                 PullOptions options = new PullOptions
