@@ -29,6 +29,7 @@ using iBlogs.Site.Core.Log.Dto;
 using iBlogs.Site.Core.Log.Service;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Security.Service;
+using iBlogs.Site.Web.Attribute;
 using ConfigKey = iBlogs.Site.Core.Option.ConfigKey;
 
 namespace iBlogs.Site.Web.Areas.Admin.Controllers
@@ -40,12 +41,12 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
         private readonly IMetasService _metasService;
         private readonly IContentsService _contentsService;
         private readonly IUserService _userService;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private readonly IAttachService _attachService;
         private readonly IOptionService _optionService;
         private readonly ICommentsService _commentsService;
 
-        public ApiController(IMetasService metasService, IContentsService contentsService, IUserService userService, IHostingEnvironment env, IAttachService attachService, IOptionService optionService, ICommentsService commentsService)
+        public ApiController(IMetasService metasService, IContentsService contentsService, IUserService userService, IWebHostEnvironment env, IAttachService attachService, IOptionService optionService, ICommentsService commentsService)
         {
             _metasService = metasService;
             _contentsService = contentsService;
@@ -365,7 +366,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                     var ftype = fileItem.ContentType.Contains("image") ? Types.IMAGE : Types.FILE;
                     var filePath = _env.WebRootPath + fkey;
 
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    await using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await fileItem.CopyToAsync(stream);
                     }
@@ -376,11 +377,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                         BlogsUtils.CutCenterImage(_env.WebRootPath + fkey, thumbnailFilePath, 270, 380);
                     }
 
-                    Attachment attachment = new Attachment();
-                    attachment.FName = fname;
-                    attachment.AuthorId = uid;
-                    attachment.FKey = fkey;
-                    attachment.FType = ftype;
+                    var attachment = new Attachment {FName = fname, AuthorId = uid, FKey = fkey, FType = ftype};
                     if (await _attachService.Save(attachment))
                     {
                         urls.Add(attachment);
@@ -392,8 +389,7 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                 }
                 else
                 {
-                    Attachment attachment = new Attachment();
-                    attachment.FName = fname;
+                    var attachment = new Attachment {FName = fname};
                     errorFiles.Add(attachment);
                 }
             }
