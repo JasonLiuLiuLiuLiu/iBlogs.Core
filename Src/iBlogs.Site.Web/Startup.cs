@@ -65,7 +65,10 @@ namespace iBlogs.Site.Web
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
