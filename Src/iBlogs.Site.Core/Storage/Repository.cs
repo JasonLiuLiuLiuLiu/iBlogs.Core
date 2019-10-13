@@ -12,7 +12,7 @@ using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
 using Microsoft.EntityFrameworkCore;
 
-namespace iBlogs.Site.Core.EntityFrameworkCore
+namespace iBlogs.Site.Core.Storage
 {
 
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, IEntityBase
@@ -20,14 +20,14 @@ namespace iBlogs.Site.Core.EntityFrameworkCore
         /// <summary>
         /// Gets EF DbContext object.
         /// </summary>
-        private readonly iBlogsContext _context;
+        private readonly BlogsContext _context;
 
         /// <summary>
         /// Gets DbSet for given entity.
         /// </summary>
         private DbSet<TEntity> Table => _context.Set<TEntity>();
 
-        public Repository(iBlogsContext context)
+        public Repository(BlogsContext context)
         {
             _context = context;
         }

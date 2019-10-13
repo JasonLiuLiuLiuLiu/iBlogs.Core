@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Serilog.Debugging;
-using Serilog.Events;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Serilog.Debugging;
+using Serilog.Events;
 
-namespace Serilog.Sinks.Batch
+namespace Serilog.Sinks.MySQL.Sinks.Batch
 {
     internal abstract class BatchProvider : IDisposable
     {

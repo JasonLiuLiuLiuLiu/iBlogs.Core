@@ -1,7 +1,7 @@
 ﻿using System;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using iBlogs.Site.Core.Storage;
 
 namespace iBlogs.Site.Core.Option
 {

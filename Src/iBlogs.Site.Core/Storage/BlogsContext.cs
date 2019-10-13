@@ -10,9 +10,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.EntityFrameworkCore
 {
-    public class iBlogsContext : DbContext
+    public class BlogsContext : DbContext
     {
-        public iBlogsContext(DbContextOptions<iBlogsContext> options) : base(options)
+        public BlogsContext(DbContextOptions<BlogsContext> options) : base(options)
         {
         }
 

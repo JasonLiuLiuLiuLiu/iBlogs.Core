@@ -7,8 +7,8 @@ using iBlogs.Site.Core.Common.AutoMapper;
 using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.CodeDi;
 using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Startup.Middleware;
+using iBlogs.Site.Core.Storage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +27,7 @@ namespace iBlogs.Site.Core.Startup
             ServiceFactory.Services = services;
             var configuration = ServiceFactory.GetService<IConfiguration>();
 
-            services.AddDbContextPool<iBlogsContext>(options =>
+            services.AddDbContextPool<BlogsContext>(options =>
             {
                 options.UseMySql(configuration.GetConnectionString("iBlogs"));
             });
@@ -78,7 +78,7 @@ namespace iBlogs.Site.Core.Startup
             if (configuration["DbInstalled"].ToBool())
                 services.AddCap(x =>
                 {
-                    x.UseEntityFramework<iBlogsContext>();
+                    x.UseEntityFramework<BlogsContext>();
                     if (configuration["RabbitMqHost"] == null || configuration["RabbitMqPWD"] == null ||
                         configuration["RabbitMqUID"] == null)
                     {

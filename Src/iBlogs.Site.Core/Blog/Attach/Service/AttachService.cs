@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
-using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.Storage;
 using Microsoft.AspNetCore.Hosting;
 
 namespace iBlogs.Site.Core.Blog.Attach.Service

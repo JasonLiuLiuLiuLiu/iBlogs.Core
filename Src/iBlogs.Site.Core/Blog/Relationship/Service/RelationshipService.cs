@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using iBlogs.Site.Core.EntityFrameworkCore;
+using iBlogs.Site.Core.Storage;
 using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Blog.Relationship.Service

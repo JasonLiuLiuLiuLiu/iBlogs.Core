@@ -1,5 +1,4 @@
 ﻿using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Install.DTO;
 using iBlogs.Site.Core.Option.Service;
 using System;
@@ -14,6 +13,7 @@ using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Meta.Service;
 using iBlogs.Site.Core.Security;
 using iBlogs.Site.Core.Security.Service;
+using iBlogs.Site.Core.Storage;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using ConfigKey = iBlogs.Site.Core.Option.ConfigKey;
@@ -24,7 +24,7 @@ namespace iBlogs.Site.Core.Install.Service
     {
         private readonly IOptionService _optionService;
         private readonly IUserService _userService;
-        private readonly iBlogsContext _blogsContext;
+        private readonly BlogsContext _blogsContext;
         private readonly ITransactionProvider _transactionProvider;
         private readonly IContentsService _contentsService;
         private readonly IMetasService _metasService;
@@ -32,7 +32,7 @@ namespace iBlogs.Site.Core.Install.Service
         private Users _users;
         private readonly IApplicationLifetime _applicationLifetime;
 
-        public InstallService(IOptionService optionService, IUserService userService, iBlogsContext blogsContext, ITransactionProvider transactionProvider, IContentsService contentsService, IMetasService metasService, IApplicationLifetime applicationLifetime)
+        public InstallService(IOptionService optionService, IUserService userService, BlogsContext blogsContext, ITransactionProvider transactionProvider, IContentsService contentsService, IMetasService metasService, IApplicationLifetime applicationLifetime)
         {
             _optionService = optionService;
             _userService = userService;
