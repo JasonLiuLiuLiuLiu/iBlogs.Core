@@ -27,7 +27,7 @@ namespace iBlogs.Site.Core.Startup
             ServiceFactory.Services = services;
             var configuration = ServiceFactory.GetService<IConfiguration>();
 
-            services.AddDbContextPool<BlogsContext>(options =>
+            services.AddDbContextPool<StorageWarehouse>(options =>
             {
                 options.UseMySql(configuration.GetConnectionString("iBlogs"));
             });
@@ -78,7 +78,7 @@ namespace iBlogs.Site.Core.Startup
             if (configuration["DbInstalled"].ToBool())
                 services.AddCap(x =>
                 {
-                    x.UseEntityFramework<BlogsContext>();
+                    x.UseEntityFramework<StorageWarehouse>();
                     if (configuration["RabbitMqHost"] == null || configuration["RabbitMqPWD"] == null ||
                         configuration["RabbitMqUID"] == null)
                     {

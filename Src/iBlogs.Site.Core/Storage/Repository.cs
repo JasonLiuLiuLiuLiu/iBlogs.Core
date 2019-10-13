@@ -20,14 +20,14 @@ namespace iBlogs.Site.Core.Storage
         /// <summary>
         /// Gets EF DbContext object.
         /// </summary>
-        private readonly BlogsContext _context;
+        private readonly StorageWarehouse _context;
 
         /// <summary>
         /// Gets DbSet for given entity.
         /// </summary>
         private DbSet<TEntity> Table => _context.Set<TEntity>();
 
-        public Repository(BlogsContext context)
+        public Repository(StorageWarehouse context)
         {
             _context = context;
         }

@@ -24,7 +24,7 @@ namespace iBlogs.Site.Core.Install.Service
     {
         private readonly IOptionService _optionService;
         private readonly IUserService _userService;
-        private readonly BlogsContext _blogsContext;
+        private readonly StorageWarehouse _storageWarehouse;
         private readonly ITransactionProvider _transactionProvider;
         private readonly IContentsService _contentsService;
         private readonly IMetasService _metasService;
@@ -32,11 +32,11 @@ namespace iBlogs.Site.Core.Install.Service
         private Users _users;
         private readonly IApplicationLifetime _applicationLifetime;
 
-        public InstallService(IOptionService optionService, IUserService userService, BlogsContext blogsContext, ITransactionProvider transactionProvider, IContentsService contentsService, IMetasService metasService, IApplicationLifetime applicationLifetime)
+        public InstallService(IOptionService optionService, IUserService userService, StorageWarehouse storageWarehouse, ITransactionProvider transactionProvider, IContentsService contentsService, IMetasService metasService, IApplicationLifetime applicationLifetime)
         {
             _optionService = optionService;
             _userService = userService;
-            _blogsContext = blogsContext;
+            _storageWarehouse = storageWarehouse;
             _transactionProvider = transactionProvider;
             _contentsService = contentsService;
             _metasService = metasService;
@@ -85,7 +85,7 @@ namespace iBlogs.Site.Core.Install.Service
             try
             {
                 var sqlScript = File.ReadAllText("InitDb.sql");
-                await _blogsContext.Database.ExecuteSqlCommandAsync(sqlScript);
+                await _storageWarehouse.Database.ExecuteSqlCommandAsync(sqlScript);
             }
             catch (Exception e)
             {
