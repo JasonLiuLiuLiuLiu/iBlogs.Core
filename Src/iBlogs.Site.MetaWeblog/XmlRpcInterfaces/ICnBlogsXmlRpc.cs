@@ -1,8 +1,7 @@
 ﻿using CookComputing.XmlRpc;
-using iBlogs.Site.MetaWeblog.CnBlogs.XmlRpcStructs;
-using iBlogs.Site.MetaWeblog.XmlRpcInterfaces;
+using iBlogs.Site.MetaWeblog.XmlRpcStructs.Cnblogs;
 
-namespace iBlogs.Site.MetaWeblog.CnBlogs
+namespace iBlogs.Site.MetaWeblog.XmlRpcInterfaces
 {
     /// <summary>
     /// https://rpc.cnblogs.com/metaweblog/CoderAyu

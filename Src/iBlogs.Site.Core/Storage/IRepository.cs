@@ -1,15 +1,15 @@
-﻿using iBlogs.Site.Core.Common.Request;
-using iBlogs.Site.Core.Common.Response;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Common.Request;
+using iBlogs.Site.Core.Common.Response;
+using Microsoft.EntityFrameworkCore;
 
-namespace iBlogs.Site.Core.EntityFrameworkCore
+namespace iBlogs.Site.Core.Storage
 {
     public interface IRepository<TEntity> where TEntity : class, IEntityBase
     {

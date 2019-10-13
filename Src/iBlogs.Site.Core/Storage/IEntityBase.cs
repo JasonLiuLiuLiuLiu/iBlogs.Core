@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace iBlogs.Site.Core.EntityFrameworkCore
+namespace iBlogs.Site.Core.Storage
 {
     public interface IEntityBase
     {

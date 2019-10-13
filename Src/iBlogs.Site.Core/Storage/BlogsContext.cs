@@ -8,7 +8,7 @@ using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Security;
 using Microsoft.EntityFrameworkCore;
 
-namespace iBlogs.Site.Core.EntityFrameworkCore
+namespace iBlogs.Site.Core.Storage
 {
     public class BlogsContext : DbContext
     {
