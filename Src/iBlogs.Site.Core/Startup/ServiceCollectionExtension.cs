@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Savorboard.CAP.InMemoryMessageQueue;
 using SLog = Serilog.Log;
 
 namespace iBlogs.Site.Core.Startup
@@ -26,11 +25,6 @@ namespace iBlogs.Site.Core.Startup
         {
             ServiceFactory.Services = services;
             var configuration = ServiceFactory.GetService<IConfiguration>();
-
-            services.AddDbContextPool<StorageWarehouse>(options =>
-            {
-                options.UseMySql(configuration.GetConnectionString("iBlogs"));
-            });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -50,23 +44,9 @@ namespace iBlogs.Site.Core.Startup
                     };
                 });
 
-            var redisConnectionOption = new RedisConnectionOption()
-            {
-                ConnectionString = configuration["RedisConnectionString"]
-            };
-            var redisConnectionWrapper = new RedisConnectionWrapper(redisConnectionOption);
-            if (redisConnectionWrapper.CheckConnection().Result)
-            {
-                SLog.Information("Use redis cache");
-                services.AddSingleton<IRedisConnectionWrapper>(redisConnectionWrapper);
-                services.AddScoped<ICacheManager, RedisCacheManager>();
-            }
-            else
-            {
-                SLog.Information("use memory cache");
-                services.AddMemoryCache();
-                services.AddSingleton<ICacheManager, MemoryCacheManager>();
-            }
+
+            SLog.Information("use memory cache");
+            services.AddSingleton<ICacheManager, MemoryCacheManager>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddCoreDi(options =>
@@ -74,34 +54,6 @@ namespace iBlogs.Site.Core.Startup
                 options.AssemblyNames = new[] { "*iBlogs.Site.Core*" };
                 options.IgnoreInterface = new[] { "*IEntityBase*", "*Caching*" };
             });
-
-            if (configuration["DbInstalled"].ToBool())
-                services.AddCap(x =>
-                {
-                    x.UseEntityFramework<StorageWarehouse>();
-                    if (configuration["RabbitMqHost"] == null || configuration["RabbitMqPWD"] == null ||
-                        configuration["RabbitMqUID"] == null)
-                    {
-                        x.UseInMemoryMessageQueue(); 
-                        Console.WriteLine("CAP Use In Memory Message Queue");
-                    }
-                    else
-                    {
-                        x.UseRabbitMQ(option =>
-                        {
-                            option.HostName = configuration["RabbitMqHost"] ?? "localhost";
-                            option.Password = configuration["RabbitMqPWD"] ?? "guest";
-                            option.UserName = configuration["RabbitMqUID"] ?? "guest";
-                            option.Port = 5672;
-                        });
-                        Console.WriteLine("CAP Use RabbitMq");
-                    }
-                    
-                    x.UseDashboard(option =>
-                    {
-                        option.Authorization = new[] { new CapDashboardAuthorizationFilter() };
-                    });
-                });
 
             services.AddAutoMapper(cfg =>
             {
