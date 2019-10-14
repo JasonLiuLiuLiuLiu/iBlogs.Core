@@ -53,11 +53,11 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
                         var context = HttpUtility.UrlDecode(txt);
                         if (context?.IndexOf("Payload=", StringComparison.CurrentCultureIgnoreCase) == 0)
                         {
-                            txt = context.Substring(8, context.Length-8);
+                            txt = context.Substring(8, context.Length - 8);
                         }
                     }
 
-                    _gitEventBus.Publish(txt);
+                    await _gitEventBus.Publish(txt);
                     return Ok();
                 }
             }

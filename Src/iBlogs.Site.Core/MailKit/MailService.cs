@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DotNetCore.CAP;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
@@ -10,16 +9,14 @@ using MimeKit;
 
 namespace iBlogs.Site.Core.MailKit
 {
-    public class MailService : IMailService, ICapSubscribe
+    public class MailService : IMailService
     {
         private readonly IOptionService _optionService;
-        private readonly ICapPublisher _capPublisher;
         private readonly ILogger<MailService> _logger;
 
-        public MailService(IOptionService optionService, ICapPublisher capPublisher, ILogger<MailService> logger)
+        public MailService(IOptionService optionService, ILogger<MailService> logger)
         {
             _optionService = optionService;
-            _capPublisher = capPublisher;
             _logger = logger;
         }
 
@@ -35,11 +32,9 @@ namespace iBlogs.Site.Core.MailKit
                 errorMessage = "通知人邮件地址不能为空";
                 throw new Exception(errorMessage);
             }
-
-            _capPublisher.Publish("iBlogs.Site.Core.Mail", context);
+            SendCapSubscription(context);
         }
 
-        [CapSubscribe("iBlogs.Site.Core.Mail")]
         public void SendCapSubscription(MailContext context)
         {
             try

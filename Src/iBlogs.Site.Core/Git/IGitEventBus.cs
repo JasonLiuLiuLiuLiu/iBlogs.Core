@@ -4,7 +4,7 @@ namespace iBlogs.Site.Core.Git
 {
     public interface IGitEventBus
     {
-        bool Publish(string message);
+        Task<bool> Publish(string message);
         Task Receive(string message);
     }
 }

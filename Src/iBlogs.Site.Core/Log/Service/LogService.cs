@@ -8,7 +8,6 @@ using iBlogs.Site.Core.Log.Dto;
 using iBlogs.Site.Core.MailKit;
 using iBlogs.Site.Core.Option;
 using Microsoft.Extensions.Configuration;
-using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Serilog.Debugging;
 using Serilog.Events;

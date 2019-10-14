@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DotNetCore.CAP;
 using iBlogs.Site.Core.Blog.Content;
 using iBlogs.Site.Core.Blog.Content.DTO;
 using iBlogs.Site.Core.Blog.Content.Service;
@@ -18,7 +17,7 @@ using Microsoft.Extensions.Logging;
 
 namespace iBlogs.Site.Core.Blog.Extension
 {
-    public class CnBlogsSyncExtension : IBlogsSyncExtension, ICapSubscribe
+    public class CnBlogsSyncExtension : IBlogsSyncExtension
     {
         private readonly IOptionService _optionService;
         private readonly IRepository<BlogSyncRelationship> _repository;
@@ -26,7 +25,6 @@ namespace iBlogs.Site.Core.Blog.Extension
         private readonly IContentsService _contentsService;
         private ICnBlogsWrapper _cnBlogsWrapper;
         private readonly Lazy<List<CategoryInfo>> _categoryInfos;
-        private readonly ITransactionProvider _transactionProvider;
 
         public CnBlogsSyncExtension(IOptionService optionService, IRepository<BlogSyncRelationship> repository, ILogger<CnBlogsSyncExtension> logger, IContentsService contentsService, ITransactionProvider transactionProvider)
         {
@@ -34,12 +32,8 @@ namespace iBlogs.Site.Core.Blog.Extension
             _repository = repository;
             _logger = logger;
             _contentsService = contentsService;
-            _transactionProvider = transactionProvider;
             _categoryInfos = new Lazy<List<CategoryInfo>>(() => _cnBlogsWrapper.GetCategories().ToList());
         }
-
-        [CapSubscribe("iBlogs.Site.Core.Blog.Sync.CnBlogs")]
-        [CapSubscribe("iBlogs.Site.Core.Blog.Sync.All")]
         public async Task Sync(BlogSyncContext context)
         {
             if (context.Target != BlogSyncTarget.All && context.Target != BlogSyncTarget.CnBlogs)
