@@ -1,23 +1,33 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using iBlogs.Site.Core.Blog.Attach;
-using iBlogs.Site.Core.Blog.Comment;
-using iBlogs.Site.Core.Blog.Content;
-using iBlogs.Site.Core.Blog.Extension;
-using iBlogs.Site.Core.Blog.Meta;
-using iBlogs.Site.Core.Blog.Relationship;
-using iBlogs.Site.Core.Option;
-using iBlogs.Site.Core.Security;
-using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace iBlogs.Site.Core.Storage
 {
     internal class StorageWarehouse
     {
-        private static Dictionary<Type, List<object>> _warehouse;
+        private static readonly ConcurrentDictionary<Type, IEnumerable<object>> Warehouse;
         static StorageWarehouse()
         {
-            _warehouse = new Dictionary<Type, List<object>>();
+            Warehouse = new ConcurrentDictionary<Type, IEnumerable<object>>();
+        }
+
+        public static IEnumerable<T> Get<T>()
+        {
+            if (Warehouse.ContainsKey(typeof(T)))
+                return Warehouse[typeof(T)].Select(u => (T)u);
+            return new T[0];
+        }
+
+        public static void Set<T>(IEnumerable<T> values)
+        {
+            if (values == null) return;
+
+            if (Warehouse.ContainsKey(typeof(T)))
+            {
+                Warehouse[typeof(T)] = values.Select(u => (object)u);
+            }
         }
     }
 }
