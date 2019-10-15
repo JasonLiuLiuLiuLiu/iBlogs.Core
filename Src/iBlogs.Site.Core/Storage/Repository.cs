@@ -1,7 +1,10 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Request;
@@ -132,5 +135,35 @@ namespace iBlogs.Site.Core.Storage
             var rows = source.Skip((pageParam.Page - 1) * pageParam.Limit).Take(pageParam.Limit).ToList();
             return new Page<TEntity>(total, pageParam.Page++, pageParam.Limit, rows);
         }
+        public IEnumerable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
+        {
+            if (!propertySelectors.IsNullOrEmpty())
+            {
+                foreach (var propertySelector in propertySelectors)
+                {
+                    var propertyInfo = GetPropertyInfo(propertySelector);
+                }
+            }
+
+            return query;
+        }
+
+        public PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
+        {
+            var type = typeof(TSource);
+
+            if (!(propertyLambda.Body is MemberExpression member))
+                throw new ArgumentException($"Expression '{propertyLambda.ToString()}' refers to a method, not a property.");
+
+            PropertyInfo propInfo = member.Member as PropertyInfo;
+            if (propInfo == null)
+                throw new ArgumentException($"Expression '{propertyLambda.ToString()}' refers to a field, not a property.");
+
+            if (type != propInfo.ReflectedType && !type.IsSubclassOf(propInfo.ReflectedType))
+                throw new ArgumentException($"Expression '{propertyLambda.ToString()}' refers to a property that is not from type {type}.");
+
+            return propInfo;
+        }
+
     }
 }
