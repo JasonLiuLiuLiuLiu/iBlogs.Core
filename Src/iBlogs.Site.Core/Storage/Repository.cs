@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -142,10 +143,26 @@ namespace iBlogs.Site.Core.Storage
                 foreach (var propertySelector in propertySelectors)
                 {
                     var propertyInfo = GetPropertyInfo(propertySelector);
+                    var foreignKeyAttribute = (ForeignKeyAttribute)propertyInfo.GetCustomAttributes().FirstOrDefault(a => a is ForeignKeyAttribute);
+                    if (foreignKeyAttribute == null)
+                    {
+                        throw new ArgumentException($"无法在{propertyInfo.ToString()}上找到ForeignKey");
+                    }
+
+                    var foreignKeyType = propertyInfo.PropertyType;
+
+                    foreach (var value in _entityDic.Values)
+                    {
+                        var foreignKeyId = (int?)value.GetType().GetProperty(foreignKeyAttribute.Name)?.GetValue(value);
+                        if(!foreignKeyId.HasValue)
+                            throw new ArgumentException($"Id:{value.Id},外键{foreignKeyAttribute.Name}没有值");
+                        var foreignKeyValue = StorageWarehouse.Get<foreignKeyType>();
+                    }
+
+
+
                 }
             }
-
-            return query;
         }
 
         public PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
