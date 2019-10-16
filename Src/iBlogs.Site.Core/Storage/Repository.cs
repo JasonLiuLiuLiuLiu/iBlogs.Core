@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading.Tasks;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Request;
@@ -136,51 +132,5 @@ namespace iBlogs.Site.Core.Storage
             var rows = source.Skip((pageParam.Page - 1) * pageParam.Limit).Take(pageParam.Limit).ToList();
             return new Page<TEntity>(total, pageParam.Page++, pageParam.Limit, rows);
         }
-        public IEnumerable<TEntity> GetAllIncluding(params Expression<Func<TEntity, object>>[] propertySelectors)
-        {
-            if (!propertySelectors.IsNullOrEmpty())
-            {
-                foreach (var propertySelector in propertySelectors)
-                {
-                    var propertyInfo = GetPropertyInfo(propertySelector);
-                    var foreignKeyAttribute = (ForeignKeyAttribute)propertyInfo.GetCustomAttributes().FirstOrDefault(a => a is ForeignKeyAttribute);
-                    if (foreignKeyAttribute == null)
-                    {
-                        throw new ArgumentException($"无法在{propertyInfo.ToString()}上找到ForeignKey");
-                    }
-
-                    var foreignKeyType = propertyInfo.PropertyType;
-
-                    foreach (var value in _entityDic.Values)
-                    {
-                        var foreignKeyId = (int?)value.GetType().GetProperty(foreignKeyAttribute.Name)?.GetValue(value);
-                        if(!foreignKeyId.HasValue)
-                            throw new ArgumentException($"Id:{value.Id},外键{foreignKeyAttribute.Name}没有值");
-                        var foreignKeyValue = StorageWarehouse.Get<foreignKeyType>();
-                    }
-
-
-
-                }
-            }
-        }
-
-        public PropertyInfo GetPropertyInfo<TSource, TProperty>(Expression<Func<TSource, TProperty>> propertyLambda)
-        {
-            var type = typeof(TSource);
-
-            if (!(propertyLambda.Body is MemberExpression member))
-                throw new ArgumentException($"Expression '{propertyLambda.ToString()}' refers to a method, not a property.");
-
-            PropertyInfo propInfo = member.Member as PropertyInfo;
-            if (propInfo == null)
-                throw new ArgumentException($"Expression '{propertyLambda.ToString()}' refers to a field, not a property.");
-
-            if (type != propInfo.ReflectedType && !type.IsSubclassOf(propInfo.ReflectedType))
-                throw new ArgumentException($"Expression '{propertyLambda.ToString()}' refers to a property that is not from type {type}.");
-
-            return propInfo;
-        }
-
     }
 }
