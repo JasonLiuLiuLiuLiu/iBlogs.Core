@@ -12,7 +12,6 @@ using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Storage;
 using iBlogs.Site.MetaWeblog.Classes;
 using iBlogs.Site.MetaWeblog.Wrappers;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace iBlogs.Site.Core.Blog.Extension
@@ -80,7 +79,8 @@ namespace iBlogs.Site.Core.Blog.Extension
 
         public BlogExtensionDashboardResponse GetDashBoardData()
         {
-            var allResponse = _repository.GetAllIncluding(u => u.Content).Where(u => u.Target == BlogSyncTarget.CnBlogs)
+            //TODO GetAllIncluding(u => u.Content)
+            var allResponse = _repository.GetAll().Where(u => u.Target == BlogSyncTarget.CnBlogs)
                 .Select(r => new BlogExtensionContentResponse
                 {
                     ContentId = r.ContentId,

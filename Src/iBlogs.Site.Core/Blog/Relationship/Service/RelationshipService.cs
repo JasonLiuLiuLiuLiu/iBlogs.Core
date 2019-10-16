@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using iBlogs.Site.Core.Storage;
-using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Blog.Relationship.Service
 {
@@ -21,19 +20,22 @@ namespace iBlogs.Site.Core.Blog.Relationship.Service
         public void SaveOrUpdate(int cid, int mid)
         {
             _repository.InsertOrUpdate(new Relationships { Cid = cid, Mid = mid });
-            _repository.SaveChanges();
         }
 
         public void DeleteByContentId(int cid)
         {
-            _repository.GetAll().Where(r => r.Cid == cid).ForEachAsync(r => _repository.Delete(r)).Wait();
-            _repository.SaveChanges();
+            foreach (var relationship in _repository.GetAll().Where(r => r.Cid == cid))
+            {
+                _repository.Delete(relationship);
+            }
         }
 
         public void DeleteByMetaId(int id)
         {
-            _repository.GetAll().Where(r => r.Mid == id).ForEachAsync(r => _repository.Delete(r)).Wait();
-            _repository.SaveChanges();
+            foreach (var relationship in _repository.GetAll().Where(r => r.Mid == id))
+            {
+                _repository.Delete(relationship);
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ namespace iBlogs.Site.Core.Startup.Middleware
                 return true;
             if (_httpContext.Request.Path.ToString().ToLower().Contains("install"))
                 return true;
-            return await _installService.InitializeDb();
+            return _installService.InitializeDb();
         }
     }
 }

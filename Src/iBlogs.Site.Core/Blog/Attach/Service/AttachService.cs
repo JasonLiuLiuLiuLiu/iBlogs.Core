@@ -32,7 +32,7 @@ namespace iBlogs.Site.Core.Blog.Attach.Service
 
         public Page<Attachment> GetPage(PageParam param)
         {
-            return _repository.Page(_repository.GetAll(), param);
+            return _repository.Page(_repository.GetAll().OrderBy(u=>u.Created), param);
         }
 
         public void Delete(int id)
@@ -44,7 +44,6 @@ namespace iBlogs.Site.Core.Blog.Attach.Service
             var newFileName = BlogsUtils.GetFileName(attach.FKey);
             var thumbnailFilePath = _env.WebRootPath + attach.FKey.Replace(newFileName, "thumbnail_" + newFileName);
             _repository.Delete(attach);
-            _repository.SaveChanges();
             File.Delete(filePath);
             File.Delete(thumbnailFilePath);
         }

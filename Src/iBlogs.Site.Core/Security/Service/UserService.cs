@@ -55,7 +55,6 @@ namespace iBlogs.Site.Core.Security.Service
             user.ScreenName = param.ScreenName;
             user.Email = param.Email;
             _optionService.Set(ConfigKey.AdminEmail,user.Email);
-            _repository.SaveChanges();
         }
 
         public void UpdatePwd(PwdUpdateParam param)
@@ -67,7 +66,6 @@ namespace iBlogs.Site.Core.Security.Service
             user.Password = param.Password;
             user.PwdMd5();
             LoginToken.RemoveToken(user.Id);
-            _repository.SaveChanges();
         }
 
         public Users FindUserById(int id)

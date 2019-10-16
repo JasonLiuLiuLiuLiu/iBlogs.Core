@@ -5,7 +5,6 @@ using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Option.DTO;
 using iBlogs.Site.Core.Storage;
-using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Option.Service
 {
@@ -35,7 +34,7 @@ namespace iBlogs.Site.Core.Option.Service
 
         public IDictionary<ConfigKey, string> GetAllAsKeyValue()
         {
-            return _repository.GetAll().AsNoTracking().ToDictionary(o => (ConfigKey)Enum.Parse(typeof(ConfigKey), o.Name), o =>
+            return _repository.GetAll().ToDictionary(o => (ConfigKey)Enum.Parse(typeof(ConfigKey), o.Name), o =>
             {
                 if (o.Value != null)
                     return o.Value;
@@ -79,7 +78,6 @@ namespace iBlogs.Site.Core.Option.Service
             {
                 _repository.Insert(new Options { Name = key.ToString(), Value = value, Description = description });
             }
-            _repository.SaveChanges();
             _cacheManager.Set(key.ToCacheKey(), value, _defaultCacheTime);
         }
 
@@ -146,7 +144,6 @@ namespace iBlogs.Site.Core.Option.Service
                     }
                 }
             }
-            _repository.SaveChanges();
         }
     }
 }

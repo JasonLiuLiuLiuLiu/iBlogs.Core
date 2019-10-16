@@ -110,7 +110,6 @@ namespace iBlogs.Site.Core.Blog.Meta.Service
                 return;
             }
             _repository.InsertOrUpdate(new Metas() { Id = mid.ValueOrDefault(), Name = name, Type = type });
-            _repository.SaveChanges();
         }
 
         private void SaveOrUpdate(int cid, string name, MetaType type)
@@ -132,7 +131,6 @@ namespace iBlogs.Site.Core.Blog.Meta.Service
             }
             metas.Count = _relationshipService.GetContentCountByMetaDataId(mid);
             _repository.Update(metas);
-            _repository.SaveChanges();
         }
     }
 }

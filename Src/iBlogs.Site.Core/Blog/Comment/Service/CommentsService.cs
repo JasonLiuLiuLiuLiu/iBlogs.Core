@@ -49,7 +49,6 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
                 comments.Status = CommentStatus.Approved;
 
             _repository.InsertOrUpdate(comments);
-            _repository.SaveChanges();
             _contentsService.UpdateCommentCount(comments.Cid, 1);
 
             _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
@@ -73,7 +72,6 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             comments.Url = ConfigData.Get(ConfigKey.SiteUrl);
 
             _repository.InsertOrUpdate(comments);
-            _repository.SaveChanges();
             _contentsService.UpdateCommentCount(comments.Cid, 1);
 
             _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
@@ -96,7 +94,6 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             if (!id.HasValue)
                 throw new Exception("没找到该评论!");
             _repository.Delete(id.Value);
-            _repository.SaveChanges();
         }
 
         public void UpdateComment(CommentParam param)
@@ -109,8 +106,6 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             _repository.Update(comment);
 
             _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
-
-            _repository.SaveChanges();
 
             if (param.Status == CommentStatus.Approved)
             {
@@ -141,7 +136,7 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             if (param.Cid.HasValue)
                 query = query.Where(c => c.Cid == param.Cid);
 
-            return _mapper.Map<Page<CommentResponse>>(_repository.Page(query, param));
+            return _mapper.Map<Page<CommentResponse>>(_repository.Page(query.OrderBy(u=>u.Created), param));
         }
 
         private void AuditNotice(Comments comments)
