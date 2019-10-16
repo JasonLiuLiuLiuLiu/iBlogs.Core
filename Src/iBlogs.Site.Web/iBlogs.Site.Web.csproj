@@ -21,15 +21,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ThirdPart\Serilog.Sinks.MySQL\Serilog.Sinks.MySQL.csproj" />
     <ProjectReference Include="..\iBlogs.Site.Core\iBlogs.Site.Core.csproj" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <None Update="InitDb.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <PropertyGroup>

@@ -1,16 +1,12 @@
-﻿using System;
-using iBlogs.Site.Web.Converter;
+﻿using iBlogs.Site.Web.Converter;
 using iBlogs.Site.Web.Filter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
-using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Startup;
 using iBlogs.Site.Core.Startup.Middleware;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
-using IApplicationLifetime = Microsoft.AspNetCore.Hosting.IApplicationLifetime;
 
 namespace iBlogs.Site.Web
 {
@@ -33,7 +29,7 @@ namespace iBlogs.Site.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptionService option, IHostApplicationLifetime appLifetime, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseStatusCodePages(async context =>
             {
