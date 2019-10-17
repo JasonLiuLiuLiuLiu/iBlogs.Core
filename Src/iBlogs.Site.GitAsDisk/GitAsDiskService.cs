@@ -10,19 +10,21 @@ namespace iBlogs.Site.GitAsDisk
 {
     public class GitAsDiskService
     {
-        private static bool _initiated;
-        private static string _basePath;
+        private static bool _synced;
+        private const string BasePath = "GitAsDisk";
 
-        public static Task<bool> Sync(GitSyncOptions options)
+        public static async Task<SyncResult> Sync(GitSyncOptions options)
         {
-            _initiated = true;
-            _basePath = options.Path;
-            throw new NotImplementedException();
+            using var syncImpl = new GitSyncImplement(BasePath, options.GitUrl, options.UserName, options.Password, options.BranchName, options.CommitterName);
+            var syncResult = await syncImpl.Execute();
+            _synced = syncResult.Success;
+            return syncResult;
+
         }
 
         public static async Task<bool> CommitAsync<T>(IEnumerable<T> values) where T : class
         {
-            if (!_initiated)
+            if (!_synced)
             {
                 throw new GitAsDiskException("Please Call Sync Method before this");
             }
@@ -38,12 +40,12 @@ namespace iBlogs.Site.GitAsDisk
 
         public static async Task<bool> CommitAsync(string fullPath, string value)
         {
-            if (!_initiated)
+            if (!_synced)
             {
                 throw new GitAsDiskException("Please Call Sync Method before this");
             }
 
-            var fileFullPath = Path.Combine(_basePath, fullPath);
+            var fileFullPath = Path.Combine(BasePath, fullPath);
             await File.WriteAllTextAsync(fileFullPath, value, Encoding.UTF8);
 
             return true;
@@ -51,17 +53,17 @@ namespace iBlogs.Site.GitAsDisk
 
         public static async Task<string> LoadAsync(string fullPath)
         {
-            if (!_initiated)
+            if (!_synced)
             {
                 throw new GitAsDiskException("Please Call Sync Method before this");
             }
 
-            return await File.ReadAllTextAsync(Path.Combine(_basePath, fullPath), Encoding.UTF8);
+            return await File.ReadAllTextAsync(Path.Combine(BasePath, fullPath), Encoding.UTF8);
         }
 
         public static async IAsyncEnumerable<T> LoadAsync<T>() where T : class
         {
-            if (!_initiated)
+            if (!_synced)
             {
                 throw new GitAsDiskException("Please Call Sync Method before this");
             }
