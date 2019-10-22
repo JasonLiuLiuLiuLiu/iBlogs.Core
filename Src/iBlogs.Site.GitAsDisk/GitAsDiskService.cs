@@ -17,7 +17,7 @@ namespace iBlogs.Site.GitAsDisk
         {
             using var syncImpl = new GitSyncImplement(BasePath, options.GitUrl, options.UserName, options.Password, options.BranchName, options.CommitterName);
             var syncResult = await syncImpl.Execute();
-            _synced = syncResult.Success;
+            _synced = syncResult.Result;
             return syncResult;
 
         }
