@@ -15,11 +15,10 @@ namespace iBlogs.Site.GitAsDisk
 
         public static async Task<SyncResult> Sync(GitSyncOptions options)
         {
-            using var syncImpl = new GitSyncImplement(BasePath, options.GitUrl, options.UserName, options.Password, options.BranchName, options.CommitterName);
-            var syncResult = await syncImpl.Execute();
+            using var syncImpl = new GitSyncImplement(BasePath, options.GitUrl, options.UserName, options.Password, options.BranchName, options.CommitterName, options.CommitterEmail);
+            var syncResult = await syncImpl.Execute(options.Token);
             _synced = syncResult.Result;
             return syncResult;
-
         }
 
         public static async Task<bool> CommitAsync<T>(IEnumerable<T> values) where T : class

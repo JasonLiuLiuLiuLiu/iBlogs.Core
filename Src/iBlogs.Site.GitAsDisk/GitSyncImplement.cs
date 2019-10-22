@@ -20,7 +20,6 @@ namespace iBlogs.Site.GitAsDisk
         private readonly Repository _repo;
 
         private CancellationToken _token;
-        private int _retryCount;
 
         public GitSyncImplement(string path, string gitUrl, string userName, string password, string branchName, string committerName, string committerEmail)
         {
@@ -35,13 +34,12 @@ namespace iBlogs.Site.GitAsDisk
             }
             _committerName = committerName;
             _committerEmail = committerEmail;
-            _repo = new LibGit2Sharp.Repository(_path);
+            _repo = new Repository(_path);
         }
 
         public async Task<SyncResult> Execute(CancellationToken token)
         {
             _token = token;
-            _retryCount = 0;
             try
             {
                 if (!Directory.EnumerateFileSystemEntries(_path).Any())
@@ -67,52 +65,26 @@ namespace iBlogs.Site.GitAsDisk
 
         }
 
-        private async Task<bool> CloneAsync()
+        private async Task CloneAsync()
         {
             await Task.Factory.StartNew(() =>
             {
                 if (!Directory.Exists(_path))
                     Directory.CreateDirectory(_path);
-                try
-                {
-                    if (!Directory.EnumerateFileSystemEntries(_path).Any())
-                    {
-                        var co = new CloneOptions
-                        {
-                            CredentialsProvider = (url, user, cred) => new UsernamePasswordCredentials
-                            {
-                                Username = _userName,
-                                Password = _password
-                            },
-                            BranchName = _branchName
-                        };
-                        Repository.Clone(_gitUrl, _path, co);
-                    }
-                    else
-                    {
-                        await Pull();
-                    }
-                }
-                catch
-                {
-                    Directory.Delete(_path, true);
-                    Directory.CreateDirectory(_path);
-                    var co = new CloneOptions
-                    {
-                        CredentialsProvider = (url, user, cred) => new UsernamePasswordCredentials
-                        {
-                            Username = _userName,
-                            Password = _password
-                        }
-                    };
-                    Repository.Clone(_gitUrl, _path, co);
-                }
-            }, _token);
-           
 
-            return true;
+                var co = new CloneOptions
+                {
+                    CredentialsProvider = (url, user, cred) => new UsernamePasswordCredentials
+                    {
+                        Username = _userName,
+                        Password = _password
+                    },
+                    BranchName = _branchName
+                };
+                Repository.Clone(_gitUrl, _path, co);
+            }, _token);
         }
-        private async Task<bool> CheckOut()
+        private async Task CheckOut()
         {
             await Task.Factory.StartNew(() =>
             {
@@ -128,10 +100,8 @@ namespace iBlogs.Site.GitAsDisk
 
                 Commands.Checkout(_repo, branch, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
             }, _token);
-
-            return true;
         }
-        private async Task<bool> Pull()
+        private async Task Pull()
         {
             await Task.Factory.StartNew(() =>
             {
@@ -156,11 +126,9 @@ namespace iBlogs.Site.GitAsDisk
                 // Pull
                 Commands.Pull(_repo, signature, options);
             }, _token);
-
-            return true;
         }
 
-        private async Task<bool> CommitAll()
+        private async Task CommitAll()
         {
             await Task.Factory.StartNew(() =>
             {
@@ -173,11 +141,9 @@ namespace iBlogs.Site.GitAsDisk
                 // Commit to the repository
                 _repo.Commit($"GitAsDisk Commit at {DateTime.Now.ToString(CultureInfo.InvariantCulture)}", author, committer);
             }, _token);
-
-            return true;
         }
 
-        private async Task<bool> Push()
+        private async Task Push()
         {
             await Task.Factory.StartNew(() =>
             {
@@ -192,8 +158,6 @@ namespace iBlogs.Site.GitAsDisk
                 };
                 _repo.Network.Push(_repo.Branches[_branchName], options);
             }, _token);
-
-            return true;
         }
 
         public void Dispose()
