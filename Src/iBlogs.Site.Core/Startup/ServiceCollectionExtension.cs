@@ -60,6 +60,8 @@ namespace iBlogs.Site.Core.Startup
 
             services.AddTransient<IStartupFilter, iBlogsStartupFilter>();
 
+            services.AddHostedService<DataSyncHostedService>();
+
             return services;
         }
     }
