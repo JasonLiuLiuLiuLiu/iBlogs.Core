@@ -56,12 +56,8 @@ namespace iBlogs.Site.GitAsDisk
                     await Pull();
                 }
 
-
-                if (HaveChanges())
-                {
-                    await CommitAll();
-                    await Push();
-                }
+                await CommitAll();
+                await Push();
             }
             catch (Exception e)
             {
@@ -140,6 +136,9 @@ namespace iBlogs.Site.GitAsDisk
             {
                 Commands.Stage(_repo, "*");
 
+                if (!_repo.Diff.Compare<TreeChanges>(_repo.Head.Tip.Tree, DiffTargets.Index | DiffTargets.WorkingDirectory).Any())
+                    return;
+
                 // Create the committer's signature and commit
                 var author = new Signature(_committerName, _committerEmail, DateTime.Now);
                 var committer = author;
@@ -164,21 +163,6 @@ namespace iBlogs.Site.GitAsDisk
                 };
                 _repo.Network.Push(_repo.Branches[_branchName], options);
             }, _token);
-        }
-
-        private bool HaveChanges()
-        {
-            foreach (IndexEntry e in _repo.Index)
-            {
-                if (e.StageLevel == 0)
-                {
-                    continue;
-                }
-
-                return true;
-            }
-
-            return false;
         }
 
         public void Dispose()

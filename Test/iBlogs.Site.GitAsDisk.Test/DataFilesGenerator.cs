@@ -14,7 +14,7 @@ using NUnit.Framework;
 
 namespace iBlogs.Site.GitAsDisk.Test
 {
-    [Ignore("Generator")]
+    //[Ignore("Generator")]
     public class DataFilesGenerator
     {
         private GitSyncOptions _syncOptions;
@@ -30,7 +30,7 @@ namespace iBlogs.Site.GitAsDisk.Test
         [Test]
         public async Task GenerateFromMysql()
         {
-            var sql = new string[]
+            var sql = new[]
             {
                 "select * from attachments",
                 "select * from blogsyncrelationships",
