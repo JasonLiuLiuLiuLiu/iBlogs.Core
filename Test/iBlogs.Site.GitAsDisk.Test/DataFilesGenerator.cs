@@ -14,7 +14,7 @@ using NUnit.Framework;
 
 namespace iBlogs.Site.GitAsDisk.Test
 {
-    //[Ignore("Generator")]
+    [Ignore("Generator")]
     public class DataFilesGenerator
     {
         private GitSyncOptions _syncOptions;

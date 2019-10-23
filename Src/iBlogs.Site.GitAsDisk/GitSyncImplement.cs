@@ -152,6 +152,10 @@ namespace iBlogs.Site.GitAsDisk
         {
             await Task.Factory.StartNew(() =>
             {
+
+                if (!_repo.RetrieveStatus(new StatusOptions()).Any())
+                    return;
+
                 var options = new PushOptions
                 {
                     CredentialsProvider = (url, usernameFromUrl, types) =>
