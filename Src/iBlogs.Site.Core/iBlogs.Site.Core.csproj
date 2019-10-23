@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\iBlogs.Site.GitAsDisk\iBlogs.Site.GitAsDisk.csproj" />
     <ProjectReference Include="..\iBlogs.Site.MetaWeblog\iBlogs.Site.MetaWeblog.csproj" />
   </ItemGroup>
   <PropertyGroup>
