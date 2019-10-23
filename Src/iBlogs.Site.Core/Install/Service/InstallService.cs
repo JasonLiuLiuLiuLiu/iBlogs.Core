@@ -40,10 +40,6 @@ namespace iBlogs.Site.Core.Install.Service
 
         public void WriteInstallInfo(InstallParam param)
         {
-            var connectString = $"Server={param.DbUrl};Database={param.DbName};uid={param.DbUserName};pwd={param.DbUserPwd}";
-            ConfigDataHelper.UpdateConnectionString("iBlogs", connectString);
-            ConfigDataHelper.UpdateRedisConfig(param.RedisHost, param.RedisPwd);
-            ConfigDataHelper.SaveInstallParam(param);
             Task.Run(() =>
             {
                 Thread.Sleep(1000);
@@ -56,10 +52,10 @@ namespace iBlogs.Site.Core.Install.Service
 
             try
             {
-                _param = ConfigDataHelper.ReadInstallParam();
+                //todo
+                _param = new InstallParam();
                 Seed();
                 ConfigDataHelper.UpdateDbInstallStatus(true);
-                ConfigDataHelper.DeleteInstallParamFile();
                 _optionService.Set(ConfigKey.SiteInstallTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 _optionService.Set(ConfigKey.LastActiveTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 _optionService.Load();

@@ -81,7 +81,15 @@ namespace iBlogs.Site.GitAsDisk
 
             Debug.Assert(typeFullName != null, nameof(typeFullName) + " != null");
 
-            return typeFullName.Replace('.', '\\');
+            var path = typeFullName.Replace('.', '\\');
+
+            var directory = Path.GetDirectoryName(path);
+            var fullDirectory = Path.Combine(BasePath, directory ?? "");
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(fullDirectory))
+            {
+                Directory.CreateDirectory(fullDirectory);
+            }
+            return path;
         }
     }
 }

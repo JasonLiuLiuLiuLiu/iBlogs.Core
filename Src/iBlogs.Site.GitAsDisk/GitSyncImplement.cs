@@ -17,7 +17,8 @@ namespace iBlogs.Site.GitAsDisk
         private readonly string _branchName;
         private readonly string _committerName;
         private readonly string _committerEmail;
-        private readonly Repository _repo;
+
+        private Repository _repo;
 
         private CancellationToken _token;
 
@@ -34,7 +35,6 @@ namespace iBlogs.Site.GitAsDisk
             }
             _committerName = committerName;
             _committerEmail = committerEmail;
-            _repo = new Repository(_path);
         }
 
         public async Task<SyncResult> Execute(CancellationToken token)
@@ -42,19 +42,26 @@ namespace iBlogs.Site.GitAsDisk
             _token = token;
             try
             {
-                if (!Directory.EnumerateFileSystemEntries(_path).Any())
+                if (!Directory.Exists(_path) || !Directory.EnumerateFileSystemEntries(_path).Any())
                 {
                     await CloneAsync();
+                    _repo = new Repository(_path);
                     await CheckOut();
                 }
                 else
                 {
+
+                    _repo = new Repository(_path);
                     await CheckOut();
                     await Pull();
                 }
 
-                await CommitAll();
-                await Push();
+
+                if (HaveChanges())
+                {
+                    await CommitAll();
+                    await Push();
+                }
             }
             catch (Exception e)
             {
@@ -120,8 +127,7 @@ namespace iBlogs.Site.GitAsDisk
                 };
 
                 // User information to create a merge commit
-                var signature = new Signature(
-                    new Identity("MERGE_USER_NAME", "MERGE_USER_EMAIL"), DateTimeOffset.Now);
+                var signature = new Signature(new Identity(_committerName, _committerEmail), DateTimeOffset.Now);
 
                 // Pull
                 Commands.Pull(_repo, signature, options);
@@ -158,6 +164,21 @@ namespace iBlogs.Site.GitAsDisk
                 };
                 _repo.Network.Push(_repo.Branches[_branchName], options);
             }, _token);
+        }
+
+        private bool HaveChanges()
+        {
+            foreach (IndexEntry e in _repo.Index)
+            {
+                if (e.StageLevel == 0)
+                {
+                    continue;
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         public void Dispose()
