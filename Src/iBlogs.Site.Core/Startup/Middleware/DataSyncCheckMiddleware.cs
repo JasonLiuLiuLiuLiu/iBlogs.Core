@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using iBlogs.Site.Core.Common.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -18,8 +19,11 @@ namespace iBlogs.Site.Core.Startup.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            if (_configuration["DataIsSynced"].ToBool())
-                context.Request.Path = "/error/loading";
+            if (!_configuration["DataIsSynced"].ToBool()&&!context.Request.Path.Value.Contains("/error/loading",StringComparison.OrdinalIgnoreCase))
+            {
+                context.Response.Redirect("/error/loading");
+                return;
+            }
             await _next.Invoke(context).ConfigureAwait(false);
         }
     }
