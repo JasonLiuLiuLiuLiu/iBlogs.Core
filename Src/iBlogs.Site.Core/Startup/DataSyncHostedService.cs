@@ -24,12 +24,14 @@ namespace iBlogs.Site.Core.Startup
         {
             _logger.LogInformation("Data Sync Hosted Service Running.");
 
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                //TODO read git sync options from config
-                await GitAsDiskService.Sync(new GitSyncOptions("", "", "")).ConfigureAwait(false);
-                Thread.Sleep(_sleepTimeSpan);
-            }
+
+            //while (!cancellationToken.IsCancellationRequested)
+            //{
+            //    //TODO read git sync options from config
+            //    //await GitAsDiskService.Sync(new GitSyncOptions("", "", "")).ConfigureAwait(false);
+            //    Thread.Sleep(_sleepTimeSpan);
+            //}
+
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

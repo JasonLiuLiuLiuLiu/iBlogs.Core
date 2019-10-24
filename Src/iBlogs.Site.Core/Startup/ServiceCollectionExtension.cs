@@ -58,7 +58,7 @@ namespace iBlogs.Site.Core.Startup
             },
                 Assembly.GetAssembly(typeof(ServiceCollection)));
 
-            services.AddTransient<IStartupFilter, iBlogsStartupFilter>();
+            services.AddTransient<IStartupFilter, BlogsStartupFilter>();
 
             services.AddHostedService<DataSyncHostedService>();
 

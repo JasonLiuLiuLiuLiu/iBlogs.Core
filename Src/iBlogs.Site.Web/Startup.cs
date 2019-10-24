@@ -68,7 +68,7 @@ namespace iBlogs.Site.Web
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMiddleware<InstallMiddleware>();
+            app.UseMiddleware<DataSyncCheckMiddleware>();
 
             app.UseEndpoints(routes =>
             {
