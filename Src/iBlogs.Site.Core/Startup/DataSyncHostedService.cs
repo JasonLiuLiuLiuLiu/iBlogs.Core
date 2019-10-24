@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.GitAsDisk;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,9 +12,9 @@ namespace iBlogs.Site.Core.Startup
     public sealed class DataSyncHostedService : IHostedService, IDisposable
     {
         private readonly ILogger<DataSyncHostedService> _logger;
-        private  Timer _timer;
+        private Timer _timer;
         private readonly TimeSpan _sleepTimeSpan;
-        private int executionCount = 0;
+        private CancellationToken _token;
 
         public DataSyncHostedService(ILogger<DataSyncHostedService> logger, IConfiguration configuration)
         {
@@ -21,25 +22,24 @@ namespace iBlogs.Site.Core.Startup
             _sleepTimeSpan = TimeSpan.FromHours(configuration?["AutoDataSyncHours"].ToIntOrDefault(1) ?? 1);
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
+            _token = cancellationToken;
+
             _logger.LogInformation("Data Sync Hosted Service Running.");
 
             _timer = new Timer(DoWork, null, TimeSpan.Zero, _sleepTimeSpan);
+
+            return Task.CompletedTask;
         }
 
-        private void DoWork(object state)
+        private async void DoWork(object state)
         {
-            executionCount++;
+            if(_token.IsCancellationRequested)
+                return;
 
-            _logger.LogInformation("Timed Hosted Service is working. Count: {Count}", executionCount);
-
-            //while (!cancellationToken.IsCancellationRequested)
-            //{
-            //    //TODO read git sync options from config
-            //    //await GitAsDiskService.Sync(new GitSyncOptions("", "", "")).ConfigureAwait(false);
-            //    Thread.Sleep(_sleepTimeSpan);
-            //}
+            //TODO read git sync options from config
+            await GitAsDiskService.Sync(new GitSyncOptions("", "", "")).ConfigureAwait(false);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
