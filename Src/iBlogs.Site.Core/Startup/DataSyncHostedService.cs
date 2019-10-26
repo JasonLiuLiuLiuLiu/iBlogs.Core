@@ -1,7 +1,18 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Blog.Attach;
+using iBlogs.Site.Core.Blog.Comment;
+using iBlogs.Site.Core.Blog.Content;
+using iBlogs.Site.Core.Blog.Extension;
+using iBlogs.Site.Core.Blog.Meta;
+using iBlogs.Site.Core.Blog.Relationship;
 using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.Option;
+using iBlogs.Site.Core.Security;
+using iBlogs.Site.Core.Storage;
 using iBlogs.Site.GitAsDisk;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -15,11 +26,14 @@ namespace iBlogs.Site.Core.Startup
         private Timer _timer;
         private readonly TimeSpan _sleepTimeSpan;
         private CancellationToken _token;
+        private readonly GitSyncOptions _gitSyncOptions;
 
         public DataSyncHostedService(ILogger<DataSyncHostedService> logger, IConfiguration configuration)
         {
             _logger = logger;
             _sleepTimeSpan = TimeSpan.FromHours(configuration?["AutoDataSyncHours"].ToIntOrDefault(1) ?? 1);
+            if (configuration != null)
+                _gitSyncOptions = new GitSyncOptions(configuration["gitUrl"], configuration["Username"], configuration["Password"]);
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -35,11 +49,46 @@ namespace iBlogs.Site.Core.Startup
 
         private async void DoWork(object state)
         {
-            if(_token.IsCancellationRequested)
+            if (_token.IsCancellationRequested)
                 return;
 
-            //TODO read git sync options from config
-            await GitAsDiskService.Sync(new GitSyncOptions("", "", "")).ConfigureAwait(false);
+            try
+            {
+                await GitAsDiskService.Sync(_gitSyncOptions).ConfigureAwait(false);
+                var attachments = GitAsDiskService.LoadAsync<Attachment>();
+                var blogsyncrelationships = GitAsDiskService.LoadAsync<BlogSyncRelationship>();
+                var comments = GitAsDiskService.LoadAsync<Comments>();
+                var contents = GitAsDiskService.LoadAsync<Contents>();
+                var metas = GitAsDiskService.LoadAsync<Metas>();
+                var options = GitAsDiskService.LoadAsync<Options>();
+                var relationships = GitAsDiskService.LoadAsync<Relationships>();
+                var users = GitAsDiskService.LoadAsync<Users>();
+
+                StorageWarehouse.Set(ConvertToDic(attachments).Result);
+                StorageWarehouse.Set(ConvertToDic(blogsyncrelationships).Result);
+                StorageWarehouse.Set(ConvertToDic(comments).Result);
+                StorageWarehouse.Set(ConvertToDic(contents).Result);
+                StorageWarehouse.Set(ConvertToDic(metas).Result);
+                StorageWarehouse.Set(ConvertToDic(options).Result);
+                StorageWarehouse.Set(ConvertToDic(relationships).Result);
+                StorageWarehouse.Set(ConvertToDic(users).Result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
+            }
+
+        }
+
+        private async Task<ConcurrentDictionary<int, T>> ConvertToDic<T>(IAsyncEnumerable<T> values) where T:IEntityBase
+        {
+            var result=new ConcurrentDictionary<int,T>();
+            await foreach (var value in values)
+            {
+                result.TryAdd(value.Id,value);
+            }
+
+            return result;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
