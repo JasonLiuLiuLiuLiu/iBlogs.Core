@@ -23,7 +23,7 @@ namespace iBlogs.Site.Web
 #endif
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext();
-            logConfig = logConfig.WriteTo.File("log\\log.txt", rollingInterval: RollingInterval.Minute);
+            logConfig = logConfig.WriteTo.File(Path.Combine("log","log.txt"), rollingInterval: RollingInterval.Hour);
 
             Log.Logger = logConfig.CreateLogger();
 

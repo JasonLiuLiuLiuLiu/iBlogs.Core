@@ -21,16 +21,17 @@ using Microsoft.Extensions.Logging;
 
 namespace iBlogs.Site.Core.Startup
 {
-    public sealed class DataSyncHostedService : IHostedService, IDisposable
+    public sealed class ScheduleHostedService : IHostedService, IDisposable
     {
-        private readonly ILogger<DataSyncHostedService> _logger;
-        private Timer _timer;
+        private readonly ILogger<ScheduleHostedService> _logger;
+        private Timer _dataSyncTimer;
+        private Timer _logClearTimer;
         private readonly TimeSpan _sleepTimeSpan;
         private CancellationToken _token;
         private readonly GitSyncOptions _gitSyncOptions;
         private readonly IConfiguration _configuration;
 
-        public DataSyncHostedService(ILogger<DataSyncHostedService> logger, IConfiguration configuration)
+        public ScheduleHostedService(ILogger<ScheduleHostedService> logger, IConfiguration configuration)
         {
             _logger = logger;
             _sleepTimeSpan = TimeSpan.FromHours(configuration?["AutoDataSyncHours"].ToIntOrDefault(1) ?? 1);
@@ -45,12 +46,13 @@ namespace iBlogs.Site.Core.Startup
 
             _logger.LogInformation("Data Sync Hosted Service Running.");
 
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, _sleepTimeSpan);
+            _dataSyncTimer = new Timer(DataSync, null, TimeSpan.Zero, _sleepTimeSpan);
+            _logClearTimer = new Timer(LogClean, null, TimeSpan.Zero, _sleepTimeSpan);
 
             return Task.CompletedTask;
         }
 
-        private void DoWork(object state)
+        private void DataSync(object state)
         {
             if (_token.IsCancellationRequested)
                 return;
@@ -90,6 +92,11 @@ namespace iBlogs.Site.Core.Startup
 
         }
 
+        private void LogClean(object state)
+        {
+
+        }
+
         private ConcurrentDictionary<int, T> ConvertToDic<T>(IEnumerable<T> values) where T : IEntityBase
         {
             var result = new ConcurrentDictionary<int, T>();
@@ -104,13 +111,15 @@ namespace iBlogs.Site.Core.Startup
         public Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Data Sync Hosted Service is stopping.");
-            _timer?.Change(Timeout.Infinite, 0);
+            _dataSyncTimer?.Change(Timeout.Infinite, 0);
+            _logClearTimer?.Change(Timeout.Infinite, 0);
             return Task.CompletedTask;
         }
 
         public void Dispose()
         {
-            _timer.Dispose();
+            _dataSyncTimer.Dispose();
+            _logClearTimer.Dispose();
         }
     }
 }
