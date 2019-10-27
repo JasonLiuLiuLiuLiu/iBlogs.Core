@@ -9,6 +9,7 @@ using iBlogs.Site.Core.Blog.Content;
 using iBlogs.Site.Core.Blog.Extension;
 using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Relationship;
+using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Security;
@@ -27,11 +28,13 @@ namespace iBlogs.Site.Core.Startup
         private readonly TimeSpan _sleepTimeSpan;
         private CancellationToken _token;
         private readonly GitSyncOptions _gitSyncOptions;
+        private readonly IConfiguration _configuration;
 
         public DataSyncHostedService(ILogger<DataSyncHostedService> logger, IConfiguration configuration)
         {
             _logger = logger;
             _sleepTimeSpan = TimeSpan.FromHours(configuration?["AutoDataSyncHours"].ToIntOrDefault(1) ?? 1);
+            _configuration = configuration;
             if (configuration != null)
                 _gitSyncOptions = new GitSyncOptions(configuration["gitUrl"], configuration["gitUid"], configuration["gitPwd"]);
         }
@@ -72,6 +75,11 @@ namespace iBlogs.Site.Core.Startup
                 StorageWarehouse.Set(ConvertToDic(options));
                 StorageWarehouse.Set(ConvertToDic(relationships));
                 StorageWarehouse.Set(ConvertToDic(users));
+
+                if (!_configuration["DataIsSynced"].ToBool())
+                {
+                    ConfigDataHelper.UpdateAppSettings("DataIsSynced","true");
+                }
             }
             catch (Exception e)
             {

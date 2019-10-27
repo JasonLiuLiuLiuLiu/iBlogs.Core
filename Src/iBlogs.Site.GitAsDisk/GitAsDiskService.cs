@@ -70,7 +70,10 @@ namespace iBlogs.Site.GitAsDisk
 
             foreach (var value in values)
             {
-                yield return JsonConvert.DeserializeObject<T>(value);
+                if (string.IsNullOrEmpty(value)) continue;
+                var result = JsonConvert.DeserializeObject<T>(value);
+                if (result == null) continue;
+                yield return result;
             }
         }
 

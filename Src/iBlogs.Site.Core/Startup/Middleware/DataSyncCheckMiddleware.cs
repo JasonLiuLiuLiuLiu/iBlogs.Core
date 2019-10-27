@@ -24,6 +24,14 @@ namespace iBlogs.Site.Core.Startup.Middleware
                 context.Response.Redirect("/error/loading");
                 return;
             }
+
+            if (context.Request.Path.Value.Contains("/error/loading", StringComparison.OrdinalIgnoreCase) &&
+                _configuration["DataIsSynced"].ToBool())
+            {
+                context.Response.Redirect("/index/index/1");
+                return;
+            }
+
             await _next.Invoke(context).ConfigureAwait(false);
         }
     }

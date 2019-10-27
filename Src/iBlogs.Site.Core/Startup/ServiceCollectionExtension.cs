@@ -60,6 +60,7 @@ namespace iBlogs.Site.Core.Startup
 
             services.AddTransient<IStartupFilter, BlogsStartupFilter>();
 
+            ConfigDataHelper.UpdateAppSettings("DataIsSynced", "false");
             services.AddHostedService<DataSyncHostedService>();
 
             return services;

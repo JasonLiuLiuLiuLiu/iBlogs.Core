@@ -22,8 +22,6 @@ namespace iBlogs.Site.Core.Option.Service
 
         public void Load()
         {
-            ConfigData.Init(this);
-
             CheckConfigKeyAttribute();
 
             foreach (var keyValuePair in GetAllAsKeyValue())
@@ -133,7 +131,7 @@ namespace iBlogs.Site.Core.Option.Service
 
                 if (update)
                 {
-                    var entity = _repository.GetAll().FirstOrDefault(o => o.Name == exist.Key.ToString());
+                    var entity = _repository.GetAll().FirstOrDefault(o => o.Name == exist.Key);
                     if (entity != null)
                     {
                         entity.Value = exist.Value;
