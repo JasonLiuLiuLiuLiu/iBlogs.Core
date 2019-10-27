@@ -5,6 +5,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /Src
 COPY ["Src/iBlogs.Site.Web/iBlogs.Site.Web.csproj", "Src/iBlogs.Site.Web/"]
+COPY ["Lib/*", "/app"]
 RUN dotnet restore "Src/iBlogs.Site.Web/iBlogs.Site.Web.csproj"
 COPY . .
 WORKDIR "/Src/Src/iBlogs.Site.Web"

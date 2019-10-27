@@ -21,7 +21,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 
-
   <ItemGroup>
     <ProjectReference Include="..\iBlogs.Site.Core\iBlogs.Site.Core.csproj" />
   </ItemGroup>
@@ -29,7 +28,6 @@
   <PropertyGroup>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
   </PropertyGroup>
-
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="y" /></VisualStudio></ProjectExtensions>
 
