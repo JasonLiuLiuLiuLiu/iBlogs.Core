@@ -13,7 +13,7 @@ namespace iBlogs.Site.Web
     {
         public static void Main(string[] args)
         {
-            args.SetConfigInfo();
+            var argsConfig = args.SetConfigInfo();
 
             var logConfig = new LoggerConfiguration()
 #if DEBUG
@@ -23,7 +23,15 @@ namespace iBlogs.Site.Web
 #endif
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext();
-            logConfig = logConfig.WriteTo.File(Path.Combine("log","log.txt"), rollingInterval: RollingInterval.Hour);
+
+            if (argsConfig.ContainsKey("logToConsole") && argsConfig["logToConsole"].ToBool())
+            {
+                logConfig = logConfig.WriteTo.Console();
+            }
+            else
+            {
+                logConfig = logConfig.WriteTo.File(Path.Combine("log", "log.txt"), rollingInterval: RollingInterval.Hour);
+            }
 
             Log.Logger = logConfig.CreateLogger();
 

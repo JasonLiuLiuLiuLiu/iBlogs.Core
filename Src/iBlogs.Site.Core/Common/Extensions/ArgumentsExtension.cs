@@ -11,15 +11,15 @@ namespace iBlogs.Site.Core.Common.Extensions
         private const string GitPwd = "GitPwd";
         private static readonly Dictionary<string, string> Data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        public static string[] SetConfigInfo(this string[] args)
+        public static Dictionary<string, string> SetConfigInfo(this string[] args)
         {
             if (args == null || args.Length == 0)
-                return args;
+                return Data;
 
             Load(args);
 
             if (!Data.ContainsKey(GitUrl) || !Data.ContainsKey(GitUid) || !Data.ContainsKey(GitPwd))
-                return args;
+                return Data;
 
             ConfigDataHelper.UpdateAppSettings(GitUrl, Data[GitUrl]);
             ConfigDataHelper.UpdateAppSettings(GitUid, Data[GitUid]);
@@ -30,7 +30,7 @@ namespace iBlogs.Site.Core.Common.Extensions
             if (Data.ContainsKey(BuildNumber))
                 ConfigDataHelper.UpdateBuildNumber(Data[BuildNumber]);
 
-            return args;
+            return Data;
         }
 
         private static void Load(IEnumerable<string> args)
