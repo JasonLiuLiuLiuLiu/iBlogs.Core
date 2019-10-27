@@ -59,7 +59,13 @@ namespace iBlogs.Site.Core.Startup
 
             try
             {
-                GitAsDiskService.Sync(_gitSyncOptions);
+                var syncResult = GitAsDiskService.Sync(_gitSyncOptions);
+                if (!syncResult.Result)
+                {
+                    _logger.LogError(syncResult.Message);
+                    return;
+                }
+
                 var attachments = GitAsDiskService.Load<Attachment>();
                 var blogSyncRelationships = GitAsDiskService.Load<BlogSyncRelationship>();
                 var comments = GitAsDiskService.Load<Comments>();

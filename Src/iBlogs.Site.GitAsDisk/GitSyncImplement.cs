@@ -157,7 +157,7 @@ namespace iBlogs.Site.GitAsDisk
 
         public void Dispose()
         {
-            _repo.Dispose();
+            _repo?.Dispose();
         }
     }
 }
