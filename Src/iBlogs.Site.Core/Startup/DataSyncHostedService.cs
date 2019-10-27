@@ -76,9 +76,11 @@ namespace iBlogs.Site.Core.Startup
                 StorageWarehouse.Set(ConvertToDic(relationships));
                 StorageWarehouse.Set(ConvertToDic(users));
 
+                StorageWarehouse.BuildRelationShip();
+
                 if (!_configuration["DataIsSynced"].ToBool())
                 {
-                    ConfigDataHelper.UpdateAppSettings("DataIsSynced","true");
+                    ConfigDataHelper.UpdateAppSettings("DataIsSynced", "true");
                 }
             }
             catch (Exception e)
