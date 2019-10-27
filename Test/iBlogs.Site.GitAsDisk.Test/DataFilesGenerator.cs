@@ -51,18 +51,18 @@ namespace iBlogs.Site.GitAsDisk.Test
             var relationships = con.Query<Relationships>(sql[6]);
             var users = con.Query<Users>(sql[7]);
 
-            await GitAsDiskService.Sync(_syncOptions);
+             GitAsDiskService.Sync(_syncOptions);
 
-            await GitAsDiskService.CommitAsync(attachments);
-            await GitAsDiskService.CommitAsync(blogsyncrelationships);
-            await GitAsDiskService.CommitAsync(comments);
-            await GitAsDiskService.CommitAsync(contents);
-            await GitAsDiskService.CommitAsync(metas);
-            await GitAsDiskService.CommitAsync(options);
-            await GitAsDiskService.CommitAsync(relationships);
-            await GitAsDiskService.CommitAsync(users);
+             GitAsDiskService.Commit(attachments);
+             GitAsDiskService.Commit(blogsyncrelationships);
+             GitAsDiskService.Commit(comments);
+             GitAsDiskService.Commit(contents);
+             GitAsDiskService.Commit(metas);
+             GitAsDiskService.Commit(options);
+             GitAsDiskService.Commit(relationships);
+             GitAsDiskService.Commit(users);
 
-            await GitAsDiskService.Sync(_syncOptions);
+             GitAsDiskService.Sync(_syncOptions);
 
             Assert.Pass();
         }

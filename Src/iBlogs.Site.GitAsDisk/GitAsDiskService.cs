@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace iBlogs.Site.GitAsDisk
@@ -13,15 +12,15 @@ namespace iBlogs.Site.GitAsDisk
         private static bool _synced;
         private const string BasePath = "GitAsDisk";
 
-        public static async Task<SyncResult> Sync(GitSyncOptions options)
+        public static SyncResult Sync(GitSyncOptions options)
         {
             using var syncImpl = new GitSyncImplement(BasePath, options.GitUrl, options.UserName, options.Password, options.BranchName, options.CommitterName, options.CommitterEmail);
-            var syncResult = await syncImpl.Execute(options.Token);
+            var syncResult = syncImpl.Execute(options.Token);
             _synced = syncResult.Result;
             return syncResult;
         }
 
-        public static async Task<bool> CommitAsync<T>(IEnumerable<T> values) where T : class
+        public static bool Commit<T>(IEnumerable<T> values) where T : class
         {
             if (!_synced)
             {
@@ -34,10 +33,10 @@ namespace iBlogs.Site.GitAsDisk
                 resultSb.AppendLine(JsonConvert.SerializeObject(value).Replace("\r\n", " "));
             }
 
-            return await CommitAsync(GetPathByType(typeof(T)), resultSb.ToString());
+            return Commit(GetPathByType(typeof(T)), resultSb.ToString());
         }
 
-        public static async Task<bool> CommitAsync(string fullPath, string value)
+        public static bool Commit(string fullPath, string value)
         {
             if (!_synced)
             {
@@ -45,29 +44,29 @@ namespace iBlogs.Site.GitAsDisk
             }
 
             var fileFullPath = Path.Combine(BasePath, fullPath);
-            await File.WriteAllTextAsync(fileFullPath, value, Encoding.UTF8);
+            File.WriteAllText(fileFullPath, value, Encoding.UTF8);
 
             return true;
         }
 
-        public static async Task<string> LoadAsync(string fullPath)
+        public static string Load(string fullPath)
         {
             if (!_synced)
             {
                 throw new GitAsDiskException("Please Call Sync Method before this");
             }
 
-            return await File.ReadAllTextAsync(Path.Combine(BasePath, fullPath), Encoding.UTF8);
+            return File.ReadAllText(Path.Combine(BasePath, fullPath), Encoding.UTF8);
         }
 
-        public static async IAsyncEnumerable<T> LoadAsync<T>() where T : class
+        public static IEnumerable<T> Load<T>() where T : class
         {
             if (!_synced)
             {
                 throw new GitAsDiskException("Please Call Sync Method before this");
             }
 
-            var values = (await LoadAsync(GetPathByType(typeof(T)))).Split('\r', '\n');
+            var values = (Load(GetPathByType(typeof(T)))).Split('\r', '\n');
 
             foreach (var value in values)
             {

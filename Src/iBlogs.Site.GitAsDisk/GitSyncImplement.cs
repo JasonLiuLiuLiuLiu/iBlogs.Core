@@ -3,7 +3,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using LibGit2Sharp;
 
 namespace iBlogs.Site.GitAsDisk
@@ -20,8 +19,6 @@ namespace iBlogs.Site.GitAsDisk
 
         private Repository _repo;
 
-        private CancellationToken _token;
-
         public GitSyncImplement(string path, string gitUrl, string userName, string password, string branchName, string committerName, string committerEmail)
         {
             _path = path;
@@ -37,27 +34,29 @@ namespace iBlogs.Site.GitAsDisk
             _committerEmail = committerEmail;
         }
 
-        public async Task<SyncResult> Execute(CancellationToken token)
+        public SyncResult Execute(CancellationToken token)
         {
-            _token = token;
+            if (token.IsCancellationRequested)
+                return SyncResult.Success();
+
             try
             {
                 if (!Directory.Exists(_path) || !Directory.EnumerateFileSystemEntries(_path).Any())
                 {
-                    await CloneAsync();
+                    Clone();
                     _repo = new Repository(_path);
-                    await CheckOut();
+                    CheckOut();
                 }
                 else
                 {
 
                     _repo = new Repository(_path);
-                    await CheckOut();
-                    await Pull();
+                    CheckOut();
+                    Pull();
                 }
 
-                await CommitAll();
-                await Push();
+                CommitAll();
+                Push();
             }
             catch (Exception e)
             {
@@ -65,98 +64,48 @@ namespace iBlogs.Site.GitAsDisk
             }
 
             return SyncResult.Success();
-
         }
 
-        private async Task CloneAsync()
+        private void Clone()
         {
-            await Task.Factory.StartNew(() =>
-            {
-                if (!Directory.Exists(_path))
-                    Directory.CreateDirectory(_path);
 
-                var co = new CloneOptions
+            if (!Directory.Exists(_path))
+                Directory.CreateDirectory(_path);
+
+            var co = new CloneOptions
+            {
+                CredentialsProvider = (url, user, cred) => new UsernamePasswordCredentials
                 {
-                    CredentialsProvider = (url, user, cred) => new UsernamePasswordCredentials
-                    {
-                        Username = _userName,
-                        Password = _password
-                    },
-                    BranchName = _branchName
-                };
-                Repository.Clone(_gitUrl, _path, co);
-            }, _token);
+                    Username = _userName,
+                    Password = _password
+                },
+                BranchName = _branchName
+            };
+            Repository.Clone(_gitUrl, _path, co);
+
         }
-        private async Task CheckOut()
+        private void CheckOut()
         {
-            await Task.Factory.StartNew(() =>
+
+            var trackingBranch = _repo.Branches["remotes/origin/" + _branchName];
+            if (trackingBranch == null || !trackingBranch.IsRemote) return;
+            var branch = _repo.Branches[_branchName];
+            if (branch == null)
             {
-                var trackingBranch = _repo.Branches["remotes/origin/" + _branchName];
-                if (trackingBranch == null || !trackingBranch.IsRemote) return;
-                var branch = _repo.Branches[_branchName];
-                if (branch == null)
-                {
-                    branch = _repo.CreateBranch(_branchName, trackingBranch.Tip);
-                }
+                branch = _repo.CreateBranch(_branchName, trackingBranch.Tip);
+            }
 
-                _repo.Branches.Update(branch, b => b.TrackedBranch = trackingBranch.CanonicalName);
+            _repo.Branches.Update(branch, b => b.TrackedBranch = trackingBranch.CanonicalName);
 
-                Commands.Checkout(_repo, branch, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
-            }, _token);
+            Commands.Checkout(_repo, branch, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
+
         }
-        private async Task Pull()
+        private void Pull()
         {
-            await Task.Factory.StartNew(() =>
+            // Credential information to fetch
+            PullOptions options = new PullOptions
             {
-                // Credential information to fetch
-                PullOptions options = new PullOptions
-                {
-                    FetchOptions = new FetchOptions
-                    {
-                        CredentialsProvider = (url, usernameFromUrl, types) =>
-                            new UsernamePasswordCredentials()
-                            {
-                                Username = _userName,
-                                Password = _password
-                            }
-                    }
-                };
-
-                // User information to create a merge commit
-                var signature = new Signature(new Identity(_committerName, _committerEmail), DateTimeOffset.Now);
-
-                // Pull
-                Commands.Pull(_repo, signature, options);
-            }, _token);
-        }
-
-        private async Task CommitAll()
-        {
-            await Task.Factory.StartNew(() =>
-            {
-                Commands.Stage(_repo, "*");
-
-                if (!_repo.Diff.Compare<TreeChanges>(_repo.Head.Tip.Tree, DiffTargets.Index | DiffTargets.WorkingDirectory).Any())
-                    return;
-
-                // Create the committer's signature and commit
-                var author = new Signature(_committerName, _committerEmail, DateTime.Now);
-                var committer = author;
-
-                // Commit to the repository
-                _repo.Commit($"GitAsDisk Commit at {DateTime.Now.ToString(CultureInfo.InvariantCulture)}", author, committer);
-            }, _token);
-        }
-
-        private async Task Push()
-        {
-            await Task.Factory.StartNew(() =>
-            {
-
-                if (!_repo.RetrieveStatus(new StatusOptions()).Any())
-                    return;
-
-                var options = new PushOptions
+                FetchOptions = new FetchOptions
                 {
                     CredentialsProvider = (url, usernameFromUrl, types) =>
                         new UsernamePasswordCredentials()
@@ -164,9 +113,46 @@ namespace iBlogs.Site.GitAsDisk
                             Username = _userName,
                             Password = _password
                         }
-                };
-                _repo.Network.Push(_repo.Branches[_branchName], options);
-            }, _token);
+                }
+            };
+
+            // User information to create a merge commit
+            var signature = new Signature(new Identity(_committerName, _committerEmail), DateTimeOffset.Now);
+
+            // Pull
+            Commands.Pull(_repo, signature, options);
+        }
+
+        private void CommitAll()
+        {
+            Commands.Stage(_repo, "*");
+
+            if (!_repo.Diff.Compare<TreeChanges>(_repo.Head.Tip.Tree, DiffTargets.Index | DiffTargets.WorkingDirectory).Any())
+                return;
+
+            // Create the committer's signature and commit
+            var author = new Signature(_committerName, _committerEmail, DateTime.Now);
+            var committer = author;
+
+            // Commit to the repository
+            _repo.Commit($"GitAsDisk Commit at {DateTime.Now.ToString(CultureInfo.InvariantCulture)}", author, committer);
+        }
+
+        private void Push()
+        {
+            if (!_repo.RetrieveStatus(new StatusOptions()).Any())
+                return;
+
+            var options = new PushOptions
+            {
+                CredentialsProvider = (url, usernameFromUrl, types) =>
+                    new UsernamePasswordCredentials()
+                    {
+                        Username = _userName,
+                        Password = _password
+                    }
+            };
+            _repo.Network.Push(_repo.Branches[_branchName], options);
         }
 
         public void Dispose()
