@@ -27,12 +27,12 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet test $(buildConfiguration)'
-  inputs:
-    command: test
-    projects: '**/Test/**/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+# - task: DotNetCoreCLI@2
+#   displayName: 'dotnet test $(buildConfiguration)'
+#   inputs:
+#     command: test
+#     projects: '**/Test/**/*.csproj'
+#     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
 - task: DotNetCoreCLI@2
   displayName: 'dotnet publish $(buildConfiguration)'
@@ -41,15 +41,15 @@ steps:
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
     
-- script: cp ./Deploy/* $(Build.ArtifactStagingDirectory)/Deploy
+- script: mkdir $(Build.ArtifactStagingDirectory)/Deploy && cp ./Deploy/* $(Build.ArtifactStagingDirectory)/Deploy
   displayName: 'copy Deploy script to artifact staging directory'
 
 
 - task: PublishBuildArtifacts@1
   displayName: 'publish artifacts'
 
-- script: |
-    docker build -t $(dockerId)/$(imageName):$(Build.BuildNumber) -f ./Src/iBlogs.Site.Web/Dockerfile .
-    docker login -u $(dockerId) -p $(pswd)
-    docker push $(dockerId)/$(imageName):$(Build.BuildNumber)
-  displayName: 'docker build and push $(buildConfiguration)'
+# - script: |
+#     docker build -t $(dockerId)/$(imageName):$(Build.BuildNumber) -f ./Src/iBlogs.Site.Web/Dockerfile .
+#     docker login -u $(dockerId) -p $(pswd)
+#     docker push $(dockerId)/$(imageName):$(Build.BuildNumber)
+#   displayName: 'docker build and push $(buildConfiguration)'
