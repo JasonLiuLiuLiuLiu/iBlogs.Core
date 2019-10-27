@@ -1,4 +1,5 @@
-docker pull $DOCKERID/$IMAGENAME:$BUILD_BUILDNUMBER
-docker stop $IMAGENAME
-docker rm $IMAGENAME
-docker run -d -p 5000:80 --restart=always --name $IMAGENAME $DOCKERID/$IMAGENAME:$BUILD_BUILDNUMBER DbServer=$DBSERVER DbName=$DBNAME DbUID=$DBUID DbPWD=$DB_PWD BuildNumber=$BUILD_BUILDNUMBER RedisConStr=$REDISCONSTR RabbitMqHost=$RABBITMQHOST RabbitMqPWD=$RABBITMQPWD RabbitMqUID=$RABBITMQUID
+docker stop $(imageName)
+docker rm $(imageName)
+docker rm -f $(docker ps -a |  grep "$(imageName)*"  | awk '{print $1}')
+docker pull $(dockerId)/$(imageName):$(Build.BuildNumber)
+docker run -d -p 5000:80 --restart=always --name $(imageName) $(dockerId)/$(imageName):$(Build.BuildNumber) GitUrl=$(GitUrl) GitUid=$(GitUid) GitPWD=$(GitPWD)
