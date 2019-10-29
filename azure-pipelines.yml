@@ -42,9 +42,5 @@ steps:
     arguments: '--configuration $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
     
-- script: mkdir $(Build.ArtifactStagingDirectory)/Deploy && cp ./Deploy/* $(Build.ArtifactStagingDirectory)/Deploy
-  displayName: 'copy Deploy script to artifact staging directory'
-
-
 - task: PublishBuildArtifacts@1
   displayName: 'publish artifacts'
