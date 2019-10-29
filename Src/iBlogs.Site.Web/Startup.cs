@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using iBlogs.Site.Core.Startup;
 using iBlogs.Site.Core.Startup.Middleware;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Hosting;
 
 namespace iBlogs.Site.Web
@@ -61,6 +62,11 @@ namespace iBlogs.Site.Web
             }
 
             app.UseRouting();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();
