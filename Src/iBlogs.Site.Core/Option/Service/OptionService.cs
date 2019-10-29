@@ -13,11 +13,21 @@ namespace iBlogs.Site.Core.Option.Service
         private readonly IRepository<Options> _repository;
         private readonly ICacheManager _cacheManager;
         private readonly int _defaultCacheTime = (int)new TimeSpan(1, 0, 0, 0).TotalMilliseconds;
+        private static bool _init;
+        private static readonly object InitLock = new object();
 
         public OptionService(IRepository<Options> repository, ICacheManager cacheManager)
         {
             _repository = repository;
             _cacheManager = cacheManager;
+            if (_init) return;
+            lock (InitLock)
+            {
+                if (_init)
+                    return;
+                Load();
+                _init = true;
+            }
         }
 
         public void Load()
@@ -48,12 +58,12 @@ namespace iBlogs.Site.Core.Option.Service
                 Key = u.Name,
                 Value = u.Value,
                 Description = u.Description
-            }).OrderBy(u=>u.Key).ToList();
+            }).OrderBy(u => u.Key).ToList();
         }
 
         public List<OptionParam> GetEditable()
         {
-            return _repository.GetAll().Where(u=>u.Editable).Select(u => new OptionParam
+            return _repository.GetAll().Where(u => u.Editable).Select(u => new OptionParam
             {
                 Id = u.Id,
                 Key = u.Name,
@@ -105,7 +115,7 @@ namespace iBlogs.Site.Core.Option.Service
                 var update = false;
                 if (exist == null)
                 {
-                    _repository.Insert(new Options { Name = attribute.Key, Value = attribute.Value, Description = attribute.Description,Editable = attribute.Editable});
+                    _repository.Insert(new Options { Name = attribute.Key, Value = attribute.Value, Description = attribute.Description, Editable = attribute.Editable });
                     continue;
                 }
 

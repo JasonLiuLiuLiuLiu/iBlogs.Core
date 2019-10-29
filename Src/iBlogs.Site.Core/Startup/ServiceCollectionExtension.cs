@@ -5,6 +5,7 @@ using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.AutoMapper;
 using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.CodeDi;
+using iBlogs.Site.Core.Git;
 using iBlogs.Site.Core.Storage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +44,7 @@ namespace iBlogs.Site.Core.Startup
 
             SLog.Information("use memory cache");
             services.AddSingleton<ICacheManager, MemoryCacheManager>();
+            services.AddSingleton<IGitDataSyncService, GitDataSyncService>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddCoreDi(options =>
