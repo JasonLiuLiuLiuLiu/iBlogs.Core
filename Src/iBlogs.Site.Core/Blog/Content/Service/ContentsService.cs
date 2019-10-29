@@ -197,16 +197,16 @@ namespace iBlogs.Site.Core.Blog.Content.Service
 
         public ContentResponse GetPre(int id)
         {
-            var query = _repository.GetAll().Where(u => u.Type == ContentType.Post).OrderByDescending(u => u.Created);
-            return _mapper.Map<ContentResponse>(query.Where(u =>
-                u.Created > query.FirstOrDefault(s => s.Id == id).Created).OrderBy(u => u.Created).FirstOrDefault());
+            var query = _repository.GetAll().Where(u => u.Type == ContentType.Post).OrderByDescending(u => u.Created).ToList();
+            var createTime = query.FirstOrDefault(s => s.Id == id)?.Created;
+            return _mapper.Map<ContentResponse>(query.Where(u =>createTime != null && u.Created > createTime.Value ).OrderBy(u => u.Created).FirstOrDefault());
         }
 
         public ContentResponse GetNext(int id)
         {
-            var query = _repository.GetAll().Where(u => u.Type == ContentType.Post).OrderByDescending(u => u.Created);
-            return _mapper.Map<ContentResponse>(query.Where(u =>
-                u.Created < query.FirstOrDefault(s => s.Id == id).Created).OrderByDescending(u => u.Created).FirstOrDefault());
+            var query = _repository.GetAll().Where(u => u.Type == ContentType.Post).OrderByDescending(u => u.Created).ToList();
+            var createTime = query.FirstOrDefault(s => s.Id == id)?.Created;
+            return _mapper.Map<ContentResponse>(query.Where(u =>createTime != null && u.Created < createTime.Value).OrderByDescending(u => u.Created).FirstOrDefault());
         }
 
         public Page<ContentResponse> FindContentByMeta(MetaType metaType, string value, ArticleParam articleParam)
