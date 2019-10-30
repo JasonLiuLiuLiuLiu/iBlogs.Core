@@ -23,7 +23,11 @@ namespace iBlogs.Site.Core.Startup
             ServiceFactory.Services = services;
             var configuration = ServiceFactory.GetService<IConfiguration>();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
                     var issuer = configuration["Auth:JwtIssuer"];
