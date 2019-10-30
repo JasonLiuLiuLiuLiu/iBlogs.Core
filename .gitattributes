@@ -4,4 +4,4 @@
 
 *.js linguist-vendored=false
 *.css linguist-vendored=false
-*.cshtml linguist-language=c#
+*.cshtml linguist-language=C#
