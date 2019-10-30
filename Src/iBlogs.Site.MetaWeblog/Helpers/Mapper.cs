@@ -1,5 +1,5 @@
 ﻿using iBlogs.Site.MetaWeblog.Classes;
-using iBlogs.Site.MetaWeblog.CnBlogs.XmlRpcStructs;
+using iBlogs.Site.MetaWeblog.XmlRpcStructs.Cnblogs;
 
 namespace iBlogs.Site.MetaWeblog.Helpers
 {

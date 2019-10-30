@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.Log.Service;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,24 +13,25 @@ namespace iBlogs.Site.Web
     {
         public static void Main(string[] args)
         {
-            args.SetConfigInfo();
+            var argsConfig = args.SetConfigInfo();
 
             var logConfig = new LoggerConfiguration()
 #if DEBUG
                 .MinimumLevel.Debug()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
 #else
                 .MinimumLevel.Information()
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
 #endif
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                 .Enrich.FromLogContext();
-#if DEBUG
-            logConfig = logConfig.WriteTo.Console();
-#else
-             logConfig = ConfigDataHelper.TryGetConnectionString("iBlogs", out var connectionString) ?
-                logConfig.WriteTo.MySQL(connectionString,errorLogEventCallBack:LogService.ErrorLogEventCallBack) : logConfig.WriteTo.Console();
-#endif
 
+            if (argsConfig.ContainsKey("logToConsole") && argsConfig["logToConsole"].ToBool())
+            {
+                logConfig = logConfig.WriteTo.Console();
+            }
+            else
+            {
+                logConfig = logConfig.WriteTo.File(Path.Combine("log", "log.txt"), rollingInterval: RollingInterval.Hour);
+            }
 
             Log.Logger = logConfig.CreateLogger();
 
@@ -43,7 +42,7 @@ namespace iBlogs.Site.Web
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly");
+                Log.Error(ex, $"Host terminated unexpectedly :{ex}");
             }
             finally
             {
@@ -56,8 +55,8 @@ namespace iBlogs.Site.Web
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     config.SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                        .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile("appsettings.json", false, true)
+                        .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", true, true)
                         .AddEnvironmentVariables()
                         .AddCommandLine(args);
                 })

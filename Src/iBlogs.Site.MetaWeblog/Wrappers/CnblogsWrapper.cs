@@ -2,8 +2,8 @@
 using System.Linq;
 using CookComputing.XmlRpc;
 using iBlogs.Site.MetaWeblog.Classes;
-using iBlogs.Site.MetaWeblog.CnBlogs;
 using iBlogs.Site.MetaWeblog.Helpers;
+using iBlogs.Site.MetaWeblog.XmlRpcInterfaces;
 
 namespace iBlogs.Site.MetaWeblog.Wrappers
 {

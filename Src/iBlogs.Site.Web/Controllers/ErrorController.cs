@@ -9,6 +9,11 @@ namespace iBlogs.Site.Web.Controllers
             return View(errorCode);
         }
 
+        public IActionResult Loading()
+        {
+            return View();
+        }
+
         public IActionResult Error404()
         {
             return View();

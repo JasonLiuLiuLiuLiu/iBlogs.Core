@@ -506,6 +506,11 @@ namespace iBlogs.Site.Core.Common.Extensions
         {
             return new Regex(@"\A" + new Regex(@"\.|\$|\^|\{|\[|\(|\||\)|\*|\+|\?|\\").Replace(toFind, ch => @"\" + ch).Replace('_', '.').Replace("%", ".*") + @"\z", RegexOptions.Singleline).IsMatch(toSearch);
         }
+
+        public static int ToIntOrDefault(this string inStr, int defaultInt)
+        {
+            return int.TryParse(inStr, out var result) ? result : defaultInt;
+        }
     }
 
     public static class StringKit

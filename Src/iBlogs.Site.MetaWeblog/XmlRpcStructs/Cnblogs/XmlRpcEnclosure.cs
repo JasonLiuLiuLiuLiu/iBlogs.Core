@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CookComputing.XmlRpc;
+﻿using CookComputing.XmlRpc;
 
-namespace iBlogs.Site.MetaWeblog.CnBlogs.XmlRpcStructs
+namespace iBlogs.Site.MetaWeblog.XmlRpcStructs.Cnblogs
 {
     [XmlRpcMissingMapping(MappingAction.Ignore)]
     public struct XmlRpcEnclosure

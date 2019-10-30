@@ -5,7 +5,7 @@ namespace iBlogs.Site.Core.Install.Service
 {
     public interface IInstallService
     {
-        Task<bool> InitializeDb();
+        bool InitializeDb();
 
         void WriteInstallInfo(InstallParam param);
     }

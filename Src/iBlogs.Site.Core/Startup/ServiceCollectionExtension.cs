@@ -5,12 +5,10 @@ using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.AutoMapper;
 using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.CodeDi;
-using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.EntityFrameworkCore;
-using iBlogs.Site.Core.Startup.Middleware;
+using iBlogs.Site.Core.Git;
+using iBlogs.Site.Core.Storage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -24,11 +22,6 @@ namespace iBlogs.Site.Core.Startup
         {
             ServiceFactory.Services = services;
             var configuration = ServiceFactory.GetService<IConfiguration>();
-
-            services.AddDbContextPool<iBlogsContext>(options =>
-            {
-                options.UseMySql(configuration.GetConnectionString("iBlogs"));
-            });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -48,23 +41,10 @@ namespace iBlogs.Site.Core.Startup
                     };
                 });
 
-            var redisConnectionOption = new RedisConnectionOption()
-            {
-                ConnectionString = configuration["RedisConnectionString"]
-            };
-            var redisConnectionWrapper = new RedisConnectionWrapper(redisConnectionOption);
-            if (redisConnectionWrapper.CheckConnection().Result)
-            {
-                SLog.Information("Use redis cache");
-                services.AddSingleton<IRedisConnectionWrapper>(redisConnectionWrapper);
-                services.AddScoped<ICacheManager, RedisCacheManager>();
-            }
-            else
-            {
-                SLog.Information("use memory cache");
-                services.AddMemoryCache();
-                services.AddSingleton<ICacheManager, MemoryCacheManager>();
-            }
+
+            SLog.Information("use memory cache");
+            services.AddSingleton<ICacheManager, MemoryCacheManager>();
+            services.AddSingleton<IGitDataSyncService, GitDataSyncService>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddCoreDi(options =>
@@ -73,23 +53,6 @@ namespace iBlogs.Site.Core.Startup
                 options.IgnoreInterface = new[] { "*IEntityBase*", "*Caching*" };
             });
 
-            if (configuration["DbInstalled"].ToBool())
-                services.AddCap(x =>
-                {
-                    x.UseEntityFramework<iBlogsContext>();
-                    x.UseRabbitMQ(option =>
-                    {
-                        option.HostName = configuration["RabbitMqHost"] ?? "localhost";
-                        option.Password = configuration["RabbitMqPWD"] ?? "guest";
-                        option.UserName = configuration["RabbitMqUID"] ?? "guest";
-                        option.Port = 5672;
-                    });
-                    x.UseDashboard(option =>
-                    {
-                        option.Authorization = new[] { new CapDashboardAuthorizationFilter() };
-                    });
-                });
-
             services.AddAutoMapper(cfg =>
             {
                 cfg.ValidateInlineMaps = false;
@@ -97,7 +60,10 @@ namespace iBlogs.Site.Core.Startup
             },
                 Assembly.GetAssembly(typeof(ServiceCollection)));
 
-            services.AddTransient<IStartupFilter, iBlogsStartupFilter>();
+            services.AddTransient<IStartupFilter, BlogsStartupFilter>();
+
+            ConfigDataHelper.UpdateAppSettings("DataIsSynced", "false");
+            services.AddHostedService<ScheduleHostedService>();
 
             return services;
         }

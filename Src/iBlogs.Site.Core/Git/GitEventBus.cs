@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DotNetCore.CAP;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Security.DTO;
@@ -13,36 +11,30 @@ using Newtonsoft.Json;
 
 namespace iBlogs.Site.Core.Git
 {
-    public class GitEventBus : ICapSubscribe, IGitEventBus
+    public class GitEventBus : IGitEventBus
     {
-        private readonly ICapPublisher _capPublisher;
-        private readonly ITransactionProvider _transactionProvider;
         private readonly ILogger<GitEventBus> _logger;
         private readonly IGitFileService _gitFileService;
         private readonly IOptionService _optionService;
         private readonly IUserService _userService;
 
-        public GitEventBus(ICapPublisher capPublisher, ITransactionProvider transactionProvider, ILogger<GitEventBus> logger, IGitFileService gitFileService, IOptionService optionService, IUserService userService)
+        public GitEventBus(ILogger<GitEventBus> logger, IGitFileService gitFileService, IOptionService optionService, IUserService userService)
         {
-            _capPublisher = capPublisher;
-            _transactionProvider = transactionProvider;
             _logger = logger;
             _gitFileService = gitFileService;
             _optionService = optionService;
             _userService = userService;
         }
 
-        public bool Publish(string message)
+        public async Task<bool> Publish(string message)
         {
-            using (_transactionProvider.CreateTransaction())
-            {
-                _logger.LogInformation($"send:{message}");
-                _capPublisher.Publish("iBlogs.Site.Core.GitEventBus", message);
-                return true;
-            }
+
+            _logger.LogInformation($"send:{message}");
+            await Receive(message);
+            return true;
         }
 
-        [CapSubscribe("iBlogs.Site.Core.GitEventBus")]
+
         public async Task Receive(string message)
         {
             _logger.LogInformation($"receive:{message}");
@@ -78,7 +70,7 @@ namespace iBlogs.Site.Core.Git
                 var branchName = gitRequest.Ref.Split('/').Last();
 
                 _gitFileService.CloneOrPull(branchName);
-                await _gitFileService.Handle(needHandleFile.Distinct().ToList(),branchName);
+                await _gitFileService.Handle(needHandleFile.Distinct().ToList(), branchName);
             }
             catch (Exception ex)
             {

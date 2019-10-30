@@ -3,6 +3,9 @@
 @using iBlogs.Site.Core.Common.Service
 @using iBlogs.Site.Core.Option
 @model ArticleViewModel
+@{
+    ViewData["title"] = Model.Content.Title;
+}
 <article class="main-content page-page" itemscope itemtype="http://schema.org/Article">
     <div class="post-header">
         <h1 class="post-title" itemprop="name headline">
@@ -16,11 +19,11 @@
     </div>
     <div id="post-content" class="post-content" itemprop="articleBody">
         <p class="post-tags">@Html.Raw(Model.Content.ShowTags())</p>
-        <a ></a>
+        <a></a>
         @Html.Raw(Model.Content.ShowContent())
         <p class="post-info">
             本文由 <a href="">@(ViewService.SiteOption(ConfigKey.Author, "阿宇"))</a> 创作，采用 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank"
-                                                                                           rel="external nofollow">知识共享署名4.0</a> 国际许可协议进行许可<br>本站文章除注明转载/出处外，均为本站原创或翻译，转载前请务必署名<br>最后编辑时间为:
+                                                                                          rel="external nofollow">知识共享署名4.0</a> 国际许可协议进行许可<br>本站文章除注明转载/出处外，均为本站原创或翻译，转载前请务必署名<br>最后编辑时间为:
             @Model.Content.ModifiedStr("yyyy/MM/dd HH:mm")
         </p>
     </div>
@@ -52,7 +55,7 @@
             {
 
 
-                @if (Model.User!=null)
+                @if (Model.User != null)
                 {
                     <span class="response">
                         Hi，<a href="@Model.User.HomeUrl" data-no-instant>@Model.User.ScreenName</a>
@@ -180,11 +183,11 @@
 <script>
     (function () {
         window.TaleComment = {
-            reply: function (coid,author) {
+            reply: function (coid, author) {
                 $('#comment-form input[name=coid]').val(coid);
                 $("html,body").animate({ scrollTop: $('div.comment-container').offset().top }, 500);
                 $('#comment-form #textarea').focus();
-                $('#comment-form #textarea').val('@@'+author+'  ');
+                $('#comment-form #textarea').val('@@' + author + '  ');
             },
             subComment: function () {
                 $.ajax({

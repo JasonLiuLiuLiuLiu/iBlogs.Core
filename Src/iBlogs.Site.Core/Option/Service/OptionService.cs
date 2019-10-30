@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option.DTO;
-using Microsoft.EntityFrameworkCore;
+using iBlogs.Site.Core.Storage;
 
 namespace iBlogs.Site.Core.Option.Service
 {
@@ -14,17 +13,25 @@ namespace iBlogs.Site.Core.Option.Service
         private readonly IRepository<Options> _repository;
         private readonly ICacheManager _cacheManager;
         private readonly int _defaultCacheTime = (int)new TimeSpan(1, 0, 0, 0).TotalMilliseconds;
+        private static bool _init;
+        private static readonly object InitLock = new object();
 
         public OptionService(IRepository<Options> repository, ICacheManager cacheManager)
         {
             _repository = repository;
             _cacheManager = cacheManager;
+            if (_init) return;
+            lock (InitLock)
+            {
+                if (_init)
+                    return;
+                Load();
+                _init = true;
+            }
         }
 
         public void Load()
         {
-            ConfigData.Init(this);
-
             CheckConfigKeyAttribute();
 
             foreach (var keyValuePair in GetAllAsKeyValue())
@@ -35,7 +42,7 @@ namespace iBlogs.Site.Core.Option.Service
 
         public IDictionary<ConfigKey, string> GetAllAsKeyValue()
         {
-            return _repository.GetAll().AsNoTracking().ToDictionary(o => (ConfigKey)Enum.Parse(typeof(ConfigKey), o.Name), o =>
+            return _repository.GetAll().ToDictionary(o => (ConfigKey)Enum.Parse(typeof(ConfigKey), o.Name), o =>
             {
                 if (o.Value != null)
                     return o.Value;
@@ -51,12 +58,12 @@ namespace iBlogs.Site.Core.Option.Service
                 Key = u.Name,
                 Value = u.Value,
                 Description = u.Description
-            }).OrderBy(u=>u.Key).ToList();
+            }).OrderBy(u => u.Key).ToList();
         }
 
         public List<OptionParam> GetEditable()
         {
-            return _repository.GetAll().Where(u=>u.Editable).Select(u => new OptionParam
+            return _repository.GetAll().Where(u => u.Editable).Select(u => new OptionParam
             {
                 Id = u.Id,
                 Key = u.Name,
@@ -79,7 +86,6 @@ namespace iBlogs.Site.Core.Option.Service
             {
                 _repository.Insert(new Options { Name = key.ToString(), Value = value, Description = description });
             }
-            _repository.SaveChanges();
             _cacheManager.Set(key.ToCacheKey(), value, _defaultCacheTime);
         }
 
@@ -109,7 +115,7 @@ namespace iBlogs.Site.Core.Option.Service
                 var update = false;
                 if (exist == null)
                 {
-                    _repository.Insert(new Options { Name = attribute.Key, Value = attribute.Value, Description = attribute.Description,Editable = attribute.Editable});
+                    _repository.Insert(new Options { Name = attribute.Key, Value = attribute.Value, Description = attribute.Description, Editable = attribute.Editable });
                     continue;
                 }
 
@@ -135,7 +141,7 @@ namespace iBlogs.Site.Core.Option.Service
 
                 if (update)
                 {
-                    var entity = _repository.GetAll().FirstOrDefault(o => o.Name == exist.Key.ToString());
+                    var entity = _repository.GetAll().FirstOrDefault(o => o.Name == exist.Key);
                     if (entity != null)
                     {
                         entity.Value = exist.Value;
@@ -146,7 +152,6 @@ namespace iBlogs.Site.Core.Option.Service
                     }
                 }
             }
-            _repository.SaveChanges();
         }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace iBlogs.Site.Core.Common.Caching
+﻿namespace iBlogs.Site.Core.Common.Caching
 {
     /// <summary>
     /// 无缓存

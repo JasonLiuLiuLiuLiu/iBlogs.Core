@@ -1,7 +1,7 @@
 ﻿using System;
 using CookComputing.XmlRpc;
 
-namespace iBlogs.Site.MetaWeblog.CnBlogs.XmlRpcStructs
+namespace iBlogs.Site.MetaWeblog.XmlRpcStructs.Cnblogs
 {
     [XmlRpcMissingMapping(MappingAction.Ignore)]
     public struct XmlRpcPost

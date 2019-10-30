@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using iBlogs.Site.Core.Blog.Content.DTO;
+using iBlogs.Site.Core.Blog.Extension;
 using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Meta.Service;
 using iBlogs.Site.Core.Blog.Relationship;
@@ -11,12 +12,11 @@ using iBlogs.Site.Core.Blog.Relationship.Service;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Security.Service;
+using iBlogs.Site.Core.Storage;
 using LibGit2Sharp;
-using Microsoft.EntityFrameworkCore;
 
 namespace iBlogs.Site.Core.Blog.Content.Service
 {
@@ -25,12 +25,13 @@ namespace iBlogs.Site.Core.Blog.Content.Service
         private readonly IMetasService _metasService;
         private readonly IRepository<Contents> _repository;
         private readonly IRepository<Relationships> _relRepository;
+        private readonly IRepository<BlogSyncRelationship> _syncRelationship;
         private readonly IRelationshipService _relationshipService;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly IOptionService _optionService;
 
-        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper, IUserService userService, IRepository<Relationships> relRepository, IOptionService optionService)
+        public ContentsService(IMetasService metasService, IRepository<Contents> repository, IRelationshipService relationshipService, IMapper mapper, IUserService userService, IRepository<Relationships> relRepository, IOptionService optionService, IRepository<BlogSyncRelationship> syncRelationship)
         {
             _metasService = metasService;
             _repository = repository;
@@ -39,6 +40,7 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             _userService = userService;
             _relRepository = relRepository;
             _optionService = optionService;
+            _syncRelationship = syncRelationship;
         }
 
         /**
@@ -59,7 +61,6 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             }
             contents.Hits++;
             _repository.UpdateAsync(contents);
-            _repository.SaveChanges();
             return _mapper.Map<ContentResponse>(contents);
         }
 
@@ -112,7 +113,7 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             contents.Categories = contents.Categories ?? "";
 
             var entity = contents.Id.HasValue ? _repository.FirstOrDefault(contents.Id.Value) : new Contents();
-            if(entity==null)
+            if (entity == null)
                 throw new NotFoundException($"输入Id({contents.Id})有误");
 
             _mapper.Map(contents, entity);
@@ -131,7 +132,7 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             _metasService.SaveMetas(cid, tags, MetaType.Tag);
             _metasService.SaveMetas(cid, categories, MetaType.Category);
 
-            _optionService.Set(ConfigKey.ContentCount, _repository.GetAll().Where(u=>u.Status==ContentStatus.Publish).Select(u => u.Id).Count().ToString());
+            _optionService.Set(ConfigKey.ContentCount, _repository.GetAll().Where(u => u.Status == ContentStatus.Publish).Select(u => u.Id).Count().ToString());
 
             return cid;
         }
@@ -145,7 +146,16 @@ namespace iBlogs.Site.Core.Blog.Content.Service
         {
             _repository.Delete(cid);
             _optionService.Set(ConfigKey.ContentCount, _repository.GetAll().Where(u => u.Status == ContentStatus.Publish).Select(u => u.Id).Count().ToString());
-            _repository.SaveChanges();
+            foreach (var relationship in _relRepository.GetAll().Where(u => u.Cid == cid))
+            {
+                _metasService.Delete(relationship.Mid);
+                _relRepository.Delete(relationship);
+            }
+            _relationshipService.DeleteByContentId(cid);
+            foreach (var blogSyncRelationship in _syncRelationship.GetAll().Where(u => u.ContentId == cid))
+            {
+                _syncRelationship.Delete(blogSyncRelationship);
+            }
         }
 
         /**
@@ -182,21 +192,21 @@ namespace iBlogs.Site.Core.Blog.Content.Service
 
             query = query.Where(p => p.Type == articleParam.Type);
 
-            return _mapper.Map<Page<ContentResponse>>(_repository.Page(query, articleParam));
+            return _mapper.Map<Page<ContentResponse>>(_repository.Page(query.OrderBy(u=>u.Created), articleParam));
         }
 
         public ContentResponse GetPre(int id)
         {
-            var query = _repository.GetAll().Where(u => u.Type == ContentType.Post).OrderByDescending(u => u.Created);
-            return _mapper.Map<ContentResponse>(query.Where(u =>
-                u.Created > query.FirstOrDefault(s => s.Id == id).Created).OrderBy(u => u.Created).FirstOrDefault());
+            var query = _repository.GetAll().Where(u => u.Type == ContentType.Post).OrderByDescending(u => u.Created).ToList();
+            var createTime = query.FirstOrDefault(s => s.Id == id)?.Created;
+            return _mapper.Map<ContentResponse>(query.Where(u =>createTime != null && u.Created > createTime.Value ).OrderBy(u => u.Created).FirstOrDefault());
         }
 
         public ContentResponse GetNext(int id)
         {
-            var query = _repository.GetAll().Where(u => u.Type == ContentType.Post).OrderByDescending(u => u.Created);
-            return _mapper.Map<ContentResponse>(query.Where(u =>
-                u.Created < query.FirstOrDefault(s => s.Id == id).Created).OrderByDescending(u => u.Created).FirstOrDefault());
+            var query = _repository.GetAll().Where(u => u.Type == ContentType.Post).OrderByDescending(u => u.Created).ToList();
+            var createTime = query.FirstOrDefault(s => s.Id == id)?.Created;
+            return _mapper.Map<ContentResponse>(query.Where(u =>createTime != null && u.Created < createTime.Value).OrderByDescending(u => u.Created).FirstOrDefault());
         }
 
         public Page<ContentResponse> FindContentByMeta(MetaType metaType, string value, ArticleParam articleParam)
@@ -205,7 +215,8 @@ namespace iBlogs.Site.Core.Blog.Content.Service
                 .Where(r => r.Meta.Type == metaType)
                 .Where(r => r.Content.Type == ContentType.Post)
                 .Where(r => r.Meta.Name == value)
-                .Select(r => r.Content);
+                .Select(r => r.Content)
+                .OrderBy(r => r.Created);
             articleParam.OrderBy = "Created";
             return _mapper.Map<Page<ContentResponse>>(_repository.Page(query, articleParam));
         }
@@ -246,7 +257,6 @@ namespace iBlogs.Site.Core.Blog.Content.Service
 
             content.CommentsNum += updateCount;
             _repository.Update(content);
-            _repository.SaveChanges();
         }
 
         public async Task<List<ContentResponse>> GetContent(int limit)
@@ -254,8 +264,8 @@ namespace iBlogs.Site.Core.Blog.Content.Service
             var contents = _repository.GetAll()
                 .Where(u => u.Status == ContentStatus.Publish)
                 .OrderByDescending(u => u.Created)
-                .Take(limit).ToListAsync();
-            return _mapper.Map<List<ContentResponse>>(await contents);
+                .Take(limit).ToList();
+            return _mapper.Map<List<ContentResponse>>(contents);
         }
     }
 }

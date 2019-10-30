@@ -1,13 +1,13 @@
-﻿using System;
-using iBlogs.Site.Web.Converter;
+﻿using iBlogs.Site.Web.Converter;
 using iBlogs.Site.Web.Filter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
-using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Startup;
 using iBlogs.Site.Core.Startup.Middleware;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Hosting;
 
 namespace iBlogs.Site.Web
 {
@@ -18,25 +18,26 @@ namespace iBlogs.Site.Web
         {
             services.AddIBlogs();
 
-            services.AddMvc(option =>
+            services.AddControllersWithViews(option =>
             {
                 option.Filters.Add<LoginFilter>();
                 option.Filters.Add<ExceptionFilter>();
-            }).AddJsonOptions(options =>
+            }).AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ContractResolver = new BlogsContractResolver();
             });
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IOptionService option, IApplicationLifetime appLifetime, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseStatusCodePages(async context =>
             {
                 var response = context.HttpContext.Response;
                 if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
                 {
-                    response.Redirect("/admin/login");
+                   response.Redirect("/admin/login");
                 }
                 else if (!env.IsDevelopment())
                 {
@@ -60,20 +61,27 @@ namespace iBlogs.Site.Web
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseRouting();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMiddleware<InstallMiddleware>();
+            app.UseMiddleware<DataSyncCheckMiddleware>();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(routes =>
             {
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "Admin",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Index}/{action=Index}/{id?}");
+                    "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                routes.MapDefaultControllerRoute();
             });
         }
     }

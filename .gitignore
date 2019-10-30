@@ -334,3 +334,4 @@ ASALocalRun/
 .localhistory/
 /Src/iBlogs.Site.Web/wwwroot/upload
 /Src/iBlogs.Site.Web/*.db
+Src/iBlogs.Site.Web/GitAsDisk/

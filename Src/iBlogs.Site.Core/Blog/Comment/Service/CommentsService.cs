@@ -5,11 +5,11 @@ using iBlogs.Site.Core.Blog.Comment.DTO;
 using iBlogs.Site.Core.Blog.Content.Service;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Response;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.MailKit;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Security.Service;
+using iBlogs.Site.Core.Storage;
 using LibGit2Sharp;
 
 namespace iBlogs.Site.Core.Blog.Comment.Service
@@ -49,16 +49,11 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
                 comments.Status = CommentStatus.Approved;
 
             _repository.InsertOrUpdate(comments);
-            _repository.SaveChanges();
             _contentsService.UpdateCommentCount(comments.Cid, 1);
 
             _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
-            _mailService.Publish(new MailContext
-            {
-                To = new[] { _optionService.Get(ConfigKey.AdminEmail) },
-                Subject = "您有新的待审批的留言",
-                Content = $"author:{comments.Author},content:{comments.Content}"
-            });
+            AuditNotice(comments);
+            ReplyNotice(comments);
         }
 
         public void Reply(Comments comments)
@@ -77,13 +72,12 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             comments.Url = ConfigData.Get(ConfigKey.SiteUrl);
 
             _repository.InsertOrUpdate(comments);
-            _repository.SaveChanges();
             _contentsService.UpdateCommentCount(comments.Cid, 1);
 
             _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
             _mailService.Publish(new MailContext
             {
-                To =new []{ replyComment.Mail },
+                To = new[] { replyComment.Mail },
                 Content = $"亲爱的{replyComment.Author},您的评论:{replyComment.Content},有了新的回复:{comments.Content}"
             });
         }
@@ -100,7 +94,6 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             if (!id.HasValue)
                 throw new Exception("没找到该评论!");
             _repository.Delete(id.Value);
-            _repository.SaveChanges();
         }
 
         public void UpdateComment(CommentParam param)
@@ -114,8 +107,6 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
 
             _optionService.Set(ConfigKey.CommentCount, _repository.GetAll().Where(u => u.Status == CommentStatus.Approved).Select(u => u.Id).Count().ToString());
 
-            _repository.SaveChanges();
-
             if (param.Status == CommentStatus.Approved)
             {
                 _mailService.Publish(new MailContext
@@ -124,6 +115,8 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
                     Content = $"亲爱的{comment.Author},您的评论已审核通过:{comment.Content}"
                 });
             }
+
+            ReplyNotice(comment);
         }
 
         /**
@@ -143,9 +136,38 @@ namespace iBlogs.Site.Core.Blog.Comment.Service
             if (param.Cid.HasValue)
                 query = query.Where(c => c.Cid == param.Cid);
 
-            return _mapper.Map<Page<CommentResponse>>(_repository.Page(query, param));
+            return _mapper.Map<Page<CommentResponse>>(_repository.Page(query.OrderBy(u=>u.Created), param));
         }
 
+        private void AuditNotice(Comments comments)
+        {
+            if (_optionService.Get(ConfigKey.AllowCommentAudit, "true").ToBool())
+            {
+                _mailService.Publish(new MailContext
+                {
+                    To = new[] { _optionService.Get(ConfigKey.AdminEmail) },
+                    Subject = "您有新的待审批的留言",
+                    Content = $"author:{comments.Author},content:{comments.Content}"
+                });
+            }
+        }
 
+        private void ReplyNotice(Comments comments)
+        {
+            if (comments.Parent == 0) return;
+
+            if(comments.Status==CommentStatus.Pending) return;
+
+            var parent = _repository.FirstOrDefault(comments.Parent);
+
+            if(parent==null) return;
+
+            _mailService.Publish(new MailContext
+            {
+                To = new[] { parent.Mail },
+                Subject = "您的评论有了新的回复",
+                Content = $"亲爱的{parent.Author},您的评论有了新的回复:author:{comments.Author},content:{comments.Content}"
+            });
+        }
     }
 }

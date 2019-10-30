@@ -1,30 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Option.Service;
 
 namespace iBlogs.Site.Core.Option
 {
-    public class ConfigData
+    public static class ConfigData
     {
-        private static IOptionService _optionService;
+        private static readonly IOptionService OptionService;
 
-        public static void Init(IOptionService optionService)
+        static ConfigData()
         {
-            _optionService = optionService;
+            OptionService = ServiceFactory.GetService<IOptionService>();
         }
 
         public static string Get(ConfigKey key, string defaultValue = null)
         {
-            if (_optionService == null)
-                throw new Exception("ConfigData使用前未进行初始化");
-            return _optionService.Get(key, defaultValue);
+            return OptionService.Get(key, defaultValue);
         }
 
         public static IDictionary<ConfigKey, string> GetAll()
         {
-            if (_optionService == null)
-                throw new Exception("ConfigData使用前未进行初始化");
-            return _optionService.GetAllAsKeyValue();
+            return OptionService.GetAllAsKeyValue();
         }
     }
 }

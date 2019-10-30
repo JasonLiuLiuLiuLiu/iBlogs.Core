@@ -1,5 +1,4 @@
 ﻿using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Install.DTO;
 using iBlogs.Site.Core.Option.Service;
 using System;
@@ -14,8 +13,8 @@ using iBlogs.Site.Core.Blog.Meta;
 using iBlogs.Site.Core.Blog.Meta.Service;
 using iBlogs.Site.Core.Security;
 using iBlogs.Site.Core.Security.Service;
+using iBlogs.Site.Core.Storage;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using ConfigKey = iBlogs.Site.Core.Option.ConfigKey;
 
 namespace iBlogs.Site.Core.Install.Service
@@ -24,20 +23,16 @@ namespace iBlogs.Site.Core.Install.Service
     {
         private readonly IOptionService _optionService;
         private readonly IUserService _userService;
-        private readonly iBlogsContext _blogsContext;
-        private readonly ITransactionProvider _transactionProvider;
         private readonly IContentsService _contentsService;
         private readonly IMetasService _metasService;
         private InstallParam _param;
         private Users _users;
         private readonly IApplicationLifetime _applicationLifetime;
 
-        public InstallService(IOptionService optionService, IUserService userService, iBlogsContext blogsContext, ITransactionProvider transactionProvider, IContentsService contentsService, IMetasService metasService, IApplicationLifetime applicationLifetime)
+        public InstallService(IOptionService optionService, IUserService userService, IContentsService contentsService, IMetasService metasService, IApplicationLifetime applicationLifetime)
         {
             _optionService = optionService;
             _userService = userService;
-            _blogsContext = blogsContext;
-            _transactionProvider = transactionProvider;
             _contentsService = contentsService;
             _metasService = metasService;
             _applicationLifetime = applicationLifetime;
@@ -45,11 +40,6 @@ namespace iBlogs.Site.Core.Install.Service
 
         public void WriteInstallInfo(InstallParam param)
         {
-            var connectString = $"Server={param.DbUrl};Database={param.DbName};uid={param.DbUserName};pwd={param.DbUserPwd}";
-            ConfigDataHelper.UpdateConnectionString("iBlogs", connectString);
-            ConfigDataHelper.UpdateRedisConfig(param.RedisHost, param.RedisPwd);
-            ConfigDataHelper.UpdateRabbitMqConfig(param.RabbitMqHost, param.RabbitMqUid, param.RabbitMqPwd);
-            ConfigDataHelper.SaveInstallParam(param);
             Task.Run(() =>
             {
                 Thread.Sleep(1000);
@@ -57,16 +47,15 @@ namespace iBlogs.Site.Core.Install.Service
             });
         }
 
-        public async Task<bool> InitializeDb()
+        public bool InitializeDb()
         {
 
             try
             {
-                _param = ConfigDataHelper.ReadInstallParam();
-                await InitDbFromScript();
+                //todo
+                _param = new InstallParam();
                 Seed();
                 ConfigDataHelper.UpdateDbInstallStatus(true);
-                ConfigDataHelper.DeleteInstallParamFile();
                 _optionService.Set(ConfigKey.SiteInstallTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 _optionService.Set(ConfigKey.LastActiveTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 _optionService.Load();
@@ -80,30 +69,11 @@ namespace iBlogs.Site.Core.Install.Service
             return false;
         }
 
-        private async Task InitDbFromScript()
-        {
-            try
-            {
-                var sqlScript = File.ReadAllText("InitDb.sql");
-                await _blogsContext.Database.ExecuteSqlCommandAsync(sqlScript);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
-
         private void Seed()
         {
-            using (var tra = _transactionProvider.CreateTransaction())
-            {
-                var result = CreateUser() && InitOptions() && InitContent();
-                if (result)
-                    tra.Commit();
-                else
-                    tra.Rollback();
-            }
+            CreateUser();
+            InitOptions();
+            InitContent();
         }
 
         private bool CreateUser()
@@ -134,7 +104,7 @@ namespace iBlogs.Site.Core.Install.Service
             _optionService.Set(ConfigKey.StaticUrl, "/static");
             _optionService.Set(ConfigKey.TemplesPath, "/templates/");
             _optionService.Set(ConfigKey.ThemePath, "themes/default");
-            _optionService.Set(ConfigKey.AdminEmail,_param.AdminEmail);
+            _optionService.Set(ConfigKey.AdminEmail, _param.AdminEmail);
             return true;
         }
 

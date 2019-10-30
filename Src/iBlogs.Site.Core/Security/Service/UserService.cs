@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using iBlogs.Site.Core.Common.Extensions;
-using iBlogs.Site.Core.EntityFrameworkCore;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Security.DTO;
+using iBlogs.Site.Core.Storage;
 
 namespace iBlogs.Site.Core.Security.Service
 {
@@ -55,7 +55,6 @@ namespace iBlogs.Site.Core.Security.Service
             user.ScreenName = param.ScreenName;
             user.Email = param.Email;
             _optionService.Set(ConfigKey.AdminEmail,user.Email);
-            _repository.SaveChanges();
         }
 
         public void UpdatePwd(PwdUpdateParam param)
@@ -67,7 +66,6 @@ namespace iBlogs.Site.Core.Security.Service
             user.Password = param.Password;
             user.PwdMd5();
             LoginToken.RemoveToken(user.Id);
-            _repository.SaveChanges();
         }
 
         public Users FindUserById(int id)
