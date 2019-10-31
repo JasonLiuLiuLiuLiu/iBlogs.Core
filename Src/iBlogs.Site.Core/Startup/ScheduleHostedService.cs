@@ -15,13 +15,11 @@ namespace iBlogs.Site.Core.Startup
         private Timer _dataSyncTimer;
         private Timer _logClearTimer;
         private readonly TimeSpan _sleepTimeSpan;
-        private readonly IGitDataSyncService _gitDataSyncService;
 
-        public ScheduleHostedService(ILogger<ScheduleHostedService> logger, IConfiguration configuration, IGitDataSyncService gitDataSyncService)
+        public ScheduleHostedService(ILogger<ScheduleHostedService> logger, IConfiguration configuration)
         {
             _logger = logger;
-            _gitDataSyncService = gitDataSyncService;
-            _sleepTimeSpan = TimeSpan.FromHours(configuration?["AutoDataSyncHours"].ToIntOrDefault(1) ?? 1);
+            _sleepTimeSpan = TimeSpan.FromMinutes(configuration?["AutoDataSyncMinutes"].ToIntOrDefault(10) ?? 10);
 
         }
 
@@ -29,7 +27,7 @@ namespace iBlogs.Site.Core.Startup
         {
             _logger.LogInformation("Data Sync Hosted Service Running.");
 
-            _dataSyncTimer = new Timer(_gitDataSyncService.DataSync, cancellationToken, TimeSpan.Zero, _sleepTimeSpan);
+            _dataSyncTimer = new Timer(GitDataSyncHelper.DataSync, cancellationToken, TimeSpan.Zero, _sleepTimeSpan);
             _logClearTimer = new Timer(LogClean, null, TimeSpan.Zero, _sleepTimeSpan);
 
             return Task.CompletedTask;

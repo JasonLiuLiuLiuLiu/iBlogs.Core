@@ -16,46 +16,52 @@ using iBlogs.Site.Core.Security;
 using iBlogs.Site.Core.Storage;
 using iBlogs.Site.GitAsDisk;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace iBlogs.Site.Core.Git
 {
-    public class GitDataSyncService : IGitDataSyncService
+    public static class GitDataSyncHelper
     {
-        private readonly GitSyncOptions _gitSyncOptions;
-        private readonly IConfiguration _configuration;
-        private readonly ILogger<GitDataSyncService> _logger;
+        private static readonly GitSyncOptions GitSyncOptions;
+        private static readonly IConfiguration Configuration;
 
-        public GitDataSyncService(IConfiguration configuration,  ILogger<GitDataSyncService> logger)
+        static GitDataSyncHelper()
         {
-            _configuration = configuration;
-            _logger = logger;
-            if (configuration != null)
-                _gitSyncOptions = new GitSyncOptions(configuration["gitUrl"], configuration["gitUid"], configuration["gitPwd"]);
+            Configuration = ServiceFactory.GetService<IConfiguration>();
+            if (Configuration != null)
+                GitSyncOptions = new GitSyncOptions(Configuration["gitUrl"], Configuration["gitUid"], Configuration["gitPwd"]);
         }
 
-        public void DataSync(object state)
+        public static void DataSync()
         {
+            DataSync(new CancellationToken());
+        }
+
+        public static void DataSync(object state)
+        {
+            Serilog.Log.Information("GitDataSync start...");
+
             var token = (CancellationToken)state;
             if (token.IsCancellationRequested)
                 return;
 
             Pull();
             Push();
+
+            Serilog.Log.Information("GitDataSync finished...");
         }
 
-        private void Pull()
+        private static void Pull()
         {
             try
             {
-                var syncResult = GitAsDiskService.Sync(_gitSyncOptions);
+                var syncResult = GitAsDiskService.Sync(GitSyncOptions);
                 if (!syncResult.Result)
                 {
-                    _logger.LogError(syncResult.Message);
+                    Serilog.Log.Error(syncResult.Message);
                     return;
                 }
 
-                if (_configuration["DataIsSynced"].ToBool())
+                if (Configuration["DataIsSynced"].ToBool())
                     return;
 
                 var attachments = GitAsDiskService.Load<Attachment>();
@@ -82,11 +88,11 @@ namespace iBlogs.Site.Core.Git
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
+                Serilog.Log.Error(e, e.Message);
             }
         }
 
-        private void Push()
+        private static void Push()
         {
             try
             {
@@ -108,19 +114,19 @@ namespace iBlogs.Site.Core.Git
                 GitAsDiskService.Commit(relationships);
                 GitAsDiskService.Commit(users);
 
-                var syncResult = GitAsDiskService.Sync(_gitSyncOptions);
+                var syncResult = GitAsDiskService.Sync(GitSyncOptions);
                 if (!syncResult.Result)
                 {
-                    _logger.LogError(syncResult.Message);
+                    Serilog.Log.Error(syncResult.Message);
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
+                Serilog.Log.Error(e, e.Message);
             }
         }
 
-        private ConcurrentDictionary<int, T> ConvertToDic<T>(IEnumerable<T> values) where T : IEntityBase
+        private static ConcurrentDictionary<int, T> ConvertToDic<T>(IEnumerable<T> values) where T : IEntityBase
         {
             var result = new ConcurrentDictionary<int, T>();
             foreach (var value in values)
