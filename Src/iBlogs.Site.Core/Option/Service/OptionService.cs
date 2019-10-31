@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using iBlogs.Site.Core.Common.Caching;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Option.DTO;
 using iBlogs.Site.Core.Storage;
@@ -11,15 +10,12 @@ namespace iBlogs.Site.Core.Option.Service
     public class OptionService : IOptionService
     {
         private readonly IRepository<Options> _repository;
-        private readonly ICacheManager _cacheManager;
-        private readonly int _defaultCacheTime = (int)new TimeSpan(1, 0, 0, 0).TotalMilliseconds;
         private static bool _init;
         private static readonly object InitLock = new object();
 
-        public OptionService(IRepository<Options> repository, ICacheManager cacheManager)
+        public OptionService(IRepository<Options> repository)
         {
             _repository = repository;
-            _cacheManager = cacheManager;
             if (_init) return;
             lock (InitLock)
             {
@@ -33,11 +29,6 @@ namespace iBlogs.Site.Core.Option.Service
         public void Load()
         {
             CheckConfigKeyAttribute();
-
-            foreach (var keyValuePair in GetAllAsKeyValue())
-            {
-                _cacheManager.Set(keyValuePair.Key.ToCacheKey(), keyValuePair.Value, _defaultCacheTime);
-            }
         }
 
         public IDictionary<ConfigKey, string> GetAllAsKeyValue()
@@ -86,18 +77,12 @@ namespace iBlogs.Site.Core.Option.Service
             {
                 _repository.Insert(new Options { Name = key.ToString(), Value = value, Description = description });
             }
-            _cacheManager.Set(key.ToCacheKey(), value, _defaultCacheTime);
         }
 
         public string Get(ConfigKey key, string defaultValue = null)
         {
-            var result = _cacheManager.Get<string>(key.ToCacheKey());
-            if (!result.IsNullOrWhiteSpace())
-                return result;
-
             var optionEntity = _repository.GetAll().FirstOrDefault(o => o.Name == key.ToString());
             if (optionEntity == null || optionEntity.Value.IsNullOrWhiteSpace()) return defaultValue;
-            _cacheManager.Set(key.ToCacheKey(), optionEntity.Value, _defaultCacheTime);
             return optionEntity.Value;
         }
         private void CheckConfigKeyAttribute()

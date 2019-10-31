@@ -25,7 +25,6 @@ namespace iBlogs.Site.Core.Common.Extensions
             ConfigDataHelper.UpdateAppSettings(GitUid, Data[GitUid]);
             ConfigDataHelper.UpdateAppSettings(GitPwd, Data[GitPwd]);
             ConfigDataHelper.UpdateDbInstallStatus(true);
-            Console.WriteLine("Set connection string from command line.");
 
             if (Data.ContainsKey(BuildNumber))
                 ConfigDataHelper.UpdateBuildNumber(Data[BuildNumber]);
