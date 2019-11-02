@@ -1,8 +1,10 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Request;
 using iBlogs.Site.Core.Common.Response;
@@ -39,6 +41,9 @@ namespace iBlogs.Site.Core.Storage
                 entity.Id = 1;
             }
             _entityDic.TryAdd(entity.Id, entity);
+
+            AccelerateTimer();
+
             return entity;
         }
 
@@ -74,6 +79,7 @@ namespace iBlogs.Site.Core.Storage
         public TEntity Update(TEntity entity)
         {
             _entityDic[entity.Id] = entity;
+            AccelerateTimer();
             return entity;
         }
 
@@ -86,12 +92,14 @@ namespace iBlogs.Site.Core.Storage
         public void Delete(TEntity entity)
         {
             _entityDic.TryRemove(entity.Id, out _);
+            AccelerateTimer();
             entity.Deleted = true;
         }
 
         public void Delete(int id)
         {
             _entityDic.TryRemove(id, out _);
+            AccelerateTimer();
         }
 
         public int Count()
@@ -135,6 +143,11 @@ namespace iBlogs.Site.Core.Storage
             var total = _entityDic.Keys.Count;
             var rows = source.Skip((pageParam.Page - 1) * pageParam.Limit).Take(pageParam.Limit).ToList();
             return new Page<TEntity>(total, pageParam.Page++, pageParam.Limit, rows);
+        }
+
+        private void AccelerateTimer()
+        {
+            BlogsTimer.AccelerateTo(TimeSpan.FromMinutes(1));
         }
     }
 }
