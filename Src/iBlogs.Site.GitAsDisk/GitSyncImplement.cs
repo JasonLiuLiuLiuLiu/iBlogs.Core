@@ -34,7 +34,7 @@ namespace iBlogs.Site.GitAsDisk
             _committerEmail = committerEmail;
         }
 
-        public SyncResult Execute(CancellationToken token)
+        public SyncResult Pull(CancellationToken token)
         {
             if (token.IsCancellationRequested)
                 return SyncResult.Success();
@@ -49,12 +49,31 @@ namespace iBlogs.Site.GitAsDisk
                 }
                 else
                 {
-
                     _repo = new Repository(_path);
                     CheckOut();
                     Pull();
                 }
+            }
+            catch (Exception e)
+            {
+                return SyncResult.Failed(e.ToString());
+            }
 
+            return SyncResult.Success();
+        }
+
+        public SyncResult Push(CancellationToken token)
+        {
+            if (token.IsCancellationRequested)
+                return SyncResult.Success();
+
+            try
+            {
+                if (!Directory.Exists(_path) || !Directory.EnumerateFileSystemEntries(_path).Any())
+                {
+                   return SyncResult.Failed("Please execute Pull before execute push");
+                }
+                _repo = new Repository(_path);
                 CommitAll();
                 Push();
             }
@@ -140,9 +159,6 @@ namespace iBlogs.Site.GitAsDisk
 
         private void Push()
         {
-            if (!_repo.RetrieveStatus(new StatusOptions()).Any())
-                return;
-
             var options = new PushOptions
             {
                 CredentialsProvider = (url, usernameFromUrl, types) =>

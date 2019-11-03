@@ -54,7 +54,7 @@ namespace iBlogs.Site.Core.Git
         {
             try
             {
-                var syncResult = GitAsDiskService.Sync(GitSyncOptions);
+                var syncResult = GitAsDiskService.Pull(GitSyncOptions);
                 if (!syncResult.Result)
                 {
                     Serilog.Log.Error(syncResult.Message);
@@ -114,7 +114,7 @@ namespace iBlogs.Site.Core.Git
                 GitAsDiskService.Commit(relationships);
                 GitAsDiskService.Commit(users);
 
-                var syncResult = GitAsDiskService.Sync(GitSyncOptions);
+                var syncResult = GitAsDiskService.Push(GitSyncOptions);
                 if (!syncResult.Result)
                 {
                     Serilog.Log.Error(syncResult.Message);
