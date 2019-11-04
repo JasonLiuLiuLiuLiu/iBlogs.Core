@@ -59,9 +59,9 @@ namespace iBlogs.Site.Web.Areas.Admin.Controllers
 
             LoginToken.SaveToken(user.Id,token);
 
-            var days = _configuration["Auth:JwtExpireDays"];
-            var key = _configuration["Auth:JwtKey"];
-            var issuer = _configuration["Auth:JwtIssuer"];
+            var days = _configuration["JwtExpireDays"];
+            var key = _configuration["JwtKey"];
+            var issuer = _configuration["JwtIssuer"];
 
             var expires = DateTime.UtcNow.AddDays(Convert.ToDouble(days));
 

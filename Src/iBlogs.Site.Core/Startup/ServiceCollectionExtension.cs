@@ -28,8 +28,8 @@ namespace iBlogs.Site.Core.Startup
                 })
                 .AddJwtBearer(options =>
                 {
-                    var issuer = configuration["Auth:JwtIssuer"];
-                    var key = configuration["Auth:JwtKey"];
+                    var issuer = configuration["JwtIssuer"];
+                    var key = configuration["JwtKey"];
                     options.RequireHttpsMetadata = false;
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters()

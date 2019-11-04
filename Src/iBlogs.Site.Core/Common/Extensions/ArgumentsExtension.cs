@@ -9,6 +9,7 @@ namespace iBlogs.Site.Core.Common.Extensions
         private const string GitUrl = "GitUrl";
         private const string GitUid = "GitUid";
         private const string GitPwd = "GitPwd";
+        private const string JwtKey = "JwtKey";
         private static readonly Dictionary<string, string> Data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         public static Dictionary<string, string> SetConfigInfo(this string[] args)
@@ -19,7 +20,9 @@ namespace iBlogs.Site.Core.Common.Extensions
             Load(args);
 
             if (!Data.ContainsKey(GitUrl) || !Data.ContainsKey(GitUid) || !Data.ContainsKey(GitPwd))
-                return Data;
+            {
+                throw new Exception("未传入GitUrl,GitUid,GitPwd,无法继续执行.");
+            }
 
             ConfigDataHelper.UpdateAppSettings(GitUrl, Data[GitUrl]);
             ConfigDataHelper.UpdateAppSettings(GitUid, Data[GitUid]);
@@ -29,6 +32,16 @@ namespace iBlogs.Site.Core.Common.Extensions
             if (Data.ContainsKey(BuildNumber))
                 ConfigDataHelper.UpdateBuildNumber(Data[BuildNumber]);
 
+            if (!Data.ContainsKey(JwtKey)) return Data;
+
+            var key = Data[JwtKey];
+            if (key.Length <= 10)
+            {
+                key = "iBlogsCoderAyuGithub" + key;
+                Console.WriteLine("The JwtKey was too short, will use iBlogsCoderAyuGithub+JwtKey instead");
+            }
+
+            ConfigDataHelper.UpdateAppSettings(JwtKey, key);
             return Data;
         }
 
