@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using iBlogs.Site.Core.Common.Extensions;
+using iBlogs.Site.Core.Git;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +33,8 @@ namespace iBlogs.Site.Web
             {
                 logConfig = logConfig.WriteTo.File(Path.Combine("log", "log.txt"), rollingInterval: RollingInterval.Hour);
             }
+
+            logConfig.Enrich.With<ErrorLogNoticeEnricher>();
 
             Log.Logger = logConfig.CreateLogger();
 

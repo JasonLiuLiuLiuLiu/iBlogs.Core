@@ -51,7 +51,7 @@ namespace iBlogs.Site.GitAsDisk.Test
             var relationships = con.Query<Relationships>(sql[6]);
             var users = con.Query<Users>(sql[7]);
 
-             GitAsDiskService.Sync(_syncOptions);
+             GitAsDiskService.Pull(_syncOptions);
 
              GitAsDiskService.Commit(attachments);
              GitAsDiskService.Commit(blogsyncrelationships);
@@ -62,7 +62,7 @@ namespace iBlogs.Site.GitAsDisk.Test
              GitAsDiskService.Commit(relationships);
              GitAsDiskService.Commit(users);
 
-             GitAsDiskService.Sync(_syncOptions);
+             GitAsDiskService.Pull(_syncOptions);
 
             Assert.Pass();
         }

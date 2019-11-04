@@ -1,39 +1,36 @@
-﻿using System;
-using iBlogs.Site.Core.Common;
-using iBlogs.Site.Core.Common.Caching;
+﻿using System.Collections.Generic;
 
 namespace iBlogs.Site.Core.Security.Service
 {
     public static class LoginToken
     {
-        private const string TokenPre = "IBLOGS_LOGIN_TOKEN_PRE";
-        private static readonly int DefaultCacheTime = (int)new TimeSpan(1, 0, 0, 0).TotalMilliseconds;
-
-        private static readonly ICacheManager CacheManager;
+        private static readonly Dictionary<int, string> UserTokens;
 
         static LoginToken()
         {
-            CacheManager = ServiceFactory.GetService<ICacheManager>();
-        }
-
-        private static string GetCacheKey(int uid)
-        {
-            return TokenPre + uid;
+            UserTokens = new Dictionary<int, string>();
         }
 
         public static bool CheckToken(int uid, string token)
         {
-            return CacheManager.Get<string>(GetCacheKey(uid)) == token;
+            return UserTokens.ContainsKey(uid) && UserTokens[uid] == token;
         }
 
         public static void SaveToken(int uid, string token)
         {
-            CacheManager.Set(GetCacheKey(uid), token, DefaultCacheTime);
+            if (UserTokens.ContainsKey(uid))
+            {
+                UserTokens[uid] = token;
+            }
+            else
+            {
+                UserTokens.Add(uid, token);
+            }
         }
 
         public static void RemoveToken(int uid)
         {
-            CacheManager.Remove(GetCacheKey(uid));
+            UserTokens.Remove(uid);
         }
     }
 }

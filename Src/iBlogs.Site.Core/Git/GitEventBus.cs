@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Option;
 using iBlogs.Site.Core.Option.Service;
 using iBlogs.Site.Core.Security.DTO;
@@ -67,10 +68,12 @@ namespace iBlogs.Site.Core.Git
                 if (!needHandleFile.Any())
                     return;
 
-                var branchName = gitRequest.Ref.Split('/').Last();
+                BlogsTimer.AccelerateTo(TimeSpan.FromSeconds(10));
 
-                _gitFileService.CloneOrPull(branchName);
-                await _gitFileService.Handle(needHandleFile.Distinct().ToList(), branchName);
+                //var branchName = gitRequest.Ref.Split('/').Last();
+
+                //_gitFileService.CloneOrPull(branchName);
+                //await _gitFileService.Handle(needHandleFile.Distinct().ToList(), branchName);
             }
             catch (Exception ex)
             {

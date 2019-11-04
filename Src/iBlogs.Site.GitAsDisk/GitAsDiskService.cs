@@ -12,10 +12,18 @@ namespace iBlogs.Site.GitAsDisk
         private static bool _synced;
         private const string BasePath = "GitAsDisk";
 
-        public static SyncResult Sync(GitSyncOptions options)
+        public static SyncResult Pull(GitSyncOptions options)
         {
             using var syncImpl = new GitSyncImplement(BasePath, options.GitUrl, options.UserName, options.Password, options.BranchName, options.CommitterName, options.CommitterEmail);
-            var syncResult = syncImpl.Execute(options.Token);
+            var syncResult = syncImpl.Pull(options.Token);
+            _synced = syncResult.Result;
+            return syncResult;
+        }
+
+        public static SyncResult Push(GitSyncOptions options)
+        {
+            using var syncImpl = new GitSyncImplement(BasePath, options.GitUrl, options.UserName, options.Password, options.BranchName, options.CommitterName, options.CommitterEmail);
+            var syncResult = syncImpl.Push(options.Token);
             _synced = syncResult.Result;
             return syncResult;
         }
@@ -24,7 +32,7 @@ namespace iBlogs.Site.GitAsDisk
         {
             if (!_synced)
             {
-                throw new GitAsDiskException("Please Call Sync Method before this");
+                throw new GitAsDiskException("Please Call Pull Method before this");
             }
 
             StringBuilder resultSb = new StringBuilder();
@@ -40,7 +48,7 @@ namespace iBlogs.Site.GitAsDisk
         {
             if (!_synced)
             {
-                throw new GitAsDiskException("Please Call Sync Method before this");
+                throw new GitAsDiskException("Please Call Pull Method before this");
             }
 
             var fileFullPath = Path.Combine(BasePath, fullPath);
@@ -53,7 +61,7 @@ namespace iBlogs.Site.GitAsDisk
         {
             if (!_synced)
             {
-                throw new GitAsDiskException("Please Call Sync Method before this");
+                throw new GitAsDiskException("Please Call Pull Method before this");
             }
 
             return File.ReadAllText(Path.Combine(BasePath, fullPath), Encoding.UTF8);
@@ -63,7 +71,7 @@ namespace iBlogs.Site.GitAsDisk
         {
             if (!_synced)
             {
-                throw new GitAsDiskException("Please Call Sync Method before this");
+                throw new GitAsDiskException("Please Call Pull Method before this");
             }
 
             var values = (Load(GetPathByType(typeof(T)))).Split('\r', '\n');

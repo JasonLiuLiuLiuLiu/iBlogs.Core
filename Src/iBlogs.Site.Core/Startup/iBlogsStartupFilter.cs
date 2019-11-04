@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using iBlogs.Site.Core.Blog.Extension;
 using iBlogs.Site.Core.Common;
+using iBlogs.Site.Core.Git;
 using iBlogs.Site.Core.Startup.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +27,8 @@ namespace iBlogs.Site.Core.Startup
 
                 appLifetime.ApplicationStopping.Register(() =>
                 {
-                    Console.WriteLine("iBlogs is stopping,If you run this application at docker, please add \"--restart = always\" to the run command...");
+                    Console.WriteLine("iBlogs is stopping");
+                    GitDataSyncHelper.DataSync();
                 });
 
                 appLifetime.ApplicationStopped.Register(() => { Console.WriteLine("iBlogs stopped."); });

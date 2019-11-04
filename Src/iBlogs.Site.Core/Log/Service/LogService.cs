@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using iBlogs.Site.Core.Common;
 using iBlogs.Site.Core.Common.Extensions;
 using iBlogs.Site.Core.Common.Request;
@@ -15,6 +17,7 @@ namespace iBlogs.Site.Core.Log.Service
     {
 
         private static IMailService _mailService;
+        private static IList<LogEvent> _errorLog=new List<LogEvent>();
 
         public static void ErrorLogEventCallBack(LogEvent logEvent)
         {
@@ -35,17 +38,27 @@ namespace iBlogs.Site.Core.Log.Service
                     Subject = "错误日志告警",
                     Content = JsonConvert.SerializeObject(logEvent)
                 });
+                _errorLog.Add(logEvent);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
-
         }
 
         public Page<LogResponse> GetPage(PageParam page)
         {
-            throw new NotImplementedException();
+            var total = _errorLog.Count;
+            var rows = _errorLog.Skip((page.Page - 1) * page.Limit).Take(page.Limit).Select(l=>new LogResponse
+            {
+                Exception = l.Exception.ToString(),
+                Level = l.Level.ToString(),
+                Message = l.Exception.Message,
+                Properties = l.Properties.ToString(),
+                Template = l.MessageTemplate.Text,
+                Timestamp = l.Timestamp.DateTime
+            }).ToList();
+            return new Page<LogResponse>(total, page.Page++, page.Limit, rows);
         }
     }
 }
