@@ -140,7 +140,7 @@ namespace iBlogs.Site.Core.Storage
                     break;
             }
 
-            var total = _entityDic.Keys.Count;
+            var total = source.Count();
             var rows = source.Skip((pageParam.Page - 1) * pageParam.Limit).Take(pageParam.Limit).ToList();
             return new Page<TEntity>(total, pageParam.Page++, pageParam.Limit, rows);
         }
