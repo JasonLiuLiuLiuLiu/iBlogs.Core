@@ -32,7 +32,7 @@ namespace iBlogs.Site.Core.Storage
 
         public TEntity Insert(TEntity entity)
         {
-            if (entity.Id == 0&&_entityDic.Count>0)
+            if (entity.Id == 0 && _entityDic.Count > 0)
             {
                 entity.Id = _entityDic.Max(u => u.Key) + 1;
             }
@@ -40,6 +40,7 @@ namespace iBlogs.Site.Core.Storage
             {
                 entity.Id = 1;
             }
+            entity.Created = DateTime.Now;
             _entityDic.TryAdd(entity.Id, entity);
 
             AccelerateTimer();
