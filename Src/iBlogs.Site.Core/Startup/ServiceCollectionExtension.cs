@@ -7,6 +7,7 @@ using iBlogs.Site.Core.Common.CodeDi;
 using iBlogs.Site.Core.Storage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -20,6 +21,11 @@ namespace iBlogs.Site.Core.Startup
         {
             ServiceFactory.Services = services;
             var configuration = ServiceFactory.GetService<IConfiguration>();
+
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
 
             services.AddAuthentication(options =>
                 {
