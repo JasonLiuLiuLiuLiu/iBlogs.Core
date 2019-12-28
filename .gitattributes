@@ -2,6 +2,6 @@
 * text=auto
 
 
-*.js linguist-vendored=false
-*.css linguist-vendored=false
+*.js linguist-vendored
+*.css linguist-vendored
 *.cshtml linguist-language=C#
