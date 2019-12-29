@@ -32,7 +32,7 @@ namespace iBlogs.Site.Core.Storage
 
         public TEntity Insert(TEntity entity)
         {
-            if (entity.Id == 0&&_entityDic.Count>0)
+            if (entity.Id == 0 && _entityDic.Count > 0)
             {
                 entity.Id = _entityDic.Max(u => u.Key) + 1;
             }
@@ -40,6 +40,7 @@ namespace iBlogs.Site.Core.Storage
             {
                 entity.Id = 1;
             }
+            entity.Created = DateTime.Now;
             _entityDic.TryAdd(entity.Id, entity);
 
             AccelerateTimer();
@@ -140,7 +141,7 @@ namespace iBlogs.Site.Core.Storage
                     break;
             }
 
-            var total = _entityDic.Keys.Count;
+            var total = source.Count();
             var rows = source.Skip((pageParam.Page - 1) * pageParam.Limit).Take(pageParam.Limit).ToList();
             return new Page<TEntity>(total, pageParam.Page++, pageParam.Limit, rows);
         }
